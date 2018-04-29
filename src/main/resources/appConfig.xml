@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+<fileHost>http://m.hcparking.cn</fileHost>
+<!-- 一卡通 终端代码 -->
+<ykt_TERMINAL_ID>128888870003</ykt_TERMINAL_ID>
+<!-- 一卡通  商户代码 -->
+<ykt_MERCHANT_ID>128888870001</ykt_MERCHANT_ID>
+<!-- 一卡通  ip -->
+<ykt_ip>117.40.140.75</ykt_ip>
+<!-- 一卡通  i端口 -->
+<ykt_port>35000</ykt_port>
+</config>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.park.api.dao.CrowDao">
+	  
+	<select id="getLastRow" resultType="com.park.api.entity.Crow" >
+select * from djt_g_game where uid = #{uid} AND pei is not null ORDER BY crow DESC limit 1 
+ 	</select>
+  	
+  	<select id="getNextRow" resultType="com.park.api.entity.Crow" >
+	select * from djt_g_game where crow = #{row}+1 AND uid = #{uid}
+ 	</select>
+ 	
+ 	<select id="getRow" resultType="com.park.api.entity.Crow" >
+	select * from djt_g_game where crow = #{row} AND uid = #{uid}
+ 	</select>
+ 	
+ 	
+ 	
+ 	<select id="getInputRow" resultType="com.park.api.entity.Crow" >
+	select * from djt_g_game where uid = #{uid} AND pei is null ORDER BY crow limit 1 
+ 	</select>
+ 	
+ 	
+  <update id="update" >
+	  UPDATE djt_g_game SET 
+	  pei = #{ model.pei }
+	  ,dui=#{model.dui}
+		,gong = #{ model.gong }
+		,gong_col = #{ model.gong_col }
+		,count = #{model.count}
+ WHERE id=#{model.id}
+	</update>
+  
+  	<delete id="delete"> delete from djt_g_game where uid=#{uid}</delete>
+ 
+ 
+ <insert id="copyTemplate">
+ INSERT INTO djt_g_game (uid, crow, sheng)  select #{uid},d_id,d_data from djt_data_base
+ </insert>
+ 
+
+ 
+ 
+ 
+  	
+  	 <select id="getGameNum" resultType="int" >
+ select count(0) from djt_g_game where uid=#{uid}
+  	</select>
+  	
+ </mapper>
+ 

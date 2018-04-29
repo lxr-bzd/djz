@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  
+<Configuration status="on" monitorInterval="1800">  
+  
+    <properties>  
+        <property name="LOG_HOME">${sys:catalina.home}/logs</property>
+        <property name="ERROR_LOG_FILE_NAME">error</property>  
+           <property name="APP_NAME">sapi</property> 
+    </properties>  
+  
+  
+    <Appenders>  
+        <Console name="Console" target="SYSTEM_OUT">  
+            <PatternLayout pattern="%d %-5p (%F:%L) - %m%n" />  
+        </Console>  
+  
+        <RollingRandomAccessFile name="ErrorLog"  
+                                 fileName="${LOG_HOME}/${APP_NAME}.log"  
+                                 filePattern="${LOG_HOME}/${APP_NAME}.log.%d{yyyy-MM-dd}.gz">  
+            <PatternLayout pattern="%d %-5p (%F:%L) - %m%n"/>  
+            
+             <Policies>  
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>  
+            </Policies>  
+            
+            <DefaultRolloverStrategy max="24">  
+                <Delete basePath="${LOG_HOME}" maxDepth="1">  
+                  <IfFileName glob="*/${APP_NAME}.log.*.zip" />  
+                  <IfLastModified age="24H" />  
+                </Delete>  
+            </DefaultRolloverStrategy>    
+        </RollingRandomAccessFile>   
+        
+        
+     <JDBC name="databaseAppender" tableName="_log">  
+     <ConnectionFactory class="com.park.api.common.ConnectionFactory" method="getDatabaseConnection" />  
+     <Column name="date" isEventTimestamp="true"/>  
+     <Column name="file" pattern="%file" />  
+     <Column name="line" pattern="%line" />   
+     <Column name="level" pattern="%level" />  
+     <Column name="msg" pattern="%message"/>  
+     </JDBC>  
+    </Appenders>  
+  
+    <Loggers>  
+    
+   <Logger name="com.park.api.service" >  
+    
+     <appender-ref ref="databaseAppender" level="warn"/>  
+   </Logger>
+   
+   <Logger name="com.park.api" >  
+    <appender-ref ref="ErrorLog" level="info"/>
+   </Logger>
+   
+        <root level="info" includeLocation="true">  
+            <appender-ref ref="Console"/>  
+        </root>  
+    </Loggers>  
+</Configuration>  
