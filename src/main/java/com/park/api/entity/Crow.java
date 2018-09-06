@@ -5,13 +5,19 @@ public class Crow {
 	String id;
 	
 	String uid;//int(11)	 
-	Integer crow;//int(11)	 
+	Integer row;//int(11)	 
 	String sheng;//varchar(713)	 '102组生组合'
 	String pei;//varchar(713)	 '102组配组合'
 	String dui;//varchar(1225)	 '102组兑组合，1：勾，2叉'
 	String gong;//varchar(1225)	 '102组供组合，1：白老，2：白少，3：白男，4：白女，5：红老，6：红少，7：红男，8：红女'
 	String gong_col;//102组供组合颜色，1：白，2：红
 	String count;//varchar(1225)	 '统计'
+	
+	String a_tg;
+	String b_tg;
+	String c_tg;
+	
+	Integer is_finish;
 	
 	
 	public String getId() {
@@ -26,11 +32,11 @@ public class Crow {
 	public void setUid(String uid) {
 		this.uid = uid;
 	}
-	public Integer getCrow() {
-		return crow;
+	public Integer getRow() {
+		return row;
 	}
-	public void setCrow(Integer crow) {
-		this.crow = crow;
+	public void setRow(Integer row) {
+		this.row = row;
 	}
 	public String getSheng() {
 		return sheng;
@@ -62,11 +68,36 @@ public class Crow {
 	public void setGong_col(String gong_col) {
 		this.gong_col = gong_col;
 	}
+	public void setIs_finish(Integer is_finish) {
+		this.is_finish = is_finish;
+	}
 	public String getCount() {
 		return count;
 	}
 	public void setCount(String count) {
 		this.count = count;
+	}
+	
+	public String getA_tg() {
+		return a_tg;
+	}
+	public void setA_tg(String a_tg) {
+		this.a_tg = a_tg;
+	}
+	public String getB_tg() {
+		return b_tg;
+	}
+	public void setB_tg(String b_tg) {
+		this.b_tg = b_tg;
+	}
+	public String getC_tg() {
+		return c_tg;
+	}
+	public void setC_tg(String c_tg) {
+		this.c_tg = c_tg;
+	}
+	public Integer getIs_finish() {
+		return is_finish;
 	}
 	
 	

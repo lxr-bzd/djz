@@ -1,5 +1,6 @@
 package com.park.api.controller;
 
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,13 +44,23 @@ public class GameController extends BaseController{
 	}
 	
 	
-	@RequestMapping("new")
+	@RequestMapping("renew")
 	@ResponseBody
-	public Object newly() {
+	public Object renew() {
 		
 		String uid = ServiceManage.securityService.getSessionSubject().getId().toString();
-		gameService.donewly(uid);
-		return JsonResult.getSuccessResult();
+		gameService.doNewly(uid);
+		Map<String, Object> ret = gameService.getMainModel(uid);
+		
+		List<Map<String, Object>> list = ServiceManage.jdbcTemplate.queryForList("select id from game_history where uid=? AND state=2 order by createtime DESC limit 30,5", uid);
+		if(list!=null&&list.size()>0) 
+			for (int i = 0; i < list.size(); i++) {
+				gameService.deleteGame(list.get(i).get("id").toString());
+			}
+			
+		
+		
+		return JsonResult.getSuccessResult(ret);
 	}
 	
 	

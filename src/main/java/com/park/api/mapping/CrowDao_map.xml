@@ -5,29 +5,24 @@
 	<select id="getLastRow" resultType="com.park.api.entity.Crow" >
 select * from djt_g_game where uid = #{uid} AND pei is not null ORDER BY crow DESC limit 1 
  	</select>
-  	
-  	<select id="getNextRow" resultType="com.park.api.entity.Crow" >
-	select * from djt_g_game where crow = #{row}+1 AND uid = #{uid}
- 	</select>
- 	
- 	<select id="getRow" resultType="com.park.api.entity.Crow" >
-	select * from djt_g_game where crow = #{row} AND uid = #{uid}
- 	</select>
- 	
- 	
  	
  	<select id="getInputRow" resultType="com.park.api.entity.Crow" >
-	select * from djt_g_game where uid = #{uid} AND pei is null ORDER BY crow limit 1 
+	select * from game_runing where is_finish=1 AND uid = #{uid} AND pei is null ORDER BY row limit 1 
  	</select>
+ 	
+
+ 	
+ 	
+ 	
+ 	
  	
  	
   <update id="update" >
-	  UPDATE djt_g_game SET 
-	  pei = #{ model.pei }
-	  ,dui=#{model.dui}
+	  UPDATE game_runing SET 
+	  	pei = #{ model.pei }
+	  	,dui=#{model.dui}
 		,gong = #{ model.gong }
 		,gong_col = #{ model.gong_col }
-		,count = #{model.count}
  WHERE id=#{model.id}
 	</update>
   
@@ -52,13 +47,54 @@ select * from djt_g_game where uid = #{uid} AND pei is not null ORDER BY crow DE
   	<select id="getGroup" resultType="int" >
   	 select d_table_id from djt_use_table where d_use_default =1
   	</select>
+	
+	<!-- 2018-8-28新加入 -->
+	<select id="getInputRow2" resultType="com.park.api.entity.Crow" >
+	select * from game_runing where hid = #{hid} AND pei is null ORDER BY row limit 1 
+ 	</select>
+ 	
+ 	 <select id="getRow" resultType="com.park.api.entity.Crow" >
+	select * from game_runing where row = #{row} AND hid = #{hid}
+ 	</select>
+	
+	
+	
+	<select id="getRuningCount" resultType="int" >
+  	 select count(0) from game_runing where is_finish=1 AND uid =#{uid}
+  	</select>
+	
+	
+	<select id="getAllGong" resultType="map" >
+  	 select row,gong,gong_col from game_runing where  (gong is not null OR pei is not null)
+		AND hid =#{hid} ORDER BY row
+  	</select>
   	
-  	  <update id="setUserGroup" >
-	  UPDATE djt_user SET 
-	  djt_use_table = #{ group }
-	  
- WHERE djt_u_id = #{uid}
+  	<select id="temp2ruing"  >
+  	 INSERT INTO game_runing (hid,uid, row, sheng) 
+SELECT ${hid}, ${uid},row,sheng FROM data_base WHERE tabl_num=#{tbNo}
+  	</select>
+  	
+  	
+ <insert id="createGame" useGeneratedKeys="true" keyProperty="mo.id">
+ INSERT INTO game_history (uid,`tbNum`, `info`, `createtime`) VALUES (#{mo.uid},#{mo.tbNum},#{mo.info} , #{mo.createtime});
+ </insert>
+  	
+  	
+ <select id="getRuningGame" resultType="com.park.api.entity.Game">
+  	select * from game_history where uid=#{uid} AND state=1 ORDER BY createtime DESC limit 1
+  	
+ </select>
+ 
+ 
+ 	
+  <update id="updateGame" >
+	  UPDATE game_history 
+	  <set>
+	  <if test="mo.state!=null">state = #{ mo.state },</if>
+		</set>
+ WHERE id=#{mo.id}
 	</update>
+ 
   	
   	
  </mapper>

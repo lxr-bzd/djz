@@ -1,5 +1,7 @@
 package com.park.api.service;
 
+import java.util.Arrays;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,6 +31,12 @@ public class GameCoreService {
 		return new int[]{allcount,allrealA,allrealB};
 	}
 	
+	/**
+	 * 
+	 * @param sheng
+	 * @param pei
+	 * @return 1:对 ，2：错
+	 */
 	public String reckonDui(String sheng,String pei) {
 		String[] shengs = sheng.split(",");
 		
@@ -110,6 +118,53 @@ public class GameCoreService {
 
 	}
 	
+	/**每一次出现提供报告无论+、-“只限提供2小结”如果第1小结结果是0系统将自动关闭提供第2小结（即本次提供完毕）。
+	 * 计算是否提供
+	 * @param row
+	 * @return
+	 */
+	public static String[] reckonIsProvide(int row,String summary,String val) {
+		
+		int summaryNum = row/6;
+		if(row%6==0)summaryNum = row/6-1;
+		if(summaryNum<2)return new String[]{"-1"+val,"-1"+val,"-1"+val};
+		Integer p1 = Integer.parseInt(summary.substring((summaryNum-1)*2, summaryNum*2));
+		Integer p2 = Integer.parseInt(summary.substring((summaryNum-1)*2-2, summaryNum*2-2));
+		Integer p3 = (summaryNum<3)?null:Integer.parseInt(summary.substring((summaryNum-1)*2-4, summaryNum*2-4));
+		Integer p4 = (summaryNum<4)?null:Integer.parseInt(summary.substring((summaryNum-1)*2-6, summaryNum*2-6));
+		
+		String[] ret = new String[3];
+		ret[0] = (p1*p2>0)?"01":"-1";
+		ret[1] = (ret[0].equals("01")&&p3!=null&&p1*p3>0)?"01":"-1";
+		ret[2] = (ret[1].equals("01")&&p4!=null&&p1*p4>0)?"01":"-1";
+		
+		ret[0]+=val;
+		ret[1]+=val;
+		ret[2]+=val;
+		
+		return ret;
+	}
+	
+	/**
+	 * 计算6连合计
+	 * @param gongCol
+	 * @return
+	 */
+	public static Integer reckon6Count(String tg) {
+		
+		Integer count= 0;
+		for (int i = 0; i < 6; i++) {
+			
+			count+=Integer.parseInt(tg.substring(i*4+2,i*4+4));
+			
+		}
+		
+		
+		
+		return count;
+
+	}
+	
 	
 	/**
 	 * 计算102组统计
@@ -158,24 +213,9 @@ public class GameCoreService {
 	
 	
 	
+	
 	public static void main(String[] args) {
-		/*String ss = "111131,122431";
-		String ps = "141141";
-		System.out.println(ss);
-		System.out.println(ps);
-		System.out.println(new GameCoreService().reckonDui(ss, ps));
-		
-		String sheng = "112431,112431";
-		String dui = "211211122121,211211122121";
-		System.out.println(new GameCoreService().reckonGong(sheng, dui));*/
-		
-		/*String gong = "老男少女少女老男少男老男";
-		String pei = "411411";
-		System.out.println(new GameCoreService().reckonGongCol(pei, gong));
-		
-		String gongCol = "212111112211,222121222112";
-		
-		System.out.println(Arrays.toString(new GameCoreService().reckonAllCount("02-2","-404")));*/
+		System.out.println(reckon6Count("010101010101010101010101"));
 		
 		
 	}

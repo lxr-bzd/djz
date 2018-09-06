@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.park.api.dao.CountDao">
+	  
+ 
+ <insert id="save">
+ INSERT INTO game_runing_count (`hid`, `index`, `lcount`, `rcount`, `ar_tg`, `br_tg`, `cr_tg`, `al_tg`, `bl_tg`, `cl_tg`) VALUES 
+ (#{hid}, 1, '', '', '', '', '', '', '', ''),
+ (#{hid}, 2, '', '', '', '', '', '', '', ''),
+ (#{hid}, 3, '', '', '', '', '', '', '', ''),
+ (#{hid}, 4, '', '', '', '', '', '', '', ''),
+ (#{hid}, 5, '', '', '', '', '', '', '', ''),
+ (#{hid}, 6, '', '', '', '', '', '', '', ''),
+ (#{hid}, 7, '', '', '', '', '', '', '', ''),
+ (#{hid}, 8, '', '', '', '', '', '', '', ''),
+ (#{hid}, 9, '', '', '', '', '', '', '', ''),
+ (#{hid}, 10, '', '', '', '', '', '', '', '')
+ </insert>
+ <update id="update"  >
+ UPDATE game_runing_count SET 
+  	lcount=#{mo.lcount},
+  	rcount=#{mo.rcount},
+  	
+  	ar_tg=#{mo.ar_tg},
+  	br_tg=#{mo.br_tg},
+  	cr_tg=#{mo.cr_tg},
+  	
+  	al_tg=#{mo.al_tg},
+  	bl_tg=#{mo.bl_tg},
+  	cl_tg=#{mo.cl_tg}
+  	WHERE id=#{mo.id}
+  	</update>
+ 
+ 
+ <select id="findAll" resultType="com.park.api.entity.Count" >
+  	 select * from game_runing_count WHERE hid =#{hid}
+  	</select>
+ 
+
+  	
+ </mapper>
+ 
