@@ -363,7 +363,7 @@
 	
 	
 	function reNew(){
-		 layer.confirm('是否重新開始？（當前未完成數據將刪除）', {
+		 layer.confirm('是否重新開始？', {
 			    btn: ['確定', '取消']
 			  },function(index){
 				  layer.close(index);
@@ -489,13 +489,17 @@ var etbHtml = "";
 		
 		
 		vData.queue = gameCore.queue(data.mainTb,function(row,gong,gongCol){
+			
+			var tr = '<tr><td class="one">'+(row-1)+'</td>';
 			if(row==data.mainTb.length-1){
 			vData.lastGong = data.mainTb[row].gong;
+			var tr = '<tr><td class="one"><a id="bottom">'+(row-1)+'</a></td>';
 			}
-			if(row==data.mainTb.length-2)
-				var tr = '<tr><td class="one"><a id="bottom">'+(row-1)+'</a></td>';
-				else
-			var tr = '<tr><td class="one">'+(row-1)+'</td>';
+			if(row==data.mainTb.length-2){
+				vData.lastCol = data.mainTb[row].gong_col;
+				
+			}
+			
 			for (var j = 0; j < 20; j++) {
 				if(gongCol){
 				var col = gongCol.substring(j,j+1);
@@ -517,12 +521,12 @@ var etbHtml = "";
 		if(vData.queue.scan.length==20)
 			for (var i = 0; i < vData.queue.scan.length; i++) {
 				if(vData.queue.scan[i].hitNum>=6) 
-					vData.queueHtml+='<tr><td>第 <text class="rd">'+(parseInt(i/2)+1)+'</text> 户</td><td class="wid25">'+vData.queue.scan[i].hitNum+'</td><td class="rd wid25">'+data.mainTb[data.mainTb.length-1].gong.substring(i,i+1)+'</td></tr>';
+					vData.queueHtml+='<tr><td>第 <text class="rd">'+(parseInt(i/2)+1)+'</text> 户</td><td class="rd wid25">'+data.mainTb[data.mainTb.length-1].gong.substring(i,i+1)+'</td><td class="wid25">'+vData.queue.scan[i].hitNum+'</td></tr>';
 					//vData.queueHtml+='<tr><td>第 <text class="rd">'+(parseInt(i/2)+1)+'</text> 户</td><td>'+vData.queue.scan[i].hitNum+'</td><td class="rd">'+vData.queue.scan[i].val+'</td></tr>';
 				if(vData.queue.scan[i].hitNum==6) 
-					vData.queueNotifyHtml+='<tr><td>第 <text class="rd">'+(parseInt(i/2)+1)+'</text> 户</td><td class="wid25">'+vData.queue.scan[i].hitNum+'</td><td class="rd wid25">'+data.mainTb[data.mainTb.length-1].gong.substring(i,i+1)+'</td></tr>';
+					vData.queueNotifyHtml+='<tr><td>第 <text class="rd">'+(parseInt(i/2)+1)+'</text> 户</td><td class="rd wid25">'+data.mainTb[data.mainTb.length-1].gong.substring(i,i+1)+'</td><td class="wid25">'+vData.queue.scan[i].hitNum+'</td></tr>';
 					//vData.queueNotifyHtml+='<tr><td>第 <text class="rd">'+(parseInt(i/2)+1)+'</text> 户</td><td>'+vData.queue.scan[i].hitNum+'</td><td class="rd">'+vData.queue.scan[i].val+'</td></tr>';
-					
+						
 			}
 		
 		
@@ -544,7 +548,7 @@ var etbHtml = "";
 		$("#crow_group").html(vData.cRow);
 		$("#main_tb").html(vData.tbHtml);
 		//提供开始
-		var xjtg = renderTg(data.mod,data.counts,vData.lastGong);
+		var xjtg = renderTg(data.mod,data.counts,vData.lastGong,vData.lastCol);
 		
 		$("#queue_group").html(vData.queueHtml);
 		//处理队列开始
@@ -589,9 +593,9 @@ var etbHtml = "";
 		
 	}
 	
-	function renderTg(mod,count,lastGong){
+	function renderTg(mod,count,lastGong,lastCol){
 		//提供小结
-		xjtg = gameCore.xjtg(mod,count,lastGong);
+		xjtg = gameCore.xjtg(mod,count,lastGong,lastCol);
 		console.log(xjtg);
 		//提供开始
 		$("#tgSum_group").html(xjtg.tgSum);
@@ -600,9 +604,9 @@ var etbHtml = "";
 		var html = "";
 		for ( var i in xjtg.tgInfo) {
 			if(xjtg.tgInfo[i].l)
-			html+='<tr><td>第 <text class="rd">'+i+'</text> 戶</td><td class="rd">'+xjtg.tgInfo[i].l+'</td></tr>';
+			html+='<tr><td>第 <text class="rd">'+i+'</text> 戶</td><td class="rd wid25">'+xjtg.tgInfo[i].l.val+'</td><td class="wid25">'+xjtg.tgInfo[i].l.f+'</td></tr>';
 			if(xjtg.tgInfo[i].r)
-				html+='<tr><td>第 <text class="rd">'+i+'</text> 戶</td><td class="rd">'+xjtg.tgInfo[i].r+'</td></tr>';
+				html+='<tr><td>第 <text class="rd">'+i+'</text> 戶</td><td class="rd wid25">'+xjtg.tgInfo[i].r.val+'</td><td class="wid25">'+xjtg.tgInfo[i].r.f+'</td></tr>';
 		}
 		$("#tglist_group").html(html);
 		
@@ -616,7 +620,7 @@ var etbHtml = "";
 	<script type="text/javascript">
 
 	var gameCore = {
-			xjtg:function(mod,count,lastGong){
+			xjtg:function(mod,count,lastGong,lastCol){
 				var xj = {};//小结
 				var xjCount = 0;//小结统计
 				var tg = 0;//提供数
@@ -662,75 +666,85 @@ var etbHtml = "";
 						}
 					}
 					
-					
-				
 					xjCount+=hu.l;
 					xjCount+=hu.r;
 					xj[count[i].index] = hu;
 					
 				}
+				var tginfo = this.tgInfo(mod,count,lastGong,lastCol);
+				tg+=tginfo.tg;
 				
-				
-				
-				
-				return {xj:xj,xjCount:xjCount,tg:tg,tgSum:tgSum,tgInfo:this.tgInfo(mod,count,lastGong)};
+				return {xj:xj,xjCount:xjCount,tg:tg,tgSum:tgSum,tgInfo:tginfo.list};
 			}
 	
-		,tgInfo:function(mod,count,lastGong){
+		,tgInfo:function(mod,count,lastGong,lastCol){
 			var tgInfo = {};
+			var tg = 0;
 			for (var i = 0; i < count.length; i++) {
 				tgInfo[count[i].index] = {};
-				var lp1,lp2,lp3,lp4,rp1,rp2,rp3,rp4;
 				var lc = count[i].lcount;
 				var rc = count[i].rcount;
-				if(lc.length>=4){
-					lp1 = new Number(lc.substring(lc.length-2,lc.length));
-					lp2 = new Number(lc.substring(lc.length-4,lc.length-2));
-					
-					rp1 = new Number(rc.substring(rc.length-2,rc.length));
-					rp2 = new Number(rc.substring(rc.length-4,rc.length-2));
-				}
-				if(lc.length>=6){
-					var lp3 = new Number(lc.substring(lc.length-6,lc.length-4));
-					var rp3 = new Number(rc.substring(rc.length-6,rc.length-4));
-				}
-				
-				if(lc.length>=8){
-					var lp4 = new Number(lc.substring(lc.length-8,lc.length-6));
-					var rp4 = new Number(rc.substring(rc.length-8,rc.length-6));
-				}
-				
-				
-				
+				var index = count[i].index;
 				switch ((mod+'')) {
 				case '2':
-					if(lp1!==undefined&&lp2!==undefined&&lp3!==undefined)
-						if(lp1*lp2>0&&lp1*lp3>0)tgInfo[count[i].index].l = lastGong.substring(i*2,i*2+1);
-					if(rp1!==undefined&&rp2!==undefined&&rp3!==undefined)
-						if(rp1*rp2>0&&rp1*rp3>0)tgInfo[count[i].index].r = lastGong.substring(i*2+1,i*2+2);	
-					
+					if(this.mark(lc,3,1)){
+						tg+=1;
+						tgInfo[count[i].index].l = {val:lastGong.substring(i*2,i*2+1)};
+					}
+						
+					if(this.mark(rc,3,1)){
+						tg+=1;
+						tgInfo[count[i].index].r = {val:lastGong.substring(i*2+1,i*2+2)};	
+					}
 					break;
 				case '3':
-					if(lp1!==undefined&&lp2!==undefined&&lp3!==undefined&&lp4!==undefined)
-						if(lp1*lp2>0&&lp1*lp3>0&&lp1*lp4>0)tgInfo[count[i].index].l = lastGong.substring(i*2,i*2+1);
-					if(rp1!==undefined&&rp2!==undefined&&rp3!==undefined&&rp4!==undefined)
-						if(rp1*rp2>0&&rp1*rp3>0&&rp1*rp4>0)tgInfo[count[i].index].r = lastGong.substring(i*2+1,i*2+2);	
+					if(this.mark(lc,4,2)){
+						tg+=1;
+						tgInfo[count[i].index].l = {val:lastGong.substring(i*2,i*2+1)};
+					}
+					if(this.mark(rc,4,2)){
+						tg+=1;
+						tgInfo[count[i].index].r = {val:lastGong.substring(i*2+1,i*2+2)};	
+					}
 					
 					break;
 				case '1':
 				default:
-					if(lp1!==undefined&&lp2!==undefined)
-						if(lp1*lp2>0)tgInfo[count[i].index].l = lastGong.substring(i*2,i*2+1);
-					if(rp1!==undefined&&rp2!==undefined)
-						if(rp1*rp2>0)tgInfo[count[i].index].r = lastGong.substring(i*2+1,i*2+2);	
-					
-				
+					if(this.mark(lc,2,0)){
+						tg+=1;
+						tgInfo[count[i].index].l = {val:lastGong.substring(i*2,i*2+1)};
+					}
+					if(this.mark(lc,2,0)){
+						tg+=1;
+						tgInfo[count[i].index].r = {val:lastGong.substring(i*2+1,i*2+2)};	
+					}
 					break;
 				}
 				
+				if(tgInfo[count[i].index].l&&lastCol){
+					tgInfo[count[i].index].l.f = (lastCol.substring((index-1)*2,(index-1)*2+1)=="2")?"+":"-";
 				}
-			return tgInfo;
+				if(tgInfo[count[i].index].r&&lastCol){
+					tgInfo[count[i].index].r.f = (lastCol.substring((index-1)*2+1,(index-1)*2+2)=="2")?"+":"-";
+				}
+				
+				}
+			return {list:tgInfo,tg:tg};
 			
+		}
+		
+		,mark:function(count,n,offset) {
+			 var vlen = 8;
+			 if(count.length<n*vlen)return null;
+			 var ret = 0;
+			 for (var i = 0; i < n; i++) {
+				var nn = new Number(count.substring(count.length-((i+1)*vlen)+(offset*2), count.length-((i+1)*vlen)+(offset*2)+2));
+				if(i==0) {ret = nn>0?1:-1; continue;}
+				if(nn*ret<=0)return null;
+			 }
+			 
+			return ret;
+
 		}
 	
 	

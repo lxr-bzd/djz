@@ -16,6 +16,10 @@ public class Count {
 	String al_tg;
 	String bl_tg;
 	String cl_tg;
+	
+	String l_info;
+	String r_info;
+	
 	public String getId() {
 		return id;
 	}
@@ -82,6 +86,18 @@ public class Count {
 	}
 	public void setCl_tg(String cl_tg) {
 		this.cl_tg = cl_tg;
+	}
+	public String getL_info() {
+		return l_info;
+	}
+	public void setL_info(String l_info) {
+		this.l_info = l_info;
+	}
+	public String getR_info() {
+		return r_info;
+	}
+	public void setR_info(String r_info) {
+		this.r_info = r_info;
 	}
 	
 	

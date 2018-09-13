@@ -2,6 +2,7 @@ package com.park.api.service;
 
 import java.util.Arrays;
 
+import org.aspectj.weaver.ast.Var;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -145,6 +146,54 @@ public class GameCoreService {
 		return ret;
 	}
 	
+	/**每一次出现提供报告无论+、-“只限提供2小结”如果第1小结结果是0系统将自动关闭提供第2小结（即本次提供完毕）。
+	 * 计算是否提供
+	 * @param 为abc模式+原始模式8位一组合
+	 * @param row
+	 * @return
+	 */
+	public static String[] reckonIsProvide2(int row,String count,Integer val) {
+		
+		int vlen = 8;
+		
+		int summaryNum = row/6;
+		if(row%6==0)summaryNum = row/6-1;
+		String valStr = getValStr(val);
+		if(summaryNum<2)return new String[]{"-1"+valStr,"-1"+valStr,"-1"+valStr};
+		
+		summaryNum--;
+		int offset = 0;
+		Integer p1a = Integer.parseInt(count.substring(summaryNum*vlen+offset, summaryNum*vlen+offset+2));
+		Integer p2a = Integer.parseInt(count.substring((summaryNum-1)*vlen+offset, (summaryNum-1)*vlen+offset+2));
+		offset = 2;
+		Integer p1b = Integer.parseInt(count.substring(summaryNum*vlen+offset, summaryNum*vlen+offset+2));
+		Integer p2b = Integer.parseInt(count.substring((summaryNum-1)*vlen+offset, (summaryNum-1)*vlen+offset+2));
+		Integer p3b = summaryNum<2?null:Integer.parseInt(count.substring((summaryNum-2)*vlen+offset, (summaryNum-2)*vlen+offset+2));
+		offset = 4;
+		Integer p1c = Integer.parseInt(count.substring(summaryNum*vlen+offset, summaryNum*vlen+offset+2));
+		Integer p2c = Integer.parseInt(count.substring((summaryNum-1)*vlen+offset, (summaryNum-1)*vlen+offset+2));
+		Integer p3c = summaryNum<2?null:Integer.parseInt(count.substring((summaryNum-2)*vlen+offset, (summaryNum-2)*vlen+offset+2));
+		Integer p4c = summaryNum<3?null:Integer.parseInt(count.substring((summaryNum-3)*vlen+offset, (summaryNum-3)*vlen+offset+2));
+		
+		String[] ret = new String[3];
+		ret[0] = (p1a*p2a>0)?"01":"-1";
+		ret[1] = (p3b!=null&&p1b*p2b>0&&p1b*p3b>0)?"01":"-1";
+		ret[2] = (p4c!=null&&p1c*p2c>0&&p1c*p3c>0&&p1c*p4c>0)?"01":"-1";
+		
+		ret[0]+=getValStr((ret[0].equals("01")&&p1a>0)?-val:val);
+		ret[1]+=getValStr((ret[1].equals("01")&&p1b>0)?-val:val);
+		ret[2]+=getValStr((ret[2].equals("01")&&p1c>0)?-val:val);
+		
+		return ret;
+	}
+	
+	
+	public static String getValStr(Integer val) {
+		return (val>=0&&val<10)?("0"+val):val.toString();
+
+	}
+	
+	
 	/**
 	 * 计算6连合计
 	 * @param gongCol
@@ -162,8 +211,63 @@ public class GameCoreService {
 		
 		
 		return count;
+	}
+	
+	
+	
+	
+	/**
+	 * abc模式组合+原始值
+	 * @param tg
+	 * @param count
+	 * @return
+	 */
+	public static String reckon6Count2(String tg,String count) {
+		
+		Integer sum= 0;
+		for (int i = 0; i < 6; i++) {
+			
+			sum+=Integer.parseInt(tg.substring(i*2,i*2+2));
+			
+		}
+		String ret = "";
+		//计算a模式
+		Integer m = mark(count, 2, 0);
+		ret+=getValStr((m!=null&&m>0)?-sum:sum);
+		//计算b模式
+		m = mark(count, 3, 1);
+		ret+=getValStr((m!=null&&m>0)?-sum:sum);
+		//计算c模式
+		m = mark(count, 4, 2);
+		ret+=getValStr((m!=null&&m>0)?-sum:sum);
+		
+		return ret+getValStr(sum);
 
 	}
+	
+	/**
+	 * 从后往前计算相同符号，不相同返回null
+	 * @param count
+	 * @param mod 0:a模式，1：b:模式，2：c模式
+	 * @return 
+	 */
+	 public static Integer mark(String count,int n,int mod) {
+		 //单位count长度
+		 int vlen = 8;
+		 if(count.length()<n*vlen)
+			 return null;
+		 int ret = 0;
+		 for (int i = 0; i < n; i++) {
+			Integer nn = Integer.parseInt(count.substring(count.length()-((i+1)*vlen)+(mod*2), count.length()-((i+1)*vlen)+(mod*2)+2));
+			if(i==0) {ret = nn>0?1:-1; continue;}
+			if(nn*ret<=0)return null;
+		 }
+		 
+		return ret;
+
+	}
+	
+	
 	
 	
 	/**
@@ -215,7 +319,9 @@ public class GameCoreService {
 	
 	
 	public static void main(String[] args) {
-		System.out.println(reckon6Count("010101010101010101010101"));
+		//System.out.println(mark("01-10101-101010101",3,1));
+		
+		System.out.println(Arrays.toString(reckonIsProvide2(25,"0606060604040404-606060604-40404",-1)));
 		
 		
 	}

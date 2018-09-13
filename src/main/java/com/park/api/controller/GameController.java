@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.lxr.framework.long1.JsonResult;
 import com.park.api.ServiceManage;
 import com.park.api.common.BaseController;
+import com.park.api.entity.Game;
 import com.park.api.service.GameCoreService;
 import com.park.api.service.GameService;
 
@@ -49,7 +50,10 @@ public class GameController extends BaseController{
 	public Object renew() {
 		
 		String uid = ServiceManage.securityService.getSessionSubject().getId().toString();
-		gameService.doNewly(uid);
+		Game game =  gameService.getRuningGame(uid);
+		if(game!=null)
+		gameService.finishGame(game.getId());
+		//gameService.doNewly(uid);
 		Map<String, Object> ret = gameService.getMainModel(uid);
 		
 		List<Map<String, Object>> list = ServiceManage.jdbcTemplate.queryForList("select id from game_history where uid=? AND state=2 order by createtime DESC limit 30,5", uid);

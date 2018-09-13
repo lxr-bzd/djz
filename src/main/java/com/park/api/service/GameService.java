@@ -88,7 +88,7 @@ public class GameService {
 		Game game = crowDao.getRuningGame(uid);
 		if(game == null) {
 			doNewly(uid);
-		game = crowDao.getRuningGame(uid);
+			game = crowDao.getRuningGame(uid);
 		}
 		
 		Crow icrow =  crowDao.getInputRow2(game.getId());
@@ -105,7 +105,7 @@ public class GameService {
 		crowDao.update(icrow);
 		//处理统计
 		if(icrow.getRow()>0)
-		count(game.getId(), icrow.getRow(), icrow.getGong(), icrow.getGong_col());
+			count2(game.getId(), icrow.getRow(), icrow.getGong(), icrow.getGong_col());
 		
 		
 		//处理下一行
@@ -129,7 +129,45 @@ public class GameService {
 
 	}
 	
+	/**
+	 * 处理统计
+	 */
+	private void count2(String hid,int row,String gong,String gong_col) {
 	
+		List<Count> counts = countDao.findAll(hid);
+		
+		for (int i = 0; i < counts.size(); i++) {
+			Count count = counts.get(i);
+			int sindex = (count.getIndex()-1)*2;
+			String lval = gong_col.substring(sindex, sindex+1).equals("1")?"-1":"01";
+			String rval = gong_col.substring(sindex+1, sindex+2).equals("1")?"-1":"01";
+			String[] lProvide =  gameCoreService.reckonIsProvide2(row, count.getLcount(), Integer.parseInt(lval));
+			String[] rProvide =  gameCoreService.reckonIsProvide2(row, count.getRcount(), Integer.parseInt(rval));
+			
+			count.setAl_tg(count.getAl_tg()+lProvide[0]);
+			count.setBl_tg(count.getBl_tg()+lProvide[1]);
+			count.setCl_tg(count.getCl_tg()+lProvide[2]);
+			count.setL_info(count.getL_info()+lval);
+			
+			count.setAr_tg(count.getAr_tg()+rProvide[0]);
+			count.setBr_tg(count.getBr_tg()+rProvide[1]);
+			count.setCr_tg(count.getCr_tg()+rProvide[2]);
+			count.setR_info(count.getR_info()+rval);
+			
+			if(row%6==0) {
+				String lJie = count.getL_info().substring(count.getL_info().length()-12, count.getL_info().length());
+				String rJie = count.getR_info().substring(count.getR_info().length()-12, count.getR_info().length());
+				
+				String clcount = gameCoreService.reckon6Count2(lJie,count.getLcount());
+				String crcount = gameCoreService.reckon6Count2(rJie,count.getRcount());
+				count.setLcount(count.getLcount()+clcount);
+				count.setRcount(count.getRcount()+crcount);
+			}
+			
+			countDao.update(count);
+		}
+		
+	}
 	
 	/**
 	 * 处理统计
@@ -257,18 +295,19 @@ public class GameService {
 	}
 	
 	
-	private Game getRuningGame(String uid) {
+	public Game getRuningGame(String uid) {
 		Game game = crowDao.getRuningGame(uid);
 		
 		return game;
 
 	}
 	
-	 private void finishGame(String hid) {
+	 public void finishGame(String hid) {
 		
 		 Game game = new Game();
 		 game.setId(hid);
 		 game.setState(2);
+		 game.setEndtime(System.currentTimeMillis());
 		 crowDao.updateGame(game);
 	}
 	
