@@ -496,7 +496,7 @@ var etbHtml = "";
 			var tr = '<tr><td class="one"><a id="bottom">'+(row-1)+'</a></td>';
 			}
 			if(row==data.mainTb.length-2){
-				vData.lastCol = data.mainTb[row].gong_col;
+				//vData.lastCol = data.mainTb[row].gong_col;
 				
 			}
 			
@@ -548,7 +548,7 @@ var etbHtml = "";
 		$("#crow_group").html(vData.cRow);
 		$("#main_tb").html(vData.tbHtml);
 		//提供开始
-		var xjtg = renderTg(data.mod,data.counts,vData.lastGong,vData.lastCol);
+		var xjtg = renderTg(data.mod,data.counts,vData.lastGong/* ,vData.lastCol */);
 		
 		$("#queue_group").html(vData.queueHtml);
 		//处理队列开始
@@ -593,9 +593,9 @@ var etbHtml = "";
 		
 	}
 	
-	function renderTg(mod,count,lastGong,lastCol){
+	function renderTg(mod,count,lastGong/* ,lastCol */){
 		//提供小结
-		xjtg = gameCore.xjtg(mod,count,lastGong,lastCol);
+		xjtg = gameCore.xjtg(mod,count,lastGong/* ,lastCol */);
 		console.log(xjtg);
 		//提供开始
 		$("#tgSum_group").html(xjtg.tgSum);
@@ -620,7 +620,7 @@ var etbHtml = "";
 	<script type="text/javascript">
 
 	var gameCore = {
-			xjtg:function(mod,count,lastGong,lastCol){
+			xjtg:function(mod,count,lastGong/* ,lastCol */){
 				var xj = {};//小结
 				var xjCount = 0;//小结统计
 				var tg = 0;//提供数
@@ -671,13 +671,13 @@ var etbHtml = "";
 					xj[count[i].index] = hu;
 					
 				}
-				var tginfo = this.tgInfo(mod,count,lastGong,lastCol);
+				var tginfo = this.tgInfo(mod,count,lastGong/* ,lastCol */);
 				tg+=tginfo.tg;
 				
 				return {xj:xj,xjCount:xjCount,tg:tg,tgSum:tgSum,tgInfo:tginfo.list};
 			}
 	
-		,tgInfo:function(mod,count,lastGong,lastCol){
+		,tgInfo:function(mod,count,lastGong/* ,lastCol */){
 			var tgInfo = {};
 			var tg = 0;
 			for (var i = 0; i < count.length; i++) {
@@ -685,69 +685,124 @@ var etbHtml = "";
 				var lc = count[i].lcount;
 				var rc = count[i].rcount;
 				var index = count[i].index;
+				var lsy = this.provideSymbol(lc);
+				var rsy = this.provideSymbol(rc);
 				switch ((mod+'')) {
 				case '2':
-					if(this.mark(lc,3,1)){
+					if(lsy[1]){
 						tg+=1;
-						tgInfo[count[i].index].l = {val:lastGong.substring(i*2,i*2+1)};
+						tgInfo[count[i].index].l = {val:lastGong.substring(i*2,i*2+1),f:lsy[1]};
 					}
 						
-					if(this.mark(rc,3,1)){
+					if(rsy[1]){
 						tg+=1;
-						tgInfo[count[i].index].r = {val:lastGong.substring(i*2+1,i*2+2)};	
+						tgInfo[count[i].index].r = {val:lastGong.substring(i*2+1,i*2+2),f:rsy[1]};	
 					}
 					break;
 				case '3':
-					if(this.mark(lc,4,2)){
+					if(lsy[2]){
 						tg+=1;
-						tgInfo[count[i].index].l = {val:lastGong.substring(i*2,i*2+1)};
+						tgInfo[count[i].index].l = {val:lastGong.substring(i*2,i*2+1),f:lsy[2]};
 					}
-					if(this.mark(rc,4,2)){
+					if(rsy[2]){
 						tg+=1;
-						tgInfo[count[i].index].r = {val:lastGong.substring(i*2+1,i*2+2)};	
+						tgInfo[count[i].index].r = {val:lastGong.substring(i*2+1,i*2+2),f:rsy[2]};	
 					}
 					
 					break;
 				case '1':
 				default:
-					if(this.mark(lc,2,0)){
+					if(lsy[0]){
 						tg+=1;
-						tgInfo[count[i].index].l = {val:lastGong.substring(i*2,i*2+1)};
+						tgInfo[count[i].index].l = {val:lastGong.substring(i*2,i*2+1),f:lsy[0]};
 					}
-					if(this.mark(lc,2,0)){
+					if(rsy[0]){
 						tg+=1;
-						tgInfo[count[i].index].r = {val:lastGong.substring(i*2+1,i*2+2)};	
+						tgInfo[count[i].index].r = {val:lastGong.substring(i*2+1,i*2+2),f:rsy[0]};	
 					}
 					break;
 				}
 				
-				if(tgInfo[count[i].index].l&&lastCol){
-					tgInfo[count[i].index].l.f = (lastCol.substring((index-1)*2,(index-1)*2+1)=="2")?"+":"-";
-				}
-				if(tgInfo[count[i].index].r&&lastCol){
-					tgInfo[count[i].index].r.f = (lastCol.substring((index-1)*2+1,(index-1)*2+2)=="2")?"+":"-";
-				}
 				
 				}
 			return {list:tgInfo,tg:tg};
 			
 		}
 		
-		,mark:function(count,n,offset) {
-			 var vlen = 8;
-			 if(count.length<n*vlen)return null;
-			 var ret = 0;
-			 for (var i = 0; i < n; i++) {
-				var nn = new Number(count.substring(count.length-((i+1)*vlen)+(offset*2), count.length-((i+1)*vlen)+(offset*2)+2));
-				if(i==0) {ret = nn>0?1:-1; continue;}
-				if(nn*ret<=0)return null;
-			 }
-			 
-			return ret;
+		,provideSymbol:function(count) {
+			var COUNT_VLEN =11;
+			var ret = [];
+			
+			var countNum = count.length/COUNT_VLEN;
+			
+			if(countNum<2)return ret;
+			
+			
+			var pa1 = new Number(count.substring((countNum-1)*COUNT_VLEN+0, (countNum-1)*COUNT_VLEN+0+2));
+			var pb1 = new Number(count.substring((countNum-1)*COUNT_VLEN+3, (countNum-1)*COUNT_VLEN+3+2));
+			var pc1 = new Number(count.substring((countNum-1)*COUNT_VLEN+6, (countNum-1)*COUNT_VLEN+6+2));
+			
+			
+			var offset = 0;
+			if(pa1!=0) {
+				var aStr1 = count.substring((countNum-1)*COUNT_VLEN+offset, (countNum-1)*COUNT_VLEN+offset+3);
+				var aStr2 = count.substring((countNum-2)*COUNT_VLEN+offset, (countNum-2)*COUNT_VLEN+offset+3);
+				
+				//提供：上一个提供，上上不提供
+				if(aStr1.endsWith("y")&&aStr2.endsWith("n")) {
+					
+					ret[0] = (aStr2.startsWith("-"))?"-":"+";
+				}
+				//提供：上一个不提供，上上不提供
+				if(aStr1.endsWith("n")&&aStr2.endsWith("n")&&aStr1.substring(0,1)==aStr2.substring(0,1)) {
+					ret[0] = (aStr1.startsWith("-"))?"-":"+";
+				}
+				
+			}
 
+			offset = 3;
+			if(pb1!=0&&countNum>=3) {
+				var aStr1 = count.substring((countNum-1)*COUNT_VLEN+offset, (countNum-1)*COUNT_VLEN+offset+3);
+				var aStr2 = count.substring((countNum-2)*COUNT_VLEN+offset, (countNum-2)*COUNT_VLEN+offset+3);
+				var aStr3 = count.substring((countNum-3)*COUNT_VLEN+offset, (countNum-3)*COUNT_VLEN+offset+3);
+				
+				//提供：上一个提供，上上不提供
+				if(aStr1.endsWith("y")&&aStr2.endsWith("n")) {
+					
+					ret[1] = (aStr2.startsWith("-"))?"-":"+";
+				}
+				//提供：上一个不提供，上上不提供,上上上不提供
+				if(aStr1.endsWith("n")&&aStr2.endsWith("n")&&aStr3.endsWith("n")
+						&&aStr1.substring(0,1)==aStr2.substring(0,1)&&aStr1.substring(0,1)==aStr3.substring(0,1)) {
+					ret[1] = (aStr1.startsWith("-"))?"-":"+";
+				}
+				
+			}
+			
+			offset = 6;
+			if(pb1!=0&&countNum>=4) {
+				var aStr1 = count.substring((countNum-1)*COUNT_VLEN+offset, (countNum-1)*COUNT_VLEN+offset+3);
+				var aStr2 = count.substring((countNum-2)*COUNT_VLEN+offset, (countNum-2)*COUNT_VLEN+offset+3);
+				var aStr3 = count.substring((countNum-3)*COUNT_VLEN+offset, (countNum-3)*COUNT_VLEN+offset+3);
+				var aStr4 = count.substring((countNum-4)*COUNT_VLEN+offset, (countNum-4)*COUNT_VLEN+offset+3);
+				
+				//提供：上一个提供，上上不提供
+				if(aStr1.endsWith("y")&&aStr2.endsWith("n")) {
+					
+					ret[2] = (aStr2.startsWith("-"))?"-":"+";
+				}
+				//提供：上一个不提供，上上不提供,上上上不提供
+				if(aStr1.endsWith("n")&&aStr2.endsWith("n")&&aStr3.endsWith("n")&&aStr4.endsWith("n")
+						&&aStr1.substring(0,1)==aStr2.substring(0,1)&&aStr1.substring(0,1)==aStr3.substring(0,1)&&aStr1.substring(0,1)==aStr4.substring(0,1)) {
+					ret[2] = (aStr1.startsWith("-"))?"-":"+";
+				}
+				
+			}
+			
+			
+			
+			return ret;
 		}
-	
-	
 		,queue:function(mainTb,onScan){
 			var queue = {
 					"6":0,"7":0,"8":0,"9":0,"10":0,"11":0

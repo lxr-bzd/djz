@@ -169,44 +169,7 @@ public class GameService {
 		
 	}
 	
-	/**
-	 * 处理统计
-	 */
-	private void count(String hid,int row,String gong,String gong_col) {
 	
-		List<Count> counts = countDao.findAll(hid);
-		
-		for (int i = 0; i < counts.size(); i++) {
-			Count count = counts.get(i);
-			int sindex = (count.getIndex()-1)*2;
-			String lval = gong_col.substring(sindex, sindex+1).equals("1")?"-1":"01";
-			String rval = gong_col.substring(sindex+1, sindex+2).equals("1")?"-1":"01";
-			String[] lProvide =  gameCoreService.reckonIsProvide(row, count.getLcount(), lval);
-			String[] rProvide =  gameCoreService.reckonIsProvide(row, count.getRcount(), rval);
-			
-			count.setAl_tg(count.getAl_tg()+lProvide[0]);
-			count.setBl_tg(count.getBl_tg()+lProvide[1]);
-			count.setCl_tg(count.getCl_tg()+lProvide[2]);
-			
-			count.setAr_tg(count.getAr_tg()+rProvide[0]);
-			count.setBr_tg(count.getBr_tg()+rProvide[1]);
-			count.setCr_tg(count.getCr_tg()+rProvide[2]);
-			
-			if(row%6==0) {
-				String ltg = count.getAl_tg().substring(count.getAl_tg().length()-24, count.getAl_tg().length());
-				String rtg = count.getAr_tg().substring(count.getAr_tg().length()-24, count.getAr_tg().length());
-				
-				
-				int clcount = gameCoreService.reckon6Count(ltg);
-				int crcount = gameCoreService.reckon6Count(rtg);
-				count.setLcount(count.getLcount()+((clcount>=0&&clcount<10)?("0"+clcount):clcount));
-				count.setRcount(count.getRcount()+((crcount>=0&&crcount<10)?("0"+crcount):crcount));
-			}
-			
-			countDao.update(count);
-		}
-		
-	}
 	
 	/*
 	 * 获取第几组
