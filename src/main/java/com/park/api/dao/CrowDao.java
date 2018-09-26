@@ -43,6 +43,8 @@ public interface CrowDao {
 	 
 	 List<Map> getAllGong(@Param("hid")String hid);
 	 
+	 String getUpTgVal(@Param("hid")String hid);
+	 
 	 /**
 	  * 复制模板到游戏表
 	  * @param uid

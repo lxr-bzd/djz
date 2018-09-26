@@ -30,7 +30,10 @@
   	cl_tg=#{mo.cl_tg},
   	
   	l_info=#{mo.l_info},
-  	r_info=#{mo.r_info}
+  	r_info=#{mo.r_info},
+  	
+  	l_lj=#{mo.l_lj},
+  	r_lj=#{mo.r_lj}
   	WHERE id=#{mo.id}
   	</update>
  

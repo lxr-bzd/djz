@@ -19,6 +19,8 @@ public class Crow {
 	
 	Integer is_finish;
 	
+	String tg_val;
+	
 	
 	public String getId() {
 		return id;
@@ -98,6 +100,12 @@ public class Crow {
 	}
 	public Integer getIs_finish() {
 		return is_finish;
+	}
+	public String getTg_val() {
+		return tg_val;
+	}
+	public void setTg_val(String tg_val) {
+		this.tg_val = tg_val;
 	}
 	
 	

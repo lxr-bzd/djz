@@ -52,6 +52,7 @@ a{
 input {
 	font-size: 16px;
 	font-family: "microsoft yahei";
+	
 }
 table {
 	width: 100%;
@@ -101,7 +102,7 @@ div{
 }
 /*主体宽度*/
 .inner-out{
-	width: 1202px;
+	width: 1247px;
 	  margin: 30px auto 0;
 	border: 2px solid #000;
 }
@@ -115,7 +116,7 @@ div{
 	z-index: 2;
 	top: 0;
 	top: 30px;
-	width: 1198px;
+	width: 1243px;
 	height: 110px;
 	border-top: 2px solid #000;
 	background-color: #fff;
@@ -155,16 +156,20 @@ div{
 }
 /*顶部中间*/
 .h-cent{
-	width: 834px;
+	width: 879px;
 }
 .h-cent table{
-	width: 834px;
+	width: 879px;
 	font-weight: bold;
 }
 .h-cent table td{
 	height: 36px;
 }
 table td.one{
+	width: 50px;
+}
+.h-cent table td.tow{
+	color: #000;
 	width: 50px;
 }
 .h-cent table input{
@@ -206,7 +211,7 @@ table td.one{
 	width: 75px;
 }
 .f-cent table{
-	width: 783px;
+	width: 828px;
 }
 .f-cent table tr td{
 	width: 4%;

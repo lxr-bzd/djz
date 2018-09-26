@@ -2,9 +2,12 @@ package com.park.api.service;
 
 import java.util.Arrays;
 
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.weaver.ast.Var;
 import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 import org.springframework.stereotype.Service;
+
+import com.alibaba.druid.sql.visitor.functions.Length;
 
 @Service
 public class GameCoreService {
@@ -127,47 +130,14 @@ public class GameCoreService {
 	
 	/**每一次出现提供报告无论+、-“只限提供2小结”如果第1小结结果是0系统将自动关闭提供第2小结（即本次提供完毕）。
 	 * 计算是否提供
-	 * @param count 为abc模式+原始模式8位一组合 abc模式加前加一位是否提供（n：未提供，y：提供）
+	 * @param count 为abc模式+原始模式8位一组合 abc模式加前加一位是否提供（n：未提供，y：提供）(a值+开启提供+是否提供)
 	 * @param row
 	 * @return
 	 */
-	public static String[] reckonIsProvide2(int row,String count,Integer val) {
-		
-		/*int vlen = COUNT_VLEN;
-		
-		int summaryNum = row/6;
-		if(row%6==0)summaryNum = row/6-1;
-		String valStr = getValStr(val);
-		if(summaryNum<2)return new String[]{"-1"+valStr+"n","-1"+valStr+"n","-1"+valStr+"n"};
-		
-		
-		
-		summaryNum--;
-		int offset = 0;
-		Integer p1a = Integer.parseInt(count.substring(summaryNum*vlen+offset, summaryNum*vlen+offset+2));
-		Integer p2a = Integer.parseInt(count.substring((summaryNum-1)*vlen+offset, (summaryNum-1)*vlen+offset+2));
-		offset = 2;
-		Integer p1b = Integer.parseInt(count.substring(summaryNum*vlen+offset, summaryNum*vlen+offset+2));
-		Integer p2b = Integer.parseInt(count.substring((summaryNum-1)*vlen+offset, (summaryNum-1)*vlen+offset+2));
-		Integer p3b = summaryNum<2?null:Integer.parseInt(count.substring((summaryNum-2)*vlen+offset, (summaryNum-2)*vlen+offset+2));
-		offset = 4;
-		Integer p1c = Integer.parseInt(count.substring(summaryNum*vlen+offset, summaryNum*vlen+offset+2));
-		Integer p2c = Integer.parseInt(count.substring((summaryNum-1)*vlen+offset, (summaryNum-1)*vlen+offset+2));
-		Integer p3c = summaryNum<2?null:Integer.parseInt(count.substring((summaryNum-2)*vlen+offset, (summaryNum-2)*vlen+offset+2));
-		Integer p4c = summaryNum<3?null:Integer.parseInt(count.substring((summaryNum-3)*vlen+offset, (summaryNum-3)*vlen+offset+2));
+	public static String[] reckonIsProvide2(int row,String count,Integer val,String upPile) {
 		
 		String[] ret = new String[3];
-		ret[0] = (p1a*p2a>0)?"01":"-1";
-		ret[1] = (p3b!=null&&p1b*p2b>0&&p1b*p3b>0)?"01":"-1";
-		ret[2] = (p4c!=null&&p1c*p2c>0&&p1c*p3c>0&&p1c*p4c>0)?"01":"-1";
-		
-		ret[0]+=getValStr((ret[0].equals("01")&&p1a>0)?-val:val);
-		ret[1]+=getValStr((ret[1].equals("01")&&p1b>0)?-val:val);
-		ret[2]+=getValStr((ret[2].equals("01")&&p1c>0)?-val:val);*/
-		
-		
-		String[] ret = new String[3];
-		String[] ps = provideSymbol(count);
+		String[] ps = provideSymbol2(count,upPile);
 		
 		ret[0] = (ps[0]!=null?"01":"-1")+getValStr((ps[0]!=null&&ps[0].equals("+"))?-val:val);
 		ret[1] = (ps[1]!=null?"01":"-1")+getValStr((ps[1]!=null&&ps[1].equals("+"))?-val:val);
@@ -178,8 +148,137 @@ public class GameCoreService {
 	
 	public static String getValStr(Integer val) {
 		return (val>=0&&val<10)?("0"+val):val.toString();
+		
+	}
+	
+	/**
+	 * 只记录正负域，0域不记录
+	 * @param upPile a'+-'+数量,b
+	 * @param abcVal
+	 * @return
+	 */
+	public static String reckonPile(String upPile,Integer[] abcVal) {
+		
+		String[] nf = new String[3];
+		nf[0] = (abcVal[0]>0?"+":(abcVal[0]<0?"-":"0"));
+		nf[1] = (abcVal[1]>0?"+":(abcVal[1]<0?"-":"0"));
+		nf[2] = (abcVal[2]>0?"+":(abcVal[2]<0?"-":"0"));
+		
+		if(upPile==null)
+			return nf[0]+"1,"+nf[1]+"1,"+nf[2]+"1";
+		
+		
+		String[] upPiles =  upPile.split(",");
+		String ret = "";
+		
+		ret+=nf[0]+(nf[0].equals(upPiles[0].substring(0, 1))?(1+new Integer(upPiles[0].substring(1, upPiles[0].length()))):"1")+",";
+		ret+=nf[1]+(nf[1].equals(upPiles[1].substring(0, 1))?(1+new Integer(upPiles[1].substring(1, upPiles[1].length()))):"1")+",";
+		ret+=nf[2]+(nf[2].equals(upPiles[2].substring(0, 1))?(1+new Integer(upPiles[2].substring(1, upPiles[2].length()))):"1");
+		
+		return ret;
 
 	}
+	
+	public static String reckonPile2(String upPile,Integer[] abcVal) {
+		
+		String nf = (abcVal[3]>0?"+":(abcVal[0]<0?"-":"0"));
+		
+		if(upPile==null)
+			return nf+"1";
+		
+		
+		String ret = "";
+		
+		ret+=nf+(nf.equals(upPile.substring(0, 1))?(1+new Integer(upPile.substring(1, upPile.length()))):"1");
+		
+		return ret;
+
+	}
+	
+	public static String[] provideSymbol2(String count,String upPile) {
+		
+		String[] ret = new String[] {null,null,null};
+		
+		int countNum = count.length()/COUNT_VLEN;
+		
+		
+		if(countNum<2)return ret;
+		
+		
+		Integer pa1 = Integer.parseInt(count.substring((countNum-1)*COUNT_VLEN+0, (countNum-1)*COUNT_VLEN+0+2));
+		Integer pb1 = Integer.parseInt(count.substring((countNum-1)*COUNT_VLEN+3, (countNum-1)*COUNT_VLEN+3+2));
+		Integer pc1 = Integer.parseInt(count.substring((countNum-1)*COUNT_VLEN+6, (countNum-1)*COUNT_VLEN+6+2));
+		
+		
+		int offset = 0;
+		if(pa1!=0) {
+			String aStr1 = count.substring((countNum-1)*COUNT_VLEN+offset, (countNum-1)*COUNT_VLEN+offset+3);
+			String aStr2 = count.substring((countNum-2)*COUNT_VLEN+offset, (countNum-2)*COUNT_VLEN+offset+3);
+			
+			//提供：上一个提供，上上不提供
+			if(aStr1.endsWith("y")&&aStr2.endsWith("n")) {
+				
+				ret[0] = (aStr2.startsWith("-"))?"-":"+";
+			}
+			//提供：上一个不提供，上上不提供
+			if(new Integer(upPile.substring(1, upPile.length()))<5&&
+					aStr1.endsWith("n")&&aStr2.endsWith("n")
+					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr2.substring(0,2)) >0)) {
+				ret[0] = (aStr1.startsWith("-"))?"-":"+";
+			}
+			
+		}
+		
+		offset = 3;
+		if(pb1!=0&&countNum>=3) {
+			String aStr1 = count.substring((countNum-1)*COUNT_VLEN+offset, (countNum-1)*COUNT_VLEN+offset+3);
+			String aStr2 = count.substring((countNum-2)*COUNT_VLEN+offset, (countNum-2)*COUNT_VLEN+offset+3);
+			String aStr3 = count.substring((countNum-3)*COUNT_VLEN+offset, (countNum-3)*COUNT_VLEN+offset+3);
+			
+			//提供：上一个提供，上上不提供
+			if(aStr1.endsWith("y")&&aStr2.endsWith("n")) {
+				
+				ret[1] = (aStr2.startsWith("-"))?"-":"+";
+			}
+			//提供：上一个不提供，上上不提供,上上上不提供
+			if(new Integer(upPile.substring(1, upPile.length()))<6&&
+					aStr1.endsWith("n")&&aStr2.endsWith("n")&&aStr3.endsWith("n")
+					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr2.substring(0,2)) >0)
+					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr3.substring(0,2)) >0)) {
+				ret[1] = (aStr1.startsWith("-"))?"-":"+";
+			}
+			
+		}
+		
+		offset = 6;
+		if(pc1!=0&&countNum>=4) {
+			String aStr1 = count.substring((countNum-1)*COUNT_VLEN+offset, (countNum-1)*COUNT_VLEN+offset+3);
+			String aStr2 = count.substring((countNum-2)*COUNT_VLEN+offset, (countNum-2)*COUNT_VLEN+offset+3);
+			String aStr3 = count.substring((countNum-3)*COUNT_VLEN+offset, (countNum-3)*COUNT_VLEN+offset+3);
+			String aStr4 = count.substring((countNum-4)*COUNT_VLEN+offset, (countNum-4)*COUNT_VLEN+offset+3);
+			
+			//提供：上一个提供，上上不提供
+			if(aStr1.endsWith("y")&&aStr2.endsWith("n")) {
+				
+				ret[2] = (aStr2.startsWith("-"))?"-":"+";
+			}
+			//提供：上一个不提供，上上不提供,上上上不提供
+			if(new Integer(upPile.substring(1, upPile.length()))<7&&
+					aStr1.endsWith("n")&&aStr2.endsWith("n")&&aStr3.endsWith("n")&&aStr4.endsWith("n")
+					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr2.substring(0,2)) >0)
+					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr3.substring(0,2)) >0)
+					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr4.substring(0,2)) >0)) {
+				ret[2] = (aStr1.startsWith("-"))?"-":"+";
+			}
+			
+		}
+		
+		
+		
+		return ret;
+
+	}
+	
 	
 	/**
 	 * 返回abc下一小结提供的是否取反 +:取反，-不取反，null：不提供
@@ -212,7 +311,8 @@ public class GameCoreService {
 				ret[0] = (aStr2.startsWith("-"))?"-":"+";
 			}
 			//提供：上一个不提供，上上不提供
-			if(aStr1.endsWith("n")&&aStr2.endsWith("n")&&aStr1.substring(0,1).equals(aStr2.substring(0,1))) {
+			if(aStr1.endsWith("n")&&aStr2.endsWith("n")
+					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr2.substring(0,2)) >0)) {
 				ret[0] = (aStr1.startsWith("-"))?"-":"+";
 			}
 			
@@ -231,14 +331,15 @@ public class GameCoreService {
 			}
 			//提供：上一个不提供，上上不提供,上上上不提供
 			if(aStr1.endsWith("n")&&aStr2.endsWith("n")&&aStr3.endsWith("n")
-					&&aStr1.substring(0,1).equals(aStr2.substring(0,1))&&aStr1.substring(0,1).equals(aStr3.substring(0,1))) {
+					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr2.substring(0,2)) >0)
+					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr3.substring(0,2)) >0)) {
 				ret[1] = (aStr1.startsWith("-"))?"-":"+";
 			}
 			
 		}
 		
 		offset = 6;
-		if(pb1!=0&&countNum>=4) {
+		if(pc1!=0&&countNum>=4) {
 			String aStr1 = count.substring((countNum-1)*COUNT_VLEN+offset, (countNum-1)*COUNT_VLEN+offset+3);
 			String aStr2 = count.substring((countNum-2)*COUNT_VLEN+offset, (countNum-2)*COUNT_VLEN+offset+3);
 			String aStr3 = count.substring((countNum-3)*COUNT_VLEN+offset, (countNum-3)*COUNT_VLEN+offset+3);
@@ -251,7 +352,9 @@ public class GameCoreService {
 			}
 			//提供：上一个不提供，上上不提供,上上上不提供
 			if(aStr1.endsWith("n")&&aStr2.endsWith("n")&&aStr3.endsWith("n")&&aStr4.endsWith("n")
-					&&aStr1.substring(0,1).equals(aStr2.substring(0,1))&&aStr1.substring(0,1).equals(aStr3.substring(0,1))&&aStr1.substring(0,1).equals(aStr4.substring(0,1))) {
+					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr2.substring(0,2)) >0)
+					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr3.substring(0,2)) >0)
+					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr4.substring(0,2)) >0)) {
 				ret[2] = (aStr1.startsWith("-"))?"-":"+";
 			}
 			
@@ -264,42 +367,36 @@ public class GameCoreService {
 	}
 	
 	
+	
 	/**
-	 * abc模式组合+原始值
+	 * abc模式组合(模式值+yn是否提供)+原始值
 	 * @param tg
 	 * @param count
-	 * @return
-	 */
-	public static String reckon6Count2(String tg,String count) {
+	 * @return 【count值,abc模式值】
+	 * 
+	 */ 
+	public static Object[] reckon6Count2(String tg,String count,String upPile) {
 		
 		Integer sum= 0;
 		for (int i = 0; i < 6; i++) {
-			
 			sum+=Integer.parseInt(tg.substring(i*2,i*2+2));
-			
 		}
 		
-		
-		
-		/*String ret = "";
-		//计算a模式
-		Integer m = mark(count, 2, 0);
-		ret+=getValStr((m!=null&&m>0)?-sum:sum);
-		//计算b模式
-		m = mark(count, 3, 1);
-		ret+=getValStr((m!=null&&m>0)?-sum:sum);
-		//计算c模式
-		m = mark(count, 4, 2);
-		ret+=getValStr((m!=null&&m>0)?-sum:sum);
-		
-		return ret+getValStr(sum);*/
-		
-		String[] ps = provideSymbol(count);
+		String[] ps = provideSymbol2(count,upPile);
+		Integer[] abcVal = new Integer[] {
+				((ps[0]!=null&&ps[0].equals("+"))?-sum:sum),
+				((ps[1]!=null&&ps[1].equals("+"))?-sum:sum),
+				((ps[2]!=null&&ps[2].equals("+"))?-sum:sum),
+				sum
+		};
 		String ret = "";
-		ret+=getValStr((ps[0]!=null&&ps[0].equals("+"))?-sum:sum)+(ps[0]!=null?"y":"n");
-		ret+=getValStr((ps[1]!=null&&ps[1].equals("+"))?-sum:sum)+(ps[1]!=null?"y":"n");
-		ret+=getValStr((ps[2]!=null&&ps[2].equals("+"))?-sum:sum)+(ps[2]!=null?"y":"n");
-		return ret+getValStr(sum);
+		ret+=getValStr(abcVal[0])+(ps[0]!=null?"y":"n");
+		ret+=getValStr(abcVal[1])+(ps[1]!=null?"y":"n");
+		ret+=getValStr(abcVal[2])+(ps[2]!=null?"y":"n");
+		
+		
+		
+		return new Object[] {ret+getValStr(sum),abcVal};
 	}
 	
 	/**
@@ -378,8 +475,8 @@ public class GameCoreService {
 	public static void main(String[] args) {
 		//System.out.println(mark("01-10101-101010101",3,1));
 		
-		System.out.println(Arrays.toString(provideSymbol("01n01n01n01,-1n01n01n01,-1y01n01n01".replaceAll(",", ""))));
-		
+		//System.out.println(Arrays.toString(provideSymbol("01n01n01n01,-1n01n01n01,-1y01n01n01".replaceAll(",", ""))));
+		System.out.println(reckonPile("+1,+1,-1",new Integer[] {1,1,0}));
 		
 	}
 	

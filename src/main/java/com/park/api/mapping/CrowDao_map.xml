@@ -23,6 +23,7 @@ select * from djt_g_game where uid = #{uid} AND pei is not null ORDER BY crow DE
 	  	,dui=#{model.dui}
 		,gong = #{ model.gong }
 		,gong_col = #{ model.gong_col }
+		,tg_val = #{ model.tg_val }
  WHERE id=#{model.id}
 	</update>
   
@@ -53,6 +54,10 @@ select * from djt_g_game where uid = #{uid} AND pei is not null ORDER BY crow DE
 	select * from game_runing where hid = #{hid} AND pei is null ORDER BY row limit 1 
  	</select>
  	
+ 	<select id="getUpTgVal" resultType="string" >
+	select tg_val from game_runing where hid = #{hid} AND pei is not null ORDER BY row desc limit 1 
+ 	</select>
+ 	
  	 <select id="getRow" resultType="com.park.api.entity.Crow" >
 	select * from game_runing where row = #{row} AND hid = #{hid}
  	</select>
@@ -65,7 +70,7 @@ select * from djt_g_game where uid = #{uid} AND pei is not null ORDER BY crow DE
 	
 	
 	<select id="getAllGong" resultType="map" >
-  	 select row,gong,gong_col from game_runing where  (gong is not null OR pei is not null)
+  	 select row,gong,gong_col,tg_val from game_runing where  (gong is not null OR pei is not null)
 		AND hid =#{hid} ORDER BY row
   	</select>
   	

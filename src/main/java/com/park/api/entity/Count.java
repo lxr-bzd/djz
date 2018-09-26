@@ -20,6 +20,9 @@ public class Count {
 	String l_info;
 	String r_info;
 	
+	String l_lj;
+	String r_lj;
+	
 	public String getId() {
 		return id;
 	}
@@ -98,6 +101,18 @@ public class Count {
 	}
 	public void setR_info(String r_info) {
 		this.r_info = r_info;
+	}
+	public String getL_lj() {
+		return l_lj;
+	}
+	public void setL_lj(String l_lj) {
+		this.l_lj = l_lj;
+	}
+	public String getR_lj() {
+		return r_lj;
+	}
+	public void setR_lj(String r_lj) {
+		this.r_lj = r_lj;
 	}
 	
 	

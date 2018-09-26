@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.core.appender.rolling.SizeBasedTriggeringPolicy;
 import org.eclipse.jdt.internal.compiler.env.IGenericField;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,11 +103,14 @@ public class GameService {
 			String gongCol = gameCoreService.reckonGongCol(pei, icrow.getGong());
 			icrow.setGong_col(gongCol);
 		}
-		crowDao.update(icrow);
+		String tgVal = null;
+		
 		//处理统计
 		if(icrow.getRow()>0)
-			count2(game.getId(), icrow.getRow(), icrow.getGong(), icrow.getGong_col());
+			tgVal = count2(game.getId(), icrow.getRow(), icrow.getGong(), icrow.getGong_col(),crowDao.getUpTgVal(game.getId()));
 		
+		icrow.setTg_val(tgVal);
+		crowDao.update(icrow);
 		
 		//处理下一行
 		Crow nCrow = getNextRow(game.getId(), icrow.getRow());
@@ -126,23 +130,25 @@ public class GameService {
 	private Integer getMod(int tbNum) {
 		return ServiceManage.jdbcTemplate.queryForObject("select model from djt_use_table where d_table_id=?"
 				, Integer.class,tbNum);
-
+		
 	}
 	
 	/**
 	 * 处理统计
 	 */
-	private void count2(String hid,int row,String gong,String gong_col) {
+	private String count2(String hid,int row,String gong,String gong_col,String upTgVal) {
 	
 		List<Count> counts = countDao.findAll(hid);
+		
+		Integer[] tgval = new Integer[] {0,0,0};
 		
 		for (int i = 0; i < counts.size(); i++) {
 			Count count = counts.get(i);
 			int sindex = (count.getIndex()-1)*2;
 			String lval = gong_col.substring(sindex, sindex+1).equals("1")?"-1":"01";
 			String rval = gong_col.substring(sindex+1, sindex+2).equals("1")?"-1":"01";
-			String[] lProvide =  gameCoreService.reckonIsProvide2(row, count.getLcount(), Integer.parseInt(lval));
-			String[] rProvide =  gameCoreService.reckonIsProvide2(row, count.getRcount(), Integer.parseInt(rval));
+			String[] lProvide =  gameCoreService.reckonIsProvide2(row, count.getLcount(), Integer.parseInt(lval),count.getL_lj());
+			String[] rProvide =  gameCoreService.reckonIsProvide2(row, count.getRcount(), Integer.parseInt(rval),count.getR_lj());
 			
 			count.setAl_tg(count.getAl_tg()+lProvide[0]);
 			count.setBl_tg(count.getBl_tg()+lProvide[1]);
@@ -154,18 +160,37 @@ public class GameService {
 			count.setCr_tg(count.getCr_tg()+rProvide[2]);
 			count.setR_info(count.getR_info()+rval);
 			
+			
+			if(lProvide[0].startsWith("01"))tgval[0]+=Integer.parseInt(lProvide[0].substring(2, 4));
+			if(rProvide[0].startsWith("01"))tgval[0]+=Integer.parseInt(rProvide[0].substring(2, 4));
+			
+			if(lProvide[1].startsWith("01"))tgval[1]+=Integer.parseInt(lProvide[1].substring(2, 4));
+			if(rProvide[1].startsWith("01"))tgval[1]+=Integer.parseInt(rProvide[1].substring(2, 4));
+			
+			if(lProvide[2].startsWith("01"))tgval[2]+=Integer.parseInt(lProvide[2].substring(2, 4));
+			if(rProvide[2].startsWith("01"))tgval[2]+=Integer.parseInt(rProvide[2].substring(2, 4));
+			
 			if(row%6==0) {
 				String lJie = count.getL_info().substring(count.getL_info().length()-12, count.getL_info().length());
 				String rJie = count.getR_info().substring(count.getR_info().length()-12, count.getR_info().length());
 				
-				String clcount = gameCoreService.reckon6Count2(lJie,count.getLcount());
-				String crcount = gameCoreService.reckon6Count2(rJie,count.getRcount());
-				count.setLcount(count.getLcount()+clcount);
-				count.setRcount(count.getRcount()+crcount);
+				Object[] clcountABC = gameCoreService.reckon6Count2(lJie,count.getLcount(),count.getL_lj());
+				Object[] crcountABC = gameCoreService.reckon6Count2(rJie,count.getRcount(),count.getR_lj());
+				count.setLcount(count.getLcount()+clcountABC[0]);
+				count.setRcount(count.getRcount()+crcountABC[0]);
+				count.setL_lj(gameCoreService.reckonPile2(count.getL_lj(), (Integer[]) clcountABC[1]));
+				count.setR_lj(gameCoreService.reckonPile2(count.getR_lj(), (Integer[]) crcountABC[1]));
 			}
 			
 			countDao.update(count);
 		}
+		
+		
+		if(StringUtils.isEmpty(upTgVal))
+			return tgval[0]+","+tgval[1]+","+tgval[2];
+		String[] upvals = upTgVal.split(",");
+		
+		return (Integer.parseInt(upvals[0])+tgval[0])+","+(Integer.parseInt(upvals[1])+tgval[1])+","+(Integer.parseInt(upvals[2])+tgval[2]);
 		
 	}
 	
