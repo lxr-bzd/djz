@@ -1,13 +1,6 @@
 package com.park.api.service;
 
-import java.util.Arrays;
-
-import org.apache.commons.lang3.StringUtils;
-import org.aspectj.weaver.ast.Var;
-import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 import org.springframework.stereotype.Service;
-
-import com.alibaba.druid.sql.visitor.functions.Length;
 
 @Service
 public class GameCoreService {
@@ -164,9 +157,7 @@ public class GameCoreService {
 		nf[1] = (abcVal[1]>0?"+":(abcVal[1]<0?"-":"0"));
 		nf[2] = (abcVal[2]>0?"+":(abcVal[2]<0?"-":"0"));
 		
-		if(upPile==null)
-			return nf[0]+"1,"+nf[1]+"1,"+nf[2]+"1";
-		
+		if(upPile==null) return nf[0]+"1,"+nf[1]+"1,"+nf[2]+"1";
 		
 		String[] upPiles =  upPile.split(",");
 		String ret = "";
@@ -181,111 +172,107 @@ public class GameCoreService {
 	
 	public static String reckonPile2(String upPile,Integer[] abcVal) {
 		
-		String nf = (abcVal[3]>0?"+":(abcVal[0]<0?"-":"0"));
+		String nf = (abcVal[3]>0?"+":(abcVal[3]<0?"-":"0"));
 		
-		if(upPile==null)
-			return nf+"1";
-		
+		if(upPile==null)return nf+"1";
 		
 		String ret = "";
 		
 		ret+=nf+(nf.equals(upPile.substring(0, 1))?(1+new Integer(upPile.substring(1, upPile.length()))):"1");
 		
 		return ret;
-
 	}
-	
-	public static String[] provideSymbol2(String count,String upPile) {
-		
-		String[] ret = new String[] {null,null,null};
-		
-		int countNum = count.length()/COUNT_VLEN;
-		
-		
-		if(countNum<2)return ret;
-		
-		
-		Integer pa1 = Integer.parseInt(count.substring((countNum-1)*COUNT_VLEN+0, (countNum-1)*COUNT_VLEN+0+2));
-		Integer pb1 = Integer.parseInt(count.substring((countNum-1)*COUNT_VLEN+3, (countNum-1)*COUNT_VLEN+3+2));
-		Integer pc1 = Integer.parseInt(count.substring((countNum-1)*COUNT_VLEN+6, (countNum-1)*COUNT_VLEN+6+2));
-		
-		
-		int offset = 0;
-		if(pa1!=0) {
-			String aStr1 = count.substring((countNum-1)*COUNT_VLEN+offset, (countNum-1)*COUNT_VLEN+offset+3);
-			String aStr2 = count.substring((countNum-2)*COUNT_VLEN+offset, (countNum-2)*COUNT_VLEN+offset+3);
-			
-			//提供：上一个提供，上上不提供
-			if(aStr1.endsWith("y")&&aStr2.endsWith("n")) {
-				
-				ret[0] = (aStr2.startsWith("-"))?"-":"+";
-			}
-			//提供：上一个不提供，上上不提供
-			if(new Integer(upPile.substring(1, upPile.length()))<5&&
-					aStr1.endsWith("n")&&aStr2.endsWith("n")
-					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr2.substring(0,2)) >0)) {
-				ret[0] = (aStr1.startsWith("-"))?"-":"+";
-			}
-			
-		}
-		
-		offset = 3;
-		if(pb1!=0&&countNum>=3) {
-			String aStr1 = count.substring((countNum-1)*COUNT_VLEN+offset, (countNum-1)*COUNT_VLEN+offset+3);
-			String aStr2 = count.substring((countNum-2)*COUNT_VLEN+offset, (countNum-2)*COUNT_VLEN+offset+3);
-			String aStr3 = count.substring((countNum-3)*COUNT_VLEN+offset, (countNum-3)*COUNT_VLEN+offset+3);
-			
-			//提供：上一个提供，上上不提供
-			if(aStr1.endsWith("y")&&aStr2.endsWith("n")) {
-				
-				ret[1] = (aStr2.startsWith("-"))?"-":"+";
-			}
-			//提供：上一个不提供，上上不提供,上上上不提供
-			if(new Integer(upPile.substring(1, upPile.length()))<6&&
-					aStr1.endsWith("n")&&aStr2.endsWith("n")&&aStr3.endsWith("n")
-					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr2.substring(0,2)) >0)
-					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr3.substring(0,2)) >0)) {
-				ret[1] = (aStr1.startsWith("-"))?"-":"+";
-			}
-			
-		}
-		
-		offset = 6;
-		if(pc1!=0&&countNum>=4) {
-			String aStr1 = count.substring((countNum-1)*COUNT_VLEN+offset, (countNum-1)*COUNT_VLEN+offset+3);
-			String aStr2 = count.substring((countNum-2)*COUNT_VLEN+offset, (countNum-2)*COUNT_VLEN+offset+3);
-			String aStr3 = count.substring((countNum-3)*COUNT_VLEN+offset, (countNum-3)*COUNT_VLEN+offset+3);
-			String aStr4 = count.substring((countNum-4)*COUNT_VLEN+offset, (countNum-4)*COUNT_VLEN+offset+3);
-			
-			//提供：上一个提供，上上不提供
-			if(aStr1.endsWith("y")&&aStr2.endsWith("n")) {
-				
-				ret[2] = (aStr2.startsWith("-"))?"-":"+";
-			}
-			//提供：上一个不提供，上上不提供,上上上不提供
-			if(new Integer(upPile.substring(1, upPile.length()))<7&&
-					aStr1.endsWith("n")&&aStr2.endsWith("n")&&aStr3.endsWith("n")&&aStr4.endsWith("n")
-					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr2.substring(0,2)) >0)
-					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr3.substring(0,2)) >0)
-					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr4.substring(0,2)) >0)) {
-				ret[2] = (aStr1.startsWith("-"))?"-":"+";
-			}
-			
-		}
-		
-		
-		
-		return ret;
-
-	}
-	
 	
 	/**
 	 * 返回abc下一小结提供的是否取反 +:取反，-不取反，null：不提供
 	 * 例如{y,n,null}
 	 * @return
 	 */
-	public static String[] provideSymbol(String count) {
+	public static String[] provideSymbol2(String count,String upPile) {
+		
+		String[] ret = new String[] {null,null,null};
+		
+		int countNum = count.length()/COUNT_VLEN;
+		
+		if(countNum<2)return ret;
+		
+		Integer p1 = Integer.parseInt(count.substring((countNum-1)*COUNT_VLEN+9, (countNum-1)*COUNT_VLEN+9+2));
+		Integer p2 = Integer.parseInt(count.substring((countNum-2)*COUNT_VLEN+9, (countNum-2)*COUNT_VLEN+9+2));
+		Integer p3 = countNum>=3?Integer.parseInt(count.substring((countNum-3)*COUNT_VLEN+9, (countNum-3)*COUNT_VLEN+9+2)):null;
+		Integer p4 = countNum>=4?Integer.parseInt(count.substring((countNum-4)*COUNT_VLEN+9, (countNum-4)*COUNT_VLEN+9+2)):null;
+		
+		int offset = 0;
+		if(true) {
+			String aStr1 = count.substring((countNum-1)*COUNT_VLEN+offset, (countNum-1)*COUNT_VLEN+offset+3);
+			String aStr2 = count.substring((countNum-2)*COUNT_VLEN+offset, (countNum-2)*COUNT_VLEN+offset+3);
+			String aStr3 = countNum>=3?count.substring((countNum-3)*COUNT_VLEN+offset, (countNum-3)*COUNT_VLEN+offset+3):null;
+			//提供：上一个提供，上上不提供
+			if(aStr1.endsWith("y")&&(aStr2.endsWith("n")||(new Integer(upPile.substring(1, upPile.length()))<4&&aStr3!=null&&aStr3.endsWith("y")))) {
+				ret[0] = (p2<0)?"-":"+";
+				
+			}
+			//提供：提供者不超过2个，本身两个，不会超过
+			else if(new Integer(upPile.substring(1, upPile.length()))<4&&
+					( p1 * p2 >0)) {
+				ret[0] = (p1<0)?"-":"+";
+			}
+		}
+		
+		offset = 3;
+		if(countNum>=3) {
+			String aStr1 = count.substring((countNum-1)*COUNT_VLEN+offset, (countNum-1)*COUNT_VLEN+offset+3);
+			String aStr2 = count.substring((countNum-2)*COUNT_VLEN+offset, (countNum-2)*COUNT_VLEN+offset+3);
+			String aStr3 = count.substring((countNum-3)*COUNT_VLEN+offset, (countNum-3)*COUNT_VLEN+offset+3);
+			
+			//提供：上一个提供，上上不提供
+			if(aStr1.endsWith("y")&&aStr2.endsWith("n")) {
+				ret[1] = (p2<0)?"-":"+";
+			}
+			//提供：举出反例子
+			else if(new Integer(upPile.substring(1, upPile.length()))<6
+					&&( p1 * p2 >0)
+					&&( p1 * p3 >0)
+					&&!(aStr1.endsWith("y")&&aStr3.endsWith("n"))) {
+				ret[1] = (p1<0)?"-":"+";
+			}
+			
+		}
+		
+		offset = 6;
+		if(countNum>=4) {
+			String aStr1 = count.substring((countNum-1)*COUNT_VLEN+offset, (countNum-1)*COUNT_VLEN+offset+3);
+			String aStr2 = count.substring((countNum-2)*COUNT_VLEN+offset, (countNum-2)*COUNT_VLEN+offset+3);
+			String aStr3 = count.substring((countNum-3)*COUNT_VLEN+offset, (countNum-3)*COUNT_VLEN+offset+3);
+			String aStr4 = count.substring((countNum-4)*COUNT_VLEN+offset, (countNum-4)*COUNT_VLEN+offset+3);
+			
+			//提供：上一个提供，上上不提供
+			if(aStr1.endsWith("y")&&aStr2.endsWith("n")) {
+				
+				ret[2] = (p2<0)?"-":"+";
+			}
+			//提供：上一个不提供，上上不提供,上上上不提供
+			else if(new Integer(upPile.substring(1, upPile.length()))<8
+					&&( p1 * p2 >0)
+					&&( p1 * p3 >0)
+					&&( p1 * p4 >0)
+					&&!(aStr4.endsWith("n")&&((aStr1.endsWith("y")?1:0)+(aStr2.endsWith("y")?1:0)+(aStr3.endsWith("y")?1:0))>=2)) {
+				ret[2] = (p1<0)?"-":"+";
+			}
+			
+		}
+		
+		
+		
+		return ret;
+
+	}
+	
+	/**
+	 * 返回abc下一小结提供的是否取反 +:取反，-不取反，null：不提供
+	 * 例如{y,n,null}
+	 * @return
+	 */
+	public static String[] provideSymbol3(String count,String upPile) {
 		
 		String[] ret = new String[] {null,null,null};
 		
@@ -307,15 +294,13 @@ public class GameCoreService {
 			
 			//提供：上一个提供，上上不提供
 			if(aStr1.endsWith("y")&&aStr2.endsWith("n")) {
-				
 				ret[0] = (aStr2.startsWith("-"))?"-":"+";
 			}
-			//提供：上一个不提供，上上不提供
-			if(aStr1.endsWith("n")&&aStr2.endsWith("n")
-					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr2.substring(0,2)) >0)) {
+			//提供：提供者不超过2个，本身两个，不会超过
+			if(new Integer(upPile.substring(1, upPile.length()))<4&&
+					( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr2.substring(0,2)) >0)) {
 				ret[0] = (aStr1.startsWith("-"))?"-":"+";
 			}
-			
 		}
 		
 		offset = 3;
@@ -329,10 +314,11 @@ public class GameCoreService {
 				
 				ret[1] = (aStr2.startsWith("-"))?"-":"+";
 			}
-			//提供：上一个不提供，上上不提供,上上上不提供
-			if(aStr1.endsWith("n")&&aStr2.endsWith("n")&&aStr3.endsWith("n")
+			//提供：举出反例子
+			if(new Integer(upPile.substring(1, upPile.length()))<6
 					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr2.substring(0,2)) >0)
-					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr3.substring(0,2)) >0)) {
+					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr3.substring(0,2)) >0)
+					&&!(aStr1.endsWith("y")&&aStr3.endsWith("n"))) {
 				ret[1] = (aStr1.startsWith("-"))?"-":"+";
 			}
 			
@@ -351,10 +337,11 @@ public class GameCoreService {
 				ret[2] = (aStr2.startsWith("-"))?"-":"+";
 			}
 			//提供：上一个不提供，上上不提供,上上上不提供
-			if(aStr1.endsWith("n")&&aStr2.endsWith("n")&&aStr3.endsWith("n")&&aStr4.endsWith("n")
+			if(new Integer(upPile.substring(1, upPile.length()))<8
 					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr2.substring(0,2)) >0)
 					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr3.substring(0,2)) >0)
-					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr4.substring(0,2)) >0)) {
+					&&( Integer.parseInt(aStr1.substring(0,2)) * Integer.parseInt(aStr4.substring(0,2)) >0)
+					&&!(aStr4.endsWith("n")&&((aStr1.endsWith("y")?1:0)+(aStr2.endsWith("y")?1:0)+(aStr3.endsWith("y")?1:0))>=2)) {
 				ret[2] = (aStr1.startsWith("-"))?"-":"+";
 			}
 			
@@ -365,6 +352,7 @@ public class GameCoreService {
 		return ret;
 
 	}
+	
 	
 	
 	
