@@ -11,9 +11,33 @@ import com.park.api.entity.Game;
 
 
 public interface CrowDao {
-
-	 Crow getLastRow(@Param("uid")String uid);
-	 Crow getInputRow(@Param("uid")String uid);
+	
+	/**
+	 * 获取用户使用的表
+	 * @param uid
+	 * @return
+	 */
+	 Integer getGroup(@Param("uid")String uid);
+	 
+	 /**
+	  * 复制模板到游戏表
+	  * @param uid
+	  * @param tbNo
+	  */
+	 void copy2ruing(@Param("uid")String uid,@Param("hid")String hid,@Param("tbNo")Integer tbNo);
+	 
+	 /**
+	  * 
+	  * @param mo
+	  */
+	 void save(@Param("hid")String hid,@Param("mo")Crow mo);
+	
+	 /**
+	  * 获取焦点行
+	  * @param hid
+	  * @return
+	  */
+	 Crow getInputRow(@Param("hid")String hid);
 	 
 	
 	 void update(@Param("model")Crow crow);
@@ -23,13 +47,6 @@ public interface CrowDao {
 	 
 	 
 	 Integer getGameNum(@Param("uid")String uid);
-
-	 
-	 void save(@Param("mo")Crow mo);
-	 
-	 
-	 Integer getGroup();
-	 
 	 
 	 void setUserGroup(@Param("uid")String uid,@Param("group")Integer group);
 	 
@@ -37,7 +54,6 @@ public interface CrowDao {
 	 //2018-8-28新加入
 	 Crow getRow(@Param("hid")String hid,@Param("row")Integer row);
 	 
-	 Crow getInputRow2(@Param("hid")String hid);
 	 
 	 Integer getRuningCount(@Param("uid")String uid);
 	 
@@ -45,12 +61,7 @@ public interface CrowDao {
 	 
 	 String getUpTgVal(@Param("hid")String hid);
 	 
-	 /**
-	  * 复制模板到游戏表
-	  * @param uid
-	  * @param tbNo
-	  */
-	 void temp2ruing(@Param("uid")String uid,@Param("hid")String hid,@Param("tbNo")Integer tbNo);
+	
 	 /**
 	  * 创建游戏记录
 	  */

@@ -5,7 +5,9 @@ public class Tmpl {
 
 	String id;
 	
-	String tgroup;
+	String grp;
+	
+	String sheng;
 	
 	
 	public String getId() {
@@ -14,12 +16,19 @@ public class Tmpl {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getTgroup() {
-		return tgroup;
+	public String getGrp() {
+		return grp;
 	}
-	public void setTgroup(String tgroup) {
-		this.tgroup = tgroup;
+	public void setGrp(String grp) {
+		this.grp = grp;
 	}
+	public String getSheng() {
+		return sheng;
+	}
+	public void setSheng(String sheng) {
+		this.sheng = sheng;
+	}
+	
 	
 
 	

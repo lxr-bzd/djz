@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/main.css"/>
+	</head>
+	<body>
+		<!--后台表-->
+		<section class="backstage_wrap">
+			<div class="backstage_box">
+				<!--<h2>后台表</h2>-->
+				<!--数据表-->
+				<div class="backtable_wrap clearfix total_table">
+					<!--<div class="fixed_box bg_w">
+						<table border="" cellspacing="" cellpadding="">
+							<tr><th colspan="1">编號</th><th colspan="1">1</th><th colspan="20" rowspan="2" class="title">汇总表</th></tr>
+							<tr><th colspan="1">序號</th><th colspan="1">180</th></tr>
+							<tr class="group_class">
+								<th colspan="2">組</th>
+						    	<th colspan="2">第 <span class="red">1</span> 戶</th>
+						    	<th colspan="2">第 <span class="red">2</span> 戶</th>
+						    	<th colspan="2">第 <span class="red">3</span> 戶</th>
+						    	<th colspan="2">第 <span class="red">4</span> 戶</th>
+						    	<th colspan="2">第 <span class="red">5</span> 戶</th>
+						    	<th colspan="2">第 <span class="red">6</span> 戶</th>
+						    	<th colspan="2">第 <span class="red">7</span> 戶</th>
+						    	<th colspan="2">第 <span class="red">8</span> 戶</th>
+						    	<th colspan="2">第 <span class="red">9</span> 戶</th>
+						    	<th colspan="2">第 <span class="red">10</span> 戶</th>
+							</tr>
+						</table>
+					</div>-->
+						
+					<!--第一組-->
+					<table border="1" class="total_table_con">
+						<tr><th colspan="1">编號</th><th colspan="1">1</th><th colspan="20" rowspan="2" class="title">汇总表</th></tr>
+						<tr><th colspan="1">序號</th><th colspan="1">180</th></tr>
+						<tr class="group_class">
+							<th colspan="2">組</th>
+					    	<th colspan="2">第 <span class="red">1</span> 戶</th>
+					    	<th colspan="2">第 <span class="red">2</span> 戶</th>
+					    	<th colspan="2">第 <span class="red">3</span> 戶</th>
+					    	<th colspan="2">第 <span class="red">4</span> 戶</th>
+					    	<th colspan="2">第 <span class="red">5</span> 戶</th>
+					    	<th colspan="2">第 <span class="red">6</span> 戶</th>
+					    	<th colspan="2">第 <span class="red">7</span> 戶</th>
+					    	<th colspan="2">第 <span class="red">8</span> 戶</th>
+					    	<th colspan="2">第 <span class="red">9</span> 戶</th>
+					    	<th colspan="2">第 <span class="red">10</span> 戶</th>
+						</tr>
+					  	<!--数据行--001-->
+					  	
+					  	<tr>
+					  		<th colspan="2">1</th>
+					  		<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+					  	</tr>
+						<!--供-->
+						<tr class="child_tr">
+							<th colspan="2">2</th>
+						</tr>
+						<!--统计-->
+						<tr><th colspan="2">列队统计</th><th colspan="20" class="red">121</th></tr>
+						<tr class="child_tr">
+							<th colspan="2" rowspan="2">列队结果</th>
+						</tr>
+						<tr class="child_tr_red"></tr>
+					</table>
+					
+				</div>
+			</div>
+			
+		</section>
+		
+		<script src="js/jquery-1.11.2.min.js"></script>
+		<script type="text/javascript">
+			//			元素置顶
+			$(".group_btn_box a").click(function(){
+				$('.layui-body').animate({scrollTop: '0px'}, 800);
+			});
+//			插入子单元格
+			for (var i=1;i<=20;i++) {
+				$('.child_tr').append('<td></td>')
+			}
+			for (var i=1;i<=20;i++) {
+				$('.child_tr_red').append('<td class="red"></td>')
+			}
+			
+		</script>
+	</body>
+</html>

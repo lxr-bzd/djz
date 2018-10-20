@@ -8,7 +8,7 @@
  
   	
   	 <select id="findTmpl" resultType="com.park.api.entity.Tmpl" >
- 		select d_rownum id,d_data tgroup from djt_data_base where d_tabl_num=#{group}
+ 		select id,grp,sheng from data_base where tabl_num=#{group} GROUP BY grp
   	</select>
   	
  </mapper>

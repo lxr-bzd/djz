@@ -2,11 +2,11 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>前台页面表格</title>
+		<title>前臺頁面表格</title>
 		<meta name="Keywords" content="" />
 		<meta name="Description" content="" />
 		<link rel="stylesheet" href="css/web.css" />
-		<style>
+				<style>
 			.h-cent table tr td:first-child{
 				width: 50px;
 			}
@@ -28,6 +28,10 @@
 			.y-bott table td:first-child{
 				width: 50px;
 			}
+			
+			.int_item{
+			display: inline;
+			}
 		</style>
 	</head>
 	<body>
@@ -41,27 +45,27 @@
 						<tr>
 							<td colspan="3">
 								<div class="button">
-									<button>返回</button>
-									<button>刷新</button>
-									<button>关闭</button>
+									<a id="btn_bottom" href="#bottom"><button>返回</button></a>
+									<button onclick="reNew()">刷新</button>
+									<button onclick="logout()">關閉</button>
 								</div>
 							</td>
 						</tr>
 						<tr class="rd">
-							<td class="wid30">21</td>
-							<td colspan="2">提供报告</td>
+							<td class="last_index">--</td>
+							<td colspan="2">提供報告</td>
 						</tr>
 					</table>
 				</div>
 				
 				<!--顶部中间-->
-				<div class="fl top-center h-cent">
+				<div class="fl top-center h-cent" style="position: absolute;left: 182px;">
 					<table>
 						<tr>
-							<td colspan="11">计算表A</td>
+							<td colspan="12" id="modName">計算表-</td>
 						</tr>
-						<tr class="input-td">
-							<td class="rd one">21</td>
+						<tr class="input-td" id="input_group">
+							<td class="rd one" id="crow_group">--</td>
 							<td><input onkeyup="onInput(this)" autofocus="autofocus" class="int_item" type="text" maxlength="1" value="" /></td>
 							<td><input onkeyup="onInput(this)" class="int_item" type="text" maxlength="1" value="" /></td>
 							<td><input onkeyup="onInput(this)" class="int_item" type="text" maxlength="1" value="" /></td>
@@ -72,19 +76,21 @@
 							<td><input onkeyup="onInput(this)" class="int_item" type="text" maxlength="1" value="" /></td>
 							<td><input onkeyup="onInput(this)" class="int_item" type="text" maxlength="1" value="" /></td>
 							<td><input onkeyup="onInput(this)" class="int_item" type="text" maxlength="1" value="" /></td>
+							<td style="width: 25px;" rowspan="2">结果<br>趋势</td>
+							 
 						</tr>
 						<tr>
-							<td class="one">序号</td>
-							<td>第 <text class="rd">1</text> 户</td>
-							<td>第 <text class="rd">2</text> 户</td>
-							<td>第 <text class="rd">3</text> 户</td>
-							<td>第 <text class="rd">4</text> 户</td>
-							<td>第 <text class="rd">5</text> 户</td>
-							<td>第 <text class="rd">6</text> 户</td>
-							<td>第 <text class="rd">7</text> 户</td>
-							<td>第 <text class="rd">8</text> 户</td>
-							<td>第 <text class="rd">9</text> 户</td>
-							<td>第 <text class="rd">10</text> 户</td>
+							<td class="one">序號</td>
+							<td>第 <text class="rd">1</text> 戶</td>
+							<td>第 <text class="rd">2</text> 戶</td>
+							<td>第 <text class="rd">3</text> 戶</td>
+							<td>第 <text class="rd">4</text> 戶</td>
+							<td>第 <text class="rd">5</text> 戶</td>
+							<td>第 <text class="rd">6</text> 戶</td>
+							<td>第 <text class="rd">7</text> 戶</td>
+							<td>第 <text class="rd">8</text> 戶</td>
+							<td>第 <text class="rd">9</text> 戶</td>
+							<td>第 <text class="rd">10</text> 戶</td>
 						</tr>
 					</table>
 				</div>
@@ -95,13 +101,13 @@
 						<tr>
 							<td colspan="3">
 								<div class="button">
-									<button>确定</button>
+									<button onclick="doInput()">確定</button>
 								</div>
 							</td>
 						</tr>
 						<tr class="rd">
-							<td class="wid30">21</td>
-							<td colspan="2">列队报告</td>
+							<td class="last_index">--</td>
+							<td colspan="2">列隊報告</td>
 						</tr>
 					</table>
 				</div>
@@ -109,42 +115,25 @@
 			</div>
 		
 			<!--中间部分-->
-			<div class="middle clear">
+			<div class="middle clear" >
 				<div class="fl h-left">
 					<!--左边部分-->
 					<table>
-						<tr>
-							<td>第 <text class="rd">1</text> 户</td>
-							<td class="rd wid30">老</td>
-						</tr>
-						<tr>
-							<td>第 <text class="rd">2</text> 户</td>
-							<td class="rd">老</td>
-						</tr>
-						<tr>
-							<td>第 <text class="rd">3</text> 户</td>
-							<td class="rd">老</td>
-						</tr>
-						<tr>
-							<td>第 <text class="rd">6</text> 户</td>
-							<td class="rd">老</td>
-						</tr>
-						<tr>
-							<td>第 <text class="rd">9</text> 户</td>
-							<td class="rd">老</td>
-						</tr>
-						<tr>
-							<td>第 <text class="rd">9</text> 户</td>
-							<td class="rd">老</td>
-						</tr>
+					<tr><td colspan="3" style="height: 1px"></td></tr>
+						<tbody id="tglist_group">
+							<!-- <tr>
+								<td>第 <text class="rd">1</text> 户</td>
+								<td class="rd">老</td>
+							</tr> -->
+						</tbody>
 					</table>
 				</div>
 				
 				<!--中间-->
 				<div class="fl">
-				<div class=" h-cent midd">
-					<table cellspacing="10px">
-						<tr>
+					<div class="fl h-cent midd">
+					<table>
+						<!-- <tr>
 							<td class="one">0</td>
 							<td></td>
 							<td></td>
@@ -189,77 +178,10 @@
 							<td></td>
 							<td></td>
 							<td></td>
-						</tr>
-						<tr>
-							<td class="one">1</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-						</tr>
-						<tr>
-							<td class="one">2</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-						</tr>
-						<tr>
-							<td class="one">3</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-						</tr>
-						<tr>
+						</tr> -->
+						<tbody id="main_tb">
+						
+						<!-- <tr>
 							<td class="one">4</td>
 							<td>少</td>
 							<td class="bg">女</td>
@@ -281,282 +203,45 @@
 							<td class="bg">女</td>
 							<td>少</td>
 							<td class="bg">男</td>
-						</tr>
-						<tr>
-							<td class="one">5</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-						</tr>
-						<tr>
-							<td class="one">6</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-						</tr>
-						<tr>
-							<td class="one">1</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-						</tr>
-						<tr>
-							<td class="one">1</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-						</tr>
-						<tr>
-							<td class="one">1</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-						</tr>
-						<tr>
-							<td class="one">1</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-						</tr>
-						<tr>
-							<td class="one">1</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-						</tr>
-						<tr>
-							<td class="one">1</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-						</tr>
-						<tr>
-							<td class="one">1</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-						</tr>
-						<tr>
-							<td class="one">1</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td class="bg">少</td>
-							<td>男</td>
-							<td class="bg">少</td>
-							<td>女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-							<td>少</td>
-							<td class="bg">女</td>
-							<td>少</td>
-							<td class="bg">男</td>
-						</tr>
-						
+						</tr> -->
+						</tbody>
+						<!-- <tr>
+							<td class="one" colspan="21"><a id="bottom">-----底部-----</a></td>
+							
+						</tr> -->
 					</table>
 				</div>
-					<div class="y-bott">
+				
+				<div class="y-bott h-cent">
 					<table>
-						<tr class="cord">
-							<td class="one">序号</td>
-							<td colspan="2">第 <text class="rd">1</text> 户</td>
-							<td colspan="2">第 <text class="rd">2</text> 户</td>
-							<td colspan="2">第 <text class="rd">3</text> 户</td>
-							<td colspan="2">第 <text class="rd">4</text>户</td>
-							<td colspan="2">第 <text class="rd">5</text> 户</td>
-							<td colspan="2">第 <text class="rd">6</text> 户</td>
-							<td colspan="2">第 <text class="rd">7</text> 户</td>
-							<td colspan="2">第 <text class="rd">8</text> 户</td>
-							<td colspan="2">第 <text class="rd">9</text> 户</td>
-							<td colspan="2">第 <text class="rd">10</text> 户</td>
-						</tr>
-					</table>
+						<tbody><tr class="cord">
+							<td class="one">序號</td>
+							<td colspan="2">第 <text class="rd">1</text> 戶</td>
+							<td colspan="2">第 <text class="rd">2</text> 戶</td>
+							<td colspan="2">第 <text class="rd">3</text> 戶</td>
+							<td colspan="2">第 <text class="rd">4</text> 戶</td>
+							<td colspan="2">第 <text class="rd">5</text> 戶</td>
+							<td colspan="2">第 <text class="rd">6</text> 戶</td>
+							<td colspan="2">第 <text class="rd">7</text> 戶</td>
+							<td colspan="2">第 <text class="rd">8</text> 戶</td>
+							<td colspan="2">第 <text class="rd">9</text> 戶</td>
+							<td colspan="2">第 <text class="rd">10</text> 戶</td>
+							<td style="width: 50px;" rowspan="2">序號</td>
+						</tr> 
+					</tbody></table>
 					</div>
 				</div>
+			
 				
 				<div class="fr h-left">
 					<!--右边部分-->
-					<table>
-						<tr>
+					<table id="queue_group">
+						<!-- <tr>
 							<td>第 <text class="rd">1</text> 户</td>
-							<td class="wid25">16</td>
-							<td class="rd wid25">老</td>
-						</tr>
-						<tr>
-							<td>第 <text class="rd">2</text> 户</td>
-							<td>11</td>
+							<td>16</td>
 							<td class="rd">老</td>
-						</tr>
-						<tr>
-							<td>第 <text class="rd">3</text> 户</td>
-							<td>7</td>
-							<td class="rd">老</td>
-						</tr>
-						<tr>
-							<td>第 <text class="rd">6</text> 户</td>
-							<td>12</td>
-							<td class="rd">老</td>
-						</tr>
+						</tr> -->
+						
 					</table>
 				</div>
 			</div>
@@ -566,12 +251,12 @@
 				<div class="fl f-left">
 					<table>
 						<tr>
-							<td class="one">提供统计</td>
-							<td class="rd">158</td>
-							<td class="one">提供结果</td>
+							<td class="one">提供統計</td>
+							<td class="rd" id="tg_group">--</td>
+							<td class="one">提供結果</td>
 						</tr>
 						<tr style="height: 60px;">
-							<td rowspan="2" colspan="3">列队结果</td>
+							<td rowspan="2" colspan="3">列隊結果</td>
 						</tr>
 					</table>
 				</div>
@@ -579,7 +264,7 @@
 				<div class="fl f-cent">
 					<table>
 						<tr class="rd">
-							<td colspan="20">38</td>
+							<td colspan="20" id="tgSum_group">--</td>
 						</tr>
 						<tr>
 							<td>6</td>
@@ -599,77 +284,632 @@
 							<td>20</td>
 							<td>21</td>
 							<td>22</td>
+							<td>23</td>
 							<td>24</td>
-							<td>24</td>
+						
 						</tr>
-						<tr class="rd">
-							<td>6</td>
-							<td>7</td>
-							<td>8</td>
-							<td>9</td>
-							<td>10</td>
-							<td>11</td>
-							<td>12</td>
-							<td>13</td>
-							<td>14</td>
-							<td>15</td>
-							<td>16</td>
-							<td>17</td>
-							<td>18</td>
-							<td>19</td>
-							<td>20</td>
-							<td>21</td>
-							<td>22</td>
-							<td>24</td>
-							<td>24</td>
+						<tr class="rd" id="query_group1">
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							
 						</tr>
 					</table>
 				</div>
 			
 				<div class="fr h-left">
-					<table>
+					<table >
 						<tr>
-							<td style="width: 42px;" colspan="2" class="one">列队统计</td>
-							<td colspan="2" class="rd">126</td>
+							<td style="width: 42px;" colspan="2" class="one"><a title="导出表格" href="javascript:tableExport()">列隊統計</a></td>
+							<td colspan="2" class="rd" id="queueCount">--</td>
 						</tr>
+						
 						<tr>
 							<td>25</td>
 							<td>26</td>
 							<td>27</td>
 							<td>28</td>
 						</tr>
-						<tr>
-							<td></td>
-							<td></td>
-							<td></td>
+						<tr class="rd" id="query_group2">
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
 						</tr>
 					</table>
 				</div>
 			</div>
 		</div> 
-		
+	
 	<script type="text/javascript" src="js/jquery-1.12.4.min.js" ></script>
-	<script>
-		function onInput(inp){
-			var i = $('.int_item').index($(inp));
-			inp.value=inp.value.replace(/[^1234.]/g,'')
-				if ($(inp).val().length==1) {
-					i++;
-					$('.int_item').eq(i).focus();
-				} else if ($(inp).val().length>1) {
-					inp.value=inp.value.replace(/[\d]/g,'')
+		<script src="js/app.js"></script>
+		<script src="jslib/layer/layer.js"></script>
+		<script type="text/javascript" src="js/template-web.js"></script>
+		
+		<script type="text/javascript" src="js/tableExport.min.js"></script>
+		<script type="text/javascript" src="js/jquery.base64.js"></script>
+		
+	<script type="text/javascript">
+	function onInput(inp){
+		var i = $('.int_item').index($(inp));
+		inp.value=inp.value.replace(/[^1234.]/g,'')
+			if ($(inp).val().length==1) {
+				i++;
+				$('.int_item').eq(i).focus();
+			} else if ($(inp).val().length>1) {
+				inp.value=inp.value.replace(/[\d]/g,'')
+			}
+			if (window.event.keyCode==8) {
+				inp.value="";
+				if (i<=0) {
+					i=0;
+				} else{
+					i--;
 				}
-				if (window.event.keyCode==8) {
-					inp.value="";
-					if (i<=0) {
-						i=0;
-					} else{
-						i--;
-					}
-					$('.int_item').eq(i).focus();
+				$('.int_item').eq(i).focus();
+			}
+			
+	}
+	
+	
+	
+	function reNew(){
+		 layer.confirm('是否重新開始？', {
+			    btn: ['確定', '取消']
+			  },function(index){
+				  layer.close(index);
+				  $app.request("user/game/renew.do",function(data){
+					  if(data.code!=1){
+							$app.alert(data.msg);
+							return;
+						}
+					  cleanInput();
+						ref(data.data);
+					  
+				  });
+				  
+			  });
+	}
+	
+	
+	function doInput(){
+		var val = getInput();
+		if(!val){
+			layer.alert("請輸入完整");
+			return;
+		}
+		$app.request("user/game/input.do?pei="+val,function(data){
+			if(data.code!=1){
+				$app.alert(data.msg,"e");
+				return;
+			}
+			cleanInput();
+			$app.msg("ok");
+			ref(data.data);
+			
+		}); 
+		
+	}
+	
+	
+	function getInput(){
+		
+		var inputs = $("#input_group input");
+		var val="";
+		inputs.each(function(i,e){
+			var v = $(e).val();
+			if(!(/^[1234]{1}$/g).test(v))return;
+			val+=v;
+		});
+		if(val.length!=10)return;
+		
+		return val;
+	}
+	
+	function cleanInput(){
+		
+		var inputs = $("#input_group input");
+		inputs.val("");
+	}
+	
+	function logout(){
+		layer.confirm('您確定要退出？', {
+			  btn: ['確定','取消'] //按钮
+			}, function(){
+				$app.request("logout.do",function(data){
+					window.location.href = $app.loginUrl;
+				});
+			});
+		 
+		
+	}
+	
+	function tableExport(){
+		var tb = $(etbHtml);
+		
+		$("body").append(tb);
+		tb.tableExport({type:'excel',ignoreColumn: [],ignoreRow:[]
+			, separator:';', escape:'false'
+				 ,formats: ['xlsx']
+		,fileName: '前臺表導出'+new Date().format("yyyy-MM-dd")});
+		tb.remove();
+	}
+	
+	
+	
+	</script>
+	<script type="text/javascript">
+	
+	var notifyDialog;
+	
+	$(function(){
+		 $app.request("user/game/data.do",function(data){
+				if(data.code!=1){
+					$app.alert(data.msg);
+					return;
 				}
 				
+				ref(data.data);
+			});
+		 
+		　$(document).keydown(function(event){
+			
+			　if(event.keyCode == 32){
+				layer.close(notifyDialog);
+				　　}
+		　　　　
+			　
+		　　});
+		
+	});
+	
+	
+var etbHtml = "";	
+	
+	function ref(data){
+		var maxRow = 182;
+		var vData = {cRow:-1};
+		if(data.mainTb)vData.cRow = data.mainTb.length-2;
+		if(vData.cRow<-1)vData.cRow = -1;
+		
+		vData.mainTb = [];
+		
+		
+		
+		vData.tbHtml = "";
+		
+		
+		vData.queue = gameCore.queue(data.mainTb,function(row,item){
+			var gong = item.gong;
+			var gongCol = item.gong_col;
+			var tr = '<tr><td class="one">'+(row-1)+'</td>';
+			if(row==data.mainTb.length-1){
+			vData.lastGong = data.mainTb[row].gong;
+			var tr = '<tr><td class="one"><a id="bottom">'+(row-1)+'</a></td>';
+			}
+			if(row==data.mainTb.length-2){
+				//vData.lastCol = data.mainTb[row].gong_col;
+				
+			}
+			
+			for (var j = 0; j < 20; j++) {
+				if(gongCol){
+				var col = gongCol.substring(j,j+1);
+				var val = gong.substring(j,j+1);
+				
+					tr+='<td '+((col=="2")?'class="bg"':'')+'>'+val+'</td>';
+				}else 
+					 tr+='<td style="color:red;">'+gong.substring(j,j+1)+'</td>';
+			}
+			
+			if(item.tg_val)
+			tr+='<td class="tow">'+item.tg_val.split(",")[data.mod-1]+'</td></tr>';
+			else tr+='<td class="tow">'+(row==data.mainTb.length-1?'提供':'')+'</td></tr>';
+			vData.tbHtml+=tr; 
+		});
+		
+		
+		
+		vData.queueHtml = "";
+		vData.queueNotifyHtml = "";
+		if(vData.queue.scan.length==20)
+			for (var i = 0; i < vData.queue.scan.length; i++) {
+				if(vData.queue.scan[i].hitNum>=6) 
+					vData.queueHtml+='<tr><td>第 <text class="rd">'+(parseInt(i/2)+1)+'</text> 户</td><td class="rd wid25">'+data.mainTb[data.mainTb.length-1].gong.substring(i,i+1)+'</td><td class="wid25">'+vData.queue.scan[i].hitNum+'</td></tr>';
+					//vData.queueHtml+='<tr><td>第 <text class="rd">'+(parseInt(i/2)+1)+'</text> 户</td><td>'+vData.queue.scan[i].hitNum+'</td><td class="rd">'+vData.queue.scan[i].val+'</td></tr>';
+				if(vData.queue.scan[i].hitNum==6) 
+					vData.queueNotifyHtml+='<tr><td>第 <text class="rd">'+(parseInt(i/2)+1)+'</text> 户</td><td class="rd wid25">'+data.mainTb[data.mainTb.length-1].gong.substring(i,i+1)+'</td><td class="wid25">'+vData.queue.scan[i].hitNum+'</td></tr>';
+					//vData.queueNotifyHtml+='<tr><td>第 <text class="rd">'+(parseInt(i/2)+1)+'</text> 户</td><td>'+vData.queue.scan[i].hitNum+'</td><td class="rd">'+vData.queue.scan[i].val+'</td></tr>';
+						
+			}
+		
+		
+		switch ((data.mod+'')) {
+		case '2':
+			$("#modName").html("計算表B");
+			break;
+		case '3':
+			$("#modName").html("計算表C");
+			break;
+		case '1':
+		default:
+			$("#modName").html("計算表A");
+			break;
 		}
+		
+		//开始渲染数据
+		$(".last_index").html(vData.cRow);
+		$("#crow_group").html(vData.cRow);
+		$("#main_tb").html(vData.tbHtml);
+		//提供开始
+		var xjtg = renderTg(data.mod,data.counts,vData.lastGong/* ,vData.lastCol */);
+		
+		$("#queue_group").html(vData.queueHtml);
+		//处理队列开始
+		renderQueue(vData);
+		//结束处理队列
+		
+		//导出
+		etbHtml = template("tmpl_etb",{queue:vData.queue,tg:xjtg});
+		
+		$("#btn_bottom")[0].click();
+	}
+	
+	function renderQueue(vData){
+		$("#query_group1>td").each(function(i,e){
+			$(e).html(vData.queue.queue[i+6]);
+		})
+		$("#query_group2>td").each(function(i,e){
+			$(e).html(vData.queue.queue[i+25]);
+		})
+		$("#queueCount").html(vData.queue.count);
+		if(0&&vData.queueNotifyHtml){
+			var offset = ["30px",$("#queue_group")[0].offsetLeft]
+			notifyDialog =	layer.open({
+				  type: 1
+				  ,title: "新列隊報告"
+				  ,closeBtn: false
+				  ,offset:offset
+				  ,area: '300px;'
+				  ,shade: 0.8
+				  ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+				  ,resize: false
+				  ,btn: ['关闭']
+				  ,btnAlign: 'c'
+				  ,moveType: 1 //拖拽模式，0或者1
+				  ,content: '<div style="padding: 10px; line-height: 22px; background-color: #aaa; color: #fff; font-weight: 300;"><table><tbody>'+
+				  vData.queueNotifyHtml+'</tbody></table></div>'
+				  ,success: function(layer){
+				   
+				  }
+				});
+		}
+		
+	}
+	
+	function renderTg(mod,count,lastGong/* ,lastCol */){
+		//提供小结
+		xjtg = gameCore.xjtg(mod,count,lastGong/* ,lastCol */);
+		console.log(xjtg);
+		//提供开始
+		$("#tgSum_group").html(xjtg.tgSum);
+		$("#tg_group").html(xjtg.tg);
+		
+		var html = "";
+		for ( var i in xjtg.tgInfo) {
+			if(xjtg.tgInfo[i].l)
+			html+='<tr><td>第 <text class="rd">'+i+'</text> 戶</td><td class="rd wid25">'+xjtg.tgInfo[i].l.val+'</td><td class="wid25">'+xjtg.tgInfo[i].l.f+'</td></tr>';
+			if(xjtg.tgInfo[i].r)
+				html+='<tr><td>第 <text class="rd">'+i+'</text> 戶</td><td class="rd wid25">'+xjtg.tgInfo[i].r.val+'</td><td class="wid25">'+xjtg.tgInfo[i].r.f+'</td></tr>';
+		}
+		$("#tglist_group").html(html);
+		
+		return xjtg;
+		
+	}
+	
+	
+	
 	</script>
+	<script type="text/javascript">
+	var gameCore = {
+			xjtg:function(mod,count,lastGong/* ,lastCol */){
+				var xj = {};//小结
+				var xjCount = 0;//小结统计
+				var tg = 0;//提供数
+				var tgSum =0;//提供值
+				for (var i = 0; i < count.length; i++) {
+					var hu = {l:0,r:0};
+					
+					var ltg,rtg;
+					switch ((mod+'')) {
+					case '2':
+						ltg = count[i].bl_tg;
+						rtg = count[i].br_tg;
+						break;
+					case '3':
+						ltg = count[i].cl_tg;
+						rtg = count[i].cr_tg;
+						break;
+					case '1':
+					default:
+						ltg = count[i].al_tg;
+						rtg = count[i].ar_tg;
+					
+						break;
+					}
+					
+					var linfo = count[i].l_info;
+					var rinfo = count[i].r_info;
+					if(rtg)
+					for (var j = 0; j < rtg.length/4; j++){
+						//小结统计
+						var l = new Number(ltg.substring(j*4+2,j*4+4));
+						var r = new Number(rtg.substring(j*4+2,j*4+4));
+						
+						
+						if(ltg.substring(j*4,j*4+2)=="01"){
+							tg+=1;
+							tgSum+=l;
+						}
+						if(rtg.substring(j*4,j*4+2)=="01"){
+							tg+=1;
+							tgSum+=r;
+						}
+						
+						hu.l+=new Number(linfo.substring(j*2,j*2+2));
+						hu.r+=new Number(rinfo.substring(j*2,j*2+2));
+					}
+					
+					xjCount+=hu.l;
+					xjCount+=hu.r;
+					xj[count[i].index] = hu;
+					
+				}
+				var tginfo = this.tgInfo(mod,count,lastGong/* ,lastCol */);
+				tg+=tginfo.tg;
+				
+				return {xj:xj,xjCount:xjCount,tg:tg,tgSum:tgSum,tgInfo:tginfo.list};
+			}
+	
+		,tgInfo:function(mod,count,lastGong){
+			var tgInfo = {};
+			var tg = 0;
+			for (var i = 0; i < count.length; i++) {
+				tgInfo[count[i].index] = {};
+				var lc = count[i].lcount;
+				var rc = count[i].rcount;
+				var index = count[i].index;
+				var lsy = this.provideSymbol(lc,count[i].l_lj);
+				var rsy = this.provideSymbol(rc,count[i].r_lj);
+				switch ((mod+'')) {
+				case '2':
+					if(lsy[1]){
+						tg+=1;
+						tgInfo[count[i].index].l = {val:lastGong.substring(i*2,i*2+1),f:lsy[1]};
+					}
+						
+					if(rsy[1]){
+						tg+=1;
+						tgInfo[count[i].index].r = {val:lastGong.substring(i*2+1,i*2+2),f:rsy[1]};	
+					}
+					break;
+				case '3':
+					if(lsy[2]){
+						tg+=1;
+						tgInfo[count[i].index].l = {val:lastGong.substring(i*2,i*2+1),f:lsy[2]};
+					}
+					if(rsy[2]){
+						tg+=1;
+						tgInfo[count[i].index].r = {val:lastGong.substring(i*2+1,i*2+2),f:rsy[2]};	
+					}
+					
+					break;
+				case '1':
+				default:
+					if(lsy[0]){
+						tg+=1;
+						tgInfo[count[i].index].l = {val:lastGong.substring(i*2,i*2+1),f:lsy[0]};
+					}
+					if(rsy[0]){
+						tg+=1;
+						tgInfo[count[i].index].r = {val:lastGong.substring(i*2+1,i*2+2),f:rsy[0]};	
+					}
+					break;
+				}
+				
+				
+				}
+			return {list:tgInfo,tg:tg};
+			
+		}
+		
+		,provideSymbol:function(count,upPile) {
+			var COUNT_VLEN =11;
+			var ret = [];
+			
+			var countNum = count.length/COUNT_VLEN;
+			
+			if(countNum<2)return ret;
+			
+			var p1 = new Number(count.substring((countNum-1)*COUNT_VLEN+9, (countNum-1)*COUNT_VLEN+9+2));
+			var p2 = new Number(count.substring((countNum-2)*COUNT_VLEN+9, (countNum-2)*COUNT_VLEN+9+2));
+			var p3 = countNum>=3?new Number(count.substring((countNum-3)*COUNT_VLEN+9, (countNum-3)*COUNT_VLEN+9+2)):null;
+			var p4 = countNum>=4?new Number(count.substring((countNum-4)*COUNT_VLEN+9, (countNum-4)*COUNT_VLEN+9+2)):null;
+			
+			var offset = 0;
+			if(true) {
+				var aStr1 = count.substring((countNum-1)*COUNT_VLEN+offset, (countNum-1)*COUNT_VLEN+offset+3);
+				var aStr2 = count.substring((countNum-2)*COUNT_VLEN+offset, (countNum-2)*COUNT_VLEN+offset+3);
+				var aStr3 = countNum>=3?count.substring((countNum-3)*COUNT_VLEN+offset, (countNum-3)*COUNT_VLEN+offset+3):null;
+				//提供：上一个提供，上上不提供
+				if(aStr1.endsWith("y")&&(aStr2.endsWith("n")||(new Number(upPile.substring(1, upPile.length))<4&&aStr3&&aStr3.endsWith("y")))) {
+					ret[0] = (p2<0)?"-":"+";
+				}
+				//提供：提供者不超过2个，本身两个，不会超过
+				else if(new Number(upPile.substring(1, upPile.length))<4&&
+						( p1 * p2 >0)) {
+					ret[0] = (p1<0)?"-":"+";
+				}
+				
+			}
+
+			offset = 3;
+			if(countNum>=3) {
+				var aStr1 = count.substring((countNum-1)*COUNT_VLEN+offset, (countNum-1)*COUNT_VLEN+offset+3);
+				var aStr2 = count.substring((countNum-2)*COUNT_VLEN+offset, (countNum-2)*COUNT_VLEN+offset+3);
+				var aStr3 = count.substring((countNum-3)*COUNT_VLEN+offset, (countNum-3)*COUNT_VLEN+offset+3);
+				
+				//提供：上一个提供，上上不提供
+				if(aStr1.endsWith("y")&&aStr2.endsWith("n")) {
+					
+					ret[1] = (p2<0)?"-":"+";
+				}
+				//提供：举出反例子
+				else if(new Number(upPile.substring(1, upPile.length))<6
+						&&( p1 * p2 >0)
+						&&( p1 * p3 >0)
+						&&!(aStr1.endsWith("y")&&aStr3.endsWith("n"))) {
+					ret[1] = (p1<0)?"-":"+";
+				}
+				
+			}
+			
+			offset = 6;
+			if(countNum>=4) {
+				var aStr1 = count.substring((countNum-1)*COUNT_VLEN+offset, (countNum-1)*COUNT_VLEN+offset+3);
+				var aStr2 = count.substring((countNum-2)*COUNT_VLEN+offset, (countNum-2)*COUNT_VLEN+offset+3);
+				var aStr3 = count.substring((countNum-3)*COUNT_VLEN+offset, (countNum-3)*COUNT_VLEN+offset+3);
+				var aStr4 = count.substring((countNum-4)*COUNT_VLEN+offset, (countNum-4)*COUNT_VLEN+offset+3);
+				
+				//提供：上一个提供，上上不提供
+				if(aStr1.endsWith("y")&&aStr2.endsWith("n")) {
+					
+					ret[2] = (p2<0)?"-":"+";
+				}
+				//提供：上一个不提供，上上不提供,上上上不提供
+				else if(new Number(upPile.substring(1, upPile.length))<8
+						&&( p1 * p2 >0)
+						&&( p1 * p3 >0)
+						&&( p1 * p4 >0)
+						&&!(aStr4.endsWith("n")&&((aStr1.endsWith("y")?1:0)+(aStr2.endsWith("y")?1:0)+(aStr3.endsWith("y")?1:0))>=2)) {
+					ret[2] = (p1<0)?"-":"+";
+				}
+				
+			}
+			
+			
+			
+			return ret;
+		}
+		,queue:function(mainTb,onScan){
+			var queue = {
+					"6":0,"7":0,"8":0,"9":0,"10":0,"11":0
+					,"12":0,"13":0,"14":0,"15":0,"16":0,"17":0,
+					"18":0,"19":0,"20":0,"21":0,"22":0,"23":0,"24":0,"25":0,
+					"26":0,"27":0,"28":0
+			};
+			var scan = [];
+			var queueCount = 0;
+			
+			if(mainTb&&mainTb.length>2)
+				for (var i = 2; i < mainTb.length; i++) {
+					var gong = mainTb[i].gong;
+					var gongCol = mainTb[i].gong_col;
+					if(onScan)onScan(i,mainTb[i]);
+					
+					if(!gongCol)continue;
+					for (var j = 0; j < 20; j++) {
+						
+							var col = gongCol.substring(j,j+1);
+							var val = gong.substring(j,j+1);
+							
+							
+							//处理队列逻辑
+							if(scan[j]&&scan[j].hit==col)scan[j].hitNum += 1;
+							else scan[j] = {hit:col,hitNum:1};
+							scan[j].val = val;
+							//统计数量
+							if(scan[j].hitNum>5){queue[scan[j].hitNum]+=1;queueCount++;}
+					
+					}
+			}
+			
+			return {queue:queue,scan:scan,count:queueCount};
+			
+		}
+	
+			
+			
+	}
+	
+	
+	
+	
+	</script>
+	<script type="text/html" id="tmpl_etb">
+	<table id="mtb" >
+	<tbody><tr>
+		<td class="one">提供統計</td>
+		<td class="rd" >{{tg.tg}}</td>
+		<td class="one">提供結果</td>
+<td colspan="20" >{{tg.tgSum}}</td>
+<td class="one" colspan="2">列隊統計</td>
+		<td class="rd" >{{queue.count}}</td>
+	</tr>
+	<tr>
+		<td colspan="3">列隊</td>
+
+		<td>6</td>
+		<td>7</td>
+		<td>8</td>
+		<td>9</td>
+		<td>10</td>
+		<td>11</td>
+		<td>12</td>
+		<td>13</td>
+		<td>14</td>
+		<td>15</td>
+		<td>16</td>
+		<td>17</td>
+		<td>18</td>
+		<td>19</td>
+		<td>20</td>
+		<td>21</td>
+		<td>22</td>
+		<td>24</td>
+		<td>24</td>
+		<td>25</td>
+		<td>26</td>
+		<td>27</td>
+		<td>28</td>
+	</tr>
+	<tr>
+		<td colspan="3">列隊結果</td>
+{{each queue.queue as val i}}
+		<td>{{val}}</td>
+{{/each}}
+	</tr>
+</tbody>
+	</table>
+	</script>
+	
+	
 	</body>
 </html>

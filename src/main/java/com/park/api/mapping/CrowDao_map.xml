@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.park.api.dao.CrowDao">
-	  
-	<select id="getLastRow" resultType="com.park.api.entity.Crow" >
-select * from djt_g_game where uid = #{uid} AND pei is not null ORDER BY crow DESC limit 1 
- 	</select>
- 	
- 	<select id="getInputRow" resultType="com.park.api.entity.Crow" >
-	select * from game_runing where is_finish=1 AND uid = #{uid} AND pei is null ORDER BY row limit 1 
- 	</select>
- 	
 
- 	
- 	
- 	
- 	
+  	<select id="getGroup" resultType="int" >
+  	 select djt_use_table from djt_user where djt_u_id =#{uid}
+  	</select>
+  	
+  	<insert id="copy2ruing"  >
+  	 INSERT INTO game_runing (hid,uid, grp, sheng) 
+SELECT ${hid}, ${uid},grp,sheng FROM data_base WHERE tabl_num=#{tbNo}
+  	</insert>
+  	
+  	<insert id="save">
+  	INSERT INTO game_runing (`hid`, `uid`, `row`, `sheng`) VALUES (#{hid}, #{mo.uid}, #{mo.row}, #{mo.sheng})
+  	</insert>
  	
  	
   <update id="update" >
@@ -40,19 +39,15 @@ select * from djt_g_game where uid = #{uid} AND pei is not null ORDER BY crow DE
   	</select>
   	
   	
-  	<insert id="save">
-  	INSERT INTO djt_g_game(uid, crow, sheng) VALUES (#{mo.uid}, #{mo.crow}, #{mo.sheng})
-  	</insert>
-  	
-  	
-  	<select id="getGroup" resultType="int" >
-  	 select d_table_id from djt_use_table where d_use_default =1
-  	</select>
-	
-	<!-- 2018-8-28新加入 -->
-	<select id="getInputRow2" resultType="com.park.api.entity.Crow" >
+  
+  	<select id="getInputRow" resultType="com.park.api.entity.Crow" >
 	select * from game_runing where hid = #{hid} AND pei is null ORDER BY row limit 1 
  	</select>
+  	
+
+	
+	<!-- 2018-8-28新加入 -->
+	
  	
  	<select id="getUpTgVal" resultType="string" >
 	select tg_val from game_runing where hid = #{hid} AND pei is not null ORDER BY row desc limit 1 
@@ -74,14 +69,11 @@ select * from djt_g_game where uid = #{uid} AND pei is not null ORDER BY crow DE
 		AND hid =#{hid} ORDER BY row
   	</select>
   	
-  	<select id="temp2ruing"  >
-  	 INSERT INTO game_runing (hid,uid, row, sheng) 
-SELECT ${hid}, ${uid},row,sheng FROM data_base WHERE tabl_num=#{tbNo}
-  	</select>
+
   	
   	
  <insert id="createGame" useGeneratedKeys="true" keyProperty="mo.id">
- INSERT INTO game_history (uid,`tbNum`, `info`, `createtime`) VALUES (#{mo.uid},#{mo.tbNum},#{mo.info} , #{mo.createtime});
+ INSERT INTO game_history (uid,`tbNum`,focus_row, `info`, `createtime`) VALUES (#{mo.uid},#{mo.tbNum},#{mo.focus_row},#{mo.info} , #{mo.createtime});
  </insert>
   	
   	
@@ -96,6 +88,7 @@ SELECT ${hid}, ${uid},row,sheng FROM data_base WHERE tabl_num=#{tbNo}
 	  UPDATE game_history 
 	  <set>
 	  <if test="mo.state!=null">state = #{ mo.state },</if>
+	  <if test="mo.focus_row!=null">focus_row = #{ mo.focus_row },</if>
 		</set>
  WHERE id=#{mo.id}
 	</update>

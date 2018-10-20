@@ -5,6 +5,7 @@ public class Game {
 	String id;
 	String uid;
 	Integer tbNum;
+	Integer focus_row;
 	String info;
 	Long createtime;
 	Long endtime;
@@ -26,6 +27,15 @@ public class Game {
 	}
 	public void setTbNum(Integer tbNum) {
 		this.tbNum = tbNum;
+	}
+	
+	
+	
+	public Integer getFocus_row() {
+		return focus_row;
+	}
+	public void setFocus_row(Integer focus_row) {
+		this.focus_row = focus_row;
 	}
 	public String getInfo() {
 		return info;

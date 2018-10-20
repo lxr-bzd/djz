@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+
+	    <meta name="description" content="">
+	
+	    <meta name="Keywords" content="">
+	
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<link rel="stylesheet" type="text/css" href="css/main.css"/>
+	</head>
+	<body>
+		<!--前台表-->
+		<section class="reception_wrap">
+			<div class="reception_box">
+				<!--数据表-->
+				<table>
+					<tr class="reception">
+						<!--A表-->
+						<td colspan="12" class="table_top rec-table-one">
+							<table border="0" class="">
+							  	<!--<caption>計算表</caption>-->
+							  	<!--表头-->
+							  	<tr class="tb_head">
+							    	<th colspan="12" class="child_tit">計算表</th>
+							  	</tr> 
+							  	<tr>
+							  		<!--序号-->
+							    	<td colspan="12" class="child_stit">报告结果</td>
+							  	</tr>
+							  	<!--数据行-1-->
+							  	<tr class="data_col">
+							    	<td>1</td>
+							    	<td>2</td>
+							    	<td>3</td>
+							    	<td>4</td>
+							    	<td>5</td>
+							    	<td>6</td>
+							    	<td>7</td>
+							    	<td>8</td>
+							    	<td>9</td>
+							    	<td>10</td>
+							    	<td>11</td>
+							    	<td>12</td>
+							  	</tr>
+							  	<!--数据行-2-->
+							  	<tr class="data_col_two">
+							    	<td>2</td>
+							    	<td>3</td>
+							    	<td>3</td>
+							    	<td>3</td>
+							    	<td>2</td>
+							    	<td>1</td>
+							    	<td>1</td>
+							    	<td>1</td>
+							    	<td>1</td>
+							    	<td>1</td>
+							    	<td>1</td>
+							    	<td>1</td>
+							  	</tr>
+							  	
+							</table>
+						</td>
+						<!--B表-->
+						<td colspan="4" class="table_top rec-table-two">
+							<table border="1" class="">
+							  	<!--<caption>計算表  B</caption>-->
+							  	<!--表头-->
+							  	<tr class="tb_head">
+							    	<th colspan="4" class="child_tit_r">报告</th>
+							  	</tr> 
+							  	<tr>
+							  		<td colspan="4" class="child_stit_r focus_row" >--</td>
+							  	</tr>
+							  	<tbody id="queue_group"></tbody>
+							  	<!--数据行-1-->
+							  	
+							  	
+							  	
+							  	<!--关闭-->
+							  	<tr>
+							  		<tr class="child_stit_r">
+								  		<td></td>
+								    	<td colspan="2" class="close-btn">关闭</td>
+								    	<td></td>
+								  	</tr>
+							  	</tr>
+								  	
+							</table>
+						</td>
+					</tr>
+					
+				</table>
+				<!--弹窗-->
+				<!--关闭按钮-->
+				<div class="exit_pup_wrap hide">
+					<div class="exit_pup_box">
+						<div class="exit_pup">
+							<h2>確定要關閉嗎？</h2>
+							<div class="pup_btn">
+								<a href="javascript:;" class="cancel_btn">取消</a>
+								<a href="reception-login.html">確定</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		
+		<script src="js/jquery-1.11.2.min.js"></script>
+		<script type="text/javascript">
+			//关闭弹窗
+			$(".close-btn").click(function () {
+				$(".exit_pup_wrap").addClass("showtb").removeClass("hide")
+			})
+			$(".cancel_btn").click(function () {
+				$(".exit_pup_wrap").addClass("hide").removeClass("showtb")
+			})
+		</script>
+	</body>
+	
+		<script src="../js/app.js"></script>
+		<script src="../jslib/layer/layer.js"></script>
+		<script type="text/javascript" src="../js/template-web.js"></script>
+		
+		<script type="text/javascript" src="../js/tableExport.min.js"></script>
+		<script type="text/javascript" src="../js/jquery.base64.js"></script>
+		
+	<script type="text/javascript">
+//	input输入框
+	$('.int_item').on('input propertychange',onInput);
+	function onInput(e){
+		var inp = e.currentTarget;
+		var i = $('.int_item').index($(inp));
+		inp.value=inp.value.replace(/[^1234.]/g,'')
+			if ($(inp).val().length==1) {
+				i++;
+				$('.int_item').eq(i).focus();
+			} else if ($(inp).val().length>1) {
+				inp.value=inp.value.replace(/[\d]/g,'')
+			}
+			if (window.event.keyCode==8) {
+				inp.value="";
+				if (i<=0) {
+					i=0;
+				} else{
+					i--;
+				}
+				$('.int_item').eq(i).focus();
+			}
+			
+	}
+	
+	
+	
+	function reNew(){
+		 layer.confirm('是否重新開始？', {
+			    btn: ['確定', '取消']
+			  },function(index){
+				  layer.close(index);
+				  $app.request("../user/game/renew.do",function(data){
+					  if(data.code!=1){
+							$app.alert(data.msg);
+							return;
+						}
+					  cleanInput();
+						ref(data.data);
+					  
+				  });
+				  
+			  });
+	}
+	
+	
+	function doInput(){
+		var val = getInput();
+		if(!val){
+			layer.alert("請輸入完整");
+			return;
+		}
+		$app.request("../user/game/input.do?pei="+val,function(data){
+			if(data.code!=1){
+				$app.alert(data.msg,"e");
+				return;
+			}
+			cleanInput();
+			$app.msg("ok");
+			ref(data.data);
+			
+		}); 
+		
+	}
+	
+	
+	function getInput(){
+		
+		var inputs = $("#input_group input");
+		var val="";
+		inputs.each(function(i,e){
+			var v = $(e).val();
+			if(!(/^[1234]{1}$/g).test(v))return;
+			val+=v;
+		});
+		if(val.length!=10)return;
+		
+		return val;
+	}
+	
+	function cleanInput(){
+		
+		var inputs = $("#input_group input");
+		inputs.val("");
+	}
+	
+	function logout(){
+		layer.confirm('您確定要退出？', {
+			  btn: ['確定','取消'] //按钮
+			}, function(){
+				$app.request("../logout.do",function(data){
+					window.location.href = $app.loginUrl;
+				});
+			});
+		 
+		
+	}
+	
+	function tableExport(){
+		var tb = $(etbHtml);
+		
+		$("body").append(tb);
+		tb.tableExport({type:'excel',ignoreColumn: [],ignoreRow:[]
+			, separator:';', escape:'false'
+				 ,formats: ['xlsx']
+		,fileName: '前臺表導出'+new Date().format("yyyy-MM-dd")});
+		tb.remove();
+	}
+	
+	
+	
+	</script>
+	<script type="text/javascript">
+	
+	var notifyDialog;
+	
+	$(function(){
+		 $app.request("../user/game/data.do",function(data){
+				if(data.code!=1){
+					$app.alert(data.msg);
+					return;
+				}
+				
+				ref(data.data);
+			});
+		 
+		　$(document).keydown(function(event){
+			
+			　if(event.keyCode == 32){
+				layer.close(notifyDialog);
+				　　}
+		　　　　
+			　
+		　　});
+		
+	});
+	
+	
+var etbHtml = "";	
+	
+	function ref(data){
+		$(".focus_row").html(data.game.focus_row<3?0:data.game.focus_row);
+		if(data.game.focus_row>=3){
+			var queue = gameCore.queue(data.count.queue,data.lastRow.gong);
+			var html = "";
+			for (var i = 0; i < queue.length; i++) {
+				html+='	<tr class="data_col_r"><td class="frist">第 <span class="red">'+queue[i].hu+'</span> 户</td>'+
+			    	+'<td>'+queue[i].nv+'</td><td>'+queue[i].zf+'</td><td>'+queue[i].num+'</td></tr>'
+			}
+			$("#queue_group").html(html);
+			
+		}
+		
+		
+		
+		var html2 = '';
+		var qs = data.count.queue_count.split(",");
+		for (var i = 0; i < 12; i++) {
+			html2+='<td>'+(qs[i+5]?qs[i+5]:0)+'</td>'; 
+		}
+		
+		
+		$(".data_col_two").html(html2)
+		
+	}
+	
+	
+	
+	</script>
+	<script type="text/javascript">
+	var gameCore = {
+			HU_NUM:20
+			,ITEM_LENGTH:4
+		,queue:function(scan,gong){
+			var scans = scan.split(",");
+			var gongs = gong.split(",");
+			var ret = [];
+			for (var i = 0; i < scans.length; i++) {
+				for (var j = 0; j < this.HU_NUM; j++) {
+					var item = scans[i].substring(j*this.ITEM_LENGTH,j*this.ITEM_LENGTH+4);
+					var nv = gongs[i].substring(j,j+1)
+					if(new Number(item.substring(1,4))>=11){
+						ret.push({hu:j%2!=0?j/2+0.5:j/2+1,
+							nv:nv,
+							zf:item.substring(0,1),
+							num:new Number(item.substring(1,3))})
+						
+					}
+				}
+			}
+			
+			return ret;
+			
+		}
+		
+	
+			
+			
+	}
+	
+	
+	
+	
+	</script>
+</html>

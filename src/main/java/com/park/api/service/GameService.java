@@ -10,6 +10,8 @@ import org.apache.logging.log4j.core.appender.rolling.SizeBasedTriggeringPolicy;
 import org.eclipse.jdt.internal.compiler.env.IGenericField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.ServletCookieValueMethodArgumentResolver;
+
 import com.lxr.commons.exception.ApplicationException;
 import com.park.api.ServiceManage;
 import com.park.api.dao.CountDao;
@@ -43,13 +45,12 @@ public class GameService {
 		Map<String, Object> ret = new HashMap<>();
 		
 		Game game = crowDao.getRuningGame(uid);
-		if(game==null) {doNewly(uid);
-		game = crowDao.getRuningGame(uid);
-		}
+		if(game==null) return null;
+		
 		ret.put("game", game);
-		ret.put("mainTb", crowDao.getAllGong(game.getId()));
-		ret.put("counts", countDao.findAll(game.getId()));
-		ret.put("mod", getMod(game.getTbNum()));
+		ret.put("lastRow", crowDao.getInputRow(game.getId()));
+		Map<String, Object> map = ServiceManage.jdbcTemplate.queryForMap("select * from game_runing_count where hid=?",game.getId());
+		ret.put("count", map);
 		return ret;
 	}
 	
@@ -62,29 +63,49 @@ public class GameService {
 		if(game1!=null)deleteGame(game1.getId());
 		
 		//读取使用的组
-		int group = getGroup();
+		int group = getGroup(uid);
 		
-		/*if(GAME_COL!=tmplDao.getTmplNum(group))
-			throw new ApplicationException("后台模板配置错误");
-		crowDao.delete(uid);*/
 		Game game = new Game();
 		game.setUid(uid);
 		game.setTbNum(group);
-		game.setInfo("");
+		game.setFocus_row(1);
 		game.setCreatetime(System.currentTimeMillis());
-		
 		crowDao.createGame(game);
-		crowDao.temp2ruing(uid,game.getId(), group);
+		createRunGame(uid,game.getId(), group);
 		countDao.save(game.getId());
+	}
+	
+	/**
+	 * 生成运行数据
+	 * @param group
+	 */
+	public void createRunGame(String uid,String hid,int group){
+		List<Tmpl> tmpls = tmplDao.findTmpl(group);
+		Map<Integer, Crow> crows = new HashMap<>();
+		for (Tmpl tmpl : tmpls) {
+			String[] rs = tmpl.getSheng().trim().split(",");
+			for (int i = 0; i < rs.length; i++) {
+				Crow crow = buildCrowByRow(i+1, crows);
+				crow.setSheng(crow.getSheng()+","+rs[i]);
+			}
+		}
 		
-		//crowDao.setUserGroup(uid, group);
+		List<Crow> ret = new ArrayList<>(crows.values());
+		
+		for (Crow crow : ret) {
+			String str1 = crow.getSheng();
+			crow.setSheng( str1.substring(1, str1.length()));
+			crow.setUid(uid);
+			crowDao.save(hid,crow);
+		}
+		
 		
 		
 	}
 	
 	
 	
-	public void doinput(String pei,String uid) {
+	public void doInput(String pei,String uid) {
 		
 		Game game = crowDao.getRuningGame(uid);
 		if(game == null) {
@@ -92,27 +113,35 @@ public class GameService {
 			game = crowDao.getRuningGame(uid);
 		}
 		
-		Crow icrow =  crowDao.getInputRow2(game.getId());
+		Crow icrow =  crowDao.getInputRow(game.getId());
 		
 		if(icrow==null)throw new ApplicationException("错误：本轮游戏已结束！");
 		
+		//基础计算开始
 		String dui = gameCoreService.reckonDui(icrow.getSheng(),pei);
 		icrow.setDui(dui);
 		icrow.setPei(pei);
-		if(icrow.getRow()>-1) {
+		if(icrow.getRow()>1) {
 			String gongCol = gameCoreService.reckonGongCol(pei, icrow.getGong());
 			icrow.setGong_col(gongCol);
 		}
+		//基础计算结束
+		/*
+		
 		String tgVal = null;
 		
 		//处理统计
 		if(icrow.getRow()>0)
 			tgVal = count2(game.getId(), icrow.getRow(), icrow.getGong(), icrow.getGong_col(),crowDao.getUpTgVal(game.getId()));
-		
-		icrow.setTg_val(tgVal);
+		icrow.setTg_val(tgVal);*/
 		crowDao.update(icrow);
 		
-		//处理下一行
+		//更新统计
+		if(icrow.getRow()>=3)
+		doCount(game.getId(),icrow.getGong_col());
+		
+		
+		//处理下一行开始
 		Crow nCrow = getNextRow(game.getId(), icrow.getRow());
 		if(nCrow!=null) {
 		String gong = gameCoreService.reckonGong(nCrow.getSheng(), dui);
@@ -120,17 +149,40 @@ public class GameService {
 		crowDao.update(nCrow);
 		}else {
 			finishGame(game.getId());
-			
 		}
+		//处理下一行结束
 		
+		if(nCrow!=null) {
+			Game g1 = new Game();
+			g1.setId(game.getId());
+			g1.setFocus_row(nCrow.getRow());
+			crowDao.updateGame(g1);
+		}
 		
 	}
 	
 	
-	private Integer getMod(int tbNum) {
-		return ServiceManage.jdbcTemplate.queryForObject("select model from djt_use_table where d_table_id=?"
-				, Integer.class,tbNum);
+	private void doCount(String hid,String gongCol) {
 		
+		Map<String, Object> map = ServiceManage.jdbcTemplate.queryForMap("select * from game_runing_count where hid=?",hid);
+		String[] rets = CountService.countQueue(map.get("queue").toString(), gongCol, map.get("queue_count").toString());
+		
+		ServiceManage.jdbcTemplate.update("UPDATE game_runing_count SET queue=?,queue_count=? WHERE id=?"
+				,rets[0],rets[1],map.get("id"));
+	}
+	
+	
+	/**
+	 * 关闭游戏
+	 * @param hid
+	 */
+	 public void finishGame(String hid) {
+			
+		 Game game = new Game();
+		 game.setId(hid);
+		 game.setState(2);
+		 game.setEndtime(System.currentTimeMillis());
+		 crowDao.updateGame(game);
 	}
 	
 	/**
@@ -196,40 +248,19 @@ public class GameService {
 	
 	
 	
-	/*
-	 * 获取第几组
-	 */
-	private int getGroup() {
-		return crowDao.getGroup();
-	}
-	
-	
 	/**
-	 * 模板转换
-	 * @param tmpls
+	 * 
+	 * @param uid
 	 * @return
 	 */
-	public List<Crow> toCrows(List<Tmpl> tmpls) {
-		Map<Integer, Crow> crows = new HashMap<>();
-		for (Tmpl tmpl : tmpls) {
-			String[] rs = tmpl.getTgroup().trim().split(",");
-			for (int i = 0; i < GAME_ROW; i++) {
-				Crow crow = getCrowByRow(i+1, crows);
-				crow.setSheng(crow.getSheng()+","+rs[i]);
-				
-			}
-		}
-		
-		List<Crow> ret = new ArrayList<>(crows.values());
-		
-		for (Crow crow : ret) {
-			String str1 = crow.getSheng();
-			crow.setSheng( str1.substring(1, str1.length()));
-		}
-		return ret;
+	public int getGroup(String uid) {
+		return crowDao.getGroup(uid);
 	}
 	
-	private Crow getCrowByRow(int row,Map<Integer, Crow> map) {
+	
+	
+	
+	private Crow buildCrowByRow(int row,Map<Integer, Crow> map) {
 		Crow crow = map.get(row);
 		if(crow==null) {
 			crow = new Crow();
@@ -241,19 +272,6 @@ public class GameService {
 		return crow;
 
 	}
-	
-	
-	
-	
-	/**
-	 * 获取最后一次填入的行
-	 * @param uid
-	 * @return
-	 */
-	public Crow getLastCrow(String uid) {
-		return crowDao.getLastRow(uid);
-	}
-	
 	
 	public Crow getNextRow(String hid,int crow) {
 		if(crow>=GAME_ROW_INDEX)return null;
@@ -290,14 +308,7 @@ public class GameService {
 
 	}
 	
-	 public void finishGame(String hid) {
-		
-		 Game game = new Game();
-		 game.setId(hid);
-		 game.setState(2);
-		 game.setEndtime(System.currentTimeMillis());
-		 crowDao.updateGame(game);
-	}
+
 	
 	 
 	 public void deleteGame(String hid) {

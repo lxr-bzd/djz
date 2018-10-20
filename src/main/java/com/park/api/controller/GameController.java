@@ -1,11 +1,14 @@
 package com.park.api.controller;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.lxr.commons.exception.ApplicationException;
 import com.lxr.framework.long1.JsonResult;
 import com.park.api.ServiceManage;
 import com.park.api.common.BaseController;
@@ -23,13 +26,19 @@ public class GameController extends BaseController{
 	@Autowired
 	GameCoreService gameCoreService;
 	
-	
+	                                                                                                      
 	@RequestMapping("input")
 	@ResponseBody
 	public Object input(String pei) {
 		
 		String uid = ServiceManage.securityService.getSessionSubject().getId().toString();
-		gameService.doinput(pei, uid);
+		Integer isSu = ServiceManage.jdbcTemplate.queryForObject("select is_su from djt_user where djt_u_id = ?", Integer.class,uid);
+		if(isSu!=1)throw new ApplicationException("不是超级会员无法操作");
+		List<String> ids = ServiceManage.jdbcTemplate.queryForList("select djt_u_id  from djt_user ", String.class);
+		for (String id : ids) {
+			gameService.doInput(pei, id);
+		}
+		
 		
 		return JsonResult.getSuccessResult(gameService.getMainModel(uid));
 	}
@@ -38,9 +47,20 @@ public class GameController extends BaseController{
 	@ResponseBody
 	public Object data() {
 		String uid = ServiceManage.securityService.getSubjectId().toString();
-		
 		Map<String, Object> ret = gameService.getMainModel(uid);
+		Integer isSu = ServiceManage.jdbcTemplate.queryForObject("select is_su from djt_user where djt_u_id = ?", Integer.class,uid);
+		if(isSu==1&&ret==null) {
+			List<String> uids = ServiceManage.jdbcTemplate.queryForList("select djt_u_id from djt_user ", String.class);
+			for (String id : uids) {
+				Game game =  gameService.getRuningGame(id);
+				if(game!=null)gameService.finishGame(game.getId());
+				gameService.doNewly(id);
+			}
+			ret = gameService.getMainModel(uid);
+			
+		}
 		
+		if(ret == null) throw new ApplicationException("没有正在进行的表格");
 		return JsonResult.getSuccessResult(ret);
 	}
 	
@@ -50,23 +70,28 @@ public class GameController extends BaseController{
 	public Object renew() {
 		
 		String uid = ServiceManage.securityService.getSessionSubject().getId().toString();
-		Game game =  gameService.getRuningGame(uid);
-		if(game!=null)
-		gameService.finishGame(game.getId());
-		//gameService.doNewly(uid);
+		Integer isSu = ServiceManage.jdbcTemplate.queryForObject("select is_su from djt_user where djt_u_id = ?", Integer.class,uid);
+		if(isSu!=1)throw new ApplicationException("不是超级会员无法操作");
+		List<String> uids = ServiceManage.jdbcTemplate.queryForList("select djt_u_id from djt_user ", String.class);
+		for (String id : uids) {
+			Game game =  gameService.getRuningGame(id);
+			if(game!=null)gameService.finishGame(game.getId());
+			gameService.doNewly(id);
+		}
+		
+		
 		Map<String, Object> ret = gameService.getMainModel(uid);
 		
-		List<Map<String, Object>> list = ServiceManage.jdbcTemplate.queryForList("select id from game_history where uid=? AND state=2 order by createtime DESC limit 30,5", uid);
-		if(list!=null&&list.size()>0) 
-			for (int i = 0; i < list.size(); i++) {
-				gameService.deleteGame(list.get(i).get("id").toString());
-			}
-			
+		for (String id : uids) {
+			List<String> list = ServiceManage.jdbcTemplate.queryForList("select id from game_history where uid=? AND state=2 order by createtime DESC limit 30,5"
+					,String.class, id);
+			if(list!=null&&list.size()>0) 
+				for (int i = 0; i < list.size(); i++) {
+					gameService.deleteGame(list.get(i));
+				}
+		}
 		
 		
 		return JsonResult.getSuccessResult(ret);
 	}
-	
-	
-	
 }
