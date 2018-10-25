@@ -94,4 +94,13 @@ public class GameController extends BaseController{
 		
 		return JsonResult.getSuccessResult(ret);
 	}
+	
+	public static void main(String[] args) {
+		String str = "";
+		for (int i = 0; i < 100; i++) {
+			str+="000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000,".replace(" ", "");
+		}
+		System.out.println(str);
+	}
+	
 }

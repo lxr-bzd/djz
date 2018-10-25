@@ -66,28 +66,39 @@
 						</td>
 						<!--B表-->
 						<td colspan="4" class="table_top rec-table-two">
-							<table border="1" class="">
-							  	<!--<caption>計算表  B</caption>-->
-							  	<!--表头-->
+							<table border="" cellspacing="" cellpadding="" class="table-head">
+								<!--表头-->
 							  	<tr class="tb_head">
 							    	<th colspan="4" class="child_tit_r">报告</th>
 							  	</tr> 
-							  	<tr>
-							  		<td colspan="4" class="child_stit_r focus_row" >--</td>
+							  	<tr> 
+							  		<td colspan="4" class="child_stit_r focus_row" style="color:red;">--</td>
 							  	</tr>
-							  	<tbody id="queue_group"></tbody>
+							</table>
+							<div style="overflow-y:scroll;height:460px">
+							<table border="1" >
+							  	<!--<caption>計算表  B</caption>-->
+							  	
 							  	<!--数据行-1-->
+							  	<tbody id="queue_group">
+							  	<!-- <tr class="data_col_r" >
+							  		<td class="frist">第 <span class="red">9</span> 位</td>
+							    	<td>女</td>
+							    	<td>-</td>
+							    	<td>6</td>
+							  	</tr> -->
 							  	
+							  	</tbody>
 							  	
-							  	
-							  	<!--关闭-->
-							  	<tr>
-							  		<tr class="child_stit_r">
-								  		<td></td>
-								    	<td colspan="2" class="close-btn">关闭</td>
+							  </table>
+							  </div>
+							  <table border="1" style="height: 60px;">	
+							  		<tr class="child_stit_r" >
+								  		<td colspan="2"></td>
+								    	<td colspan="2" class="close-btn" style="margin: 0 50px;">关闭</td>
 								    	<td></td>
 								  	</tr>
-							  	</tr>
+							  	
 								  	
 							</table>
 						</td>
@@ -270,15 +281,18 @@
 var etbHtml = "";	
 	
 	function ref(data){
-		$(".focus_row").html(data.game.focus_row<3?0:data.game.focus_row);
+		$(".focus_row").html(data.game.focus_row-2);
 		if(data.game.focus_row>=3){
 			var queue = gameCore.queue(data.count.queue,data.lastRow.gong);
 			var html = "";
 			for (var i = 0; i < queue.length; i++) {
-				html+='	<tr class="data_col_r"><td class="frist">第 <span class="red">'+queue[i].hu+'</span> 户</td>'+
-			    	+'<td>'+queue[i].nv+'</td><td>'+queue[i].zf+'</td><td>'+queue[i].num+'</td></tr>'
+				html+='<tr class="data_col_r"><td class="frist">第 <span class="red">'+queue[i].hu+'</span>户</td>'
+		    	+'<td>'+queue[i].nv+'</td><td>'+queue[i].zf+'</td><td>'+queue[i].num+'</td></tr>'
 			}
-			$("#queue_group").html(html);
+			if(!html)
+				$("#queue_group").html('<tr style="height:460px;"></tr>');
+			else
+				$("#queue_group").html(html+"<tr></tr>");
 			
 		}
 		

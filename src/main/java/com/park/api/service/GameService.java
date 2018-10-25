@@ -165,10 +165,10 @@ public class GameService {
 	private void doCount(String hid,String gongCol) {
 		
 		Map<String, Object> map = ServiceManage.jdbcTemplate.queryForMap("select * from game_runing_count where hid=?",hid);
-		String[] rets = CountService.countQueue(map.get("queue").toString(), gongCol, map.get("queue_count").toString());
+		String[] rets = CountService.countQueue(map.get("queue").toString(), gongCol, map.get("queue_count").toString(),map.get("grp_queue").toString());
 		
-		ServiceManage.jdbcTemplate.update("UPDATE game_runing_count SET queue=?,queue_count=? WHERE id=?"
-				,rets[0],rets[1],map.get("id"));
+		ServiceManage.jdbcTemplate.update("UPDATE game_runing_count SET queue=?,queue_count=?,grp_queue=? WHERE id=?"
+				,rets[0],rets[1],rets[2],map.get("id"));
 	}
 	
 	
