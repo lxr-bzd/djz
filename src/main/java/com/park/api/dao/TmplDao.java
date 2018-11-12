@@ -12,6 +12,6 @@ public interface TmplDao {
 	 Integer getTmplNum(@Param("group")int group);
 	
 	 
-	 List<Tmpl> findTmpl(@Param("group")int group);
+	 List<Tmpl> findTmpl(@Param("uid")String uid,@Param("group")int group);
 	 
 }

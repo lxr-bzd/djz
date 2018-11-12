@@ -49,7 +49,8 @@ public class CountService {
 				
 				if(zf.equals(col.equals("1")?"-":"+")) {
 					qr+=createItem(col.equals("1")?"-":"+",pNum+1);
-					if(pNum+1>=6) {
+					if(pNum+1>=6&&pNum<25) {
+						
 						gqs[pNum+1-6] +=1;
 						qcs[pNum+1-6] += 1;}
 				}else {

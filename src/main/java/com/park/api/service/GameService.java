@@ -60,7 +60,7 @@ public class GameService {
 	
 	public void doNewly(String uid) {
 		Game game1 = getRuningGame(uid);
-		if(game1!=null)deleteGame(game1.getId());
+		if(game1!=null)finishGame(game1.getUid(), game1.getId());
 		
 		//读取使用的组
 		int group = getGroup(uid);
@@ -80,7 +80,7 @@ public class GameService {
 	 * @param group
 	 */
 	public void createRunGame(String uid,String hid,int group){
-		List<Tmpl> tmpls = tmplDao.findTmpl(group);
+		List<Tmpl> tmpls = tmplDao.findTmpl(uid,group);
 		Map<Integer, Crow> crows = new HashMap<>();
 		for (Tmpl tmpl : tmpls) {
 			String[] rs = tmpl.getSheng().trim().split(",");
@@ -148,7 +148,7 @@ public class GameService {
 		nCrow.setGong(gong);
 		crowDao.update(nCrow);
 		}else {
-			finishGame(game.getId());
+			finishGame(game.getUid(),game.getId());
 		}
 		//处理下一行结束
 		
@@ -176,13 +176,21 @@ public class GameService {
 	 * 关闭游戏
 	 * @param hid
 	 */
-	 public void finishGame(String hid) {
+	 public void finishGame(String uid,String hid) {
 			
 		 Game game = new Game();
 		 game.setId(hid);
 		 game.setState(2);
 		 game.setEndtime(System.currentTimeMillis());
 		 crowDao.updateGame(game);
+		 
+		
+		List<String> list = ServiceManage.jdbcTemplate.queryForList("select id from game_history where uid=? AND state=2 order by createtime DESC limit 30,5"
+						,String.class, uid);
+		if(list!=null&&list.size()>0) 
+		for (int i = 0; i < list.size(); i++) {
+			deleteGame(list.get(i));
+		}
 	}
 	
 	/**
@@ -313,10 +321,13 @@ public class GameService {
 	 
 	 public void deleteGame(String hid) {
 		
-		 ServiceManage.jdbcTemplate.update("delete from game_history where id=?", hid);
-		 ServiceManage.jdbcTemplate.update("delete from game_runing where hid=?", hid);
-		 ServiceManage.jdbcTemplate.update("delete from game_runing_count where hid=?", hid);
-
+		 String[] sqls = new String[] {
+					"delete from game_history where id="+hid,
+					"delete from game_runing where hid="+hid,
+					"delete from game_runing_count where hid="+hid
+			};
+		 ServiceManage.jdbcTemplate.batchUpdate(sqls);
+		
 	}
 	
 	

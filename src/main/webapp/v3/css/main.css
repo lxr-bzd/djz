@@ -240,7 +240,7 @@ html,body{
 	padding-left:20;
 	padding-right:20px;
 	text-align: center;
-	font-size: 17px;
+	font-size: 20px;
 	width: auto;
 	margin: auto auto;
 }
@@ -259,7 +259,7 @@ html,body{
 	height: 100%;
 }
 .rec-table-two{
-	width: 16%;
+	width: 20%;
 }
 .rec-table-two td{
 	height: 40px;
@@ -280,20 +280,18 @@ html,body{
 }
 .reception .main_tit {
 	height: 100px;
-	padding-left: 40px;
 	font-size: 40px;
-	letter-spacing: 2em;
+	
 }
 .reception .child_tit{
 	height: 450px;
-	padding-left: 40px;
-	font-size: 50px;
-	letter-spacing: 2em;
-}
+	padding-left: 20px;
+	font-size: 40px;
+	}
 .reception .child_stit{
 	height: 80px;
 	font-weight: bold;
-	font-size: 24px;
+	font-size: 30px;
 	color: #000;
 }
 .reception .child_tit_r{
@@ -347,8 +345,8 @@ html,body{
 .data_col_r td{
 	overflow: hidden;
 	min-width: 64px;
-	max-height: 60px;
-	padding: 10px 3px!important;
+	height: 50px;
+	padding: 10px 14px!important;
 	color: red;
 }
 .data_col_r .frist{
@@ -358,10 +356,21 @@ html,body{
 .red{
 	color: red;
 }
+
+.pad-no {
+	padding: 0 !important;
+}
 .close-btn{
+	width: 100%;
+    height: 60px;
+    margin: 0 auto;
+    line-height: 60px;
 	background-color: #ededed;
 	cursor: pointer;
+	border-left: 1px solid rgba(0,0,0,0.6);
+	border-right: 1px solid rgba(0,0,0,0.6);
 }
+
 .rec-table-one .item1 td:nth-child(2n-1){
 	/*background-color: rgba(101,203,194,0.2);*/
 	background-color: rgba(224,245,243,0.6);
@@ -389,20 +398,15 @@ html,body{
 	color: #FFFFFF !important;
 	font-size: 19px;
 }
-
-.person_int{
-	
-	height:60px;
-}
-
 .person_int td{
+	height:60px;
 	/*border: 2px solid black;*/
 	padding: 0 !important;
 }
 .person_int input{
 	border: none;
 	width: 70px;
-	font-size: 24px;
+	font-size: 28px;
 	/*padding: 12px 0;*/
 	text-align: center;
 }
@@ -440,8 +444,8 @@ html,body{
 .funtr_td div{
 	float: left;
 	width: 100px;
-	height: 66px;
-	line-height: 66px;
+	height: 60px;
+	line-height: 60px;
 	border-radius: 6px;
 	color: #fff;
 	background-color: #33CCCC;
@@ -461,9 +465,9 @@ html,body{
 	font-size: 24px;
 	/*margin: 0 176px;*/
 	padding: 0 !important;
-	-webkit-box-shadow: 0px 0px 3px #0092D8 !important;
+	/* -webkit-box-shadow: 0px 0px 3px #0092D8 !important; */
 	-moz-box-shadow: 0px 0px 3px #0092D8 !important;
-	box-shadow: 0px 0px 3px #0092D8 !important;
+	/* box-shadow: 0px 0px 3px #0092D8 !important; */
 }
 .refresh_btn{
 	cursor: pointer;
