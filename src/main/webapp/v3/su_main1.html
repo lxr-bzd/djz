@@ -15,25 +15,46 @@
 	<body>
 		<!--前臺表-->
 		<section class="reception_wrap">
-			<div class="reception_box" style="max-width: 1200px;">
+			<div class="reception_box">
 				<!--數據表-->
-				<table style="border: 1px solid #000;">
+				<table>
 					<tr class="reception">
 						<!--A表-->
 						<td colspan="12" class="table_top rec-table-one">
-							<table border="0" style="border: 1px solid #000;table-layout:fixed;">
+							<table border="0" style="border: 1px solid #000;">
 							  	<!--<caption>計算表</caption>-->
 							  	<!--表頭-->
-							  	
 							  	<tr class="tb_head">
 							    	<th colspan="12" class="main_tit">計&nbsp;算&nbsp;表&nbsp;</th>
 							  	</tr> 
-							 
+							  	<tr class="data_col person_int">
+							    	<td>序號</td>
+							    	<td>第 <span class="red">1</span> 戶</td>
+							    	<td>第 <span class="red">2</span> 戶</td>
+							    	<td>第 <span class="red">3</span> 戶</td>
+							    	<td>第 <span class="red">4</span> 戶</td>
+							    	<td>第 <span class="red">5</span> 戶</td>
+							    	<td>第 <span class="red">6</span> 戶</td>
+							    	<td>第 <span class="red">7</span> 戶</td>
+							    	<td>第 <span class="red">8</span> 戶</td>
+							    	<td>第 <span class="red">9</span> 戶</td>
+							    	<td>第 <span class="red">10</span> 戶</td>
+							    	<td>序號</td>
+							  	</tr>
 							  	<!--輸入框-->
 							  	<tr class="person_int" id="input_group">
-							    	<td colspan="2" class="focus_row" style="">--</td>
-							    	<td colspan="8"><input type="text" style="width: 100%" maxlength="1" autofocus="autofocus" class="int_item" placeholder="" /></td>
-							    	<td colspan="2" class="focus_row" style="">--</td>
+							    	<td class="focus_row red">--</td>
+							    	<td><input type="text" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""/></td>
+							    	<td><input type="text" maxlength="1" class="int_item" placeholder=""/></td>
+							    	<td><input type="text" maxlength="1" class="int_item" placeholder=""/></td>
+							    	<td><input type="text" maxlength="1" class="int_item" placeholder=""/></td>
+							    	<td><input type="text" maxlength="1" class="int_item" placeholder=""/></td>
+							    	<td><input type="text" maxlength="1" class="int_item" placeholder=""/></td>
+							    	<td><input type="text" maxlength="1" class="int_item" placeholder=""/></td>
+							    	<td><input type="text" maxlength="1" class="int_item" placeholder=""/></td>
+							    	<td><input type="text" maxlength="1" class="int_item" placeholder=""/></td>
+							    	<td><input type="text" maxlength="1" class="int_item" placeholder=""/></td>
+							    	<td class="focus_row red">--</td>
 							  	</tr>
 							  	<tr class="operation_box">
 							  		<td colspan="12">
@@ -46,39 +67,40 @@
 										</div>
 							  		</td>
 							  	</tr>
-							  	<tr >
-							  		<td colspan="12" style="padding: 0px;">
-							  			<table id="bg_group" style="border: 1px solid #000;table-layout:fixed;he">
-
-											  	<tr>
-											    	<td colspan="2" rowspan="2" class="focus_row">--</td>
-											    	<td colspan="2" >老</td>
-											    	<td colspan="2" ></td>
-											    	<td colspan="2" >男</td>
-											    	<td colspan="2" ></td>
-											    	<td colspan="2" rowspan="2" class="focus_row">--</td>
-											  	</tr>
-											  	
-											  
-											  	<tr>
-											    	<td colspan="2" >少</td>
-											    	<td colspan="2" ></td>
-											    	<td colspan="2" >女</td>
-											    	<td colspan="2" ></td>
-											  	</tr>
-											  	<tr>
-											    	<td colspan="2" >--</td>
-											    	<td colspan="2" >结果</td>
-											    	<td colspan="4" class="focus_jg"></td>
-											    	<td colspan="2" >结果</td>
-											    	<td colspan="2" >--</td>
-											  	</tr>
-							  			</table>
-							  		</td>
+							  	<tr>
+							  		<!--序號-->
+							    	<td colspan="12" class="child_stit">報告結果&nbsp;</td>
 							  	</tr>
-							  	
-							  
-							  		
+							  	<!--數據行-1-->
+							  	<tr class="data_col person_int">
+							    	<td>1</td>
+							    	<td>2</td>
+							    	<td>3</td>
+							    	<td>4</td>
+							    	<td>5</td>
+							    	<td>6</td>
+							    	<td>7</td>
+							    	<td>8</td>
+							    	<td>9</td>
+							    	<td>10</td>
+							    	<td>11</td>
+							    	<td>12</td>
+							  	</tr>
+							  	<!--數據行-2-->
+							  	<tr class="data_col_two person_int">
+							    	<td>-</td>
+							    	<td>-</td>
+							    	<td>-</td>
+							    	<td>-</td>
+							    	<td>-</td>
+							    	<td>-</td>
+							    	<td>-</td>
+							    	<td>-</td>
+							    	<td>-</td>
+							    	<td>-</td>
+							    	<td>-</td>
+							    	<td>-</td>
+							  	</tr>
 							  	
 							</table>
 						</td>
@@ -86,16 +108,12 @@
 						<td colspan="4" class="table_top rec-table-two" style="border: 1px solid #000;">
 							
 									<table border="" cellspacing="" cellpadding="" class="child_tit_r" style="width:100%">
-										<tbody><tr><th colspan="4" class="main_tit" style="font-size: 20px;">结果趋势</th></tr>
+										<tbody><tr><th colspan="4" class="main_tit">報&nbsp;告</th></tr>
 										<tr></tr>
 										</tbody>
 									</table>
-									<div style="overflow-y:scroll;height:500px;">
-											<table border="1" class="" style="height:500px;" >
-											<colgroup>
-												<col style="width:100px"/>
-												<col/>
-											</colgroup>
+									<div style="overflow-y:scroll;height:600px;">
+											<table border="1" class="" >
 											  	<tbody id="queue_group">
 												  	<!--數據行-1-->
 												  	<!-- <tr class="data_col_r">
@@ -109,15 +127,6 @@
 												  	
 											  	</tbody>
 											</table>
-									</div>
-									<div style="overflow-y: scroll;">
-									<table style="width:100%;height: 50px;" >
-											<colgroup>
-												<col style="width:100px"/>
-												<col/>
-											</colgroup>
-										<tr><td colspan="" >结果汇总</td><td colspan="" id="allJg">--</td></tr>
-									</table>
 									</div>
 								
 							</td>
@@ -305,12 +314,9 @@
 			if(!(/^[1234]{1}$/g).test(v))return;
 			val+=v;
 		});
-		if(val.length!=1)return;
-		var ret = '';
-		for (var i = 0; i < 10; i++) {
-			ret+=val;
-		}
-		return ret;
+		if(val.length!=10)return;
+		
+		return val;
 	}
 	
 	function cleanInput(){
@@ -376,49 +382,28 @@ var etbHtml = "";
 function ref(data){
 	$(".focus_row").html(data.game.focus_row-2);
 	$("#queue_group").empty();
-	/* if(data.game.focus_row>=4)
-	var tg = gameCore.tg(data.count.queue,data.lastRow.gong,data.count.rule);
-	$("#bg_group").html(template('tmpl_tg',{frow:data.game.focus_row-2,
-		tg:tg?tg:{lsbg:{k:'',v:''},nnbg:{k:'',v:''},info:{}}})); */
-	
 	if(data.game.focus_row>=3){
-		var tgM = [];
-		for (var i = 0; i < data.counts.length; i++) {
-			var ts = data.counts[i].tg?data.counts[i].tg.split(","):[];
-			for (var j = 0; j < ts.length; j++) {
-				if(!ts[j])continue;
-				var v = new Number(ts[j].split("_")[0])+new Number(ts[j].split("_")[1]);
-				if(isNaN(tgM[j]))tgM[j]= 0;					
-				
-				tgM[j]+=v;
-			}
-		}
+		var queue = gameCore.queue(data.count.queue,data.lastRow.gong);
+		var html = "";
+		for (var i = 0; i < queue.length; i++) {
 		
-		
-		var html = '<tr class="data_col_r"><td class="frist">1</td><td style="color:#000">0</td></tr>';
-		var focus_jg = null;
-		var allJg = 0;
-		for (var i = 0; i < tgM.length; i++) {
-			var v = tgM[i];
-			focus_jg = v;
-			allJg+=v;
-			html+='<tr class="data_col_r"><td class="frist">'+((i==tgM.length-1)?('<a id="bottom">'+(i+2)+'</a>'):(i+2))+'</td>'
-		    	+'<td '+(v<=0?'style="color:#000"':'')+'>'+v+'</td></tr>'
-		    	
+			html+='<tr class="data_col_r"><td class="frist">第 <span class="red"> '+queue[i].hu+' </span>戶</td>'
+		    	+'<td>'+queue[i].nv+'</td><td>'+queue[i].zf+'</td><td>'+queue[i].num+'</td></tr>'
 		}
-		$(".focus_jg").html(focus_jg);
 		$("#queue_group").html(html+'<tr></tr>');
-		$("#allJg").html(allJg);
-		
-		
-		location.href="#bottom";
 		
 	}
 	
 	
 	
+	var html2 = '';
+	var qs = data.count.queue_count.split(",");
+	for (var i = 0; i < 12; i++) {
+		html2+='<td>'+(qs[i+5]?qs[i+5]:0)+'</td>'; 
+	}
 	
 	
+	$(".data_col_two").html(html2)
 	
 }
 	
@@ -462,103 +447,12 @@ function ref(data){
 		}
 		
 	
-	,tg:function(queue,gong,rule){
-		var info = {
-				'老+':{v:0},'少+':{v:0},
-				'老-':{v:0},'少-':{v:0},
-				'男+':{v:0},'女+':{v:0},
-				'男-':{v:0},'女-':{v:0},
-		}
-		var qs = queue.split(",");
-		var gs = gong.split(",");
-		var start = new Number(rule.split(",")[0]);
-		var end = new Number(rule.split(",")[1]);
-		for (var i = 0; i < qs.length; i++) {
-			
-			for (var j = 0; j < this.HU_NUM; j++) {
-				var q1 = qs[i].substring(j*this.ITEM_LENGTH,j*this.ITEM_LENGTH+4);
-				var g1 = gs[i].substring(j,j+1);
-				info[g1+q1.substring(0,1)].v+=getJg(new Number(q1.substring(1,this.ITEM_LENGTH)),start,end);
-			}
-			
-		}
-		
-		var lsb1 = getHz(info['老+'],info['少+'],true);
-		var lsb2 = getHz(info['老-'],info['少-'],false);
-		var nnb1 = getHz(info['男+'],info['女+'],true);
-		var nnb2 = getHz(info['男-'],info['女-'],false);
-		
-		var lsbg = {k:lsb1+lsb2>0?'老':(lsb1+lsb2<0?'少':''),v:Math.abs(lsb1+lsb2)}
-		var nnbg = {k:nnb1+nnb2>0?'男':(nnb1+nnb2<0?'女':''),v:Math.abs(nnb1+nnb2)}
-		
-		
-		/**
-		返回正反报
-		*/
-		function getHz(q1,q2,isQf){
-			if(q1.v>q2.v){
-				q1.hz=q1.v-q2.v;
-				return isQf?-q1.hz:q1.hz;
-			}
-			if(q2.v>q1.v){
-				q2.hz=q2.v-q1.v;
-				return isQf?q2.hz:-q2.hz;
-			}
-			
-			return 0;
-			
-		}
-		
-		function getJg(length,start,end) {
-			var isMinus = false;
-			if(length>=start&&length<end) {
-				var l = (length*Math.pow(2,length-start));
-				
-				return isMinus?-l:l;
-			}
-				
-			else return 0;
-			
-		}
-		
-		
-		return {lsbg:lsbg,nnbg:nnbg,info:info};
-		
-		
-	}
-	
 			
 			
 	}
 	</script>
-	<script type="text/html" id="tmpl_tg">
-	<tr>
-							    	<td colspan="2" rowspan="3" >{{frow}}</td>
-							    	<td colspan="2" >老</td>
-							    	<td colspan="2" class="red">{{if tg.lsbg.k=='老'}}{{tg.lsbg.v}}{{/if}}</td>
-							    	<td colspan="2" >男</td>
-							    	<td colspan="2" class="red">{{if tg.nnbg.k=='男'}}{{tg.nnbg.v}}{{/if}}</td>
-							    	<td colspan="2" rowspan="3" >{{frow}}</td>
-							  	</tr>
-							  	<tr>
-							    	<td colspan="2" >少</td>
-							    	<td colspan="2" class="red">{{if tg.lsbg.k=='少'}}{{tg.lsbg.v}}{{/if}}</td>
-							    	<td colspan="2" >女</td>
-							    	<td colspan="2" class="red">{{if tg.nnbg.k=='女'}}{{tg.nnbg.v}}{{/if}}</td>
-							  	</tr>
-								<tr>
-							    	<td colspan="2" >统计</td>
-							    	<td colspan="2" >{{tg.lsbg.v+tg.nnbg.v}}</td>
-									<td colspan="2" >累计</td>
-							    	<td colspan="2" ></td>
-							  	</tr>
-							  	<tr>
-							    	<td colspan="2" >{{if frow>-1}}{{frow-1}}{{else}}--{{/if}}</td>
-							    	<td colspan="2" >结果</td>
-									<td colspan="4" class="focus_jg"></td>
-									<td colspan="2" >结果</td>
-							    	<td colspan="2" >{{if frow>-1}}{{frow-1}}{{else}}--{{/if}}</td>
-							  	</tr>
+	<script type="text/html" id="tmpl_etb">
+	
 	</script>
 	</body>
 </html>

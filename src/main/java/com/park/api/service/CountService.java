@@ -16,59 +16,106 @@ public class CountService {
 	
 	static int grp_itemSize = 3;
 	
+	
+	
+	
 	/**
 	 * 
 	 * @param queue
 	 * @param gongCol
 	 * @param queueCounts [队列数据，队列统计数据]
-	 * @return
+	 * @return [队列扫描，总队列统计，组队列统计，老少-男女结果值]
 	 */
-	public static String[] countQueue(String queue,String gongCol,String queueCounts,String grpQueue) {
+	public static String[] countQueue(int row,String queue,String queueCounts,String grpQueue
+			,String gong,String gongCol,int start,int end) {
 		
 		Integer[] qcs = parseQueueCounts(queueCounts);
 		
 		String[] queues = queue.split(",");
 		String[] gongCols = gongCol.split(",");
-		String queueRet = "";
+		StringBuilder queueRet = new StringBuilder();
 		String[] grpQueues = grpQueue.split(",");
-		String newGrpQueue = "";
+		StringBuilder newGrpQueue = new StringBuilder();
+		
+		int lsJg = 0;
+		int nvJg = 0;
+		String[] gongs = gong.split(",");
+		
+		//循环组
 		for (int i = 0; i < queues.length; i++) {
 			String q1 = queues[i];
 			String col1 = gongCols[i];
-			String qr = "";
+			StringBuilder qr = new StringBuilder();
 			Integer[] gqs = parseGrpQueue(grpQueues[i]);
+			//循环户，户下两列
 			for (int j = 0; j < HU_NUM*2; j++) {
 				String zf = q1.substring(j*itemSize, j*itemSize+1);
 				String col = col1.substring(j, j+1);
-				if(zf.equals(DEF_ZF)) {
-					qr+=createItem(col.equals("1")?"-":"+",1);
-					continue;
-				}
 				//上一次的列队值
 				int pNum = Integer.parseInt(q1.substring(j*itemSize+1, j*itemSize+itemSize));
 				
-				if(zf.equals(col.equals("1")?"-":"+")) {
-					qr+=createItem(col.equals("1")?"-":"+",pNum+1);
-					if(pNum+1>=6&&pNum<25) {
-						
-						gqs[pNum+1-6] +=1;
-						qcs[pNum+1-6] += 1;}
-				}else {
-					qr+=createItem(col.equals("1")?"-":"+",1);
+				if(zf.equals(DEF_ZF)) {
+					qr.append(createItem(col.equals("1")?"-":"+",1));
+					continue;
 				}
 				
+				if(zf.equals(col.equals("1")?"-":"+")) {
+					qr.append(createItem(col.equals("1")?"-":"+",pNum+1));
+					if(pNum<40) {
+						gqs[pNum] +=1;
+						qcs[pNum] +=1;}
+				}else {
+					qr.append(createItem(col.equals("1")?"-":"+",1));
+					gqs[0] +=1;
+					qcs[0] +=1;
+				}
+				
+				if(row>3) {
+					if((j+1)%2==0)
+						nvJg+=getJg(pNum, start, end, zf.equals("+"));
+					else 
+						lsJg+=getJg(pNum, start, end, zf.equals("+"));
+					
+				}
+				
+				
 			}
-			newGrpQueue+=buildGrpQueue(gqs)+",";
-			queueRet+=qr+",";
+			newGrpQueue.append(buildGrpQueue(gqs)+",");
+			queueRet.append(qr+",");
 			
 		}
 		
 		
 		return new String[] {queueRet.substring(0, queueRet.length()-1)
 				,buildQueueCounts(qcs)
-				,newGrpQueue.substring(0, newGrpQueue.length()-1)};
+				,newGrpQueue.substring(0, newGrpQueue.length()-1)
+				,row>3?(lsJg+"_"+nvJg):null};
 
 	}
+	
+	
+	/**
+	 * 结果值转换
+	 * @param length
+	 * @param start
+	 * @param end
+	 * @param isMinus
+	 * @return
+	 */
+	private static int getJg(int length,int start,int end,boolean isMinus) {
+		
+		if(length>=start&&length<end) {
+			int l = (int) (length*Math.pow(2,length-start));
+			
+			return isMinus?-l:l;
+		}
+			
+		else return 0;
+		
+		
+
+	}
+	
 	
 	
 	private static Integer[] parseQueueCounts(String qcs) {
@@ -95,14 +142,14 @@ public class CountService {
 	
 	private static String buildGrpQueue(Integer[] gqs) {
 		
-		String ret = "";
+		StringBuilder ret = new StringBuilder();
 		for (int i = 0; i < gqs.length; i++) {
-			if(gqs[i]>=100)ret+=gqs[i];
-			else if(gqs[i]>=10)ret+=("0"+gqs[i]);
-			else ret+=("00"+gqs[i]);
+			if(gqs[i]>=100)ret.append(gqs[i]);
+			else if(gqs[i]>=10)ret.append("0"+gqs[i]);
+			else ret.append("00"+gqs[i]);
 		}
 		
-		return ret;
+		return ret.toString();
 	}
 	
 	
@@ -128,5 +175,7 @@ public class CountService {
 		return zf+"00"+num;
 
 	}
+	
+	
 	
 }

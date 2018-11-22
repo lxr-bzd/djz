@@ -8,7 +8,7 @@ import com.park.api.entity.Count;
 
 public interface CountDao {
 
-	void save(@Param("hid")String hid);
+	void save(@Param("hid")String hid,@Param("rule")String rule);
 	
 	List<Count> findAll(@Param("hid")String hid);
 	
