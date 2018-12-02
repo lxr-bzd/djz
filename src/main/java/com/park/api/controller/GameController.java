@@ -36,7 +36,6 @@ public class GameController extends BaseController{
 		List<String> uids = ServiceManage.jdbcTemplate.queryForList("select djt_u_id from djt_user WHERE djt_islock=1", String.class);
 		gameService.doInputTurn(pei,uids);
 		System.gc();
-		gameService.getTurnId().set(null);
 		return JsonResult.getSuccessResult(gameService.getMainModel(uid));
 	}
 	
@@ -48,16 +47,10 @@ public class GameController extends BaseController{
 		Integer isSu = ServiceManage.jdbcTemplate.queryForObject("select is_su from djt_user where djt_u_id = ?", Integer.class,uid);
 		if(isSu==1&&ret==null) {
 			List<String> uids = ServiceManage.jdbcTemplate.queryForList("select djt_u_id from djt_user WHERE djt_islock=1", String.class);
-			for (String id : uids) {
-				Game game =  gameService.getRuningGame(id);
-				if(game!=null)gameService.finishGame(game.getUid(),game.getId());
-				gameService.doNewly(id);
-			}
+			gameService.doRenewTurn(uids);
 			ret = gameService.getMainModel(uid);
 			
 		}
-		
-		gameService.getTurnId().set(null);
 		
 		if(ret == null) throw new ApplicationException("没有正在进行的表格");
 		return JsonResult.getSuccessResult(ret);
@@ -72,18 +65,10 @@ public class GameController extends BaseController{
 		Integer isSu = ServiceManage.jdbcTemplate.queryForObject("select is_su from djt_user where djt_u_id = ?", Integer.class,uid);
 		if(isSu!=1)throw new ApplicationException("不是超级会员无法操作");
 		List<String> uids = ServiceManage.jdbcTemplate.queryForList("select djt_u_id from djt_user WHERE djt_islock=1", String.class);
-		for (String id : uids) {
-			Game game =  gameService.getRuningGame(id);
-			if(game!=null)gameService.finishGame(game.getUid(),game.getId());
-			gameService.doNewly(id);
-		}
-		
+		gameService.doRenewTurn(uids);
 		
 		Map<String, Object> ret = gameService.getMainModel(uid);
 		
-		
-		
-		gameService.getTurnId().set(null);
 		return JsonResult.getSuccessResult(ret);
 	}
 	

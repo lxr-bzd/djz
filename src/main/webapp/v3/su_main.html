@@ -15,7 +15,7 @@
 	<body>
 		<!--前臺表-->
 		<section class="reception_wrap">
-			<div class="reception_box" style="max-width: 1200px;">
+			<div class="reception_box" style="max-width: 1400px;">
 				<!--數據表-->
 				<table style="border: 1px solid #000;">
 					<tr class="reception">
@@ -49,29 +49,32 @@
 							  	<tr >
 							  		<td colspan="12" style="padding: 0px;">
 							  			<table id="bg_group" style="border: 1px solid #000;table-layout:fixed;he">
-
-											  	<tr>
-											    	<td colspan="2" rowspan="2" class="focus_row">--</td>
-											    	<td colspan="2" >老</td>
-											    	<td colspan="2" ></td>
-											    	<td colspan="2" >男</td>
-											    	<td colspan="2" ></td>
-											    	<td colspan="2" rowspan="2" class="focus_row">--</td>
-											  	</tr>
-											  	
-											  
-											  	<tr>
-											    	<td colspan="2" >少</td>
-											    	<td colspan="2" ></td>
-											    	<td colspan="2" >女</td>
-											    	<td colspan="2" ></td>
+												<tr>
+											    	<td colspan="2" rowspan="3">--</td>
+											    	<td colspan="2">老</td>
+											    	<td colspan="2" class="red"></td>
+											    	<td colspan="2">男</td>
+											    	<td colspan="2" class="red"></td>
+											    	<td colspan="2" rowspan="3">--</td>
 											  	</tr>
 											  	<tr>
-											    	<td colspan="2" >--</td>
-											    	<td colspan="2" >结果</td>
-											    	<td colspan="4" class="focus_jg"></td>
-											    	<td colspan="2" >结果</td>
-											    	<td colspan="2" >--</td>
+											    	<td colspan="2">少</td>
+											    	<td colspan="2" class="red"></td>
+											    	<td colspan="2">女</td>
+											    	<td colspan="2" class="red"></td>
+											  	</tr>
+												<tr>
+											    	<td colspan="2">统计</td>
+											    	<td colspan="2"></td>
+													<td colspan="2">累计</td>
+											    	<td colspan="2"></td>
+											  	</tr>
+											  	<tr>
+											    	<td colspan="2">--</td>
+											    	<td colspan="2">结果</td>
+													<td colspan="4" class="focus_jg"></td>
+													<td colspan="2">结果</td>
+											    	<td colspan="2">--</td>
 											  	</tr>
 							  			</table>
 							  		</td>
@@ -93,8 +96,6 @@
 									<div style="overflow-y:scroll;height:500px;">
 											<table border="1" class="" style="height:500px;" >
 											<colgroup>
-												<col style="width:100px"/>
-												<col/>
 											</colgroup>
 											  	<tbody id="queue_group">
 												  	<!--數據行-1-->
@@ -110,15 +111,13 @@
 											  	</tbody>
 											</table>
 									</div>
-									<div style="overflow-y: scroll;">
+									<!-- <div style="overflow-y: scroll;">
 									<table style="width:100%;height: 50px;" >
 											<colgroup>
-												<col style="width:100px"/>
-												<col/>
 											</colgroup>
 										<tr><td colspan="" >结果汇总</td><td colspan="" id="allJg">--</td></tr>
 									</table>
-									</div>
+									</div> -->
 								
 							</td>
 					</tr>
@@ -376,10 +375,17 @@ var etbHtml = "";
 function ref(data){
 	$(".focus_row").html(data.game.focus_row-2);
 	$("#queue_group").empty();
-	/* if(data.game.focus_row>=4)
-	var tg = gameCore.tg(data.count.queue,data.lastRow.gong,data.count.rule);
+	$("#allJg").empty();
+	 if(data.game.focus_row>=4){
+		 var info = eval(data.turn.info);
+		 var tg = {lsbg:{k:info[4]==0?'':(info[4]>0?'老':'少'),v:Math.abs(info[4])}
+		 ,nnbg:{k:info[5]==0?'':(info[5]>0?'男':'女'),v:Math.abs(info[5])
+				 },lj:data.turn.lj,info:{}};
+		 
+	 }
+	
 	$("#bg_group").html(template('tmpl_tg',{frow:data.game.focus_row-2,
-		tg:tg?tg:{lsbg:{k:'',v:''},nnbg:{k:'',v:''},info:{}}})); */
+		tg:tg?tg:{lsbg:{k:'',v:''},nnbg:{k:'',v:''},lj:0,info:{}}})); 
 	
 	if(data.game.focus_row>=3){
 		var tgM = [];
@@ -395,20 +401,26 @@ function ref(data){
 		}
 		
 		
-		var html = '<tr class="data_col_r"><td class="frist">1</td><td style="color:#000">0</td></tr>';
+		var html = '';
 		var focus_jg = null;
 		var allJg = 0;
 		for (var i = 0; i < tgM.length; i++) {
 			var v = tgM[i];
 			focus_jg = v;
 			allJg+=v;
-			html+='<tr class="data_col_r"><td class="frist">'+((i==tgM.length-1)?('<a id="bottom">'+(i+2)+'</a>'):(i+2))+'</td>'
-		    	+'<td '+(v<=0?'style="color:#000"':'')+'>'+v+'</td></tr>'
+			html+='<tr class="data_col_r"><td class="frist">'+((i==tgM.length-1)?('<a id="bottom">'+(i+1)+'</a>'):(i+1))+'</td>'
+		    	+'<td '+(v<=0?'style="color:#000"':'')+'>'+v+'</td>'
+		    	+'<td '+(allJg<=0?'style="color:#000"':'')+'>'+allJg+'</td></tr>';
 		    	
 		}
 		$(".focus_jg").html(focus_jg);
+		if(focus_jg>0)$(".focus_jg").addClass("red");
+		
 		$("#queue_group").html(html+'<tr></tr>');
-		$("#allJg").html(allJg);
+		/* if(allJg>0)
+			$("#allJg").addClass("red");
+		else $("#allJg").removeClass("red");
+		$("#allJg").html(allJg); */
 		
 		
 		location.href="#bottom";
@@ -550,7 +562,7 @@ function ref(data){
 							    	<td colspan="2" >统计</td>
 							    	<td colspan="2" >{{tg.lsbg.v+tg.nnbg.v}}</td>
 									<td colspan="2" >累计</td>
-							    	<td colspan="2" ></td>
+							    	<td colspan="2" >{{tg.lj}}</td>
 							  	</tr>
 							  	<tr>
 							    	<td colspan="2" >{{if frow>-1}}{{frow-1}}{{else}}--{{/if}}</td>
