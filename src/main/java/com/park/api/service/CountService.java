@@ -119,7 +119,7 @@ public class CountService {
 		if(length>=start&&length<end) {
 			int l = (int) (Math.pow(2,length-start));
 			
-			if(type==2)return 1;
+			if(type==2)return isMinus?-1:1;
 			else
 			return isMinus?-l:l;
 		}

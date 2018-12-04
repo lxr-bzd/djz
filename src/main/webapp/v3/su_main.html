@@ -89,7 +89,7 @@
 						<td colspan="4" class="table_top rec-table-two" style="border: 1px solid #000;">
 							
 									<table border="" cellspacing="" cellpadding="" class="child_tit_r" style="width:100%">
-										<tbody><tr><th colspan="4" class="main_tit" style="font-size: 20px;">结果趋势</th></tr>
+										<tbody><tr><th colspan="4" class="main_tit" style="font-size: 20px;">结果趋势 &nbsp;&nbsp;<a href="javascript:removeAll()" style="font-size: 14px;color:#333;">清空数据</a></th></tr>
 										<tr></tr>
 										</tbody>
 									</table>
@@ -111,13 +111,13 @@
 											  	</tbody>
 											</table>
 									</div>
-									<!-- <div style="overflow-y: scroll;">
+									 <div style="overflow-y: scroll;">
 									<table style="width:100%;height: 50px;" >
 											<colgroup>
 											</colgroup>
-										<tr><td colspan="" >结果汇总</td><td colspan="" id="allJg">--</td></tr>
+										<tr ><td  style="width:93px;">求和</td><td colspan="2" id="allQh">--</td></tr>
 									</table>
-									</div> -->
+									</div>
 								
 							</td>
 					</tr>
@@ -375,7 +375,7 @@ var etbHtml = "";
 function ref(data){
 	$(".focus_row").html(data.game.focus_row-2);
 	$("#queue_group").empty();
-	$("#allJg").empty();
+	$("#allQh").empty();
 	 if(data.game.focus_row>=4){
 		 var info = eval(data.turn.info);
 		 var tg = {lsbg:{k:info[4]==0?'':(info[4]>0?'老':'少'),v:Math.abs(info[4])}
@@ -404,10 +404,12 @@ function ref(data){
 		var html = '';
 		var focus_jg = null;
 		var allJg = 0;
+		var qh = 0;
 		for (var i = 0; i < tgM.length; i++) {
 			var v = tgM[i];
 			focus_jg = v;
 			allJg+=v;
+			qh+=(v>0?1:(v<0?-1:0));
 			html+='<tr class="data_col_r"><td class="frist">'+((i==tgM.length-1)?('<a id="bottom">'+(i+1)+'</a>'):(i+1))+'</td>'
 		    	+'<td '+(v<=0?'style="color:#000"':'')+'>'+v+'</td>'
 		    	+'<td '+(allJg<=0?'style="color:#000"':'')+'>'+allJg+'</td></tr>';
@@ -421,6 +423,11 @@ function ref(data){
 			$("#allJg").addClass("red");
 		else $("#allJg").removeClass("red");
 		$("#allJg").html(allJg); */
+		if(qh>0)
+			$("#allQh").addClass("red");
+		else $("#allQh").removeClass("red");
+		$("#allQh").html(qh);
+		
 		
 		
 		location.href="#bottom";
@@ -434,6 +441,34 @@ function ref(data){
 	
 }
 	
+	
+/**
+清空所有游戏数据
+*/
+function removeAll(){
+	layer.confirm('確定清空數據？', {
+		  btn: ['是','否'] 
+		}, function(){
+			$.ajax({
+				url:"../user/game/removeAll.do",
+				type:"post",
+				async:false,
+				success:function(result){
+					if(result.code==1){
+						layer.msg('成功');
+					}
+					else{
+						
+						alert(result.msg)
+					}
+				}
+			});
+		  
+		}, function(){
+		 
+		});
+	
+}
 	
 	
 	</script>
