@@ -41,6 +41,8 @@ public class CountService {
 		int nvJg = 0;
 		String[] gongs = gong.split(",");
 		
+		int ys = 0;
+		
 		//循环组
 		for (int i = 0; i < queues.length; i++) {
 			String q1 = queues[i];
@@ -51,6 +53,8 @@ public class CountService {
 			for (int j = 0; j < HU_NUM*2; j++) {
 				String zf = q1.substring(j*itemSize, j*itemSize+1);
 				String col = col1.substring(j, j+1);
+				//计算原始值
+				ys=ys+(col.equals("1")?-1:1);
 				//上一次的列队值
 				int pNum = Integer.parseInt(q1.substring(j*itemSize+1, j*itemSize+itemSize));
 				
@@ -98,7 +102,8 @@ public class CountService {
 		return new String[] {queueRet.substring(0, queueRet.length()-1)
 				,buildQueueCounts(qcs)
 				,newGrpQueue.substring(0, newGrpQueue.length()-1)
-				,row>=3?(lsJg+"_"+nvJg):null};
+				,row>=3?(lsJg+"_"+nvJg):null
+				,ys+""};
 
 	}
 	

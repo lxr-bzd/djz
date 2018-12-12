@@ -83,8 +83,13 @@ public class GameService {
 		
 		//读取使用的组
 		int group = getGroup(uid);
-		String rule = ServiceManage.jdbcTemplate.queryForObject("select val from djt_sys where ckey='rule'", String.class);
+		String rule = null;
 		Integer rule_type = ServiceManage.jdbcTemplate.queryForObject("select val from djt_sys where ckey='use_rule'", Integer.class);
+		
+		if(rule_type==1)
+			rule = ServiceManage.jdbcTemplate.queryForObject("select val from djt_sys where ckey='rule'",String.class);
+		else 
+			rule = ServiceManage.jdbcTemplate.queryForObject("select val from djt_sys where ckey='rule2'", String.class);
 		
 		if(turnId.get()==null) {
 			   turnId.set(createTurn(rule,rule_type));
@@ -231,8 +236,8 @@ public class GameService {
 		String[] rets = CountService.countQueue(row,map.get("queue").toString(), map.get("queue_count").toString(),map.get("grp_queue").toString()
 				, gong,gongCol,rule_type,start,end);
 		
-		ServiceManage.jdbcTemplate.update("UPDATE game_runing_count SET queue=?,queue_count=?,grp_queue=?,tg=CONCAT(tg,?) WHERE id=?"
-				,rets[0],rets[1],rets[2],rets[3]!=null?rets[3]+",":"",map.get("id"));
+		ServiceManage.jdbcTemplate.update("UPDATE game_runing_count SET queue=?,queue_count=?,grp_queue=?,tg=CONCAT(tg,?),ys=ys+? WHERE id=?"
+				,rets[0],rets[1],rets[2],rets[3]!=null?rets[3]+",":"",rets[4],map.get("id"));
 		
 		
 		
@@ -335,8 +340,8 @@ public class GameService {
 	   
 			 
 			 //拷贝统计数据
-		ServiceManage.jdbcTemplate.update("INSERT INTO djt_history (tid,`hid`, `uid`, `tbNum`, `focus_row`, `queue_count`, `tg`, `rule`) \r\n" + 
-			 		"		 select tid,hid,b.uid,tbNum,focus_row,queue_count,tg,rule from game_runing_count a left join game_history b  on a.hid= b.id\r\n" + 
+		ServiceManage.jdbcTemplate.update("INSERT INTO djt_history (tid,`hid`, `uid`, `tbNum`, `focus_row`, `queue_count`, `tg`, `rule`,ys) \r\n" + 
+			 		"		 select tid,hid,b.uid,tbNum,focus_row,queue_count,tg,rule,ys from game_runing_count a left join game_history b  on a.hid= b.id\r\n" + 
 			 		"		  where hid = ? limit 1",hid);
 		ServiceManage.jdbcTemplate.update("UPDATE game_turn SET state=2 WHERE id =(select tid from game_runing_count where hid = ? limit 1)",hid);
 			
