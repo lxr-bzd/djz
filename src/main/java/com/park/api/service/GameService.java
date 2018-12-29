@@ -1,26 +1,13 @@
 package com.park.api.service;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.core.appender.rolling.SizeBasedTriggeringPolicy;
-import org.eclipse.jdt.internal.compiler.env.IGenericField;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.method.annotation.ServletCookieValueMethodArgumentResolver;
-
 import com.alibaba.fastjson.JSONObject;
 import com.lxr.commons.exception.ApplicationException;
 import com.park.api.ServiceManage;
@@ -31,18 +18,16 @@ import com.park.api.entity.Count;
 import com.park.api.entity.Crow;
 import com.park.api.entity.Game;
 import com.park.api.entity.Tmpl;
+import com.park.api.entity.Turn;
 
 @Service
 public class GameService {
 	
-	public ThreadLocal<String> turnId = new ThreadLocal<>();
-	
-	public ThreadLocal<String> countTurnId = new ThreadLocal<>();
-	public ThreadLocal<List<Object>> turnCount = new ThreadLocal<>();
 	
 	int GAME_COL = 10;
 	int GAME_ROW = 182;
-	int GAME_ROW_INDEX = 180;
+	
+	int GAME_GROUP = 1000;
 	
 	@Autowired
 	CrowDao crowDao;
@@ -56,20 +41,25 @@ public class GameService {
 	@Autowired
 	GameCoreService gameCoreService;
 	
+	@Autowired
+	TurnService turnService;
+	
 	public Map<String, Object> getMainModel(String uid) {
-		
+		if(true)
+		throw new ApplicationException("这个方法不能被调用");
 		Map<String, Object> ret = new HashMap<>();
 		
 		Game game = crowDao.getRuningGame(uid);
 		if(game==null) return null;
 		
 		ret.put("game", game);
-		ret.put("lastRow", crowDao.getInputRow(game.getId()));
-		List<Map<String, Object>> maps = ServiceManage.jdbcTemplate.queryForList("select b.* from game_history a left join game_runing_count b on a.id=b.hid  where a.state=1");
+		//ret.put("lastRow", crowDao.getInputRow(game.getId()));
+		List<Map<String, Object>> maps = ServiceManage.jdbcTemplate.queryForList(
+				"select b.id,b.tid,b.hid,b.tg,b.rule,b.rule_type,b.ys,b.g,b.g_sum,a.uid from game_history a left join game_runing_count b on a.id=b.hid  where a.state=1");
 		ret.put("counts", maps);
 		if(maps.size()>0)
-		ret.put("turn", 
-				ServiceManage.jdbcTemplate.queryForMap("select * from game_turn where id=?",maps.get(0).get("tid")));
+		ret.put("turn",ServiceManage.jdbcTemplate.queryForMap(
+				"select * from game_turn where id=?",maps.get(0).get("tid")));
 		return ret;
 	}
 	
@@ -83,17 +73,12 @@ public class GameService {
 		
 		//读取使用的组
 		int group = getGroup(uid);
-		String rule = null;
-		Integer rule_type = ServiceManage.jdbcTemplate.queryForObject("select val from djt_sys where ckey='use_rule'", Integer.class);
 		
-		if(rule_type==1)
-			rule = ServiceManage.jdbcTemplate.queryForObject("select val from djt_sys where ckey='rule'",String.class);
-		else 
-			rule = ServiceManage.jdbcTemplate.queryForObject("select val from djt_sys where ckey='rule2'", String.class);
-		
-		if(turnId.get()==null) {
-			   turnId.set(createTurn(rule,rule_type));
+		if(turnService.getTurn().get()==null) {
+			turnService.getTurn().set(turnService.createTurn());
 		 }
+		
+		Turn turn = turnService.getTurn().get();
 		
 		Game game = new Game();
 		game.setUid(uid);
@@ -102,7 +87,7 @@ public class GameService {
 		game.setCreatetime(System.currentTimeMillis());
 		crowDao.createGame(game);
 		createRunGame(uid,game.getId(), group);
-		countDao.save(game.getId(),rule_type,rule,turnId.get());
+		countDao.save(game.getId(),turn.getMod(),turn.getRule_type(),turn.getRule(),turn.getId());
 		
 		
 		
@@ -121,7 +106,7 @@ public class GameService {
 			 
 			 for (int i = 0; i <182; i++) {
 				 StringBuilder sheng = new StringBuilder();
-				 for (int j = 0; j < 1000; j++) {
+				 for (int j = 0; j < GAME_GROUP*10; j++) {
 					 if(j%10==0)sheng.append(",");
 					 sheng.append(random.nextInt(4)+1);
 				}
@@ -134,17 +119,42 @@ public class GameService {
 			}
 		}
 		else {
-			Map<Integer, Crow> crows = new HashMap<>();
+			/*Map<Integer, Crow> crows = new HashMap<>();
 			List<Tmpl> tmpls = tmplDao.findTmpl(uid,group);
 			
 			for (Tmpl tmpl : tmpls) {
 				String[] rs = tmpl.getSheng().trim().split(",");
-				for (int i = 0; i < rs.length; i++) {
+				for (int i = 0; i < rs.length/10; i++) {
 					Crow crow = buildCrowByRow(i+1, crows);
-					crow.setSheng(crow.getSheng()+","+rs[i]);
+					for (int j = 0; j < 10; j++) {
+						crow.setSheng(crow.getSheng()+","+rs[j*182+i]);
+					}
+					
+				}
+			}*/
+			Map<Integer, StringBuilder> shnegs = new HashMap<>();
+			List<Tmpl> tmpls = tmplDao.findTmpl(uid,group);
+			
+			for (Tmpl tmpl : tmpls) {
+				String[] rs = tmpl.getSheng().trim().split(",");
+				for (int i = 0; i < rs.length/10; i++) {
+					StringBuilder shneg = buildShengByRow(i+1, shnegs);
+					for (int j = 0; j < 10; j++) {
+						shneg.append(",");
+						shneg.append(rs[j*182+i]);
+					}
+					
 				}
 			}
-			ret = new ArrayList<>(crows.values());
+			ret = new ArrayList<>();
+			for (Map.Entry<Integer, StringBuilder> entry : shnegs.entrySet()) { 
+				Crow crow = new Crow();
+				crow.setRow(entry.getKey());
+				crow.setSheng(entry.getValue().toString());
+				ret.add(crow);
+			} 
+			
+			
 		}
 		
 		for (Crow crow : ret) {
@@ -161,14 +171,11 @@ public class GameService {
 	public void doInput(String pei,String uid) {
 		
 		Game game = crowDao.getRuningGame(uid);
-		if(game == null) {
-			doNewly(uid);
-			game = crowDao.getRuningGame(uid);
-		}
+		if(game == null)throw new ApplicationException("游戏未开始！");
 		
-		Crow icrow =  crowDao.getInputRow(game.getId());
+		Crow icrow =  crowDao.getInputRow(game.getId(),game.getFocus_row());
 		
-		if(icrow==null)throw new ApplicationException("错误：本轮游戏已结束！");
+		if(icrow==null)throw new ApplicationException("本轮游戏已结束！");
 		
 		//基础计算开始
 		String dui = gameCoreService.reckonDui(icrow.getSheng(),pei);
@@ -233,8 +240,10 @@ public class GameService {
 		int end = Integer.parseInt(rule[1]);
 		int rule_type = Integer.parseInt(map.get("rule_type").toString());
 		
+		int mod2 = turnService.getInputTurn().get().getMod2();
+		
 		String[] rets = CountService.countQueue(row,map.get("queue").toString(), map.get("queue_count").toString(),map.get("grp_queue").toString()
-				, gong,gongCol,rule_type,start,end);
+				, gong,gongCol,rule_type,start,end,mod2);
 		
 		ServiceManage.jdbcTemplate.update("UPDATE game_runing_count SET queue=?,queue_count=?,grp_queue=?,tg=CONCAT(tg,?),ys=ys+? WHERE id=?"
 				,rets[0],rets[1],rets[2],rets[3]!=null?rets[3]+",":"",rets[4],map.get("id"));
@@ -255,93 +264,64 @@ public class GameService {
 		
 	}
 	
-	 public void doRenewTurn(List<String> uids) {
-		List<String> games = ServiceManage.jdbcTemplate.queryForList("select id from game_history where state=1", String.class);
-		for (int i = 0; i < games.size(); i++) {
-			finishGame(null, games.get(i));
-		}
-		for (String uid : uids) {
-			doNewly(uid);
-		}
-		getTurnId().set(null);
-	 }
 	 
-	public void doInputTurn(String pei,List<String> uids) {
-		turnCount.set(null);
-		countTurnId.set(null);
-		for (int i = 0; i < uids.size(); i++) {
-			doInput(pei, uids.get(i));
-		}
-		
-		
-		if(countTurnId.get()==null)return;
-		
-		Integer[] allts = new Integer[]{0,0,0,0 ,0,0,0,0};
-		for (Object obj : turnCount.get()) {
-			Integer[] ts = (Integer[])obj;
-			allts[0]+=ts[0];
-			allts[1]+=ts[1];
-			allts[2]+=ts[2];
-			allts[3]+=ts[3];
-			allts[4]+=ts[4];
-			allts[5]+=ts[5];
-			allts[6]+=ts[6];
-			allts[7]+=ts[7];
-			
-		}
-		
-		Object[] objs = CountService.countAllTg(allts);
-		ServiceManage.jdbcTemplate.update("update game_turn set frow=frow+1,info=?,lj=lj+? where id=?",
-				JSONObject.toJSONString(objs),
-				Math.abs((Integer)objs[4])+Math.abs((Integer)objs[5]),
-				countTurnId.get());
-
-		getTurnId().set(null);
-	}
 	
+	
+	/**
+	 * 
+	 * @param hid
+	 * @param queue 
+	 * @param gong 最后一个无颜色的供
+	 */
 	private void doCountTurn(String hid,String queue,String gong) {
-		Map<String, Object> map = ServiceManage.jdbcTemplate.queryForMap("select tid,rule,rule_type from game_runing_count where hid=? limit 1", hid);
-		countTurnId.set(map.get("tid").toString());
+		Map<String, Object> map = ServiceManage.jdbcTemplate.queryForMap("select b.id, b.tid,a.uid,b.mod,b.rule,b.rule_type from game_history a left join game_runing_count b on a.id = b.hid where a.id=? limit 1", hid);
+		turnService.getCountTurnId().set(map.get("tid").toString());
 		String[] rule = map.get("rule").toString().split(",");
 		int start = Integer.parseInt(rule[0]);
 		int end = Integer.parseInt(rule[1]);
 		int rule_type =Integer.parseInt(map.get("rule_type").toString());
+		//1:A模式，2:B模式
+		int mod2 = turnService.getInputTurn().get().getMod2();
+		int mod =Integer.parseInt(map.get("mod").toString());
+		if(mod==1) {
+			//A模式
+			Integer[] tgs = CountService.countTgA(queue, gong,rule_type, start, end);
+			Object[] objs = CountService.countAllTgA(tgs,mod2);
+			ServiceManage.jdbcTemplate.update("update game_runing_count set g=?,g_sum=g_sum+? where id=?",
+					JSONObject.toJSONString(objs),
+					Math.abs((Integer)objs[4])+Math.abs((Integer)objs[5]),
+					map.get("id"));
+			
+			if(turnService.getTurnCount().get()==null)turnService.getTurnCount().set(new HashMap());
+			turnService.getTurnCount().get().put(map.get("uid").toString(), objs);
+			
+		}else {
+			//B模式
+			Integer[] tgs = CountService.countTgB(queue, gong,rule_type, start, end);
+			Object[] objs = CountService.countAllTgB(tgs);
+			ServiceManage.jdbcTemplate.update("update game_runing_count set g=?,g_sum=g_sum+? where id=?",
+					JSONObject.toJSONString(objs),
+					Math.abs((Integer)objs[0])+Math.abs((Integer)objs[1]),
+					map.get("id"));
+			if(turnService.getTurnCount().get()==null)turnService.getTurnCount().set(new HashMap());
+			turnService.getTurnCount().get().put(map.get("uid").toString(), objs);
+			
+		}
 		
-		Integer[] tgs = CountService.countTg(queue, gong,rule_type, start, end);
 		
-		if(turnCount.get()==null)turnCount.set(new ArrayList<>());
-		
-		turnCount.get().add(tgs);
 		
 		
 	}
 	
-	
-	private String createTurn(final String rule,final Integer rule_type) {
-		
-		    KeyHolder keyHolder = new GeneratedKeyHolder();
-		    ServiceManage.jdbcTemplate.update(
-		            new PreparedStatementCreator() {
-		                public PreparedStatement createPreparedStatement(Connection con) throws SQLException
-		                {
-		                	PreparedStatement ps = con.prepareStatement("INSERT INTO game_turn (frow,info,lj,`rule`,rule_type,state) VALUES (3,'',0,?,?,1)",Statement.RETURN_GENERATED_KEYS); 
-		                    ps.setString(1, rule);
-		                    ps.setInt(2, rule_type);
-		                	return ps;
-		                }
-		            }, keyHolder);
-		    return keyHolder.getKey().intValue()+"";
 
-	}
-		
 		 
 	public void deleteGame(String hid) {
 		
 	   
 			 
 			 //拷贝统计数据
-		ServiceManage.jdbcTemplate.update("INSERT INTO djt_history (tid,`hid`, `uid`, `tbNum`, `focus_row`, `queue_count`, `tg`, `rule`,ys) \r\n" + 
-			 		"		 select tid,hid,b.uid,tbNum,focus_row,queue_count,tg,rule,ys from game_runing_count a left join game_history b  on a.hid= b.id\r\n" + 
+		ServiceManage.jdbcTemplate.update("INSERT INTO djt_history (tid,`hid`, `uid`, `tbNum`, `focus_row`, `queue_count`, `tg`, `rule`,ys,g_sum) " + 
+			 		"		 select tid,hid,b.uid,tbNum,focus_row,queue_count,tg,rule,ys,g_sum from game_runing_count a left join game_history b  on a.hid= b.id " + 
 			 		"		  where hid = ? limit 1",hid);
 		ServiceManage.jdbcTemplate.update("UPDATE game_turn SET state=2 WHERE id =(select tid from game_runing_count where hid = ? limit 1)",hid);
 			
@@ -442,8 +422,19 @@ public class GameService {
 
 	}
 	
+	private StringBuilder buildShengByRow(int row,Map<Integer, StringBuilder> map) {
+		StringBuilder crow = map.get(row);
+		if(crow==null) {
+			crow = new StringBuilder("");
+			map.put(row,crow);
+		}
+		
+		return crow;
+
+	}
+	
 	public Crow getNextRow(String hid,int crow) {
-		if(crow>=GAME_ROW_INDEX)return null;
+		if(crow>=GAME_ROW)return null;
 		
 		return crowDao.getRow(hid,crow+1);
 		
@@ -464,10 +455,7 @@ public class GameService {
 	
 	
 	
-	public Crow getInputRow(String uid) {
-		return crowDao.getInputRow(uid);
-
-	}
+	
 	
 	
 	public Game getRuningGame(String uid) {
@@ -477,12 +465,5 @@ public class GameService {
 
 	}
 	
-	public ThreadLocal<String> getTurnId() {
-		return turnId;
-	}
-	
-	public void setTurnId(ThreadLocal<String> turnId) {
-		this.turnId = turnId;
-	}
 	
 }

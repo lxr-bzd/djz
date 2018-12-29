@@ -27,7 +27,7 @@ public class CountService {
 	 * @return [队列扫描，总队列统计，组队列统计，老少-男女结果值]
 	 */
 	public static String[] countQueue(int row,String queue,String queueCounts,String grpQueue
-			,String gong,String gongCol,int rule_type,int start,int end) {
+			,String gong,String gongCol,int rule_type,int start,int end,int mod2) {
 		
 		Integer[] qcs = parseQueueCounts(queueCounts);
 		
@@ -93,11 +93,19 @@ public class CountService {
 				
 				
 			}
+			
+			
+			
 			newGrpQueue.append(buildGrpQueue(gqs)+",");
 			queueRet.append(qr+",");
 			
 		}
 		
+		
+		if(mod2==2) {
+			lsJg=-lsJg;
+			nvJg=-nvJg;
+		}
 		
 		return new String[] {queueRet.substring(0, queueRet.length()-1)
 				,buildQueueCounts(qcs)
@@ -196,7 +204,7 @@ public class CountService {
 	}
 	
 	
-	public static Integer[] countTg(String queue,String gong,int rule_type,int start,int end) {
+	public static Integer[] countTgA(String queue,String gong,int rule_type,int start,int end) {
 		Integer[] info = new Integer[]{
 				0,0,
 				0,0,
@@ -227,8 +235,66 @@ public class CountService {
 
 	}
 	
+	public static Integer[] countTgB(String queue,String gong,int rule_type,int start,int end) {
+		Integer[] info = new Integer[]{
+				0,0,
+				0,0
+		};
+		/*
+		 * {男，女，老，少}
+		 */
+		String bmap = "男女老少";
+		String[] gs = gong.split(",");
+		for (int i = 0; i < gs.length; i++) {
+			
+			for (int j = 0; j < HU_NUM*2; j++) {
+				String g1 = gs[i].substring(j,j+1);
+				info[bmap.indexOf(g1)]+=1;
+			}
+			
+		}
+		
+		return info;
+		
+
+	}
 	
-	public static Object[] countAllTg(Integer[] allts) {
+	/**
+	 * 报告求和
+	 * @param qh
+	 * @return
+	 */
+	public static Integer[] countQh(Integer[] qh,int mod2) {
+		Integer[] qhbg = new Integer[] {qh[0]-qh[1],qh[2]-qh[3]};
+		
+		return qhbg;
+		
+	}
+	
+	/**
+	 * 计算求和结果
+	 * @param pei
+	 * @param qh
+	 * @return
+	 */
+	public static Integer[] countQhJg(String pei,Integer[] upQh) {
+		
+		Integer[] qhbg = upQh;
+		
+		Integer pv = Integer.valueOf(pei);
+		int jg1 =(pv>2?qhbg[0]:-qhbg[0]);
+		int	jg2 =(pv%2!=0?qhbg[1]:-qhbg[1]);
+		return new Integer[] {jg1,jg2};
+		
+	}
+	
+	
+	/**
+	 * 提供报告汇总表A模式
+	 * @param allts
+	 * @return "[[大的下标值,和值],[大的下标值,和值],[大的下标值,和值],[大的下标值,和值],（老男为正数，少女为负数表示报告）,（同上）,原allts]"
+	 */
+	public static Object[] countAllTgA(Integer[] allts,Integer mod2) {
 		
 		Integer[] lss = getHz(0,allts[0],allts[1]);
 		Integer[] lsj = getHz(2,allts[2],allts[3]);
@@ -241,9 +307,35 @@ public class CountService {
 		int nv1 = (nvs==null?0:((nvs[0]+1)%2==0?nvs[1]:-nvs[1]));
 		int nv2 = (nvj==null?0:((nvj[0]+1)%2==0?-nvj[1]:nvj[1]));
 		
+		if(mod2==1)
+			return new Object[] {lss,lsj,nvs,nvj
+					,ls1+ls2,nv1+nv2,allts
+					
+			};
+		else 
+			return new Object[] {lss,lsj,nvs,nvj
+					,-(ls1+ls2),-(nv1+nv2),allts
+					
+			};
 		
-		return new Object[] {lss,lsj,nvs,nvj
-				,ls1+ls2,nv1+nv2,allts
+		
+
+	}
+	/**
+	 * 提供报告汇总表B模式
+	 * @param allts
+	 * @return
+	 */
+	public static Object[] countAllTgB(Integer[] allts) {
+		//{老少男女}
+		Integer ls = null;
+		Integer nv = null;
+		
+		ls = allts[0]-allts[1];
+		nv = allts[2]-allts[3];
+		
+		return new Object[] {ls,nv
+				,allts
 				
 		};
 		

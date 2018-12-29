@@ -239,20 +239,16 @@ html,body{
 	padding-top:10px;
 	
 	text-align: center;
-	font-size: 20px;
+	font-size: 15px;
 	width: auto;
 	margin: auto auto;
 }
 .reception_box{
-	width: 100%;
-	max-width: 1400px;
+	padding:10px;
 	display: inline-block;
-	padding: 30px;
+	
 }
-.reception_box table{
-	width: 100%;
-	height: 520px;
-}
+
 .rec-table-one{
 	width: 70%;
 	height: 100%;
@@ -264,16 +260,14 @@ html,body{
 	height: 40px;
 }
 .rec-table-one,.rec-table-two,.remittance_table{
-	margin-bottom: 30px;
+	/* margin-bottom: 30px; */
 	background-color: rgba(255,255,255,0.8);
 	-webkit-box-shadow: 0px 0px 3px #E1E1E1;
 	-moz-box-shadow: 0px 0px 3px #E1E1E1;
 	box-shadow: 0px 0px 3px #E1E1E1;
 }
 
-.reception {
-	border: 2px solid rgba(0,0,0,1);
-}
+
 .reception table{
 	height: 100%;
 }
@@ -337,9 +331,10 @@ html,body{
 	padding: 8px 10px !important;
 }
 .data_col td{
+	height:40px;
 	min-width: 60px;
     overflow: hidden;
-	padding: 11px 20px!important;
+	padding: 8px 5px!important;
 }
 .data_col_r td{
 	overflow: hidden;
@@ -398,7 +393,7 @@ html,body{
 	font-size: 19px;
 }
 .person_int td{
-	height:60px;
+	height:70px;
 	/*border: 2px solid black;*/
 	padding: 0 !important;
 }
@@ -451,17 +446,14 @@ html,body{
 }
 .exit_btn{
 	cursor: pointer;
-	font-size: 24px;
 	padding: 0 !important;
 	border-left: 1px solid transparent !important;
 }
 .sure_btn{
-	width: 286px !important;
 	background-color: #1ea2ef !important;
 	opacity: 1 !important;
 	color: #FFFFFF !important;
 	cursor: pointer;
-	font-size: 24px;
 	/*margin: 0 176px;*/
 	padding: 0 !important;
 	/* -webkit-box-shadow: 0px 0px 3px #0092D8 !important; */
@@ -470,7 +462,6 @@ html,body{
 }
 .refresh_btn{
 	cursor: pointer;
-	font-size: 24px;
 	padding: 0 !important;
 	border-right: 1px solid transparent !important;
 }

@@ -37,7 +37,7 @@ public interface CrowDao {
 	  * @param hid
 	  * @return
 	  */
-	 Crow getInputRow(@Param("hid")String hid);
+	 Crow getInputRow(@Param("hid")String hid,@Param("row")Integer row);
 	 
 	
 	 void update(@Param("model")Crow crow);

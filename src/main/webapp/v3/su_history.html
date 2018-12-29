@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+
+	    <meta name="description" content="">
+	
+	    <meta name="Keywords" content="">
+	
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<link rel="stylesheet" type="text/css" href="css/main.css"/>
+		<style type="text/css">
+			table{border-collapse: collapse;}
+			table td,table th{
+				border: 1px solid rgba(0,0,0,1);
+			}
+			.top-body{overflow-y: scroll;}
+			.top-body>table{table-layout: fixed;}
+			.scroll-body{overflow-y: scroll;max-height: 615px;}
+			.scroll-body>table{table-layout: fixed;}
+			.scroll-body td{height: 33px;}
+			.bottom-body{overflow-y: scroll;}
+			.bottom-body>table{table-layout: fixed;}
+			.bottom-body>td{height: 38px;}
+			
+			.blue{background-color: #087ec3;color: white;}
+			.blue2{background-color: #92ebff;}
+			.yellow{background-color: yellow;}
+			
+			
+			.btn1{text-align: center;margin: 5px;height: 40px;line-height: 40px;border-radius:5px}
+			
+		
+		
+		</style>
+	</head>
+	<body>
+		<!--前臺表-->
+		<section class="reception_wrap" style="overflow-x: scroll;height: 100%;">
+			<div class="reception_box">
+				<!--數據表-->
+				<table>
+					<tr class="reception">
+						<!--A表-->
+						<td  class="table_top rec-table-one">
+						<div class="top-body">
+							<table >
+							<colgroup>
+											<col style="width:60px;">
+											<col style="width:100px;"><col style="width:60px;">
+											<col style="width:100px;"><col style="width:60px;">
+											<col style="width:100px;"><col style="width:60px;">
+											<col style="width:100px;"><col style="width:60px;">
+											<col style="width:100px;"><col style="width:60px;">
+											<col style="width:100px;"><col style="width:60px;">
+											<col style="width:100px;"><col style="width:60px;">
+											<col style="width:100px;"><col style="width:60px;">
+											<col style="width:100px;"><col style="width:60px;">
+											<col style="width:100px;"><col style="width:60px;">
+											<col style="width:60px;">
+											<col style="width:120px;"><col style="width:80px;">
+											<col style="width:120px;"><col style="width:80px;">
+											
+											<col style="width:120px;">
+											
+										</colgroup>
+								<tbody id="head_group">
+							  	<tr class="data_col"> <td colspan="1"><a href="javascript:history.back(-1)">返回</a></td><td colspan="25">歷史記錄</td><td colspan="1"><a href="javascript:history.back(-1)">返回</a></td></tr>
+							  	<tr class="data_col">
+							    	<td rowspan="2">序號</td>
+							    	<td colspan="2">1號</td>
+							    	<td colspan="2">2號</td>
+							    	<td colspan="2">3號</td>
+							    	<td colspan="2">4號</td>
+							    	<td colspan="2">5號</td>
+							    	<td colspan="2">6號</td>
+							    	<td colspan="2">7號</td>
+							    	<td colspan="2">8號</td>
+							    	<td colspan="2">9號</td>
+							    	<td colspan="2">10號</td>
+							    	<td rowspan="2">序號</td>
+							    	<td colspan="2">匯總結果</td>
+							    	<td colspan="2">求和結果</td>
+							    	<td rowspan="2"><a href="javascript:tableExport()">導出</a></td>
+							    	
+							  	</tr>
+							  	<tr class="data_col">
+							    	<td >結果</td>
+							    	<td >求和</td>
+							    	<td >結果</td>
+							    	<td >求和</td>
+							    	<td >結果</td>
+							    	<td >求和</td>
+							    	<td >結果</td>
+							    	<td >求和</td>
+							    	<td >結果</td>
+							    	<td >求和</td>
+							    	<td >結果</td>
+							    	<td >求和</td>
+							    	<td >結果</td>
+							    	<td >求和</td>
+							    	<td >結果</td>
+							    	<td >求和</td>
+							    	<td >結果</td>
+							    	<td >求和</td>
+							    	<td >結果</td>
+							    	<td >求和</td>
+							    	
+							    	<td >結果</td>
+							    	<td >求和</td>
+							    	<td >結果</td>
+							    	<td >求和</td>
+							    	
+							  	</tr>
+							  	</tbody>
+							  
+							</table>
+							</div>
+						</td>
+						
+					</tr>
+					<tr>
+						<td>
+							<div class="scroll-body">
+							<table class="rec-table-one">
+										<colgroup>
+											<col style="width:60px;">
+											<col style="width:100px;"><col style="width:60px;">
+											<col style="width:100px;"><col style="width:60px;">
+											<col style="width:100px;"><col style="width:60px;">
+											<col style="width:100px;"><col style="width:60px;">
+											<col style="width:100px;"><col style="width:60px;">
+											<col style="width:100px;"><col style="width:60px;">
+											<col style="width:100px;"><col style="width:60px;">
+											<col style="width:100px;"><col style="width:60px;">
+											<col style="width:100px;"><col style="width:60px;">
+											<col style="width:100px;"><col style="width:60px;">
+											<col style="width:60px;">
+											<col style="width:120px;"><col style="width:80px;">
+											<col style="width:120px;"><col style="width:80px;">
+											
+											<col style="width:120px;">
+											
+										</colgroup>
+									<tbody id="main_group">
+									<!-- <tr class="data_col ">
+							  		<td>1</td>
+							    	<td>-111</td><td>3</td>
+							    	<td>-111</td><td>3</td>
+							    	<td>-111</td><td>3</td>
+							    	<td>-111</td><td>3</td>
+							    	<td>-111</td><td>3</td>
+							    	<td>-111</td><td>3</td>
+							    	<td>-111</td><td>3</td>
+							    	<td>-111</td><td>3</td>
+							    	<td>-111</td><td>3</td>
+							    	<td>-111</td><td>3</td>
+							    	<td>1</td>
+							    	<td>-111</td><td>3</td>
+							    	<td>-111</td><td>3</td>
+							    	<td>刪除</td>
+							    	
+							  	</tr> -->
+							  	</tbody>
+							  	<tr class="data_col">
+							    	<td rowspan="2">序號</td>
+							    	<td colspan="2">1號</td>
+							    	<td colspan="2">2號</td>
+							    	<td colspan="2">3號</td>
+							    	<td colspan="2">4號</td>
+							    	<td colspan="2">5號</td>
+							    	<td colspan="2">6號</td>
+							    	<td colspan="2">7號</td>
+							    	<td colspan="2">8號</td>
+							    	<td colspan="2">9號</td>
+							    	<td colspan="2">10號</td>
+							    	<td rowspan="2">序號</td>
+							    	<td colspan="2">匯總結果</td>
+							    	<td colspan="2">求和結果</td>
+							    	<td rowspan="2"><a href="javascript:del(2)">刪除全部</a></td>
+							    	
+							  	</tr>
+							</table>
+							</div>
+						
+						</td>
+					</tr>
+					
+				</table>
+				
+				
+				
+			</div>
+		</section>
+		
+		<script src="js/jquery-1.11.2.min.js"></script>
+		<script src="../js/app.js"></script>
+		<script src="../jslib/layer/layer.js"></script>
+		<script type="text/javascript" src="../js/template-web.js"></script>
+		<script src="../js/tableExport.min.js"></script>
+		<script src="../js/jquery.base64.js"></script>
+		
+		<script type="text/javascript">
+		
+		$(function(){
+			 $app.request("../user/his.do",function(data){
+					if(data.code!=1){
+						$app.alert(data.msg);
+						return;
+					}
+					
+					ref(data.data);
+				});
+			
+		});
+		
+		
+		function initViewData(data){
+			var mod = data.turn.mod;
+			var turn = initTurn(data.turn);
+			var counts = data.counts;
+			var jgData = {hb:{list:[],jg:0,qh:0}};
+			var bgData = {};
+			for (var i = 0; i < counts.length; i++) {
+				var count = counts[i];
+				bgData[count.uid] = [count.g_sum];
+				jgData[count.uid] = {list:[],jg:0,qh:0};
+				var ts = count.tg?count.tg.split(","):[];
+				for (var j = 0; j < ts.length; j++) {
+					if(!ts[j])continue;
+					var jg = jgData[count.uid];
+					var v = new Number(ts[j].split("_")[0])+new Number(ts[j].split("_")[1]);
+					jg.list[j] = v;
+					jg.jg+=v;
+					jg.qh+=(v>0?1:(v<0?-1:0));
+					if(turn.user_lock[count.uid-1]=='1'){
+						if(isNaN(jgData['hb'].list[j]))jgData['hb'].list[j] = 0;
+						jgData['hb'].list[j]+=v;
+					}
+					
+				}
+			}
+			
+			for (var i = 0; i < jgData['hb'].list.length; i++) {
+				var v = jgData['hb'].list[i];
+				jgData['hb'].jg+=v;
+				jgData['hb'].qh+=(v>0?1:(v<0?-1:0));
+			}
+			
+			//處理求和結果
+			var qhData = [[{},{},0],{list:[null],sum:0,qh:0}];
+			qhData[0][2] = isNaN(turn.qh_sum)?0:new Number(turn.qh_sum);
+			var qhjgs = turn.qh_jg?turn.qh_jg.split(","):[];
+			for (var i = 0; i < qhjgs.length; i++) {
+				if(!qhjgs[i])continue;
+				var v = new Number(qhjgs[i]);
+				qhData[1].list.push(v);
+				qhData[1].sum+=v;
+				qhData[1].qh+=(v>0?1:(v<0?-1:0));
+			}
+			
+			return {turn:turn,jgData:jgData,qhData:qhData,bgData:bgData};
+			
+			function bgA(g){
+				var ret = [{name:'',val:''},{name:'',val:''},0];
+				ret[0].name = g[4]>0?'男':(g[4]<0?'女':'');
+				ret[0].val = ret[0].name?Math.abs(g[4]):0;
+				ret[1].name = g[5]>0?'男':(g[5]<0?'女':'');
+				ret[1].val = ret[1].name?Math.abs(g[5]):0;
+				ret[2] = ret[0].val+ret[1].val
+				return ret;
+				
+			}
+			function bgB(g){
+				
+				
+			}
+			
+			function initTurn(oldTurn){
+				var turn = oldTurn;
+				turn.info = eval(turn.info);
+				turn.user_lock = turn.user_lock.split(',');
+				return turn;
+			}
+			
+		}
+		
+		
+		function ref(data){
+			console.log(data)
+			var turns = data.turns||[];
+			var his = data.his||[];
+			var hisMap  = {};
+			for (var i = 0; i < his.length; i++) {
+				if(!hisMap[his[i].tid])hisMap[his[i].tid] = [];
+				hisMap[his[i].tid].push(his[i]);
+			}
+			var vData = [];
+			var sumData = {hb:{jg:0,qh:0},qh:{sum:0,qh:0,jg:0}};
+			var gHzData = {hb:0,qh:0};
+			for (var i = 0; i < turns.length; i++) {
+				var tData = initViewData({turn:turns[i],counts:hisMap[turns[i].id]});
+				vData.push(tData);
+				
+				sumData['hb'].jg+=tData.jgData['hb'].jg;
+				sumData['hb'].qh+=tData.jgData['hb'].qh;
+				sumData['qh'].jg+=tData.qhData[1].sum;
+				sumData['qh'].qh+=tData.qhData[1].qh;
+				gHzData.hb+=tData.turn.lj;
+				gHzData.qh+=tData.qhData[0][2];
+				for (var j = 0; j < 10; j++) {
+					
+					if(!sumData[j+1])sumData[j+1] = {jg:0,qh:0};
+					if(!gHzData[j+1])gHzData[j+1] = 0;
+					
+					if(tData.jgData[j+1]){
+						sumData[j+1].jg+=tData.jgData[j+1].jg;
+						sumData[j+1].qh+=tData.jgData[j+1].qh;
+					}
+					if(tData.bgData[j+1]){
+						gHzData[j+1]+=tData.bgData[j+1][0];
+					}
+					
+				}
+			}
+			
+			
+			var m = {vData:vData,sumData:sumData,gHzData:gHzData,u:[1,2,3,4,5,6,7,8,9,10]};
+			console.log(m);
+			var html = template("tb_tmpl",m);
+			/* for ( var j in vData) {
+				var tData = vData[j];
+				var row = '<tr class="data_col "><td>'+(tData.turn.id)+'</td>';
+				for (var i = 0; i < 10; i++) {
+					row+=(tData.jgData[i+1]?'<td>'+tData.jgData[i+1].jg+'</td><td>'+tData.jgData[i+1].qh+'</td>':'<td></td><td></td>');
+				}
+				row+='<td>'+(tData.turn.id)+'</td>';
+				row+='<td>'+tData.jgData['hb'].jg+'</td><td>'+tData.jgData['hb'].qh+'</td>';
+				row+='<td>'+tData.qhData[1].sum+'</td><td>'+tData.qhData[1].qh+'</td>';
+				
+				row+='<td><a href="javascript:del(1,'+tData.turn.id+')">刪除</a></td></tr>';
+				html+=row;
+			}
+			 */
+			$('#main_group').html(html)
+			
+			
+		}
+		
+		
+		function del(mod,tid){
+			var msg = (mod==1?'您確定刪除該條記錄？':'您確定刪除全部記錄？')
+			
+			layer.confirm(msg, {
+				  btn: ['確定','取消'] //按鈕
+				}, function(){
+					$app.request("../user/his/del.do",function(data){
+						if(data.code==1){
+							layer.msg("刪除成功");
+							window.location.reload()
+						}else{
+							layer.msg(data.msg||"刪除失敗");
+							
+						}
+						
+					},{param:{mod:mod,
+						tid:tid}});
+				},function(){});
+			 
+			
+		}
+		
+		
+		function tableExport(){
+			var hd =  $($("#head_group").html());
+			var tb = $(".scroll-body>table");
+			$("#main_group").prepend(hd);
+			tb.tableExport({type:'excel',ignoreColumn: [],ignoreRow:[]
+				, separator:';', escape:'false'
+					 ,formats: ['xlsx']
+			,fileName: '歷史記錄'+new Date().format("yyyy-MM-dd")});
+			hd.remove();
+		}
+		
+		
+		</script>
+		
+		
+		<script type="text/html" id="tb_tmpl">
+		{{each vData as tData j}}
+			<tr class="data_col "><td>{{tData.turn.id}}</td>
+				{{each u as val i}}
+					{{if tData.jgData[i+1]}}<td {{if tData.jgData[i+1].jg>0}}class="red"{{/if}}>{{tData.jgData[i+1].jg}}</td><td {{if tData.jgData[i+1].qh>0}}class="red"{{/if}}>{{tData.jgData[i+1].qh}}</td>{{else}}<td></td><td></td>{{/if}}
+				{{/each}}
+				<td>{{tData.turn.id}}</td>
+				<td {{if tData.jgData['hb'].jg>0}}class="red"{{/if}}>{{tData.jgData['hb'].jg}}</td><td {{if tData.jgData['hb'].qh>0}}class="red"{{/if}}>{{tData.jgData['hb'].qh}}</td>
+				<td {{if tData.qhData[1].sum>0}}class="red"{{/if}}>{{tData.qhData[1].sum}}</td><td {{if tData.qhData[1].qh>0}}class="red"{{/if}}>{{tData.qhData[1].qh}}</td>
+				
+				<td><a href="javascript:del(1,{{tData.turn.id}})">刪除</a></td>
+			</tr>
+		{{/each}}
+			<tr class="data_col blue2"><td>匯總</td>
+				{{each u as val i}}
+					{{if sumData[i+1]}}<td {{if sumData[i+1].jg>0}}class="red"{{/if}}>{{sumData[i+1].jg}}</td><td {{if sumData[i+1].qh>0}}class="red"{{/if}}>{{sumData[i+1].qh}}</td>{{else}}<td></td><td></td>{{/if}}
+				{{/each}}
+				<td>匯總</td>
+				<td {{if sumData['hb'].jg>0}}class="red"{{/if}}>{{sumData['hb'].jg}}</td><td {{if sumData['hb'].qh>0}}class="red"{{/if}}>{{sumData['hb'].qh}}</td>
+				<td {{if sumData['qh'].jg>0}}class="red"{{/if}}>{{sumData['qh'].jg}}</td><td {{if sumData['qh'].qh>0}}class="red"{{/if}}>{{sumData['qh'].qh}}</td>
+				
+				<td>匯總</td>
+			</tr>
+			<tr class="data_col blue"><td>供計</td>
+				{{each u as val i}}
+					<td colspan="2" {{if gHzData[i+1]>0}}class=""{{/if}}>{{gHzData[i+1]}}</td>
+				{{/each}}
+				<td>供計</td>
+				<td colspan="2"  {{if gHzData['hb']>0}}class=""{{/if}}>{{gHzData['hb']}}</td>
+				<td colspan="2"  {{if gHzData['qh']>0}}class=""{{/if}}>{{gHzData['qh']}}</td>
+				
+				<td>供計</td>
+			</tr>
+
+		</script>
+		
+	</body>
+</html>

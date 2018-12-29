@@ -22,7 +22,6 @@ SELECT ${hid}, ${uid},grp,sheng FROM data_base WHERE tabl_num=#{tbNo}
 	  	,dui=#{model.dui}
 		,gong = #{ model.gong }
 		,gong_col = #{ model.gong_col }
-		,tg_val = #{ model.tg_val }
  WHERE id=#{model.id}
 	</update>
   
@@ -41,7 +40,7 @@ SELECT ${hid}, ${uid},grp,sheng FROM data_base WHERE tabl_num=#{tbNo}
   	
   
   	<select id="getInputRow" resultType="com.park.api.entity.Crow" >
-	select * from game_runing where hid = #{hid} AND pei is null ORDER BY row limit 1 
+	select * from game_runing where hid = #{hid} AND row =#{row} limit 1 
  	</select>
   	
 

@@ -55,14 +55,7 @@
       <param-name>resetEnable</param-name>
       <param-value>false</param-value>
     </init-param>
-    <init-param>
-      <param-name>loginUsername</param-name>
-      <param-value>root</param-value>
-    </init-param>
-    <init-param>
-      <param-name>loginPassword</param-name>
-      <param-value>123456</param-value>
-    </init-param>
+    
   </servlet>
   <servlet-mapping>
     <servlet-name>DruidStatView</servlet-name>
