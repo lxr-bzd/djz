@@ -114,16 +114,17 @@
 			<tx:method name="do*" propagation="REQUIRED" />
 			<tx:method name="get*" propagation="SUPPORTS" />
 			<tx:method name="find*" propagation="SUPPORTS" />
+			<tx:method name="rq*" propagation="REQUIRES_NEW" />
 			
 		</tx:attributes>
 	</tx:advice>
 	
-	<aop:config>
+	<!-- <aop:config>
 		<aop:pointcut id="transactionPointcut"
 			expression="execution(* com.park.api.service.*Service*.*(..))" />
 		<aop:advisor pointcut-ref="transactionPointcut"
 			advice-ref="transactionAdvice" />
-	</aop:config>
+	</aop:config> -->
 	
 	
 	

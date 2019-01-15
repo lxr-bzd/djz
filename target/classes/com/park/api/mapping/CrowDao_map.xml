@@ -53,7 +53,7 @@ SELECT ${hid}, ${uid},grp,sheng FROM data_base WHERE tabl_num=#{tbNo}
  	</select>
  	
  	 <select id="getRow" resultType="com.park.api.entity.Crow" >
-	select * from game_runing where row = #{row} AND hid = #{hid}
+	select `id`,  `hid`,  `uid`,  `row`,  `sheng`,  `pei`,  `dui`, `gong`,  `gong_col` from game_runing where row = #{row} AND hid = #{hid} limit 1
  	</select>
 	
 	

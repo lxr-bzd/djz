@@ -1,5 +1,8 @@
 package com.park.api.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 统计服务
  * @author Administrator
@@ -34,12 +37,12 @@ public class CountService {
 		String[] queues = queue.split(",");
 		String[] gongCols = gongCol.split(",");
 		StringBuilder queueRet = new StringBuilder();
-		String[] grpQueues = grpQueue.split(",");
-		StringBuilder newGrpQueue = new StringBuilder();
+		//-String[] grpQueues = grpQueue.split(",");
+		//-StringBuilder newGrpQueue = new StringBuilder();
 		
 		int lsJg = 0;
 		int nvJg = 0;
-		String[] gongs = gong.split(",");
+		//String[] gongs = gong.split(",");
 		
 		int ys = 0;
 		
@@ -48,7 +51,7 @@ public class CountService {
 			String q1 = queues[i];
 			String col1 = gongCols[i];
 			StringBuilder qr = new StringBuilder();
-			Integer[] gqs = parseGrpQueue(grpQueues[i]);
+			//-Integer[] gqs = parseGrpQueue(grpQueues[i]);
 			//循环户，户下两列
 			for (int j = 0; j < HU_NUM*2; j++) {
 				String zf = q1.substring(j*itemSize, j*itemSize+1);
@@ -69,13 +72,13 @@ public class CountService {
 							newItem = createItem(col.equals("1")?"-":"+",pNum+1);
 							qr.append(newItem);
 							if(pNum<40) {
-								gqs[pNum] +=1;
+								//-gqs[pNum] +=1;
 								qcs[pNum] +=1;
 								}
 						}else {
 							newItem =createItem(col.equals("1")?"-":"+",1);
 							qr.append(newItem);
-							gqs[0] +=1;
+							//-gqs[0] +=1;
 							qcs[0] +=1;
 						}
 					
@@ -96,7 +99,7 @@ public class CountService {
 			
 			
 			
-			newGrpQueue.append(buildGrpQueue(gqs)+",");
+			//-newGrpQueue.append(buildGrpQueue(gqs)+",");
 			queueRet.append(qr+",");
 			
 		}
@@ -109,7 +112,7 @@ public class CountService {
 		
 		return new String[] {queueRet.substring(0, queueRet.length()-1)
 				,buildQueueCounts(qcs)
-				,newGrpQueue.substring(0, newGrpQueue.length()-1)
+				,null//-newGrpQueue.substring(0, newGrpQueue.length()-1)
 				,row>=3?(lsJg+"_"+nvJg):null
 				,ys+""};
 
@@ -359,6 +362,38 @@ public class CountService {
 		
 		return null;
 		
+	}
+	
+	
+	
+	
+	public static void main(String[] args) {
+		
+		int row = 1;
+		String queue = null;
+		String queueCounts="0,200000,200000,200000,200000,200000,200000,200000,200000,200000,200000,200000,200000,200000,200000,200000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
+		String grpQueue = null;
+		String gong = null;
+		String gongCol = null;
+		int rule_type = 1;
+		int start = 1;
+		int end = 40;
+		int mod2 = 2;
+		for (int i = 0; i < 10000; i++) {
+			if(queue==null)
+				queue="+016+016+016+016+016+016+016+016+016+016+016+016+016+016+016+016+016+016+016+016";
+			else queue+=",+016+016+016+016+016+016+016+016+016+016+016+016+016+016+016+016+016+016+016+016";
+			if(gong==null)
+				gong="3333333333";
+			else gong+=",3333333333";
+			if(gongCol==null)
+				gongCol="4444444444";
+			else gongCol+=",4444444444";
+		}
+		
+		Long s1 = System.currentTimeMillis();
+		countQueue(row, queue, queueCounts, grpQueue, gong, gongCol, rule_type, start, end, mod2);
+		System.out.println("finish:"+(System.currentTimeMillis()-s1)+"ms");
 	}
 	
 	
