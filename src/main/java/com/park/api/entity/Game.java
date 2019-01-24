@@ -4,6 +4,7 @@ public class Game {
 
 	String id;
 	String uid;
+	String tid;
 	Integer tbNum;
 	Integer focus_row;
 	String info;
@@ -21,6 +22,14 @@ public class Game {
 	}
 	public void setUid(String uid) {
 		this.uid = uid;
+	}
+	
+	
+	public String getTid() {
+		return tid;
+	}
+	public void setTid(String tid) {
+		this.tid = tid;
 	}
 	public Integer getTbNum() {
 		return tbNum;

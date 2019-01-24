@@ -3,6 +3,8 @@ package com.park.api.service;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.park.api.service.GameService.GameEach;
+
 /**
  * 统计服务
  * @author Administrator
@@ -13,13 +15,118 @@ public class CountService {
 	//每组的户数
 	static int HU_NUM = 10;
 	
-	static int itemSize = 4;
+	
 	//默认正负
 	static String DEF_ZF = "0";
 	
 	static int grp_itemSize = 3;
 	
+	static int queueItemSize = 2;
+	//队列记录 偏移值
+	static int QUEUE_VAL_OFFSET = 500;
 	
+	
+	
+	public static CountQueueResult countQueue2(int row,String queue,String queueCounts,String dui,String gong,String gongCol,String nextGong,GameEach[] es) {
+
+		
+		int group = GameCoreService2.SHENG_GROUP;
+		int groupNum = GameCoreService2.SHENG_GROUP_NUM;
+		int queueGroupSize = queueItemSize*20;
+		int colGroupSize = 4;
+		
+		Integer[] qcs = parseQueueCounts(queueCounts);
+		StringBuilder newQueue = new StringBuilder();
+		
+		
+		
+		int ys = 0;
+		
+		//循环组
+		for (int i = 0; i < group; i++) {
+			
+			//循环户，户下两列
+			int colIndex = i*(colGroupSize+1);
+			boolean[] gong1 = GameCoreService2.gongMap[Long.valueOf(gong.substring(colIndex, colIndex+2),36).intValue()];
+			boolean[] gong2 = GameCoreService2.gongMap[Long.valueOf(gong.substring(colIndex+2, colIndex+4),36).intValue()];
+			
+			boolean[] nGong1 = null;
+			boolean[] nGong2 = null;
+			
+			if(nextGong!=null) {
+				nGong1 = GameCoreService2.gongMap[Long.valueOf(nextGong.substring(colIndex, colIndex+2),36).intValue()];
+				nGong1 = GameCoreService2.gongMap[Long.valueOf(nextGong.substring(colIndex+2, colIndex+4),36).intValue()];
+				
+			}
+			
+			boolean[] col1 = GameCoreService2.gongColMap[Long.valueOf(gongCol.substring(colIndex, colIndex+2),36).intValue()];
+			boolean[] col2 = GameCoreService2.gongColMap[Long.valueOf(gongCol.substring(colIndex+2, colIndex+4),36).intValue()];
+			
+			
+			
+			
+			for (int j = 0; j < groupNum*2; j++) {
+				int queueIndex = i*(queueGroupSize+1)+(j*queueItemSize);
+				
+				
+				Integer queueVal = null;
+				if(queue!=null) {
+					queueVal = Long.valueOf(queue.substring(queueIndex, queueIndex+queueItemSize),36).intValue();
+				}
+				
+				boolean gongItem = false;
+				Boolean nextGongItem = null;
+				boolean col = false;
+				if(j<groupNum) {
+					col = col1[j];
+					gongItem = gong1[j];
+					nextGongItem = nGong1[j];
+				}else {
+					col = col2[j-groupNum];
+					gongItem = gong2[j-groupNum];
+					nextGongItem = nGong1[j-groupNum];
+				}
+				//计算原始值
+				ys=ys+(col?1:-1);
+				//上一次的列队值
+				Integer newQueueVal = null;
+				if(queueVal==null||((queueVal>QUEUE_VAL_OFFSET?false:true)!=col)) {
+					newQueueVal = col?1:QUEUE_VAL_OFFSET+1;
+					newQueue.append(createItem(newQueueVal));
+					if(queueVal!=null)qcs[0] +=1;
+				}else {
+					
+					newQueueVal = queueVal+1;
+					newQueue.append(createItem(newQueueVal));
+					if(queueVal<40) {
+								qcs[queueVal] +=1;
+						}
+					
+				}
+				
+				
+				
+				for (GameEach ge : es) {
+					if(ge!=null)
+					ge.exe(i, j, queueVal, newQueueVal,gongItem,col,nextGongItem);
+				}
+				
+				
+			}
+			
+			newQueue.append(",");
+			
+		}
+		
+		CountQueueResult ret = new CountQueueResult();
+		ret.setQueue(newQueue.substring(0, newQueue.length()-1));
+		ret.setQueueCount(buildQueueCounts(qcs));
+		ret.setYs(ys);
+		return ret;
+		
+		
+
+	}
 	
 	
 	/**
@@ -29,78 +136,76 @@ public class CountService {
 	 * @param queueCounts [队列数据，队列统计数据]
 	 * @return [队列扫描，总队列统计，组队列统计，老少-男女结果值]
 	 */
-	public static String[] countQueue(int row,String queue,String queueCounts,String grpQueue
+	public static CountQueueResult countQueue(int row,String queue,String queueCounts,String grpQueue
 			,String gong,String gongCol,int rule_type,int start,int end,int mod2) {
 		
-		Integer[] qcs = parseQueueCounts(queueCounts);
 		
-		String[] queues = queue.split(",");
-		String[] gongCols = gongCol.split(",");
-		StringBuilder queueRet = new StringBuilder();
-		//-String[] grpQueues = grpQueue.split(",");
-		//-StringBuilder newGrpQueue = new StringBuilder();
+		int group = GameCoreService2.SHENG_GROUP;
+		int groupNum = GameCoreService2.SHENG_GROUP_NUM;
+		int queueGroupSize = queueItemSize*20;
+		int colGroupSize = 4;
+		
+		Integer[] qcs = parseQueueCounts(queueCounts);
+		StringBuilder newQueue = new StringBuilder();
 		
 		int lsJg = 0;
 		int nvJg = 0;
-		//String[] gongs = gong.split(",");
 		
 		int ys = 0;
 		
 		//循环组
-		for (int i = 0; i < queues.length; i++) {
-			String q1 = queues[i];
-			String col1 = gongCols[i];
-			StringBuilder qr = new StringBuilder();
-			//-Integer[] gqs = parseGrpQueue(grpQueues[i]);
+		for (int i = 0; i < group; i++) {
+			
 			//循环户，户下两列
-			for (int j = 0; j < HU_NUM*2; j++) {
-				String zf = q1.substring(j*itemSize, j*itemSize+1);
-				String col = col1.substring(j, j+1);
-				//计算原始值
-				ys=ys+(col.equals("1")?-1:1);
-				//上一次的列队值
-				int pNum = Integer.parseInt(q1.substring(j*itemSize+1, j*itemSize+itemSize));
+			int colIndex = i*(colGroupSize+1);
+			boolean[] col1 = GameCoreService2.gongColMap[Long.valueOf(gongCol.substring(colIndex, colIndex+2),36).intValue()];
+			boolean[] col2 = GameCoreService2.gongColMap[Long.valueOf(gongCol.substring(colIndex+2, colIndex+4),36).intValue()];
+			
+			
+			for (int j = 0; j < groupNum*2; j++) {
+				int queueIndex = i*(queueGroupSize+1)+(j*queueItemSize);
 				
-				String newItem = null;
-				if(zf.equals(DEF_ZF)) {
-					newItem = createItem(col.equals("1")?"-":"+",1);
-					qr.append(newItem);
-					
+				
+				Integer queueVal = null;
+				if(queue!=null) {
+					queueVal = Long.valueOf(queue.substring(queueIndex, queueIndex+queueItemSize),36).intValue();
+				}
+				
+				
+				boolean col = false;
+				if(j<groupNum) {
+					col = col1[j];
+				}else {
+					col = col2[j-groupNum];
+				}
+				//计算原始值
+				ys=ys+(col?1:-1);
+				//上一次的列队值
+				Integer newQueueVal = null;
+				if(queueVal==null||(queueVal>0?true:false==col)) {
+					newQueueVal = col?0:QUEUE_VAL_OFFSET+1;
+					newQueue.append(createItem(newQueueVal));
+					if(queueVal!=null)qcs[0] +=1;
 				}else {
 					
-						if(zf.equals(col.equals("1")?"-":"+")) {
-							newItem = createItem(col.equals("1")?"-":"+",pNum+1);
-							qr.append(newItem);
-							if(pNum<40) {
-								//-gqs[pNum] +=1;
-								qcs[pNum] +=1;
-								}
-						}else {
-							newItem =createItem(col.equals("1")?"-":"+",1);
-							qr.append(newItem);
-							//-gqs[0] +=1;
-							qcs[0] +=1;
+					newQueueVal = queueVal+1;
+					newQueue.append(createItem(newQueueVal));
+					if(queueVal<40) {
+								qcs[queueVal] +=1;
 						}
 					
 				}
 				
-				
-				
 				if(row>3) {
 					if((j+1)%2==0)
-						nvJg+=getJg(rule_type,pNum, start, end, newItem.startsWith(zf));
+						nvJg+=getJg(rule_type,queueVal, start, end, newQueueVal*queueVal>0);
 					else 
-						lsJg+=getJg(rule_type,pNum, start, end, newItem.startsWith(zf));
+						lsJg+=getJg(rule_type,queueVal, start, end, newQueueVal*queueVal>0);
 					
 				}
 				
-				
 			}
-			
-			
-			
-			//-newGrpQueue.append(buildGrpQueue(gqs)+",");
-			queueRet.append(qr+",");
+			newQueue.append(",");
 			
 		}
 		
@@ -110,11 +215,12 @@ public class CountService {
 			nvJg=-nvJg;
 		}
 		
-		return new String[] {queueRet.substring(0, queueRet.length()-1)
-				,buildQueueCounts(qcs)
-				,null//-newGrpQueue.substring(0, newGrpQueue.length()-1)
-				,row>=3?(lsJg+"_"+nvJg):null
-				,ys+""};
+		CountQueueResult ret = new CountQueueResult();
+		ret.setQueue(newQueue.substring(0, newQueue.length()-1));
+		ret.setQueueCount(buildQueueCounts(qcs));
+		ret.setJg(row>=3?(lsJg+"_"+nvJg):null);
+		ret.setYs(ys);
+		return ret;
 
 	}
 	
@@ -130,7 +236,7 @@ public class CountService {
 	 * @param isMinus
 	 * @return
 	 */
-	private static int getJg(int type,int length,int start,int end,boolean isMinus) {
+	public static int getJg(int type,int length,int start,int end,boolean isMinus) {
 		
 		if(length>=start&&length<end) {
 			int l = (int) (Math.pow(2,length-start));
@@ -141,15 +247,11 @@ public class CountService {
 		}
 			
 		else return 0;
-		
-		
-
 	}
 	
 	
 	
 	private static Integer[] parseQueueCounts(String qcs) {
-		
 		
 		String[] q = qcs.split(",");
 		Integer[] ret = new Integer[q.length];
@@ -197,17 +299,23 @@ public class CountService {
 	
 	
 	
-	private static String createItem(String zf,int num) {
-		if(num>=100)return zf+num;
+	private static String createItem(int num) {
+		String str = null;
+		if(num<36) {
+			str="0"+Long.toString(num, 36).toUpperCase();
+		}else str=Long.toString(num, 36).toUpperCase();
 		
-		if(num>=10)return zf+"0"+num;
-		
-		return zf+"00"+num;
+		return str;
 
 	}
 	
 	
 	public static Integer[] countTgA(String queue,String gong,int rule_type,int start,int end) {
+		
+		int group = GameCoreService2.SHENG_GROUP;
+		int groupNum = GameCoreService2.SHENG_GROUP_NUM;
+		int queueGroupSize = queueItemSize*20;
+		int colGroupSize = 4;
 		Integer[] info = new Integer[]{
 				0,0,
 				0,0,
@@ -221,14 +329,29 @@ public class CountService {
 		'老-':{v:0},'少-':{v:0},
 		'男+':{v:0},'女+':{v:0},
 		'男-':{v:0},'女-':{v:0},*/
-		String[] qs = queue.split(",");
-		String[] gs = gong.split(",");
-		for (int i = 0; i < qs.length; i++) {
+		//String[] gs = gong.split(",");
+		for (int i = 0; i < group; i++) {
+			int colIndex = i*(colGroupSize+1);
+			boolean[] gong1 = GameCoreService2.gongMap[Long.valueOf(gong.substring(colIndex, colIndex+2),36).intValue()];
+			boolean[] gong2 = GameCoreService2.gongMap[Long.valueOf(gong.substring(colIndex+2, colIndex+4),36).intValue()];
 			
-			for (int j = 0; j < HU_NUM*2; j++) {
-				String q1 = qs[i].substring(j*itemSize,j*itemSize+4);
-				String g1 = gs[i].substring(j,j+1);
-				info[bmap.indexOf(g1+q1.substring(0,1))/2]+=getJg(rule_type,new Integer(q1.substring(1,itemSize)),start,end,false);
+			
+			for (int j = 0; j < groupNum*2; j++) {
+				int queueIndex = i*(queueGroupSize+1)+(j*queueItemSize);
+				Integer queueVal = null;
+				if(queue!=null) {
+					queueVal = Long.valueOf(queue.substring(queueIndex, queueIndex+queueItemSize),36).intValue();
+				}
+				int index = (j+1)%2==0?4:0;//确定老少/男女区域
+				if(queueVal<0)index+=2;//确定 负正区域
+				if(j<groupNum) {
+					if(gong1[j])index+=1;
+					
+				}else {
+					if(gong2[j-groupNum])index+=1;
+				}
+				
+				info[index]+=getJg(rule_type,Math.abs(queueVal),start,end,false);
 			}
 			
 		}
@@ -395,6 +518,46 @@ public class CountService {
 		countQueue(row, queue, queueCounts, grpQueue, gong, gongCol, rule_type, start, end, mod2);
 		System.out.println("finish:"+(System.currentTimeMillis()-s1)+"ms");
 	}
+	
+	public static class CountQueueResult{
+		
+		String queue;
+		String queueCount;
+		String jg;//lsJg+"_"+nvJg
+		//原始值
+		int ys;
+		public String getQueue() {
+			return queue;
+		}
+		public void setQueue(String queue) {
+			this.queue = queue;
+		}
+		public String getQueueCount() {
+			return queueCount;
+		}
+		public void setQueueCount(String queueCount) {
+			this.queueCount = queueCount;
+		}
+		public String getJg() {
+			return jg;
+		}
+		public void setJg(String jg) {
+			this.jg = jg;
+		}
+		public int getYs() {
+			return ys;
+		}
+		public void setYs(int ys) {
+			this.ys = ys;
+		}
+		
+		
+		
+		
+	}
+	
+	
+	
 	
 	
 }

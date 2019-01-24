@@ -1,6 +1,6 @@
 package com.park.api.controller;
 
-import java.util.List;
+
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +13,6 @@ import com.lxr.commons.exception.ApplicationException;
 import com.lxr.framework.long1.JsonResult;
 import com.park.api.ServiceManage;
 import com.park.api.common.BaseController;
-import com.park.api.entity.Game;
 import com.park.api.service.GameCoreService;
 import com.park.api.service.GameService;
 import com.park.api.service.TurnService;
@@ -69,6 +68,7 @@ public class GameController extends BaseController{
 		String uid = ServiceManage.securityService.getSessionSubject().getId().toString();
 		Integer isSu = ServiceManage.jdbcTemplate.queryForObject("select is_su from djt_user where djt_u_id = ?", Integer.class,uid);
 		if(isSu!=1)throw new ApplicationException("不是超级会员无法操作");
+		turnService.doFinishTurn();
 		turnService.doRenewTurn();
 		
 		Map<String, Object> ret = turnService.getMainModel(uid);

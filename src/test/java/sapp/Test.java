@@ -1,10 +1,28 @@
 package sapp;
 
-import sapp.DllTest.Dll;
 
 public class Test {
 	
-	static int[][] map = {{1,1,1,1,1},{1,1,1,1,2}};
+	static int[][] map = new int[1024][];
+	static {
+		for (int i = 0; i < map.length; i++) {
+			
+			map[i] = new int[] {1,1,1,1,1};
+			String iBinary = Integer.toBinaryString(i);
+			for (int j = 0; j < 5; j++) {
+				int index = j*2;
+				if(index>=iBinary.length())break;
+				if("1".equals(iBinary.substring(iBinary.length()-index-1, iBinary.length()-index)))
+					map[i][4-j]++;
+				if(index+1>=iBinary.length())break;
+				if("1".equals(iBinary.substring(iBinary.length()-(index+1)-1, iBinary.length()-(index+1))))
+					map[i][4-j]+=2;
+				
+			}
+			
+		}
+		
+	}
 	
 	
 
@@ -100,7 +118,8 @@ public class Test {
 	}
 	
 	public static void main(String[] args) {
-		//System.out.println(System.getProperty("sun.arch.data.model"));
+		
+		//System.out.println(Integer.toBinaryString(0));
 		
 		String sheng = null;
 		long start = 0;

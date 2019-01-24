@@ -22,6 +22,7 @@ import com.park.api.entity.Crow;
 import com.park.api.entity.Game;
 import com.park.api.entity.Tmpl;
 import com.park.api.entity.Turn;
+import com.park.api.service.CountService.CountQueueResult;
 
 @Service
 public class GameService {
@@ -31,8 +32,6 @@ public class GameService {
 	
 	int GAME_COL = 10;
 	int GAME_ROW = 182;
-	
-	int GAME_GROUP = 10000;
 	
 	@Autowired
 	CrowDao crowDao;
@@ -44,20 +43,10 @@ public class GameService {
 	TmplDao tmplDao;
 	
 	@Autowired
-	GameCoreService gameCoreService;
+	GameCoreService2 gameCoreService;
 	
 	@Autowired
 	TurnService turnService;
-	
-	public Map<String, Object> getMainModel(String uid) {
-		if(true)
-		throw new ApplicationException("这个方法不能被调用");
-		Map<String, Object> ret = new HashMap<>();
-		
-		return ret;
-	}
-	
-	
 	
 	
 	
@@ -76,6 +65,7 @@ public class GameService {
 		
 		Game game = new Game();
 		game.setUid(uid);
+		game.setTid(turn.getId());
 		game.setTbNum(group);
 		game.setFocus_row(1);
 		game.setCreatetime(System.currentTimeMillis());
@@ -94,54 +84,65 @@ public class GameService {
 	public void createRunGame(String uid,String hid,int group){
 		List<Crow> ret = null;
 		
+		int groupNum = GameCoreService2.SHENG_GROUP;
+		
 		if(group==1) {
 			ret = new ArrayList<>();
 			 Random random = new Random();
 			 
 			 for (int i = 0; i <182; i++) {
 				 StringBuilder sheng = new StringBuilder();
-				 for (int j = 0; j < GAME_GROUP*10; j++) {
-					 if(j%10==0)sheng.append(",");
-					 sheng.append(random.nextInt(4)+1);
+				 for (int j = 0; j < groupNum; j++) {
+					 String item = GameCoreService2.createShengStr(random.nextInt(1024), random.nextInt(1024));
+					 sheng.append(item+",");
 				}
 				Crow crow = new Crow();
 				crow.setRow(i+1);
-				crow.setSheng(sheng.toString());
+				crow.setSheng(sheng.substring(0, sheng.length()-1));
 				ret.add(crow);
 				 
 				
 			}
 		}
 		else if(group==2||group==3||group==4||group==5){
+			
+			String u = null;
+			
+			switch (group) {
+			case 2:
+				u = "0000,0000,0000,0000,0000,0000,0000,0000,0000,0000,";
+				break;
+			case 3:
+				u = "J0J0,J0J0,J0J0,J0J0,J0J0,J0J0,J0J0,J0J0,J0J0,J0J0,";
+				break;
+			case 4:
+				u = "IYIY,IYIY,IYIY,IYIY,IYIY,IYIY,IYIY,IYIY,IYIY,IYIY,";
+				break;
+			case 5:
+				u = "SFSF,SFSF,SFSF,SFSF,SFSF,SFSF,SFSF,SFSF,SFSF,SFSF,";
+				break;
+			}
+			
+			//100组
+			String ten0 = "";
+			
+			for (int i = 0; i < 10; i++) {
+				ten0+=u;
+			}
+			
 			ret = new ArrayList<>();
 			
 			for (int i = 0; i < 182; i++) {
 				StringBuilder sheng = new StringBuilder("");
 				for (int j = 0; j < 1000; j++) {
-					switch (group) {
-					case 2:
-						sheng.append(",1111111111,1111111111,1111111111,1111111111,1111111111,1111111111,1111111111,1111111111,1111111111,1111111111");
-						break;
-					case 3:
-						sheng.append(",2222222222,2222222222,2222222222,2222222222,2222222222,2222222222,2222222222,2222222222,2222222222,2222222222");
-						break;
-					case 4:
-						sheng.append(",3333333333,3333333333,3333333333,3333333333,3333333333,3333333333,3333333333,3333333333,3333333333,3333333333");
-						break;
-					case 5:
-						sheng.append(",4444444444,4444444444,4444444444,4444444444,4444444444,4444444444,4444444444,4444444444,4444444444,4444444444");
-						break;
-					}
+					sheng.append(ten0);
 					
 				}
 				
 				Crow crow = new Crow();
 				crow.setRow(i+1);
-				crow.setSheng(sheng.toString());
+				crow.setSheng(sheng.substring(0,sheng.length()-1));
 				ret.add(crow);
-				
-				
-				
 				
 				
 			}
@@ -174,8 +175,6 @@ public class GameService {
 		}
 		
 		for (Crow crow : ret) {
-			String str1 = crow.getSheng();
-			crow.setSheng( str1.substring(1, str1.length()));
 			crow.setUid(uid);
 			crowDao.save(hid,crow);
 		}
@@ -184,9 +183,8 @@ public class GameService {
 	
 	
 	
-	public void doInput(String pei,String uid) {
-		//Long start = System.currentTimeMillis();
-		Game game = crowDao.getRuningGame(uid);
+	public void doInput(Game game,String pei) {
+		
 		if(game == null)throw new ApplicationException("游戏未开始！");
 		
 		Crow icrow =  getInputRow(game.getId(),game.getFocus_row());
@@ -206,15 +204,10 @@ public class GameService {
 		updateCrow(icrow);
 		// insulateCleanGame(game.getId(),icrow.getRow());
 		
-		
-		
-		
 		Crow nCrow = getNextRow(game.getId(), icrow.getRow());
 		//System.out.println(uid+"输入行："+((System.currentTimeMillis()-start))+"ms");
 		//start = System.currentTimeMillis();
 		
-		//更新统计,row>=3 queue才会有返回，否则返回null
-		String queue = doCount(icrow.getRow(),nCrow!=null,game.getId(),icrow.getGong(),icrow.getGong_col());
 		
 		//System.out.println(uid+"统计行："+((System.currentTimeMillis()-start))+"ms");
 		//start = System.currentTimeMillis();
@@ -226,24 +219,74 @@ public class GameService {
 		}else {
 			finishGame(game.getUid(),game.getId());
 		}
-		//处理下一行结束
-		//System.out.println(uid+"下一行："+((System.currentTimeMillis()-start))+"ms");
-		//start = System.currentTimeMillis();
 		
-		
-		if(icrow.getRow()>=3&&nCrow!=null) {
-			doCountTurn(game.getId(),queue, nCrow.getGong());
-		}
-		//System.out.println(uid+"轮统计："+((System.currentTimeMillis()-start))+"ms");
-		//start = System.currentTimeMillis();
+		//String queue = doCount(game.getId(),icrow.getRow(),icrow.getGong(),icrow.getGong_col(),nCrow);
+		//更新统计,row>=3 queue才会有返回，否则返回null
+		String queue = doCount2(game.getId(),game.getUid(),icrow.getRow(),icrow.getGong(),icrow.getGong_col(),nCrow);
 		
 	}
 	
 	
-	private String doCount(int row,boolean hasNext,String hid,String gong,String gongCol) {
+	private String doCount2(String hid,String uid,int row,String gong,String gongCol,Crow nCrow) {
 		
-	
-		if(hasNext) {
+		if(nCrow!=null) {
+			Game g1 = new Game();
+			g1.setId(hid);
+			g1.setFocus_row(row+1);
+			crowDao.updateGame(g1);
+		}
+		if(row<3) return null;
+		
+		Long start1 = System.currentTimeMillis();
+		Map<String, Object> map = ServiceManage.jdbcTemplate.queryForMap("select `id`,tid,   `queue`,  `queue_count`,  `grp_queue`,   `rule`,  `rule_type`,`mod` from game_runing_count where hid=?",hid);
+		System.out.println(hid+"查询："+((System.currentTimeMillis()-start1))+"ms");
+		start1 = System.currentTimeMillis();
+		String[] rule = map.get("rule").toString().split(",");
+		int start = Integer.parseInt(rule[0]);
+		int end = Integer.parseInt(rule[1]);
+		int rule_type = Integer.parseInt(map.get("rule_type").toString());
+		int mod =Integer.parseInt(map.get("mod").toString());
+		int mod2 = turnService.getInputTurn().get().getMod2();
+		String tid = map.get("tid").toString();
+		
+		
+		JgHandel jgHandel = createJgHandel(row, rule_type, start, end, mod2);
+		
+		CountTurn countTurn = null;
+		if(row>=3&&nCrow!=null) 
+			countTurn = createCountTurnHandel(mod,rule_type,start,end,mod2);
+		
+		
+		CountQueueResult rets = CountService.countQueue2(row,map.get("queue")==null?null:map.get("queue").toString(), map.get("queue_count").toString()
+				,"", gong,gongCol,nCrow!=null?nCrow.getGong():null,new GameEach[] {countTurn,jgHandel});
+		System.out.println(hid+"计算："+((System.currentTimeMillis()-start1))+"ms");
+		start1 = System.currentTimeMillis();
+		
+		/*Object[] countTurnResult = null;
+		if(countTurn!=null) 
+			countTurnResult = countTurn.getResult();*/
+		
+		ServiceManage.jdbcTemplate.update("UPDATE game_runing_count SET queue=?,queue_count=?,tg=CONCAT(tg,?),ys=ys+? WHERE id=?"
+				,rets.getQueue(),rets.getQueueCount(),jgHandel.getResult()+",",rets.getYs(),map.get("id"));
+		System.out.println(hid+"update："+((System.currentTimeMillis()-start1))+"ms");
+		start1 = System.currentTimeMillis();
+		
+		if(countTurn!=null) {
+			turnService.getCountTurnId().set(tid);
+			Object[] objs = countTurn.getResult();
+			ServiceManage.jdbcTemplate.update("update game_runing_count set g=?,g_sum=g_sum+? where id=?",
+					JSONObject.toJSONString(objs),
+					Math.abs((Integer)objs[4])+Math.abs((Integer)objs[5]),
+					map.get("id"));
+			
+			if(turnService.getTurnCount().get()==null)turnService.getTurnCount().set(new HashMap());
+			turnService.getTurnCount().get().put(uid, objs);
+		}
+		return rets.getQueue();
+	}
+	private String doCount(String hid,int row,String gong,String gongCol,Crow nCrow) {
+		
+		if(nCrow!=null) {
 			Game g1 = new Game();
 			g1.setId(hid);
 			g1.setFocus_row(row+1);
@@ -266,17 +309,48 @@ public class GameService {
 		
 		int mod2 = turnService.getInputTurn().get().getMod2();
 		
-		String[] rets = CountService.countQueue(row,map.get("queue").toString(), map.get("queue_count").toString(),map.get("grp_queue").toString()
+		CountQueueResult rets = CountService.countQueue(row,map.get("queue")==null?null:map.get("queue").toString(), map.get("queue_count")==null?null:map.get("queue_count").toString(),map.get("grp_queue").toString()
 				, gong,gongCol,rule_type,start,end,mod2);
 		System.out.println(hid+"计算："+((System.currentTimeMillis()-start1))+"ms");
 		start1 = System.currentTimeMillis();
-		ServiceManage.jdbcTemplate.update("UPDATE game_runing_count SET queue=?,queue_count=?,grp_queue=?,tg=CONCAT(tg,?),ys=ys+? WHERE id=?"
-				,rets[0],rets[1],"",rets[3]!=null?rets[3]+",":"",rets[4],map.get("id"));
+		ServiceManage.jdbcTemplate.update("UPDATE game_runing_count SET queue=?,queue_count=?,tg=CONCAT(tg,?),ys=ys+? WHERE id=?"
+				,rets.getQueue(),rets.getQueueCount(),rets.getJg()!=null?rets.getJg()+",":"",rets.getYs(),map.get("id"));
 		System.out.println(hid+"update："+((System.currentTimeMillis()-start1))+"ms");
 		start1 = System.currentTimeMillis();
-		return rets[0];
+		
+		if(row>=3&&nCrow!=null) {
+			
+			start1 = System.currentTimeMillis();
+			doCountTurn(hid,rets.getQueue(), nCrow.getGong());
+			System.out.println(hid+"doCountTurn："+((System.currentTimeMillis()-start1))+"ms");
+			start1 = System.currentTimeMillis();
+		}
+		return rets.getQueue();
 	}
 	
+	
+	private CountTurn createCountTurnHandel(int mod,int ruleType,int start,int end,int mod2) {
+
+		CountTurn countTurn = new CountTurn();
+		countTurn.setMod2(mod2);
+		countTurn.setStart(start);
+		countTurn.setEnd(end);
+		countTurn.setRuleType(ruleType);
+		return countTurn;
+
+	}
+	
+	
+	private JgHandel createJgHandel(int row,int ruleType,int start,int end,int mod2) {
+		JgHandel handel = new JgHandel();
+		handel.setRow(row);
+		handel.setRule_type(ruleType);
+		handel.setStart(start);
+		handel.setEnd(end);
+		handel.setMod2(mod2);
+		return handel;
+
+	}
 	
 	/**
 	 * 关闭游戏
@@ -352,7 +426,7 @@ public class GameService {
 			 
 			 //拷贝统计数据
 		ServiceManage.jdbcTemplate.update("INSERT INTO djt_history (tid,`hid`, `uid`, `tbNum`, `focus_row`, `queue_count`, `tg`, `rule`,ys,g_sum) " + 
-			 		"		 select tid,hid,b.uid,tbNum,focus_row,queue_count,tg,rule,ys,g_sum from game_runing_count a left join game_history b  on a.hid= b.id " + 
+			 		"		 select a.tid,hid,b.uid,tbNum,focus_row,queue_count,tg,rule,ys,g_sum from game_runing_count a left join game_history b  on a.hid= b.id " + 
 			 		"		  where hid = ? limit 1",hid);
 		ServiceManage.jdbcTemplate.update("UPDATE game_turn SET state=2 WHERE id =(select tid from game_runing_count where hid = ? limit 1)",hid);
 			
@@ -365,66 +439,7 @@ public class GameService {
 			
 		}
 	
-	/**
-	 * 处理统计
-	 */
-	private String count2(String hid,int row,String gong,String gong_col,String upTgVal) {
 	
-		List<Count> counts = countDao.findAll(hid);
-		
-		Integer[] tgval = new Integer[] {0,0,0};
-		
-		for (int i = 0; i < counts.size(); i++) {
-			Count count = counts.get(i);
-			int sindex = (count.getIndex()-1)*2;
-			String lval = gong_col.substring(sindex, sindex+1).equals("1")?"-1":"01";
-			String rval = gong_col.substring(sindex+1, sindex+2).equals("1")?"-1":"01";
-			String[] lProvide =  gameCoreService.reckonIsProvide2(row, count.getLcount(), Integer.parseInt(lval),count.getL_lj());
-			String[] rProvide =  gameCoreService.reckonIsProvide2(row, count.getRcount(), Integer.parseInt(rval),count.getR_lj());
-			
-			count.setAl_tg(count.getAl_tg()+lProvide[0]);
-			count.setBl_tg(count.getBl_tg()+lProvide[1]);
-			count.setCl_tg(count.getCl_tg()+lProvide[2]);
-			count.setL_info(count.getL_info()+lval);
-			
-			count.setAr_tg(count.getAr_tg()+rProvide[0]);
-			count.setBr_tg(count.getBr_tg()+rProvide[1]);
-			count.setCr_tg(count.getCr_tg()+rProvide[2]);
-			count.setR_info(count.getR_info()+rval);
-			
-			
-			if(lProvide[0].startsWith("01"))tgval[0]+=Integer.parseInt(lProvide[0].substring(2, 4));
-			if(rProvide[0].startsWith("01"))tgval[0]+=Integer.parseInt(rProvide[0].substring(2, 4));
-			
-			if(lProvide[1].startsWith("01"))tgval[1]+=Integer.parseInt(lProvide[1].substring(2, 4));
-			if(rProvide[1].startsWith("01"))tgval[1]+=Integer.parseInt(rProvide[1].substring(2, 4));
-			
-			if(lProvide[2].startsWith("01"))tgval[2]+=Integer.parseInt(lProvide[2].substring(2, 4));
-			if(rProvide[2].startsWith("01"))tgval[2]+=Integer.parseInt(rProvide[2].substring(2, 4));
-			
-			if(row%6==0) {
-				String lJie = count.getL_info().substring(count.getL_info().length()-12, count.getL_info().length());
-				String rJie = count.getR_info().substring(count.getR_info().length()-12, count.getR_info().length());
-				
-				Object[] clcountABC = gameCoreService.reckon6Count2(lJie,count.getLcount(),count.getL_lj());
-				Object[] crcountABC = gameCoreService.reckon6Count2(rJie,count.getRcount(),count.getR_lj());
-				count.setLcount(count.getLcount()+clcountABC[0]);
-				count.setRcount(count.getRcount()+crcountABC[0]);
-				count.setL_lj(gameCoreService.reckonPile2(count.getL_lj(), (Integer[]) clcountABC[1]));
-				count.setR_lj(gameCoreService.reckonPile2(count.getR_lj(), (Integer[]) crcountABC[1]));
-			}
-			
-			countDao.update(count);
-		}
-		
-		
-		if(StringUtils.isEmpty(upTgVal))
-			return tgval[0]+","+tgval[1]+","+tgval[2];
-		String[] upvals = upTgVal.split(",");
-		
-		return (Integer.parseInt(upvals[0])+tgval[0])+","+(Integer.parseInt(upvals[1])+tgval[1])+","+(Integer.parseInt(upvals[2])+tgval[2]);
-		
-	}
 	
 	
 	
@@ -495,6 +510,188 @@ public class GameService {
 		return game;
 
 	}
+	
+	
+	
+	
+	
+	public static void main(String[] args) {
+		for (int i = 161; i < 341; i++) {
+			System.out.println((char)i+","+i);
+		}
+	}
+	
+public static class GameEach{
+		
+		
+		public void exe(int groupIndex,int itemIndex,Integer queueVal,int newQueueVal
+				,boolean gong,boolean gongCol,Boolean nextGong) {
+			
+
+		}
+		
+	}
+
+	class JgHandel extends GameEach{
+		int groupNum = GameCoreService2.SHENG_GROUP_NUM;
+		int row;
+		int rule_type;
+		int mod2;
+		int start,end;
+		int lsJg = 0;
+		int nvJg = 0;
+		
+		boolean isResult = false;
+		@Override
+		public void exe(int groupIndex, int itemIndex, Integer queueVal, int newQueueVal, boolean gong, boolean gongCol,Boolean nextGong) {
+			if(row>3) {
+				if((itemIndex+1)%2==0)
+					nvJg+=CountService.getJg(rule_type,queueVal>CountService.QUEUE_VAL_OFFSET?queueVal-CountService.QUEUE_VAL_OFFSET:queueVal, start, end, (newQueueVal-CountService.QUEUE_VAL_OFFSET)*(queueVal-CountService.QUEUE_VAL_OFFSET)>0);
+				else 
+					lsJg+=CountService.getJg(rule_type,queueVal>CountService.QUEUE_VAL_OFFSET?queueVal-CountService.QUEUE_VAL_OFFSET:queueVal, start, end, (newQueueVal-CountService.QUEUE_VAL_OFFSET)*(queueVal-CountService.QUEUE_VAL_OFFSET)>0);
+				
+			}
+		}
+		
+		
+		
+		public int getRow() {
+			return row;
+		}
+
+
+
+		public void setRow(int row) {
+			this.row = row;
+		}
+
+
+
+		public int getRule_type() {
+			return rule_type;
+		}
+
+
+
+		public void setRule_type(int rule_type) {
+			this.rule_type = rule_type;
+		}
+
+
+
+		public int getMod2() {
+			return mod2;
+		}
+
+
+
+		public void setMod2(int mod2) {
+			this.mod2 = mod2;
+		}
+
+
+
+		public int getStart() {
+			return start;
+		}
+		
+		public void setStart(int start) {
+			this.start = start;
+		}
+		
+		public int getEnd() {
+			return end;
+		}
+
+
+
+		public void setEnd(int end) {
+			this.end = end;
+		}
+
+
+
+		public String getResult() {
+			if(isResult)throw new ApplicationException("重复获取");
+			isResult = true;
+			if(mod2==2) {
+				lsJg=-lsJg;
+				nvJg=-nvJg;
+			}
+			
+			return row>=3?(lsJg+"_"+nvJg):null;
+
+		}
+		
+	}
+	
+	class CountTurn extends GameEach{
+		int groupNum = GameCoreService2.SHENG_GROUP_NUM;
+		Integer[] info = new Integer[]{
+				0,0,
+				0,0,
+				0,0,
+				0,0,
+		};
+		
+		int ruleType;
+		int start,end;
+		int mod2;
+		
+		//String bmap = "老+少+老-少-男+女+男-女-";
+		@Override
+		public void exe(int groupIndex, int itemIndex, Integer queueVal, int newQueueVal
+				,boolean gong,boolean gongCol,Boolean nextGong) {
+			
+				int index = ((itemIndex+1)%2)==0?4:0;//确定老少/男女区域
+				if(newQueueVal>CountService.QUEUE_VAL_OFFSET)index+=2;//确定 负正区域
+				
+				if(nextGong)index+=1;
+				
+				info[index]+=CountService.getJg(ruleType,newQueueVal>CountService.QUEUE_VAL_OFFSET?newQueueVal-CountService.QUEUE_VAL_OFFSET:newQueueVal,start,end,false);
+		}
+		
+		
+		private Object[] getResult() {
+			Integer[] tgs = info;
+			Object[] objs = CountService.countAllTgA(tgs,mod2);
+
+			return objs;
+		}
+		
+		public int getRuleType() {
+			return ruleType;
+		}
+		public void setRuleType(int ruleType) {
+			this.ruleType = ruleType;
+		}
+		public int getStart() {
+			return start;
+		}
+		public void setStart(int start) {
+			this.start = start;
+		}
+		public int getEnd() {
+			return end;
+		}
+		public void setEnd(int end) {
+			this.end = end;
+		}
+
+
+		public int getMod2() {
+			return mod2;
+		}
+
+
+		public void setMod2(int mod2) {
+			this.mod2 = mod2;
+		}
+		
+		
+		
+	}
+	
 	
 	
 }

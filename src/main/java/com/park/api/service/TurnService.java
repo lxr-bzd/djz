@@ -22,11 +22,15 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.park.api.ServiceManage;
+import com.park.api.dao.CrowDao;
+import com.park.api.entity.Crow;
 import com.park.api.entity.Game;
 import com.park.api.entity.Turn;
 
 @Service
 public class TurnService {
+	@Autowired
+	CrowDao crowDao;
 	
 	@Autowired
 	GameService gameService;
@@ -67,11 +71,11 @@ public class TurnService {
 		if(turn==null)doRenewTurn();
 		turn = getCurrentTurn();
 		inputTurn.set(turn);
-		
-		List<String> uids = getUids();
-		for (int i = 0; i < uids.size(); i++) {
-			gameService.doInput(pei, uids.get(i));
+		List<Game> games = crowDao.getGames(turn.getId());
+		for (Game game : games) {
+			gameService.doInput(game,pei);
 		}
+		
 		
 		ServiceManage.jdbcTemplate.update("UPDATE game_turn SET frow=frow+1 WHERE id=?",turn.getId());
 		
@@ -129,21 +133,27 @@ public class TurnService {
 					qhJg==null?"":(qhJg[0]+qhJg[1]+","),
 					qhJg==null?"":qhJg[0]+"_"+qhJg[1],
 					countTurnId.get());
-			
+		
 		}else {//B模式
 			
 		}
 		
-
+		
 		getTurn().set(null);
 	}
 	
-	public void doRenewTurn() {
-		List<String> uids = getUids();
+	
+	public void doFinishTurn() {
 		List<String> games = ServiceManage.jdbcTemplate.queryForList("select id from game_history where state=1", String.class);
 		for (int i = 0; i < games.size(); i++) {
 			gameService.finishGame(null, games.get(i));
 		}
+
+	}
+	
+	public void doRenewTurn() {
+		List<String> uids = getUids();
+		
 		for (String uid : uids) {
 			gameService.doNewly(uid);
 		}

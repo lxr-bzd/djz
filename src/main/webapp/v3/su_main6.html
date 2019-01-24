@@ -561,7 +561,11 @@
 	var notifyDialog;
 	
 	$(function(){
+		var index = layer.load(1, {
+			  shade: [0.5,'#555'] //0.1透明度的白色背景
+			});
 		 $app.request("../user/game/data.do",function(data){
+				layer.close(index);
 				if(data.code!=1){
 					$app.alert(data.msg);
 					return;

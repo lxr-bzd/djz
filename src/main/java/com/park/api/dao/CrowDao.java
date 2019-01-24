@@ -71,6 +71,8 @@ public interface CrowDao {
 	 
 	 void updateGame(@Param("mo")Game game);
 	 
+	 List<Game> getGames(@Param("tid")String tid);
+	 
 	 
 	 
 }

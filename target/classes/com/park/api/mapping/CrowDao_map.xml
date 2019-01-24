@@ -72,12 +72,16 @@ SELECT ${hid}, ${uid},grp,sheng FROM data_base WHERE tabl_num=#{tbNo}
   	
   	
  <insert id="createGame" useGeneratedKeys="true" keyProperty="mo.id">
- INSERT INTO game_history (uid,`tbNum`,focus_row, `info`, `createtime`) VALUES (#{mo.uid},#{mo.tbNum},#{mo.focus_row},#{mo.info} , #{mo.createtime});
+ INSERT INTO game_history (uid,tid,`tbNum`,focus_row, `info`, `createtime`) VALUES (#{mo.uid},#{mo.tid},#{mo.tbNum},#{mo.focus_row},#{mo.info} , #{mo.createtime});
  </insert>
   	
   	
  <select id="getRuningGame" resultType="com.park.api.entity.Game">
   	select * from game_history where uid=#{uid} AND state=1 ORDER BY createtime DESC limit 1
+  	
+ </select>
+  <select id="getGames" resultType="com.park.api.entity.Game">
+  	select * from game_history where tid=#{tid} 
   	
  </select>
  
