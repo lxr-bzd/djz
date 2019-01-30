@@ -86,11 +86,13 @@ public class GameService {
 		
 		int groupNum = GameCoreService2.SHENG_GROUP;
 		
+		int rowNum = 182;
+		
 		if(group==1) {
 			ret = new ArrayList<>();
 			 Random random = new Random();
 			 
-			 for (int i = 0; i <182; i++) {
+			 for (int i = 0; i <rowNum; i++) {
 				 StringBuilder sheng = new StringBuilder();
 				 for (int j = 0; j < groupNum; j++) {
 					 String item = GameCoreService2.createShengStr(random.nextInt(1024), random.nextInt(1024));
@@ -132,9 +134,9 @@ public class GameService {
 			
 			ret = new ArrayList<>();
 			
-			for (int i = 0; i < 182; i++) {
+			for (int i = 0; i < rowNum; i++) {
 				StringBuilder sheng = new StringBuilder("");
-				for (int j = 0; j < 1000; j++) {
+				for (int j = 0; j < groupNum/100; j++) {
 					sheng.append(ten0);
 					
 				}

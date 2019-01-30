@@ -55,7 +55,7 @@ public class CountService {
 			
 			if(nextGong!=null) {
 				nGong1 = GameCoreService2.gongMap[Long.valueOf(nextGong.substring(colIndex, colIndex+2),36).intValue()];
-				nGong1 = GameCoreService2.gongMap[Long.valueOf(nextGong.substring(colIndex+2, colIndex+4),36).intValue()];
+				nGong2 = GameCoreService2.gongMap[Long.valueOf(nextGong.substring(colIndex+2, colIndex+4),36).intValue()];
 				
 			}
 			
@@ -84,7 +84,7 @@ public class CountService {
 				}else {
 					col = col2[j-groupNum];
 					gongItem = gong2[j-groupNum];
-					nextGongItem = nGong1[j-groupNum];
+					nextGongItem = nGong2[j-groupNum];
 				}
 				//计算原始值
 				ys=ys+(col?1:-1);
@@ -92,17 +92,15 @@ public class CountService {
 				Integer newQueueVal = null;
 				if(queueVal==null||((queueVal>QUEUE_VAL_OFFSET?false:true)!=col)) {
 					newQueueVal = col?1:QUEUE_VAL_OFFSET+1;
-					newQueue.append(createItem(newQueueVal));
 					if(queueVal!=null)qcs[0] +=1;
 				}else {
-					
 					newQueueVal = queueVal+1;
-					newQueue.append(createItem(newQueueVal));
-					if(queueVal<40) {
-								qcs[queueVal] +=1;
-						}
-					
+					int qm = queueVal>QUEUE_VAL_OFFSET?queueVal-QUEUE_VAL_OFFSET:queueVal;
+					if(qm<40) qcs[qm] +=1;
+										
 				}
+				
+				newQueue.append(createItem(newQueueVal));
 				
 				
 				

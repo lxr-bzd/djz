@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class GameCoreService2 {
 	
-	static int[][] shengMap = new int[1024][];
+	public static int[][] shengMap = new int[1024][];
 	
 	static boolean[][] duiMap = new boolean[1024][];
 	
@@ -16,7 +16,8 @@ public class GameCoreService2 {
 	
 	static {
 		for (int i = 0; i < shengMap.length; i++) {
-			
+			// 二进制  11 10 00 11 11
+			// 生	4  3  1  4  4 
 			shengMap[i] = new int[] {1,1,1,1,1};
 			String iBinary = Integer.toBinaryString(i);
 			for (int j = 0; j < 5; j++) {
@@ -24,8 +25,10 @@ public class GameCoreService2 {
 				if(index>=iBinary.length())break;
 				if("1".equals(iBinary.substring(iBinary.length()-index-1, iBinary.length()-index)))
 					shengMap[i][4-j]++;
-				if(index+1>=iBinary.length())break;
-				if("1".equals(iBinary.substring(iBinary.length()-(index+1)-1, iBinary.length()-(index+1))))
+				//向前移动一位
+				index++;
+				if(index>=iBinary.length())break;
+				if("1".equals(iBinary.substring(iBinary.length()-index-1, iBinary.length()-index)))
 					shengMap[i][4-j]+=2;
 				
 			}
@@ -52,7 +55,7 @@ public class GameCoreService2 {
 	
 	static final int COUNT_VLEN = 11;
 	 
-	static final int SHENG_GROUP = 100000;//总组数
+	static final int SHENG_GROUP = 10000;//总组数
 	/*户数*/
 	static final int SHENG_GROUP_NUM = 10;
 	static final int SHENG_ITEM_SIZE = 4;//生行一组大小
