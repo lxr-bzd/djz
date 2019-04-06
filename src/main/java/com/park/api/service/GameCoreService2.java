@@ -55,7 +55,7 @@ public class GameCoreService2 {
 	
 	static final int COUNT_VLEN = 11;
 	 
-	static final int SHENG_GROUP = 10000;//总组数
+	static final int SHENG_GROUP = 100000;//总组数
 	/*户数*/
 	static final int SHENG_GROUP_NUM = 10;
 	static final int SHENG_ITEM_SIZE = 4;//生行一组大小
@@ -114,6 +114,31 @@ public class GameCoreService2 {
 			
 			
 			duis.append(createDuiStr(ret1,ret2)+",");
+			
+		}
+		
+		return duis.deleteCharAt(duis.length()-1).toString();
+	}
+	
+	public static String reckonDui2(String sheng,String pei) {
+		
+		int group = SHENG_GROUP;
+		int groupLength = SHENG_ITEM_SIZE;
+		int peis1 = Integer.parseInt(pei.substring(0, 1));
+		
+		
+		StringBuilder duis = new StringBuilder();
+		int v = 0b1111111111;
+		for (int i = 0; i < group; i++) {
+			int st = i*(groupLength+1);
+			int sheng1 = Long.valueOf(sheng.substring(st,st+2), 36).intValue();
+			int sheng2 = Long.valueOf(sheng.substring(st+2,st+4), 36).intValue();
+			
+			int ret1 = sheng1^peis1^v;
+			int ret2 = sheng2^peis1^v;
+			
+			duis.append(createDuiStr(ret1,ret2)+",");
+				
 			
 		}
 		

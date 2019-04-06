@@ -1,12 +1,18 @@
 package sapp;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
+import javax.json.Json;
+
+import com.alibaba.fastjson.JSONArray;
 import com.park.api.service.GameCoreService2;
 
 public class atest {
 	 public static void main(String[] args) {
+		 
+		List<Long> aaString =  JSONArray.parseArray(JSONArray.parseArray("[[0,2000000,2000000,0],[2000000,-2000000]]").getString(1),Long.class);
 		 StringBuilder builder = new StringBuilder("123,");
 			System.out.println(Long.toBinaryString(Long.valueOf("SF",36)));
 			System.out.println(Long.valueOf("DX", 36));

@@ -86,6 +86,42 @@ public class Test {
 		return duis.deleteCharAt(duis.length()-1).toString();
 	}
 	
+	
+	/**
+	 * 
+	 * @param sheng 36进制 四位一组,ag:AB0P,09OP...
+	 * @param pei
+	 * @return 1:对 ，2：错
+	 */
+	public static String reckonDui3(String sheng,String pei) {
+		//String[] shengs = sheng.split(",");
+		int group = 10000;
+		int groupLength = 4;
+		int v = 0b1111111111;
+		
+		int pei1 = 0;
+		int pei2 = 0;
+		
+		StringBuilder duis = new StringBuilder();
+		
+		for (int i = 0; i < group; i++) {
+			int st = i*(groupLength+1);
+			int sheng1 = Long.valueOf(sheng.substring(st,st+2), 36).intValue();
+			int sheng2 = Long.valueOf(sheng.substring(st+2,st+4), 36).intValue();
+			
+			int ret1 = sheng1^pei1^v;
+			int ret2 = sheng2^pei2^v;
+			
+			
+			
+			duis.append(Long.toString(ret1, 36).toUpperCase()
+					+Long.toString(ret2, 36).toUpperCase()+",");
+			
+			
+		}
+		
+		return duis.deleteCharAt(duis.length()-1).toString();
+	}
 	/**
 	 * 
 	 * @param sheng 36进制 四位一组,ag:AB0P,09OP...
@@ -119,7 +155,10 @@ public class Test {
 	
 	public static void main(String[] args) {
 		
-		//System.out.println(Integer.toBinaryString(0));
+		int s = 0b0000000000;
+		int p = 0b0000000000;
+		int v = 0b1111111111;
+		//System.out.println(s^p^v);
 		
 		String sheng = null;
 		long start = 0;
@@ -159,9 +198,14 @@ public class Test {
 		a = reckonDui2(sheng,"1111111111");
 		System.out.println(System.currentTimeMillis()-start);
 		
+		System.out.println(a.length());
+		
 		start = System.currentTimeMillis();
+		a = reckonDui3(sheng,"1111111111");
+		System.out.println(System.currentTimeMillis()-start);
 		
 		System.out.println(a.length());
+		
 	}
 
 

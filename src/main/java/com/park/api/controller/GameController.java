@@ -24,8 +24,6 @@ public class GameController extends BaseController{
 	@Autowired
 	GameService gameService;
 	
-	@Autowired
-	GameCoreService gameCoreService;
 	
 	@Autowired
 	TurnService turnService;

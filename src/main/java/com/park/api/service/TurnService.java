@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import com.park.api.ServiceManage;
 import com.park.api.dao.CrowDao;
 import com.park.api.entity.Crow;
 import com.park.api.entity.Game;
+import com.park.api.entity.InputResult;
 import com.park.api.entity.Turn;
 
 @Service
@@ -72,8 +74,12 @@ public class TurnService {
 		turn = getCurrentTurn();
 		inputTurn.set(turn);
 		List<Game> games = crowDao.getGames(turn.getId());
+		
+		List<InputResult> results = new ArrayList<>();
 		for (Game game : games) {
-			gameService.doInput(game,pei);
+			InputResult result = gameService.doInput(game,pei);
+			if(result.getRets()!=null)
+			results.add(result);
 		}
 		
 		
@@ -83,22 +89,28 @@ public class TurnService {
 		
 		
 		Map<String, Object> map = ServiceManage.jdbcTemplate.queryForMap(
-				"select id, `mod`,user_lock,qh from game_turn where state=1 limit 1");
+				"select id, `mod`,user_lock,qh,yz from game_turn where state=1 limit 1");
 		String[] uLock = map.get("user_lock").toString().split(",");
+		
+		
 		
 		List<Object> upQhList = StringUtils.isEmpty(map.get("qh").toString())?
 				null:JSONArray.parseArray(map.get("qh").toString()).getJSONArray(1);
 		Integer[] upQh = upQhList!=null?upQhList.toArray(new Integer[upQhList.size()]):null;
+		List<Long> upYzList = StringUtils.isEmpty(map.get("yz").toString())?
+				null:JSONArray.parseArray(JSONArray.parseArray(map.get("yz").toString()).getString(1),Long.class);
+		Long[] upYz = upYzList!=null?upYzList.toArray(new Long[upYzList.size()]):null;
 		int mod = Integer.parseInt(map.get("mod").toString());
 		Integer[] qh = new Integer[]{0,0,0,0};
 		if(mod==1) {
-			Integer[] allts = new Integer[]{0,0,0,0 ,0,0,0,0};
-			
-			for (Entry<String, Object> entry : turnCount.get().entrySet()) {
-				if(uLock[Integer.valueOf(entry.getKey())-1].equals("0"))
+			long[] allts = new long[]{0,0,0,0 ,0,0,0,0};
+			//汇总原值
+			long[] allYz = new long[] {0,0,0,0};
+			for (InputResult result : results) {
+				if(uLock[Integer.valueOf(result.getUid())-1].equals("0"))
 					continue;
-				Object[] objs = (Object[])entry.getValue();
-				Integer[] ts = (Integer[])objs[6];
+				Object[] objs = result.getRets();
+				long[] ts = (long[])objs[6];
 				allts[0]+=ts[0];
 				allts[1]+=ts[1];
 				allts[2]+=ts[2];
@@ -107,31 +119,44 @@ public class TurnService {
 				allts[5]+=ts[5];
 				allts[6]+=ts[6];
 				allts[7]+=ts[7];
+				
+				long[] yz = result.getYz();
+				//汇总原值
+				allYz[0]+=yz[0];
+				allYz[1]+=yz[1];
+				allYz[2]+=yz[2];
+				allYz[3]+=yz[3];
 				//求和计算
 				
-					if((Integer)objs[4]>0)qh[0]++;
-					if((Integer)objs[4]<0)qh[1]++;
+					if((long)objs[4]>0)qh[0]++;
+					if((long)objs[4]<0)qh[1]++;
 					
-					if((Integer)objs[5]>0)qh[2]++;
-					if((Integer)objs[5]<0)qh[3]++;
-				
-				
+					if((long)objs[5]>0)qh[2]++;
+					if((long)objs[5]<0)qh[3]++;
 			}
+			
 			int mod2 = getInputTurn().get().getMod2();
 			Object[] objs = CountService.countAllTgA(allts,mod2);
 			Integer[] qhBg = CountService.countQh(qh,mod2);
 			Integer[] qhJg = upQh==null?null:CountService.countQhJg(pei.substring(0, 1), upQh);
-			
+			long[] yzBg = CountService.reckonYzBg(allYz, mod2);
+			Long[] yzJg = upYz==null?null:CountService.countYzJg(pei.substring(0, 1), upYz);
 			
 			ServiceManage.jdbcTemplate.update("update game_turn set info=?,lj=lj+?"
-					+ ",qh=?,qh_sum=qh_sum+?,qh_jg=CONCAT(qh_jg,?),qh_last_jg=? where id=?",
+					+ ",qh=?,qh_sum=qh_sum+?,qh_jg=CONCAT(qh_jg,?),qh_last_jg=? "
+					+ ",yz=?,yz_sum=yz_sum+?,yz_jg=CONCAT(yz_jg,?),yz_last_jg=? where id=?",
 					JSONObject.toJSONString(objs),
-					Math.abs((Integer)objs[4])+Math.abs((Integer)objs[5]),
+					Math.abs((long)objs[4])+Math.abs((long)objs[5]),
 					
 					JSONObject.toJSONString(new Object[] {qh,qhBg}),
 					Math.abs(qhBg[0])+Math.abs(qhBg[1]),
 					qhJg==null?"":(qhJg[0]+qhJg[1]+","),
 					qhJg==null?"":qhJg[0]+"_"+qhJg[1],
+							
+					JSONObject.toJSONString(new Object[] {allYz,yzBg}),
+					Math.abs(yzBg[0])+Math.abs(yzBg[1]),
+					yzJg==null?"":(yzJg[0]+yzJg[1]+","),
+					yzJg==null?"":yzJg[0]+"_"+yzJg[1],
 					countTurnId.get());
 		
 		}else {//B模式

@@ -49,7 +49,7 @@
 						<!--A表-->
 						<td  class="table_top rec-table-one">
 						<div class="top-body">
-							<table border="0" style="border: 1px solid #000;">
+							<table border="0" style="border: 1px solid #000;width:100%">
 							<colgroup>
 								<col style="width:60px;">
 								
@@ -68,6 +68,7 @@
 								<col style="width:60px;">
 								
 								<col style="width:180px;">
+								<col style="width:90px;">
 								<col style="width:180px;">
 								
 								<col style="width:60px;">
@@ -83,8 +84,8 @@
 							    	<td ><div class="blue btn1 remove-all">清空</div></td>
 							    	<td ><div class="blue btn1 exit_btn">關閉</div></td>
 							    	<td rowspan="4" class="focus_row">--</td>
-							    	<td id="input_group"><input type="text" style="width: 90%;background-color: #eee" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""></td>
-							    	<td > <div class="blue btn1 sure_btn">確定</div></td>
+							    	<td colspan="2" id="input_group"><input type="text" style="width: 90%;background-color: #eee" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""></td>
+							    	<td > <div class="blue btn1 ok_btn">確定</div></td>
 							    	<td rowspan="4" class="focus_row">--</td>
 							    	
 							  	</tr>
@@ -132,6 +133,7 @@
 												</td>
 							    	<td>匯總報告</td>
 							    	<td>求和報告</td>
+							    	<td>原值报告</td>
 							    	
 							  	</tr>
 							  	<tr class="data_col ">
@@ -190,7 +192,7 @@
 					<tr>
 						<td>
 							<div class="scroll-body">
-							<table class="rec-table-one" style="height:auto;">
+							<table class="rec-table-one" style="height:auto;width:100%;">
 								<colgroup>
 								<col style="width:60px;">
 								
@@ -209,6 +211,7 @@
 								<col style="width:60px;">
 								
 								<col style="width:180px;">
+								<col style="width:90px;">
 								<col style="width:180px;">
 								
 								<col style="width:60px;">
@@ -242,7 +245,7 @@
 					<tr>
 						<td>
 							<div class="bottom-body">
-							<table class="table_top">
+							<table class="table_top" style="width:100%">
 								<colgroup>
 								<col style="width:60px;">
 								
@@ -261,6 +264,7 @@
 								<col style="width:60px;">
 								
 								<col style="width:180px;">
+								<col style="width:90px;">
 								<col style="width:180px;">
 								
 								<col style="width:60px;">
@@ -302,7 +306,7 @@
 							    	<td>求和</td>
 							  	</tr>
 							  	<tr >
-							  		<td>供計</td>
+							  		<td>共計</td>
 							    	<td class="blue"></td>
 							    	<td class="blue"></td>
 							    	<td class="blue"></td>
@@ -313,10 +317,10 @@
 							    	<td class="blue"></td>
 							    	<td class="blue"></td>
 							    	<td class="blue"></td>
-							    	<td>供計</td>
+							    	<td>共計</td>
 							    	<td class="blue"></td>
 							    	<td class="blue"></td>
-							    	<td>供計</td>
+							    	<td>共計</td>
 							  	</tr>
 							  	</tbody>
 							</table>
@@ -403,7 +407,7 @@
 			})	
 //			確定按鈕判斷
 			var off=null;
-			$(".sure_btn").click(function () {
+			$(".ok_btn").click(function () {
 				for (var j=0;j<$('.int_item').length;j++) {
 					if ($('.int_item').eq(j).val()=="") {
 						off=true;
@@ -557,6 +561,10 @@
 	
 	</script>
 	<script type="text/javascript">
+	// L  X  D  S
+	// 老 少 男 女
+	var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
+	
 	
 	var notifyDialog;
 	
@@ -626,10 +634,10 @@ var etbHtml = "";
 		var qhData = [[{},{},0],{list:[null],sum:0,qh:0}];
 		turn.qh = eval(turn.qh );
 		var q1  = turn.qh[1][0];
-		qhData[0][0].name=q1>0?'老':(q1<0?'少':"");
+		qhData[0][0].name=q1>0?conf1.L:(q1<0?conf1.X:"");
 		qhData[0][0].val=Math.abs(q1);
 		var q2  = turn.qh[1][1];
-		qhData[0][1].name=q2>0?'男':(q2<0?'女':"");
+		qhData[0][1].name=q2>0?conf1.D:(q2<0?conf1.S:"");
 		qhData[0][1].val=Math.abs(q2);
 		qhData[0][2] = turn.qh_sum;
 		var qhjgs = turn.qh_jg?turn.qh_jg.split(","):[];
@@ -640,14 +648,33 @@ var etbHtml = "";
 			qhData[1].sum+=v;
 			qhData[1].qh+=(v>0?1:(v<0?-1:0));
 		}
+		/* 开始处理原值数据 */
+		var yzData = [[{},{},0],{list:[null],sum:0,qh:0}];
+		turn.yz = eval(turn.yz );
+		var y1  = turn.yz[1][0];
+		yzData[0][0].name=y1>0?conf1.L:(y1<0?conf1.X:"");
+		yzData[0][0].val=Math.abs(y1);
+		var y2  = turn.yz[1][1];
+		yzData[0][1].name=y2>0?conf1.D:(y2<0?conf1.S:"");
+		yzData[0][1].val=Math.abs(y2);
+		yzData[0][2] = turn.yz_sum;
+		var yzjgs = turn.yz_jg?turn.yz_jg.split(","):[];
+		for (var i = 0; i < yzjgs.length; i++) {
+			if(!yzjgs[i])continue;
+			var v = new Number(yzjgs[i]);
+			yzData[1].list.push(v);
+			yzData[1].sum+=v;
+			yzData[1].qh+=(v>0?1:(v<0?-1:0));
+		}
+		/* 结束处理原值数据 */
 		
-		return {turn:turn,bgData:bgData,jgData:jgData,qhData:qhData};
+		return {turn:turn,bgData:bgData,jgData:jgData,qhData:qhData,yzData:yzData};
 		
 		function bgA(g){
 			var ret = [{name:'',val:''},{name:'',val:''},0];
-			ret[0].name = g[4]>0?'老':(g[4]<0?'少':'');
+			ret[0].name = g[4]>0?conf1.L:(g[4]<0?conf1.X:'');
 			ret[0].val = ret[0].name?Math.abs(g[4]):0;
-			ret[1].name = g[5]>0?'男':(g[5]<0?'女':'');
+			ret[1].name = g[5]>0?conf1.D:(g[5]<0?conf1.S:'');
 			ret[1].val = ret[1].name?Math.abs(g[5]):0;
 			ret[2] = ret[0].val+ret[1].val
 			return ret;
@@ -683,7 +710,10 @@ function ref(data){
 	vData = {"turn":initTurn(data.turn)
 	,"bgData":{"hb":[{"name":'',"val":0},{"name":"","val":0},'','']}
 	,"jgData":{"hb":{"list":[],"jg":0,"qh":0}}
-	,"qhData":[[{"name":"","val":0},{"name":"","val":0},""],{"list":[],"sum":0,"qh":0}]}
+	,"qhData":[[{"name":"","val":0},{"name":"","val":0},""],{"list":[],"sum":0,"qh":0}]
+	,"yzData":[[{"name":"","val":0},{"name":"","val":0},""],{"list":[],"sum":0,"qh":0}]
+	}
+	
 	
 		 
 	console.log(vData);
@@ -773,6 +803,7 @@ function ref(data){
 				{{/each}}
 							    	<td>匯總報告</td>
 							    	<td>求和報告</td>
+									<td>原值报告</td>
 							    	
 							  	</tr>
 							  	<tr class="data_col ">
@@ -784,7 +815,7 @@ function ref(data){
 							{{/each}}
 									<td> <div class="bg-td">{{bgData['hb'][0].name}}<span {{if bgData['hb'][0].val>0}}class="red"{{/if}}>{{if bgData['hb'][0].name}}{{bgData['hb'][0].val}}{{/if}}</span></div></td>
 							    	<td> <div class="bg-td">{{qhData[0][0].name}}<span {{if qhData[0][0].val>0}}class="red"{{/if}}>{{if qhData[0][0].name}}{{qhData[0][0].val}}{{/if}}</span></div></td>
-							    	
+							    	<td> <div class="bg-td">{{yzData[0][0].name}}<span {{if yzData[0][0].val>0}}class="red"{{/if}}>{{if yzData[0][0].name}}{{yzData[0][0].val}}{{/if}}</span></div></td>
 							  	</tr>
 							  <tr class="data_col">
 							{{each turn.user_lock as val i}}
@@ -795,17 +826,20 @@ function ref(data){
 							    	
 									<td><div class="bg-td">{{bgData['hb'][1].name}} <span {{if bgData['hb'][1].val>0}}class="red"{{/if}}>{{if bgData['hb'][1].name}}{{bgData['hb'][1].val}}{{/if}}</span></div></td>
 							    	<td><div class="bg-td">{{qhData[0][1].name}} <span {{if qhData[0][1].val>0}}class="red"{{/if}}>{{if qhData[0][1].name}}{{qhData[0][1].val}}{{/if}}</span></div></td>
+							    	<td><div class="bg-td">{{yzData[0][1].name}} <span {{if yzData[0][1].val>0}}class="red"{{/if}}>{{if yzData[0][1].name}}{{yzData[0][1].val}}{{/if}}</span></div></td>
 							    	
 							    	
 							  	</tr>
 							  	<tr class="data_col">
 							  		<td>序號</td>
 							{{each turn.user_lock as val i}}
-									<td class="blue"><div class="bg-td">供 <span >{{if bgData[i+1]}}{{bgData[i+1][2]}}{{/if}}</span></div></td>
+									<td class="blue"><div class="bg-td">共 <span >{{if bgData[i+1]}}{{bgData[i+1][2]}}{{/if}}</span></div></td>
 							{{/each}}
 							    	<td>序號</td>
-							    	<td class="blue"><div class="bg-td">供 <span >{{bgData['hb'][2]}}</span></div></td>
-							    	<td class="blue"><div class="bg-td">供 <span >{{qhData[0][0].val+qhData[0][1].val}}</span></div></td>
+							    	<td class="blue"><div class="bg-td">共 <span >{{bgData['hb'][2]}}</span></div></td>
+							    	<td class="blue"><div class="bg-td">共 <span >{{qhData[0][0].val+qhData[0][1].val}}</span></div></td>
+									<td class="blue"><div class="bg-td">共 <span >{{yzData[0][0].val+yzData[0][1].val}}</span></div></td>
+
 							    	<td>序號</td>
 							  	</tr>
 	</script>
@@ -823,7 +857,8 @@ function ref(data){
 	<td>{{i+1}}</td>
 	<td {{if val>0}}class="red"{{/if}}>{{val}}</td>
 	<td {{if qhData[1].list[i]>0}}class="red"{{/if}}>{{qhData[1].list[i]}}</td>
-	<td>{{i+1}}</td>
+	<td {{if yzData[1].list[i]>0}}class="red"{{/if}}>{{yzData[1].list[i]}}</td>
+<td>{{i+1}}</td>
 	</tr>
 	{{/each}}
 	</script>
@@ -837,7 +872,8 @@ function ref(data){
 							    	<td>結果</td>
 							    	<td class="blue2 {{if jgData['hb'].jg>0}}red{{/if}}">{{jgData['hb'].jg}}</td>
 							    	<td class="blue2 {{if qhData[1].sum>0}}red{{/if}}">{{qhData[1].sum}}</td>
-							    	<td>結果</td>
+							    	<td class="blue2 {{if yzData[1].sum>0}}red{{/if}}">{{yzData[1].sum}}</td>
+<td>結果</td>
 							  	</tr>
 							  	<tr>
 							  		<td>求和</td>
@@ -848,18 +884,20 @@ function ref(data){
 							    	<td>求和</td>
 							    	<td {{if jgData['hb'].qh>0}}class="red"{{/if}}>{{jgData['hb'].qh}}</td>
 							    	<td {{if qhData[1].qh>0}}class="red"{{/if}}>{{qhData[1].qh}}</td>
-							    	<td>求和</td>
+							    	<td {{if yzData[1].qh>0}}class="red"{{/if}}>{{yzData[1].qh}}</td>
+									<td>求和</td>
 							  	</tr>
 							  	<tr style="height:40px;">
-							  		<td>供計</td>
+							  		<td>共計</td>
 									{{each turn.user_lock as val j}}
 										{{if bgData[j+1]}}<td class="blue">{{bgData[j+1][3]}}</td>{{else}}<td class="blue"></td>{{/if}}
 							    	
 									{{/each}}
-							    	<td>供計</td>
+							    	<td>共計</td>
 							    	<td class="blue">{{bgData['hb'][3]}}</td>
 							    	<td class="blue">{{qhData[0][2]}}</td>
-							    	<td>供計</td>
+							    	<td class="blue">{{yzData[0][2]}}</td>
+									<td>共計</td>
 							  	</tr>
 	</script>
 	</body>

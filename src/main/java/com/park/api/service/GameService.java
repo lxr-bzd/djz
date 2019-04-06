@@ -20,6 +20,7 @@ import com.park.api.dao.TmplDao;
 import com.park.api.entity.Count;
 import com.park.api.entity.Crow;
 import com.park.api.entity.Game;
+import com.park.api.entity.InputResult;
 import com.park.api.entity.Tmpl;
 import com.park.api.entity.Turn;
 import com.park.api.service.CountService.CountQueueResult;
@@ -31,7 +32,7 @@ public class GameService {
 	
 	
 	int GAME_COL = 10;
-	int GAME_ROW = 182;
+	int GAME_ROW = 1202;
 	
 	@Autowired
 	CrowDao crowDao;
@@ -55,7 +56,7 @@ public class GameService {
 		if(game1!=null)finishGame(game1.getUid(), game1.getId());
 		
 		//读取使用的组
-		int group = getGroup(uid);
+		int templateNo = getGroup(uid);
 		
 		if(turnService.getTurn().get()==null) {
 			turnService.getTurn().set(turnService.createTurn());
@@ -66,16 +67,92 @@ public class GameService {
 		Game game = new Game();
 		game.setUid(uid);
 		game.setTid(turn.getId());
-		game.setTbNum(group);
+		game.setTbNum(templateNo);
 		game.setFocus_row(1);
 		game.setCreatetime(System.currentTimeMillis());
 		crowDao.createGame(game);
-		createRunGame(uid,game.getId(), group);
+		
 		countDao.save(game.getId(),turn.getMod(),turn.getRule_type(),turn.getRule(),turn.getId());
-		
-		
+		createRunGame(uid,game.getId(), templateNo);
+		//createNextGameRow(game, 1, templateNo);
 		
 	}
+	
+	
+	
+	private void createNextGameRow(Game game,int row,int group) {
+		int rowNum = GAME_ROW;
+		
+		if(row>rowNum)return;
+		
+		Crow crow = getNewRow(row,group);
+		crow.setUid(game.getUid());
+		crowDao.save(game.getId(),crow);
+
+	}
+	
+	
+	
+	
+	private Crow getNewRow(int row,int group) {
+		int groupNum = GameCoreService2.SHENG_GROUP;
+		
+		Crow crow = new Crow();
+		if(group==1) {
+			 Random random = new Random();
+			 
+				 StringBuilder sheng = new StringBuilder();
+				 for (int j = 0; j < groupNum; j++) {
+					 String item = GameCoreService2.createShengStr(random.nextInt(1024), random.nextInt(1024));
+					 sheng.append(item+",");
+				}
+				
+				crow.setSheng(sheng.substring(0, sheng.length()-1));
+		}else if(group==2||group==3||group==4||group==5){
+			
+			String u = null;
+			
+			switch (group) {
+			case 2:
+				u = "0000,0000,0000,0000,0000,0000,0000,0000,0000,0000,";
+				break;
+			case 3:
+				u = "J0J0,J0J0,J0J0,J0J0,J0J0,J0J0,J0J0,J0J0,J0J0,J0J0,";
+				break;
+			case 4:
+				u = "IYIY,IYIY,IYIY,IYIY,IYIY,IYIY,IYIY,IYIY,IYIY,IYIY,";
+				break;
+			case 5:
+				u = "SFSF,SFSF,SFSF,SFSF,SFSF,SFSF,SFSF,SFSF,SFSF,SFSF,";
+				break;
+			}
+			
+			//100组
+			String ten0 = "";
+			
+			for (int i = 0; i < 10; i++) {
+				ten0+=u;
+			}
+			
+				StringBuilder sheng = new StringBuilder("");
+				for (int j = 0; j < groupNum/100; j++) {
+					sheng.append(ten0);
+					
+				}
+				crow.setSheng(sheng.substring(0,sheng.length()-1));
+				
+			
+		}else {
+			throw new ApplicationException("无法创建模板");
+		}
+		
+		
+		crow.setRow(row);
+		return crow;
+
+	}
+	
+	
 	
 	/**
 	 * 生成运行数据
@@ -86,7 +163,7 @@ public class GameService {
 		
 		int groupNum = GameCoreService2.SHENG_GROUP;
 		
-		int rowNum = 182;
+		int rowNum = GAME_ROW;
 		
 		if(group==1) {
 			ret = new ArrayList<>();
@@ -160,7 +237,7 @@ public class GameService {
 					StringBuilder shneg = buildShengByRow(i+1, shnegs);
 					for (int j = 0; j < 10; j++) {
 						shneg.append(",");
-						shneg.append(rs[j*182+i]);
+						shneg.append(rs[j*rowNum+i]);
 					}
 					
 				}
@@ -185,7 +262,7 @@ public class GameService {
 	
 	
 	
-	public void doInput(Game game,String pei) {
+	public InputResult doInput(Game game,String pei) {
 		
 		if(game == null)throw new ApplicationException("游戏未开始！");
 		
@@ -204,6 +281,8 @@ public class GameService {
 		//基础计算结束
 		
 		updateCrow(icrow);
+		
+		//createNextGameRow(game, icrow.getRow()+1, game.getTbNum());
 		// insulateCleanGame(game.getId(),icrow.getRow());
 		
 		Crow nCrow = getNextRow(game.getId(), icrow.getRow());
@@ -218,18 +297,34 @@ public class GameService {
 			String gong = gameCoreService.reckonGong(nCrow.getSheng(), dui);
 			nCrow.setGong(gong);
 			updateCrow(nCrow);
-		}else {
-			finishGame(game.getUid(),game.getId());
 		}
 		
+		InputResult inputResult = new InputResult();
+		inputResult.setUid(game.getUid());
 		//String queue = doCount(game.getId(),icrow.getRow(),icrow.getGong(),icrow.getGong_col(),nCrow);
 		//更新统计,row>=3 queue才会有返回，否则返回null
-		String queue = doCount2(game.getId(),game.getUid(),icrow.getRow(),icrow.getGong(),icrow.getGong_col(),nCrow);
+		Object[] countReult = doCount2(game.getId(),game.getUid(),icrow.getRow(),icrow.getGong(),icrow.getGong_col(),nCrow,inputResult);
+		if(nCrow==null) {
+			
+			finishGame(game.getUid(),game.getId());
+			
+		}
 		
+		
+		return inputResult;
 	}
 	
-	
-	private String doCount2(String hid,String uid,int row,String gong,String gongCol,Crow nCrow) {
+	/**
+	 * 
+	 * @param hid
+	 * @param uid
+	 * @param row
+	 * @param gong 当前输入行的供
+	 * @param gongCol 当前输入行的供颜色
+	 * @param nCrow
+	 * @return
+	 */
+	private Object[] doCount2(String hid,String uid,int row,String gong,String gongCol,Crow nCrow,InputResult inputResult) {
 		
 		if(nCrow!=null) {
 			Game g1 = new Game();
@@ -278,13 +373,20 @@ public class GameService {
 			Object[] objs = countTurn.getResult();
 			ServiceManage.jdbcTemplate.update("update game_runing_count set g=?,g_sum=g_sum+? where id=?",
 					JSONObject.toJSONString(objs),
-					Math.abs((Integer)objs[4])+Math.abs((Integer)objs[5]),
+					Math.abs((long)objs[4])+Math.abs((long)objs[5]),
 					map.get("id"));
+			long[] yz = countTurn.getYzResult();
+			inputResult.setYz(yz);
+			inputResult.setRets(objs);
 			
-			if(turnService.getTurnCount().get()==null)turnService.getTurnCount().set(new HashMap());
-			turnService.getTurnCount().get().put(uid, objs);
+			return objs;
+			
+			/*
+			 * if(turnService.getTurnCount().get()==null)turnService.getTurnCount().set(new
+			 * HashMap()); turnService.getTurnCount().get().put(uid, objs);
+			 */
 		}
-		return rets.getQueue();
+		return null;
 	}
 	private String doCount(String hid,int row,String gong,String gongCol,Crow nCrow) {
 		
@@ -392,7 +494,7 @@ public class GameService {
 		int mod =Integer.parseInt(map.get("mod").toString());
 		if(mod==1) {
 			//A模式
-			Integer[] tgs = CountService.countTgA(queue, gong,rule_type, start, end);
+			long[] tgs = CountService.countTgA(queue, gong,rule_type, start, end);
 			Object[] objs = CountService.countAllTgA(tgs,mod2);
 			ServiceManage.jdbcTemplate.update("update game_runing_count set g=?,g_sum=g_sum+? where id=?",
 					JSONObject.toJSONString(objs),
@@ -629,37 +731,51 @@ public static class GameEach{
 	
 	class CountTurn extends GameEach{
 		int groupNum = GameCoreService2.SHENG_GROUP_NUM;
-		Integer[] info = new Integer[]{
+		long[] info = new long[]{
 				0,0,
 				0,0,
 				0,0,
-				0,0,
+				0,0
 		};
 		
 		int ruleType;
 		int start,end;
 		int mod2;
+		//统计原值{老，少，男，女}
+		long[] yz = new long[] {0,0,0,0};
 		
 		//String bmap = "老+少+老-少-男+女+男-女-";
 		@Override
 		public void exe(int groupIndex, int itemIndex, Integer queueVal, int newQueueVal
 				,boolean gong,boolean gongCol,Boolean nextGong) {
-			
+				
 				int index = ((itemIndex+1)%2)==0?4:0;//确定老少/男女区域
+				
 				if(newQueueVal>CountService.QUEUE_VAL_OFFSET)index+=2;//确定 负正区域
 				
 				if(nextGong)index+=1;
 				
 				info[index]+=CountService.getJg(ruleType,newQueueVal>CountService.QUEUE_VAL_OFFSET?newQueueVal-CountService.QUEUE_VAL_OFFSET:newQueueVal,start,end,false);
+				
+				int indexYz = ((itemIndex+1)%2)==0?2:0;//确定老少/男女区域
+				if(nextGong)indexYz+=1;
+				
+				yz[indexYz]+=1;
+		
 		}
 		
 		
 		private Object[] getResult() {
-			Integer[] tgs = info;
+			long[] tgs = info;
 			Object[] objs = CountService.countAllTgA(tgs,mod2);
 
 			return objs;
 		}
+		
+		private long[] getYzResult() {
+			return yz;
+		}
+		
 		
 		public int getRuleType() {
 			return ruleType;

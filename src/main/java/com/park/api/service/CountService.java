@@ -1,8 +1,5 @@
 package com.park.api.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.park.api.service.GameService.GameEach;
 
 /**
@@ -28,7 +25,7 @@ public class CountService {
 	
 	
 	public static CountQueueResult countQueue2(int row,String queue,String queueCounts,String dui,String gong,String gongCol,String nextGong,GameEach[] es) {
-
+		
 		
 		int group = GameCoreService2.SHENG_GROUP;
 		int groupNum = GameCoreService2.SHENG_GROUP_NUM;
@@ -80,11 +77,11 @@ public class CountService {
 				if(j<groupNum) {
 					col = col1[j];
 					gongItem = gong1[j];
-					nextGongItem = nGong1[j];
+					if(nextGong!=null)nextGongItem = nGong1[j];
 				}else {
 					col = col2[j-groupNum];
 					gongItem = gong2[j-groupNum];
-					nextGongItem = nGong2[j-groupNum];
+					if(nextGong!=null)nextGongItem = nGong2[j-groupNum];
 				}
 				//计算原始值
 				ys=ys+(col?1:-1);
@@ -234,17 +231,17 @@ public class CountService {
 	 * @param isMinus
 	 * @return
 	 */
-	public static int getJg(int type,int length,int start,int end,boolean isMinus) {
+	public static long getJg(int type,int length,int start,int end,boolean isMinus) {
 		
 		if(length>=start&&length<end) {
-			int l = (int) (Math.pow(2,length-start));
+			long l = (long) (Math.pow(2,length-start));
 			
-			if(type==2)return isMinus?-1:1;
+			if(type==2)return (long)(isMinus?-1:1);
 			else
-			return isMinus?-l:l;
+			return (long)(isMinus?-l:l);
 		}
 			
-		else return 0;
+		else return 0; 
 	}
 	
 	
@@ -308,13 +305,13 @@ public class CountService {
 	}
 	
 	
-	public static Integer[] countTgA(String queue,String gong,int rule_type,int start,int end) {
+	public static long[] countTgA(String queue,String gong,int rule_type,int start,int end) {
 		
 		int group = GameCoreService2.SHENG_GROUP;
 		int groupNum = GameCoreService2.SHENG_GROUP_NUM;
 		int queueGroupSize = queueItemSize*20;
 		int colGroupSize = 4;
-		Integer[] info = new Integer[]{
+		long[] info = new long[]{
 				0,0,
 				0,0,
 				0,0,
@@ -349,7 +346,7 @@ public class CountService {
 					if(gong2[j-groupNum])index+=1;
 				}
 				
-				info[index]+=getJg(rule_type,Math.abs(queueVal),start,end,false);
+				//--info[index]+=getJg(rule_type,Math.abs(queueVal),start,end,false);
 			}
 			
 		}
@@ -418,18 +415,18 @@ public class CountService {
 	 * @param allts
 	 * @return "[[大的下标值,和值],[大的下标值,和值],[大的下标值,和值],[大的下标值,和值],（老男为正数，少女为负数表示报告）,（同上）,原allts]"
 	 */
-	public static Object[] countAllTgA(Integer[] allts,Integer mod2) {
+	public static Object[] countAllTgA(long[] allts,Integer mod2) {
 		
-		Integer[] lss = getHz(0,allts[0],allts[1]);
-		Integer[] lsj = getHz(2,allts[2],allts[3]);
-		Integer[] nvs = getHz(4,allts[4],allts[5]);
-		Integer[] nvj = getHz(6,allts[6],allts[7]);
+		Long[] lss = getHz(0,allts[0],allts[1]);
+		Long[] lsj = getHz(2,allts[2],allts[3]);
+		Long[] nvs = getHz(4,allts[4],allts[5]);
+		Long[] nvj = getHz(6,allts[6],allts[7]);
 		
-		int ls1 = (lss==null?0:((lss[0]+1)%2==0?lss[1]:-lss[1]));
-		int ls2 = (lsj==null?0:((lsj[0]+1)%2==0?-lsj[1]:lsj[1]));
+		long ls1 = (lss==null?0:((lss[0]+1)%2==0?lss[1]:-lss[1]));
+		long ls2 = (lsj==null?0:((lsj[0]+1)%2==0?-lsj[1]:lsj[1]));
 		
-		int nv1 = (nvs==null?0:((nvs[0]+1)%2==0?nvs[1]:-nvs[1]));
-		int nv2 = (nvj==null?0:((nvj[0]+1)%2==0?-nvj[1]:nvj[1]));
+		long nv1 = (nvs==null?0:((nvs[0]+1)%2==0?nvs[1]:-nvs[1]));
+		long nv2 = (nvj==null?0:((nvj[0]+1)%2==0?-nvj[1]:nvj[1]));
 		
 		if(mod2==1)
 			return new Object[] {lss,lsj,nvs,nvj
@@ -475,13 +472,46 @@ public class CountService {
 	 * @param q2
 	 * @return [下标，和值]
 	 */
-	public static Integer[] getHz(int start,int q1,int q2){
-		int v = q1-q2;
+	public static Long[] getHz(int start,long q1,long q2){
+		long v = q1-q2;
 		
-		if(v>0)return new Integer[] {start,v};
-		if(v<0)return new Integer[] {start+1,-v};
+		if(v>0)return new Long[] {(long)start,v};
+		if(v<0)return new Long[] {(long)start+1,-v};
 		
 		return null;
+		
+	}
+	
+	/**
+	 * 
+	 * @param yz
+	 * @param mod2
+	 * @return [正数为报告老负数报告少，正数为报告男负数报告女]
+	 */
+	public static long[] reckonYzBg(long[] yz,int mod2) {
+		long[] ret = new long[] {yz[0]-yz[1],yz[2]-yz[3]};
+		if(mod2==2) {
+			ret[0] = -ret[0];
+			ret[1] = -ret[1];
+		}
+		
+		return ret;
+	}
+	
+	/**
+	 * 计算原值结果
+	 * @param pei
+	 * @param qh
+	 * @return
+	 */
+	public static Long[] countYzJg(String pei,Long[] upYz) {
+		
+		Long[] qhbg = upYz;
+		
+		Integer pv = Integer.valueOf(pei);
+		long jg1 =(pv>2?qhbg[0]:-qhbg[0]);
+		long	jg2 =(pv%2!=0?qhbg[1]:-qhbg[1]);
+		return new Long[] {jg1,jg2};
 		
 	}
 	
