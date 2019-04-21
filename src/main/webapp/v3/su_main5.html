@@ -1,611 +1,1886 @@
 <!DOCTYPE html>
+
 <html>
+
 	<head>
+
 		<meta charset="UTF-8">
+
 		<title></title>
+
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 
+
+
 	    <meta name="description" content="">
+
 	
+
 	    <meta name="Keywords" content="">
+
 	
+
 	    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
 		<link rel="stylesheet" type="text/css" href="css/main.css"/>
-	</head>
-	<body>
-		<!--前臺表-->
-		<section class="reception_wrap">
-			<div class="reception_box" style="max-width: 1400px;">
-				<!--數據表-->
-				<table style="border: 1px solid #000;">
-					<tr class="reception">
-						<!--A表-->
-						<td colspan="12" class="table_top rec-table-one">
-							<table border="0" style="border: 1px solid #000;table-layout:fixed;">
-							  	<!--<caption>計算表</caption>-->
-							  	<!--表頭-->
-							  	
-							  	<tr class="tb_head">
-							    	<th colspan="12" class="main_tit">計&nbsp;算&nbsp;表&nbsp;</th>
-							  	</tr> 
-							 
-							  	<!--輸入框-->
-							  	<tr class="person_int" id="input_group">
-							    	<td colspan="2" class="focus_row" style="">--</td>
-							    	<td colspan="8"><input type="text" style="width: 100%" maxlength="1" autofocus="autofocus" class="int_item" placeholder="" /></td>
-							    	<td colspan="2" class="focus_row" style="">--</td>
-							  	</tr>
-							  	<tr class="operation_box">
-							  		<td colspan="12">
-							  			<div class="funtr_td_box">
-											<div class="clearfix funtr_td jus-a ali-c">
-												<div class="refresh_btn unselectable">刷新</div>
-												<div class="sure_btn unselectable">確定</div>
-												<div class="exit_btn unselectable">關閉</div>
-											</div>
-										</div>
-							  		</td>
-							  	</tr>
-							  	<tr >
-							  		<td colspan="12" style="padding: 0px;">
-							  			<table id="bg_group" style="border: 1px solid #000;table-layout:fixed;he">
-												<tr>
-											    	<td colspan="2" rowspan="3">--</td>
-											    	<td colspan="2">老</td>
-											    	<td colspan="2" class="red"></td>
-											    	<td colspan="2">男</td>
-											    	<td colspan="2" class="red"></td>
-											    	<td colspan="2" rowspan="3">--</td>
-											  	</tr>
-											  	<tr>
-											    	<td colspan="2">少</td>
-											    	<td colspan="2" class="red"></td>
-											    	<td colspan="2">女</td>
-											    	<td colspan="2" class="red"></td>
-											  	</tr>
-												<tr>
-											    	<td colspan="2">统计</td>
-											    	<td colspan="2"></td>
-													<td colspan="2">累计</td>
-											    	<td colspan="2"></td>
-											  	</tr>
-											  	<tr>
-											    	<td colspan="2">--</td>
-											    	<td colspan="2">结果</td>
-													<td colspan="4" class="focus_jg"></td>
-													<td colspan="2">结果</td>
-											    	<td colspan="2">--</td>
-											  	</tr>
-							  			</table>
-							  		</td>
-							  	</tr>
-							  	
-							  
-							  		
-							  	
-							</table>
-						</td>
-						<!--B表-->
-						<td colspan="4" class="table_top rec-table-two" style="border: 1px solid #000;">
-							
-									<table border="" cellspacing="" cellpadding="" class="child_tit_r" style="width:100%">
-										<tbody><tr><th colspan="4" class="main_tit" style="font-size: 20px;">结果趋势 &nbsp;&nbsp;<a href="javascript:removeAll()" style="font-size: 14px;color:#333;">清空</a></th></tr>
-										<tr></tr>
-										</tbody>
-									</table>
-									<div style="overflow-y:scroll;height:500px;">
-											<table border="1" class="" style="height:500px;" >
-											<colgroup>
-											</colgroup>
-											  	<tbody id="queue_group">
-												  	<!--數據行-1-->
-												  	<!-- <tr class="data_col_r">
-												  		<td class="frist">第 <span class="red">9</span> 位</td>
-												    	<td>女</td>
-												    	<td>-</td>
-												    	<td>6</td>
-												  	</tr> -->
-												  	
-												  	<!--關閉-->
-												  	
-											  	</tbody>
-											</table>
-									</div>
-									 <div style="overflow-y: scroll;">
-									<table style="width:100%;height: 50px;" >
-											<colgroup>
-											</colgroup>
-										<tr ><td  style="width:93px;">求和</td><td colspan="2" id="allQh">--</td></tr>
-									</table>
-									</div>
-								
-							</td>
-					</tr>
-					
-				</table>
-				<!--彈窗-->
-				<!--關閉按鈕-->
-				<div class="exit_pup_wrap hide">
-					<div class="exit_pup_box">
-						<div class="exit_pup">
-							<h2>確定要關閉嗎？</h2>
-							<div class="pup_btn">
-								<a href="javascript:;" class="cancel_btn">取消</a>
-								<a href="reception-login.html">確定</a>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!--刷新按鈕-->
-				<div class="refresh_pup_wrap hide">
-					<div class="exit_pup_box">
-						<div class="exit_pup">
-							<h2>確定要刷新嗎？</h2>
-							<div class="pup_btn">
-								<a href="javascript:;" class="cancel_btn">取消</a>
-								<a href="javascript:;" class="pup_sure_btn">確定</a>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!--確定按鈕-->
-				<div class="sure_pup_wrap hide">
-					<div class="exit_pup_box">
-						<div class="exit_pup">
-							<h2>請檢查輸入框是否填滿</h2>
-							<div class="pup_btn">
-								<a href="javascript:;" class="pup_sure">確定</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
+
+		<style type="text/css">
+
+			table{border-collapse: collapse;}
+
+			table td,table th{
+
+				border: 1px solid rgba(0,0,0,1);
+
+			}
+
+			.top-body{overflow-y: scroll;}
+
+			.top-body>table{table-layout: fixed;}
+
+			.scroll-body{overflow-y: scroll;height: 420px;}
+
+			.scroll-body>table{table-layout: fixed;}
+
+			.scroll-body td{height: 35px;}
+
+			.bottom-body{overflow-y: scroll;}
+
+			.bottom-body>table{table-layout: fixed;}
+
+			.bottom-body td{height: 35px;}
+
+			
+
+			.blue{background-color: #087ec3;color: white;}
+
+			.blue2{background-color: #92ebff;}
+
+			.locak_btn1{background-color: #dddddd;padding: 3px 12px;cursor: pointer;border-radius:5px}
+
+			.locak_btn2{background-color: yellow;padding: 3px 12px;cursor: pointer;border-radius:5px}
+
+			
+
+			
+
+			.btn1{cursor: pointer;text-align: center;margin: 5px;height: 40px;line-height: 40px;border-radius:5px}
+
+			
+
+			.bg-td{text-align: left; display: flex;}
+
+			.bg-td>span{flex:1;text-align: center;}
+
 		
+
+		
+
+		</style>
+
+	</head>
+
+	<body>
+
+		<!--前臺表-->
+
+		<section class="reception_wrap" style="overflow-x: scroll;height: 100%;">
+
+			<div class="reception_box">
+
+				<!--數據表-->
+
+				<table>
+
+					<tr class="reception">
+
+						<!--A表-->
+
+						<td  class="table_top rec-table-one">
+
+						<div class="top-body">
+
+							<table border="0" style="border: 1px solid #000;width:100%">
+
+							<colgroup>
+
+								<col style="width:60px;">
+
+								
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								
+
+								
+
+								<col style="width:150px;">
+
+								<col style="width:60px;">
+
+								<col style="width:150px;">
+
+								<col style="width:150px;">
+
+								
+
+								<col style="width:60px;">
+
+								
+
+							</colgroup>
+
+							  	<tbody id="bg_group">
+
+							  	<tr class="data_col person_int">
+
+							    	<td rowspan="4" class="focus_row">--</td>
+
+							    	<td colspan="6" class="blue" style="font-size:24px">計 算 表</td>
+
+							    	<!-- <td colspan="3" class="blue mod_group">--</td> -->
+
+							    	<td ><div class="blue btn1 refresh_btn">刷新</div></td>
+
+							    	<td ><a href="su_history.html" ><div class="blue btn1">記錄</div></a></td>
+
+							    	<td ><div class="blue btn1 remove-all">清空</div></td>
+
+							    	<td ><div class="blue btn1 exit_btn">關閉</div></td>
+
+							    	
+
+							    	<td colspan="2" id="input_group"><input type="text" style="width: 90%;background-color: #eee" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""></td>
+
+							    	<td colspan="2"> <div class="blue btn1 ok_btn">確定</div></td>
+
+							    	<td rowspan="4" class="focus_row">--</td>
+
+							    	
+
+							  	</tr>
+
+							  	
+
+							  	<tr class="data_col">
+
+							    	
+
+							    	<td>1號 
+
+<span class="locak_btn1" >瑣定</span>
+
+												</td>
+
+				
+
+							    	<td>2號 
+
+<span class="locak_btn1" >瑣定</span>
+
+												</td>
+
+				
+
+							    	<td>3號 
+
+<span class="locak_btn1" >瑣定</span>
+
+												</td>
+
+				
+
+							    	<td>4號 
+
+<span class="locak_btn1" >瑣定</span>
+
+												</td>
+
+				
+
+							    	<td>5號 
+
+<span class="locak_btn1" >瑣定</span>
+
+												</td>
+
+				
+
+							    	<td>6號 
+
+<span class="locak_btn1" >瑣定</span>
+
+												</td>
+
+				
+
+							    	<td>7號 
+
+<span class="locak_btn1" >瑣定</span>
+
+												</td>
+
+				
+
+							    	<td>8號 
+
+<span class="locak_btn1" >瑣定</span>
+
+												</td>
+
+				
+
+							    	<td>9號 
+
+<span class="locak_btn1" >瑣定</span>
+
+												</td>
+
+				
+
+							    	<td>10號 
+
+<span class="locak_btn1" >瑣定</span>
+
+												</td>
+
+							    	<td>匯總報告</td>
+
+							    	<td>求和報告</td>
+
+							    	<td>原值报告</td>
+
+							    	
+
+							  	</tr>
+
+							  	<tr class="data_col ">
+
+							    	<td>&nbsp;<span class="red"></span></td>
+
+							    	<td> <span class="red"></span></td>
+
+							    	<td> <span class="red"></span></td>
+
+							    	<td> <span class="red"></span></td>
+
+							    	<td> <span class="red"></span></td>
+
+							    	<td> <span class="red"></span></td>
+
+							    	<td> <span class="red"></span></td>
+
+							    	<td> <span class="red"></span></td>
+
+							    	<td> <span class="red"></span></td>
+
+							    	<td> <span class="red"></span></td>
+
+							    	<td> <span class="red"></span></td>
+
+							    	<td> <span class="red"></span></td>
+
+							    	
+
+							  	</tr>
+
+							  <tr class="data_col ">
+
+							    	<td style="text-align: left;">&nbsp;<span class="red"  style="display: inline-block;float: right;"></span></td>
+
+							    	<td><span class="red"></span></td>
+
+							    	<td><span class="red"></span></td>
+
+							    	<td><span class="red"></span></td>
+
+							    	<td><span class="red"></span></td>
+
+							    	<td><span class="red"></span></td>
+
+							    	<td><span class="red"></span></td>
+
+							    	<td><span class="red"></span></td>
+
+							    	<td><span class="red"></span></td>
+
+							    	<td><span class="red"></span></td>
+
+							    	<td><span class="red"></span></td>
+
+							    	<td><span class="red"></span></td>
+
+							    	
+
+							  	</tr>
+
+							  	<tr class="data_col ">
+
+							  		<td>序號</td>
+
+							    	<td class="blue"></td>
+
+							    	<td class="blue"></td>
+
+							    	<td class="blue"></td>
+
+							    	<td class="blue"></td>
+
+							    	<td class="blue"></td>
+
+							    	<td class="blue"></td>
+
+							    	<td class="blue"></td>
+
+							    	<td class="blue"></td>
+
+							    	<td class="blue"></td>
+
+							    	<td class="blue"></td>
+
+							    	
+
+							    	<td class="blue"></td>
+
+							    	<td class="blue"></td>
+
+							    	<td>序號</td>
+
+							  	</tr>
+
+							  	</tbody>
+
+							</table>
+
+							</div>
+
+						</td>
+
+						
+
+					</tr>
+
+					<tr>
+
+						<td>
+
+							<div class="scroll-body">
+
+							<table class="rec-table-one" style="height:auto;width:100%;">
+
+								<colgroup>
+
+								<col style="width:60px;">
+
+								
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								
+
+								
+
+								<col style="width:150px;">
+
+								<col style="width:60px;">
+
+								<col style="width:150px;">
+
+								<col style="width:150px;">
+
+								
+
+								<col style="width:60px;">
+
+								
+
+							</colgroup>
+
+								<tbody id="jg_group">
+
+								
+
+							  	<!-- <tr >
+
+							  		<td>1</td>
+
+							    	<td>200</td>
+
+							    	<td>200</td>
+
+							    	<td>200</td>
+
+							    	<td>200</td>
+
+							    	<td>200</td>
+
+							    	<td>200</td>
+
+							    	<td>200</td>
+
+							    	<td>200</td>
+
+							    	<td>200</td>
+
+							    	<td>200</td>
+
+							    	<td>1</td>
+
+							    	<td>200</td>
+
+							    	<td>200</td>
+
+							    	<td>1</td>
+
+							  	</tr> -->
+
+							  	</tbody>
+
+							</table>
+
+							</div>
+
+						
+
+						</td>
+
+					</tr>
+
+					<tr>
+
+						<td>
+
+							<div class="bottom-body">
+
+							<table class="table_top" style="width:100%">
+
+								<colgroup>
+
+								<col style="width:60px;">
+
+								
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								<col style="width:110px;">
+
+								
+
+								
+
+								<col style="width:150px;">
+
+								<col style="width:60px;">
+
+								<col style="width:150px;">
+
+								<col style="width:150px;">
+
+								
+
+								<col style="width:60px;">
+
+								
+
+							</colgroup>
+
+								<tbody id="bottom_group">
+
+								<tr >
+
+							  		<td>結果</td>
+
+							    	<td class="blue2"></td>
+
+							    	<td class="blue2"></td>
+
+							    	<td class="blue2"></td>
+
+							    	<td class="blue2"></td>
+
+							    	<td class="blue2"></td>
+
+							    	<td class="blue2"></td>
+
+							    	<td class="blue2"></td>
+
+							    	<td class="blue2"></td>
+
+							    	<td class="blue2"></td>
+
+							    	<td class="blue2"></td>
+
+							    	
+
+							    	<td class="blue2"></td>
+
+							    	<td class="blue2"></td>
+
+							    	<td>結果</td>
+
+							  	</tr>
+
+							  	<tr >
+
+							  		<td>求和</td>
+
+							    	<td></td>
+
+							    	<td></td>
+
+							    	<td></td>
+
+							    	<td></td>
+
+							    	<td></td>
+
+							    	<td></td>
+
+							    	<td></td>
+
+							    	<td></td>
+
+							    	<td></td>
+
+							    	<td></td>
+
+							    	
+
+							    	<td></td>
+
+							    	<td></td>
+
+							    	<td>求和</td>
+
+							  	</tr>
+
+							  	<tr >
+
+							  		<td>共計</td>
+
+							    	<td class="blue"></td>
+
+							    	<td class="blue"></td>
+
+							    	<td class="blue"></td>
+
+							    	<td class="blue"></td>
+
+							    	<td class="blue"></td>
+
+							    	<td class="blue"></td>
+
+							    	<td class="blue"></td>
+
+							    	<td class="blue"></td>
+
+							    	<td class="blue"></td>
+
+							    	<td class="blue"></td>
+
+							    	
+
+							    	<td class="blue"></td>
+
+							    	<td class="blue"></td>
+
+							    	<td>共計</td>
+
+							  	</tr>
+
+							  	</tbody>
+
+							</table>
+
+							</div>
+
+						
+
+						</td>
+
+					</tr>
+
+				</table>
+
+				<!--彈窗-->
+
+				<!--關閉按鈕-->
+
+				<div class="exit_pup_wrap hide">
+
+					<div class="exit_pup_box">
+
+						<div class="exit_pup">
+
+							<h2>確定要關閉嗎？</h2>
+
+							<div class="pup_btn">
+
+								<a href="javascript:;" class="cancel_btn">取消</a>
+
+								<a href="reception-login.html">確定</a>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+				<!--刷新按鈕-->
+
+				<div class="refresh_pup_wrap hide">
+
+					<div class="exit_pup_box">
+
+						<div class="exit_pup">
+
+							<h2>確定要刷新嗎？</h2>
+
+							<div class="pup_btn">
+
+								<a href="javascript:;" class="cancel_btn">取消</a>
+
+								<a href="javascript:;" class="pup_sure_btn">確定</a>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+				<!--確定按鈕-->
+
+				<div class="sure_pup_wrap hide">
+
+					<div class="exit_pup_box">
+
+						<div class="exit_pup">
+
+							<h2>請檢查輸入框是否填滿</h2>
+
+							<div class="pup_btn">
+
+								<a href="javascript:;" class="pup_sure">確定</a>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</section>
+
+		
+
 		<script src="js/jquery-1.11.2.min.js"></script>
+
 		<script type="text/javascript">
+
 			//關閉彈窗
+
 			$(".exit_btn").click(function () {
+
 				logout();
+
 				//$(".exit_pup_wrap").addClass("showtb").removeClass("hide")
-			})
-			$(".cancel_btn").click(function () {
-				$(".exit_pup_wrap").addClass("hide").removeClass("showtb")
-			})
-			//刷新彈窗
-			$(".refresh_btn").click(function () {
-				reNew();
-				//$(".refresh_pup_wrap").addClass("showtb").removeClass("hide")
-			})
-			$(".cancel_btn,.pup_sure_btn").click(function () {
-				$(".refresh_pup_wrap").addClass("hide").removeClass("showtb")
+
 			})
 
-//			回刪
-			$('.int_item').on('keyup',function(e){
-				var i = $('.int_item').index(e.target);
-				if (window.event.keyCode==8) {
-					this.value="";
-					if (i<=0) {
-						i=0;
-					} else{
-						i--;
-					}
-					$('.int_item').eq(i).focus();
-				}
-			})	
-//			確定按鈕判斷
-			var off=null;
-			$(".sure_btn").click(function () {
-				for (var j=0;j<$('.int_item').length;j++) {
-					if ($('.int_item').eq(j).val()=="") {
-						off=true;
-						break;
-					}else{
-						off=false;
-					}
-				}
-				
-				if (off) {
-					$(".sure_pup_wrap").addClass("showtb").removeClass("hide")
-					$(".pup_sure").click(function () {
-						$(".sure_pup_wrap").addClass("hide").removeClass("showtb")
-					})
-				}else{
-					doInput();
-					
-				}
+			$(".cancel_btn").click(function () {
+
+				$(".exit_pup_wrap").addClass("hide").removeClass("showtb")
+
 			})
+
+			//刷新彈窗
+
+			$(".refresh_btn").click(function () {
+
+				reNew();
+
+				
+
+			})
+
+			//刷新彈窗
+
+			$(".remove-all").click(function () {
+
+				removeAll();
+
+				
+
+			});
+
+			$(".cancel_btn,.pup_sure_btn").click(function () {
+
+				$(".refresh_pup_wrap").addClass("hide").removeClass("showtb")
+
+			})
+
+
+
+//			回刪
+
+			$('.int_item').on('keyup',function(e){
+
+				var i = $('.int_item').index(e.target);
+
+				if (window.event.keyCode==8) {
+
+					this.value="";
+
+					if (i<=0) {
+
+						i=0;
+
+					} else{
+
+						i--;
+
+					}
+
+					$('.int_item').eq(i).focus();
+
+				}
+
+			})	
+
+//			確定按鈕判斷
+
+			var off=null;
+
+			$(".ok_btn").click(function () {
+
+				for (var j=0;j<$('.int_item').length;j++) {
+
+					if ($('.int_item').eq(j).val()=="") {
+
+						off=true;
+
+						break;
+
+					}else{
+
+						off=false;
+
+					}
+
+				}
+
+				
+
+				if (off) {
+
+					$(".sure_pup_wrap").addClass("showtb").removeClass("hide")
+
+					$(".pup_sure").click(function () {
+
+						$(".sure_pup_wrap").addClass("hide").removeClass("showtb")
+
+					})
+
+				}else{
+
+					doInput();
+
+					
+
+				}
+
+			})
+
 		</script>
+
 		
+
 		<script src="../js/app.js"></script>
+
 		<script src="../jslib/layer/layer.js"></script>
+
 		<script type="text/javascript" src="../js/template-web.js"></script>
+
 		
+
 		<script type="text/javascript" src="../js/tableExport.min.js"></script>
+
 		<script type="text/javascript" src="../js/jquery.base64.js"></script>
+
 		
+
 	<script type="text/javascript">
+
 //	input輸入框
+
 	$('.int_item').on('input propertychange',onInput);
+
 	function onInput(e){
+
 		var inp = e.currentTarget;
+
 		var i = $('.int_item').index($(inp));
+
 		inp.value=inp.value.replace(/[^1234.]/g,'')
+
 			if ($(inp).val().length==1) {
+
 				i++;
+
 				$('.int_item').eq(i).focus();
+
 			} else if ($(inp).val().length>1) {
+
 				inp.value=inp.value.replace(/[\d]/g,'')
+
 			}
+
 			if (window.event.keyCode==8) {
+
 				inp.value="";
+
 				if (i<=0) {
+
 					i=0;
+
 				} else{
+
 					i--;
+
 				}
+
 				$('.int_item').eq(i).focus();
+
 			}
+
 			
+
 	}
+
 	
+
 	
+
 	
+
 	function reNew(){
+
+		
+
 		 layer.confirm('是否重新開始？', {
+
 			    btn: ['確定', '取消']
+
 			  },function(index){
+
 				  layer.close(index);
+
+				  var index2 = layer.load(1, {
+
+					  shade: [0.5,'#555'] //0.1透明度的白色背景
+
+					});
+
 				  $app.request("../user/game/renew.do",function(data){
+
+					  layer.close(index2);
+
 					  if(data.code!=1){
+
 							$app.alert(data.msg);
+
 							return;
+
 						}
+
 					  cleanInput();
+
 						ref(data.data);
+
 					  
+
 				  });
+
 				  
+
 			  });
+
 	}
+
 	
+
 	
+
 	function doInput(){
+
 		var val = getInput();
+
 		if(!val){
+
 			layer.alert("請輸入完整");
+
 			return;
+
 		}
+
 		var index = layer.load(1, {
+
 			  shade: [0.5,'#555'] //0.1透明度的白色背景
+
 			});
+
 		$app.request("../user/game/input.do?pei="+val,function(data){
+
 			layer.close(index);
+
 			if(data.code!=1){
+
 				$app.alert(data.msg,"e");
+
 				return;
+
 			}
+
 			cleanInput();
+
 			$app.msg("ok");
+
 			ref(data.data);
+
 			
+
 		}); 
+
 		
+
 	}
+
 	
+
 	
+
 	function getInput(){
+
 		
+
 		var inputs = $("#input_group input");
+
 		var val="";
+
 		inputs.each(function(i,e){
+
 			var v = $(e).val();
+
 			if(!(/^[1234]{1}$/g).test(v))return;
+
 			val+=v;
+
 		});
+
 		if(val.length!=1)return;
+
 		var ret = '';
+
 		for (var i = 0; i < 10; i++) {
+
 			ret+=val;
+
 		}
+
 		return ret;
+
 	}
+
 	
+
 	function cleanInput(){
+
 		
+
 		var inputs = $("#input_group input");
+
 		inputs.val("");
+
 	}
+
 	
+
 	function logout(){
+
 		layer.confirm('您確定要退出？', {
+
 			  btn: ['確定','取消'] //按鈕
+
 			}, function(){
+
 				$app.request("../logout.do",function(data){
+
 					window.location.href = $app.loginUrl;
+
 				});
+
 			});
+
 		 
+
 		
+
 	}
+
 	
+
 	function tableExport(){
+
 		var tb = $(etbHtml);
+
 		
+
 		$("body").append(tb);
+
 		tb.tableExport({type:'excel',ignoreColumn: [],ignoreRow:[]
+
 			, separator:';', escape:'false'
+
 				 ,formats: ['xlsx']
+
 		,fileName: '前臺表導出'+new Date().format("yyyy-MM-dd")});
+
 		tb.remove();
+
 	}
+
 	
+
 	
+
 	
+
 	</script>
+
 	<script type="text/javascript">
+
+	// L  X  D  S
+
+	// 老 少 男 女
+
+	var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
+
 	
+
+	
+
 	var notifyDialog;
+
 	
+
 	$(function(){
+
+		var index = layer.load(1, {
+
+			  shade: [0.5,'#555'] //0.1透明度的白色背景
+
+			});
+
 		 $app.request("../user/game/data.do",function(data){
+
+				layer.close(index);
+
 				if(data.code!=1){
+
 					$app.alert(data.msg);
+
 					return;
+
 				}
+
 				
+
 				ref(data.data);
+
 			});
+
 		 
+
 		　$(document).keydown(function(event){
+
 			
+
 			　if(event.keyCode == 32){
+
 				layer.close(notifyDialog);
+
 				　　}
+
 		　　　　
+
 			　
+
 		　　});
+
 		
+
 	});
+
 	
+
 	
-var etbHtml = "";	
+
+var etbHtml = "";
+
 	
-function ref(data){
-	$(".focus_row").html(data.game.focus_row-2);
-	$("#queue_group").empty();
-	$("#allQh").empty();
-	 if(data.game.focus_row>=4){
-		 var info = eval(data.turn.info);
-		 var tg = {lsbg:{k:info[4]==0?'':(info[4]>0?'老':'少'),v:Math.abs(info[4])}
-		 ,nnbg:{k:info[5]==0?'':(info[5]>0?'男':'女'),v:Math.abs(info[5])
-				 },lj:data.turn.lj,info:{}};
-		 
-	 }
-	
-	$("#bg_group").html(template('tmpl_tg',{frow:data.game.focus_row-2,
-		tg:tg?tg:{lsbg:{k:'',v:''},nnbg:{k:'',v:''},lj:0,info:{}}})); 
-	
-	if(data.game.focus_row>=3){
-		var tgM = [];
-		for (var i = 0; i < data.counts.length; i++) {
-			var ts = data.counts[i].tg?data.counts[i].tg.split(","):[];
+
+	function initViewData(data){
+
+		var mod = data.turn.mod;
+
+		var turn = initTurn(data.turn);
+
+		var counts = data.counts;
+
+		var bgData = {hb:mod==1?bgA(turn.info):bgB(turn.info)}; bgData['hb'].push(turn.lj);
+
+		var jgData = {hb:{list:[],jg:0,qh:0}};
+
+		for (var i = 0; i < counts.length; i++) {
+
+			var count = counts[i];
+
+			count.g = eval(count.g);
+
+			bgData[count.uid] = mod==1?bgA(count.g):bgB(count.g);
+
+			bgData[count.uid].push(count.g_sum);
+
+			jgData[count.uid] = {list:[],jg:count.tg_sum,qh:0};
+
+			var ts = count.tg?count.tg.split(","):[];
+
 			for (var j = 0; j < ts.length; j++) {
+
 				if(!ts[j])continue;
+
+				var jg = jgData[count.uid];
+
 				var v = new Number(ts[j].split("_")[0])+new Number(ts[j].split("_")[1]);
-				if(isNaN(tgM[j]))tgM[j]= 0;					
+
+				jg.list[j] = v;
+
+				jg.qh+=(v>0?1:(v<0?-1:0));
+
+				if(turn.user_lock[count.uid-1]=='1'){
+
+					if(isNaN(jgData['hb'].list[j]))jgData['hb'].list[j] = 0;
+
+					jgData['hb'].list[j]+=v;
+
+					
+
+				}
+
 				
-				tgM[j]+=v;
+
 			}
+
 		}
+
 		
-		
-		var html = '';
-		var focus_jg = null;
-		var allJg = 0;
-		var qh = 0;
-		for (var i = 0; i < tgM.length; i++) {
-			var v = tgM[i];
-			focus_jg = v;
-			allJg+=v;
-			qh+=(v>0?1:(v<0?-1:0));
-			html+='<tr class="data_col_r"><td class="frist">'+((i==tgM.length-1)?('<a id="bottom">'+(i+1)+'</a>'):(i+1))+'</td>'
-		    	+'<td '+(v<=0?'style="color:#000"':'')+'>'+v+'</td>'
-		    	+'<td '+(allJg<=0?'style="color:#000"':'')+'>'+allJg+'</td></tr>';
-		    	
+
+		for (var i = 0; i < jgData['hb'].list.length; i++) {
+
+			var v = jgData['hb'].list[i];
+
+			jgData['hb'].jg+=v;
+
+			jgData['hb'].qh+=(v>0?1:(v<0?-1:0));
+
+			
+
 		}
-		$(".focus_jg").html(focus_jg);
-		if(focus_jg>0)$(".focus_jg").addClass("red");
+
+		//處理求和結果
+
+		var qhData = [[{},{},0],{list:[null],sum:0,qh:0}];
+
+		turn.qh = eval(turn.qh );
+
+		var q1  = turn.qh[1][0];
+
+		qhData[0][0].name=q1>0?conf1.L:(q1<0?conf1.X:"");
+
+		qhData[0][0].val=Math.abs(q1);
+
+		var q2  = turn.qh[1][1];
+
+		qhData[0][1].name=q2>0?conf1.D:(q2<0?conf1.S:"");
+
+		qhData[0][1].val=Math.abs(q2);
+
+		qhData[0][2] = turn.qh_sum;
+
+		var qhjgs = turn.qh_jg?turn.qh_jg.split(","):[];
+
+		for (var i = 0; i < qhjgs.length; i++) {
+
+			if(!qhjgs[i])continue;
+
+			var v = new Number(qhjgs[i]);
+
+			qhData[1].list.push(v);
+
+			qhData[1].sum+=v;
+
+			qhData[1].qh+=(v>0?1:(v<0?-1:0));
+
+		}
+
+		/* 开始处理原值数据 */
+
+		var yzData = [[{},{},0],{list:[null],sum:0,qh:0}];
+
+		turn.yz = eval(turn.yz );
+
+		var y1  = turn.yz[1][0];
+
+		yzData[0][0].name=y1>0?conf1.L:(y1<0?conf1.X:"");
+
+		yzData[0][0].val=Math.abs(y1);
+
+		var y2  = turn.yz[1][1];
+
+		yzData[0][1].name=y2>0?conf1.D:(y2<0?conf1.S:"");
+
+		yzData[0][1].val=Math.abs(y2);
+
+		yzData[0][2] = new Number(turn.yz_sum);
+
 		
-		$("#queue_group").html(html+'<tr></tr>');
-		/* if(allJg>0)
-			$("#allJg").addClass("red");
-		else $("#allJg").removeClass("red");
-		$("#allJg").html(allJg); */
-		if(qh>0)
-			$("#allQh").addClass("red");
-		else $("#allQh").removeClass("red");
-		$("#allQh").html(qh);
+
+		yzData[1].sum = turn.yz_jg_sum;
+
+		var yzjgs = turn.yz_jg?turn.yz_jg.split(","):[];
+
+		for (var i = 0; i < yzjgs.length; i++) {
+
+			if(!yzjgs[i])continue;
+
+			var v = new Number(yzjgs[i]);
+
+			yzData[1].list.push(v);
+
+			yzData[1].qh+=(v>0?1:(v<0?-1:0));
+
+		}
+
+		/* 结束处理原值数据 */
+
 		
+
 		
+
+		/* 开始处理合并报告  */
+
+		turn.hb = eval(turn.hb );
+
+		var hbBgData = createBg(turn.hb);
+
+		hbBgData.push(turn.hb_sum);
+
+		bgData["hbBg"] = hbBgData;
+
 		
-		location.href="#bottom";
+
 		
-	}
-	
-	
-	
-	
-	
-	
-}
-	
-	
-/**
-清空所有游戏数据
-*/
-function removeAll(){
-	layer.confirm('確定清空數據？', {
-		  btn: ['是','否'] 
-		}, function(){
-			$.ajax({
-				url:"../user/game/removeAll.do",
-				type:"post",
-				async:false,
-				success:function(result){
-					if(result.code==1){
-						layer.msg('成功');
-					}
-					else{
-						
-						alert(result.msg)
-					}
-				}
-			});
-		  
-		}, function(){
-		 
-		});
-	
-}
-	
-	
-	</script>
-	<script type="text/javascript">
-	var gameCore = {
-			HU_NUM:20
-			,ITEM_LENGTH:4
-		,queue:function(scan,gong){
-			var scans = scan.split(",");
-			var gongs = gong.split(",");
-			
-			var tempRet = [];
-			for (var i = 0; i < scans.length; i++) {
-				for (var j = 0; j < this.HU_NUM; j++) {
-					var item = scans[i].substring(j*this.ITEM_LENGTH,j*this.ITEM_LENGTH+4);
-					var nv = gongs[i].substring(j,j+1)
-					var num = new Number(item.substring(1,4));
-					if(num>=11){
-						var h = j%2!=0?j/2+0.5:j/2+1;
-						if(!tempRet[h])tempRet[h] = [];
-						tempRet[h].push({hu:h,
-							nv:nv,
-							zf:item.substring(0,1),
-							num:num-10})
-						
-					}
-				}
-			}
-			
-			var ret = [];
-			for (var i = 0; i < tempRet.length; i++) {
-				if(tempRet[i])
-				ret = ret.concat(tempRet[i]);
-			}
-			
+
+		jgData['hbBg'] = {list:[null],jg:turn.hb_jg_sum,qh:0};
+
+		var hbjgs = turn.hb_jg?turn.hb_jg.split(","):[];
+
+		for (var i = 0; i < hbjgs.length; i++) {
+
+			if(!hbjgs[i])continue;
+
+			var v = new Number(hbjgs[i]);
+
+			jgData['hbBg'].list.push(v);
+
+			jgData['hbBg'].qh+=(v>0?1:(v<0?-1:0));
+
+		}
+
+		
+
+		
+
+		/* 结束处理合并报告  */
+
+		
+
+		return {turn:turn,bgData:bgData,jgData:jgData,qhData:qhData,yzData:yzData};
+
+		
+
+		function bgA(g){
+
+			var ret = [{name:'',val:''},{name:'',val:''},0];
+
+			ret[0].name = g[4]>0?conf1.L:(g[4]<0?conf1.X:'');
+
+			ret[0].val = ret[0].name?Math.abs(g[4]):0;
+
+			ret[1].name = g[5]>0?conf1.D:(g[5]<0?conf1.S:'');
+
+			ret[1].val = ret[1].name?Math.abs(g[5]):0;
+
+			ret[2] = ret[0].val+ret[1].val
+
 			return ret;
+
 			
+
 		}
-		
-	
-	,tg:function(queue,gong,rule){
-		var info = {
-				'老+':{v:0},'少+':{v:0},
-				'老-':{v:0},'少-':{v:0},
-				'男+':{v:0},'女+':{v:0},
-				'男-':{v:0},'女-':{v:0},
+
+		function bgB(g){
+
+			
+
+			
+
 		}
-		var qs = queue.split(",");
-		var gs = gong.split(",");
-		var start = new Number(rule.split(",")[0]);
-		var end = new Number(rule.split(",")[1]);
-		for (var i = 0; i < qs.length; i++) {
+
+		
+
+		function createBg(arr){
+
+			var ret = [{name:'',val:''},{name:'',val:''},0];
+
+			ret[0].name = arr[0]>0?conf1.L:(arr[0]<0?conf1.X:'');
+
+			ret[0].val = ret[0].name?Math.abs(arr[0]):0;
+
+			ret[1].name = arr[1]>0?conf1.D:(arr[1]<0?conf1.S:'');
+
+			ret[1].val = ret[1].name?Math.abs(arr[1]):0;
+
+			ret[2] = ret[0].val+ret[1].val
+
+			return ret;
+
 			
-			for (var j = 0; j < this.HU_NUM; j++) {
-				var q1 = qs[i].substring(j*this.ITEM_LENGTH,j*this.ITEM_LENGTH+4);
-				var g1 = gs[i].substring(j,j+1);
-				info[g1+q1.substring(0,1)].v+=getJg(new Number(q1.substring(1,this.ITEM_LENGTH)),start,end);
-			}
-			
+
 		}
+
 		
-		var lsb1 = getHz(info['老+'],info['少+'],true);
-		var lsb2 = getHz(info['老-'],info['少-'],false);
-		var nnb1 = getHz(info['男+'],info['女+'],true);
-		var nnb2 = getHz(info['男-'],info['女-'],false);
+
 		
-		var lsbg = {k:lsb1+lsb2>0?'老':(lsb1+lsb2<0?'少':''),v:Math.abs(lsb1+lsb2)}
-		var nnbg = {k:nnb1+nnb2>0?'男':(nnb1+nnb2<0?'女':''),v:Math.abs(nnb1+nnb2)}
-		
-		
-		/**
-		返回正反报
-		*/
-		function getHz(q1,q2,isQf){
-			if(q1.v>q2.v){
-				q1.hz=q1.v-q2.v;
-				return isQf?-q1.hz:q1.hz;
-			}
-			if(q2.v>q1.v){
-				q2.hz=q2.v-q1.v;
-				return isQf?q2.hz:-q2.hz;
-			}
-			
-			return 0;
-			
-		}
-		
-		function getJg(length,start,end) {
-			var isMinus = false;
-			if(length>=start&&length<end) {
-				var l = (length*Math.pow(2,length-start));
-				
-				return isMinus?-l:l;
-			}
-				
-			else return 0;
-			
-		}
-		
-		
-		return {lsbg:lsbg,nnbg:nnbg,info:info};
-		
-		
+
 	}
+
 	
-			
-			
+
+	function initTurn(oldTurn){
+
+		var turn = oldTurn;
+
+		turn.info = eval(turn.info);
+
+		turn.user_lock = turn.user_lock.split(',');
+
+		return turn;
+
 	}
+
+
+
+function ref(data){
+
+	var frow = data.turn.frow;
+
+	$(".focus_row").html(frow-2);
+
+	$(".mod_group").html(data.turn.mod==1?'A':'B');
+
+	
+
+	$("#jg_group").empty();
+
+	$("#allQh").empty();
+
+	
+
+	var vData = null;
+
+	if(frow>=4)
+
+		var vData = initViewData(data);
+
+	else
+
+	vData = {"turn":initTurn(data.turn)
+
+	,"bgData":{"hb":[{"name":'',"val":0},{"name":"","val":0},'',''],"hbBg":[{"name":'',"val":0},{"name":"","val":0},'','']}
+
+	,"jgData":{"hb":{"list":[],"jg":0,"qh":0},"hbBg":{"list":[],"jg":0,"qh":0}}
+
+	,"qhData":[[{"name":"","val":0},{"name":"","val":0},""],{"list":[],"sum":0,"qh":0}]
+
+	,"yzData":[[{"name":"","val":0},{"name":"","val":0},""],{"list":[],"sum":0,"qh":0}]
+
+	}
+
+	
+
+	
+
+		 
+
+	console.log(vData);
+
+		$("#bg_group>tr:gt(0)").remove();
+
+		$("#bg_group").append(template("bg_tmpl",vData))
+
+		$("#jg_group").html(template("jg_tmpl",vData));
+
+		$("#jg_group>tr:last").attr("id","bottom");
+
+		//
+
+		$("#bottom_group").html(template("bottom_tmpl",vData));
+
+		
+
+	
+
+	
+
+		location.href="#bottom";
+
+	}
+
+	
+
+	/**
+
+	*/
+
+	function setLock(tid,uid,val,btn){
+
+		
+
+		
+
+		$.ajax({
+
+			url:"../user/game/setLock.do",
+
+			data:{uid:uid,tid:tid,val:val},
+
+			type:"post",
+
+			async:false,
+
+			success:function(json){
+
+				if(json.code==1){
+
+					layer.msg('操作成功');
+
+					$(btn).attr('class',(val==1?'locak_btn1':'locak_btn2'));
+
+					$(btn).html(val==1?'瑣定':'解瑣');
+
+					$(btn).attr("onclick",'setLock('+tid+','+uid+','+(val==1?0:1)+',this)');
+
+					
+
+				}else{
+
+					
+
+					alert(json.msg)
+
+				}
+
+			}
+
+		});
+
+		
+
+		
+
+		
+
+		
+
+	}
+
+	
+
+	/**
+
+	清空所有遊戲數據
+
+	*/
+
+	function removeAll(){
+
+		layer.confirm('確定清空數據？', {
+
+			  btn: ['是','否'] 
+
+			}, function(){
+
+				$.ajax({
+
+					url:"../user/game/removeAll.do",
+
+					type:"post",
+
+					async:false,
+
+					success:function(result){
+
+						if(result.code==1){
+
+							layer.msg('成功');
+
+							location.reload();
+
+						}
+
+						else{
+
+							
+
+							alert(result.msg)
+
+						}
+
+					}
+
+				});
+
+			  
+
+			}, function(){
+
+			 
+
+			});
+
+		
+
+	}
+
+		
+
+	
+
 	</script>
-	<script type="text/html" id="tmpl_tg">
+
+	
+
+	
+
+	
+
+	<script type="text/html" id="bg_tmpl">
+
+	<tr class="data_col">
+
+				{{each turn.user_lock as val i}}
+
+							    	<td>{{i+1}}號 {{if val=='1'}}
+
+<span class="locak_btn1" onclick="setLock({{turn.id}},{{i+1}},0,this)" >瑣定</span>
+
+												{{else}}
+
+<span class="locak_btn2" onclick="setLock({{turn.id}},{{i+1}},1,this)" >解瑣</span>
+
+												{{/if}}</td>
+
+				{{/each}}
+
+							    	<td>匯總報告</td>
+
+							    	<td>求和報告</td>
+
+									<td>原值报告</td>
+
+							    	<td>合并報告</td>
+
+							  	</tr>
+
+							  	<tr class="data_col ">
+
+							{{each turn.user_lock as val i}}
+
+							    	<td>{{if bgData[i+1]}}
+
+											<div class="bg-td">{{bgData[i+1][0].name}} <span {{if bgData[i+1][0].val>0}}class="red"{{/if}}>{{if bgData[i+1][0].name}}{{bgData[i+1][0].val}}{{/if}}</span></div>
+
+										{{/if}}
+
+									</td>
+
+							{{/each}}
+
+									<td> <div class="bg-td">{{bgData['hb'][0].name}}<span {{if bgData['hb'][0].val>0}}class="red"{{/if}}>{{if bgData['hb'][0].name}}{{bgData['hb'][0].val}}{{/if}}</span></div></td>
+
+							    	<td> <div class="bg-td">{{qhData[0][0].name}}<span {{if qhData[0][0].val>0}}class="red"{{/if}}>{{if qhData[0][0].name}}{{qhData[0][0].val}}{{/if}}</span></div></td>
+
+							    	<td> <div class="bg-td">{{yzData[0][0].name}}<span {{if yzData[0][0].val>0}}class="red"{{/if}}>{{if yzData[0][0].name}}{{yzData[0][0].val}}{{/if}}</span></div></td>
+
+							  		<td> <div class="bg-td">{{bgData['hbBg'][0].name}}<span {{if bgData['hbBg'][0].val>0}}class="red"{{/if}}>{{if bgData['hbBg'][0].name}}{{bgData['hbBg'][0].val}}{{/if}}</span></div></td>
+
+							    	
+
+								</tr>
+
+							  <tr class="data_col">
+
+							{{each turn.user_lock as val i}}
+
+							    	<td>{{if bgData[i+1]}}
+
+										<div class="bg-td">{{bgData[i+1][1].name}} <span {{if bgData[i+1][1].val>0}}class="red"{{/if}}>{{if bgData[i+1][1].name}}{{bgData[i+1][1].val}}{{/if}}</span></div>
+
+									{{/if}}</td>
+
+							{{/each}}
+
+							    	
+
+									<td><div class="bg-td">{{bgData['hb'][1].name}} <span {{if bgData['hb'][1].val>0}}class="red"{{/if}}>{{if bgData['hb'][1].name}}{{bgData['hb'][1].val}}{{/if}}</span></div></td>
+
+							    	<td><div class="bg-td">{{qhData[0][1].name}} <span {{if qhData[0][1].val>0}}class="red"{{/if}}>{{if qhData[0][1].name}}{{qhData[0][1].val}}{{/if}}</span></div></td>
+
+							    	<td><div class="bg-td">{{yzData[0][1].name}} <span {{if yzData[0][1].val>0}}class="red"{{/if}}>{{if yzData[0][1].name}}{{yzData[0][1].val}}{{/if}}</span></div></td>
+
+									<td><div class="bg-td">{{bgData['hbBg'][1].name}} <span {{if bgData['hbBg'][1].val>0}}class="red"{{/if}}>{{if bgData['hbBg'][1].name}}{{bgData['hbBg'][1].val}}{{/if}}</span></div></td>
+
+							    	
+
+							    	
+
+							  	</tr>
+
+							  	<tr class="data_col">
+
+							  		<td>序號</td>
+
+							{{each turn.user_lock as val i}}
+
+									<td class="blue"><div class="bg-td">共 <span >{{if bgData[i+1]}}{{bgData[i+1][2]}}{{/if}}</span></div></td>
+
+							{{/each}}
+
+							    	
+
+							    	<td class="blue"><div class="bg-td">共 <span >{{bgData['hb'][2]}}</span></div></td>
+
+							    	<td class="blue"><div class="bg-td">共 <span >{{qhData[0][0].val+qhData[0][1].val}}</span></div></td>
+
+									<td class="blue"><div class="bg-td">共 <span >{{yzData[0][0].val+yzData[0][1].val}}</span></div></td>
+
+									<td class="blue"><div class="bg-td">共 <span >{{bgData['hbBg'][2]}}</span></div></td>
+
+							    	<td>序號</td>
+
+							  	</tr>
+
+	</script>
+
+	<script type="text/html" id="jg_tmpl">
+
+	{{each jgData['hb'].list  as val i}}
+
 	<tr>
-							    	<td colspan="2" rowspan="3" >{{frow}}</td>
-							    	<td colspan="2" >老</td>
-							    	<td colspan="2" class="red">{{if tg.lsbg.k=='老'}}{{tg.lsbg.v}}{{/if}}</td>
-							    	<td colspan="2" >男</td>
-							    	<td colspan="2" class="red">{{if tg.nnbg.k=='男'}}{{tg.nnbg.v}}{{/if}}</td>
-							    	<td colspan="2" rowspan="3" >{{frow}}</td>
-							  	</tr>
-							  	<tr>
-							    	<td colspan="2" >少</td>
-							    	<td colspan="2" class="red">{{if tg.lsbg.k=='少'}}{{tg.lsbg.v}}{{/if}}</td>
-							    	<td colspan="2" >女</td>
-							    	<td colspan="2" class="red">{{if tg.nnbg.k=='女'}}{{tg.nnbg.v}}{{/if}}</td>
-							  	</tr>
-								<tr>
-							    	<td colspan="2" >统计</td>
-							    	<td colspan="2" >{{tg.lsbg.v+tg.nnbg.v}}</td>
-									<td colspan="2" >累计</td>
-							    	<td colspan="2" >{{tg.lj}}</td>
-							  	</tr>
-							  	<tr>
-							    	<td colspan="2" >{{if frow>-1}}{{frow-1}}{{else}}--{{/if}}</td>
-							    	<td colspan="2" >结果</td>
-									<td colspan="4" class="focus_jg"></td>
-									<td colspan="2" >结果</td>
-							    	<td colspan="2" >{{if frow>-1}}{{frow-1}}{{else}}--{{/if}}</td>
-							  	</tr>
+
+	<td>{{i+1}}</td>
+
+		{{each turn.user_lock as val j}}
+
+			{{if jgData[j+1]}}
+
+				<td {{if jgData[j+1].list[i]>0}}class="red"{{/if}}>{{jgData[j+1].list[i]}}</td>
+
+			{{else}}
+
+				<td></td>
+
+			{{/if}}
+
+		{{/each}}
+
+	
+
+	<td {{if val>0}}class="red"{{/if}}>{{val}}</td>
+
+	<td {{if qhData[1].list[i]>0}}class="red"{{/if}}>{{qhData[1].list[i]}}</td>
+
+	<td {{if yzData[1].list[i]>0}}class="red"{{/if}}>{{yzData[1].list[i]}}</td>
+
+	<td {{if jgData['hbBg'].list[i]>0}}class="red"{{/if}}>{{jgData['hbBg'].list[i]}}</td>
+
+<td>{{i+1}}</td>
+
+	</tr>
+
+	{{/each}}
+
 	</script>
+
+	<script type="text/html" id="bottom_tmpl">
+
+							<tr>
+
+							  		<td>結果</td>
+
+									{{each turn.user_lock as val j}}
+
+										{{if jgData[j+1]}}
+
+							    		<td class="blue2{{if jgData[j+1].jg>0}} red{{/if}}">{{jgData[j+1].jg}}</td>{{else}}<td  class="blue2"></td>{{/if}}	
+
+									{{/each}}
+
+							    	
+
+							    	<td class="blue2 {{if jgData['hb'].jg>0}}red{{/if}}">{{jgData['hb'].jg}}</td>
+
+							    	<td class="blue2 {{if qhData[1].sum>0}}red{{/if}}">{{qhData[1].sum}}</td>
+
+							    	<td class="blue2 {{if yzData[1].sum>0}}red{{/if}}">{{yzData[1].sum}}</td>
+
+									<td class="blue2 {{if jgData['hbBg'].jg>0}}red{{/if}}">{{jgData['hbBg'].jg}}</td>
+
+									<td>結果</td>
+
+							  	</tr>
+
+							  	<tr>
+
+							  		<td>求和</td>
+
+									{{each turn.user_lock as val j}}
+
+										{{if jgData[j+1]}}<td {{if jgData[j+1].qh>0}}class="red"{{/if}}>{{jgData[j+1].qh}}</td>{{else}}<td></td>{{/if}}
+
+							    	
+
+									{{/each}}
+
+							    	
+
+							    	<td {{if jgData['hb'].qh>0}}class="red"{{/if}}>{{jgData['hb'].qh}}</td>
+
+							    	<td {{if qhData[1].qh>0}}class="red"{{/if}}>{{qhData[1].qh}}</td>
+
+							    	<td {{if yzData[1].qh>0}}class="red"{{/if}}>{{yzData[1].qh}}</td>
+
+									<td {{if jgData['hbBg'].qh>0}}class="red"{{/if}}>{{jgData['hbBg'].qh}}</td>
+
+									<td>求和</td>
+
+							  	</tr>
+
+							  	<tr style="height:40px;">
+
+							  		<td>共計</td>
+
+									{{each turn.user_lock as val j}}
+
+										{{if bgData[j+1]}}<td class="blue">{{bgData[j+1][3]}}</td>{{else}}<td class="blue"></td>{{/if}}
+
+							    	
+
+									{{/each}}
+
+							    	
+
+							    	<td class="blue">{{bgData['hb'][3]}}</td>
+
+							    	<td class="blue">{{qhData[0][2]}}</td>
+
+							    	<td class="blue">{{yzData[0][2]}}</td>
+
+									<td class="blue">{{bgData['hbBg'][3]}}</td>
+
+									<td>共計</td>
+
+							  	</tr>
+
+	</script>
+
 	</body>
+
 </html>
+

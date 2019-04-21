@@ -8,6 +8,8 @@ public class InputResult {
 	
 	long[] yz;
 	
+	long tg_sum;
+	
 	public String getUid() {
 		return uid;
 	}
@@ -25,6 +27,12 @@ public class InputResult {
 	}
 	public void setYz(long[] yz) {
 		this.yz = yz;
+	}
+	public long getTg_sum() {
+		return tg_sum;
+	}
+	public void setTg_sum(long tg_sum) {
+		this.tg_sum = tg_sum;
 	}
 	
 	

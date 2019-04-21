@@ -1,4 +1,4 @@
-package com.park.api.service;
+package com.park.api.service.bean;
 
 import java.util.HashMap;
 

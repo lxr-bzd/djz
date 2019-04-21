@@ -32,7 +32,8 @@ public class GameService {
 	
 	
 	int GAME_COL = 10;
-	int GAME_ROW = 1202;
+	int GAME_ROW = 212;
+	//int GAME_ROW = 1202;
 	
 	@Autowired
 	CrowDao crowDao;
@@ -73,8 +74,8 @@ public class GameService {
 		crowDao.createGame(game);
 		
 		countDao.save(game.getId(),turn.getMod(),turn.getRule_type(),turn.getRule(),turn.getId());
-		createRunGame(uid,game.getId(), templateNo);
-		//createNextGameRow(game, 1, templateNo);
+		//createRunGame(uid,game.getId(), templateNo);
+		createNextGameRow(game, 1, templateNo);
 		
 	}
 	
@@ -94,11 +95,11 @@ public class GameService {
 	
 	
 	
-	private Crow getNewRow(int row,int group) {
+	private Crow getNewRow(int row,int templateNo) {
 		int groupNum = GameCoreService2.SHENG_GROUP;
 		
 		Crow crow = new Crow();
-		if(group==1) {
+		if(templateNo==1) {
 			 Random random = new Random();
 			 
 				 StringBuilder sheng = new StringBuilder();
@@ -108,11 +109,11 @@ public class GameService {
 				}
 				
 				crow.setSheng(sheng.substring(0, sheng.length()-1));
-		}else if(group==2||group==3||group==4||group==5){
+		}else if(templateNo==2||templateNo==3||templateNo==4||templateNo==5){
 			
 			String u = null;
 			
-			switch (group) {
+			switch (templateNo) {
 			case 2:
 				u = "0000,0000,0000,0000,0000,0000,0000,0000,0000,0000,";
 				break;
@@ -282,7 +283,7 @@ public class GameService {
 		
 		updateCrow(icrow);
 		
-		//createNextGameRow(game, icrow.getRow()+1, game.getTbNum());
+		createNextGameRow(game, icrow.getRow()+1, game.getTbNum());
 		// insulateCleanGame(game.getId(),icrow.getRow());
 		
 		Crow nCrow = getNextRow(game.getId(), icrow.getRow());
@@ -335,7 +336,7 @@ public class GameService {
 		if(row<3) return null;
 		
 		Long start1 = System.currentTimeMillis();
-		Map<String, Object> map = ServiceManage.jdbcTemplate.queryForMap("select `id`,tid,   `queue`,  `queue_count`,  `grp_queue`,   `rule`,  `rule_type`,`mod` from game_runing_count where hid=?",hid);
+		Map<String, Object> map = ServiceManage.jdbcTemplate.queryForMap("select `id`,tid,   `queue`,  `queue_count`,  `grp_queue`,   `rule`,  `rule_type`,`mod`,tg_sum from game_runing_count where hid=?",hid);
 		System.out.println(hid+"查询："+((System.currentTimeMillis()-start1))+"ms");
 		start1 = System.currentTimeMillis();
 		String[] rule = map.get("rule").toString().split(",");
@@ -362,9 +363,11 @@ public class GameService {
 		/*Object[] countTurnResult = null;
 		if(countTurn!=null) 
 			countTurnResult = countTurn.getResult();*/
-		
-		ServiceManage.jdbcTemplate.update("UPDATE game_runing_count SET queue=?,queue_count=?,tg=CONCAT(tg,?),ys=ys+? WHERE id=?"
-				,rets.getQueue(),rets.getQueueCount(),jgHandel.getResult()+",",rets.getYs(),map.get("id"));
+		int[] tgResult = jgHandel.getResultVal();
+		long tg_sum = tgResult[0]+tgResult[1]+((long)map.get("tg_sum"));
+		ServiceManage.jdbcTemplate.update("UPDATE game_runing_count SET queue=?,queue_count=?,tg=CONCAT(tg,?),tg_sum=?,ys=ys+? WHERE id=?"
+				,rets.getQueue(),rets.getQueueCount(),jgHandel.getResult()+",",tg_sum,
+				rets.getYs(),map.get("id"));
 		System.out.println(hid+"update："+((System.currentTimeMillis()-start1))+"ms");
 		start1 = System.currentTimeMillis();
 		
@@ -378,6 +381,7 @@ public class GameService {
 			long[] yz = countTurn.getYzResult();
 			inputResult.setYz(yz);
 			inputResult.setRets(objs);
+			inputResult.setTg_sum(tg_sum);
 			
 			return objs;
 			
@@ -529,8 +533,8 @@ public class GameService {
 	   
 			 
 			 //拷贝统计数据
-		ServiceManage.jdbcTemplate.update("INSERT INTO djt_history (tid,`hid`, `uid`, `tbNum`, `focus_row`, `queue_count`, `tg`, `rule`,ys,g_sum) " + 
-			 		"		 select a.tid,hid,b.uid,tbNum,focus_row,queue_count,tg,rule,ys,g_sum from game_runing_count a left join game_history b  on a.hid= b.id " + 
+		ServiceManage.jdbcTemplate.update("INSERT INTO djt_history (tid,`hid`, `uid`, `tbNum`, `focus_row`, `queue_count`, `tg`, `rule`,ys,g,g_sum) " + 
+			 		"		 select a.tid,hid,b.uid,tbNum,focus_row,queue_count,tg,rule,ys,g,g_sum from game_runing_count a left join game_history b  on a.hid= b.id " + 
 			 		"		  where hid = ? limit 1",hid);
 		ServiceManage.jdbcTemplate.update("UPDATE game_turn SET state=2 WHERE id =(select tid from game_runing_count where hid = ? limit 1)",hid);
 			
@@ -714,16 +718,28 @@ public static class GameEach{
 		}
 
 
+		public int[] getResultVal() {
+			int ls = lsJg;
+			int nv = nvJg;
+			if(mod2==2) {
+				ls=-ls;
+				nv=-nv;
+			}
+			return new int[] {ls,nv};
+
+		}
 
 		public String getResult() {
 			if(isResult)throw new ApplicationException("重复获取");
 			isResult = true;
+			int ls = lsJg;
+			int nv = nvJg;
 			if(mod2==2) {
-				lsJg=-lsJg;
-				nvJg=-nvJg;
+				ls=-ls;
+				nv=-nv;
 			}
 			
-			return row>=3?(lsJg+"_"+nvJg):null;
+			return row>=3?(ls+"_"+nv):null;
 
 		}
 		

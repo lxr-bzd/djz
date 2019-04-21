@@ -1,92 +1,263 @@
 package com.park.api.service.impl;
 
-import com.park.api.service.GameCoreService;
+import java.util.Random;
 
-public class GameCoreServiceImpl implements GameCoreService{
+import com.park.api.service.bean.GameConfig;
 
-
-	 static final int COUNT_VLEN = 11;
+public class GameCoreServiceImpl {
+public static int[][] shengMap = new int[1024][];
 	
+	static boolean[][] duiMap = new boolean[1024][];
 	
+	static boolean[][] gongMap = new boolean[1024][];
+	
+	static boolean[][] gongColMap = new boolean[1024][];
+	
+	static {
+		for (int i = 0; i < shengMap.length; i++) {
+			// 二进制  11 10 00 11 11
+			// 生	4  3  1  4  4 
+			shengMap[i] = new int[] {1,1,1,1,1};
+			String iBinary = Integer.toBinaryString(i);
+			for (int j = 0; j < 5; j++) {
+				int index = j*2;
+				if(index>=iBinary.length())break;
+				if("1".equals(iBinary.substring(iBinary.length()-index-1, iBinary.length()-index)))
+					shengMap[i][4-j]++;
+				//向前移动一位
+				index++;
+				if(index>=iBinary.length())break;
+				if("1".equals(iBinary.substring(iBinary.length()-index-1, iBinary.length()-index)))
+					shengMap[i][4-j]+=2;
+				
+			}
+			
+		}
+		
+		for (int i = 0; i < duiMap.length; i++) {
+			
+			duiMap[i] = new boolean[] {false,false,false,false,false,false,false,false,false,false};
+			String iBinary = Integer.toBinaryString(i);
+			for (int j = 0; j < 10; j++) {
+				int index = j;
+				if(index>=iBinary.length())break;
+				if("1".equals(iBinary.substring(iBinary.length()-index-1, iBinary.length()-index)))
+					duiMap[i][9-index] = true;
+			}
+			
+		}
+		
+		gongMap = duiMap;
+		gongColMap = duiMap;
+		
+	}
+	
+	static final int COUNT_VLEN = 11;
+	/*户数*/
+	static final int SHENG_GROUP_NUM = 10;
+	static final int SHENG_ITEM_SIZE = 4;//生行一组大小
+	 
+	
+		
 	/**
 	 * 
-	 * @param sheng
+	 * @param sheng 36进制 四位一组,ag:AB0P,09OP...
 	 * @param pei
 	 * @return 1:对 ，2：错
 	 */
-	public String reckonDui(String sheng,String pei) {
-		String[] shengs = sheng.split(",");
+	public static String reckonDui(GameConfig conf,String sheng,String pei) {
+		
+		int group = conf.gameGroupNum;
+		int groupLength = SHENG_ITEM_SIZE;
+		int peis1 = Integer.parseInt(pei.substring(0, 1));
+		
 		
 		StringBuilder duis = new StringBuilder();
 		
-		for (int i = 0; i < shengs.length; i++) {
-			String ts = shengs[i];
-			for (int j = 0; j < ts.length(); j++) {
-				Integer a = Integer.parseInt(ts.substring(j, j+1));
-				Integer b = Integer.parseInt(pei.substring(j, j+1));
+		for (int i = 0; i < group; i++) {
+			int st = i*(groupLength+1);
+			int[] sheng1 = shengMap[Long.valueOf(sheng.substring(st,st+2), 36).intValue()];
+			int[] sheng2 = shengMap[Long.valueOf(sheng.substring(st+2,st+4), 36).intValue()];
+			
+			int ret1 = 0;
+			int ret2 = 0;
+			
+			for (int j = 0; j < 10; j++) {
+				int a = 0;
+				if(j<5) {
+					a = sheng1[j];
+				}else {
+					
+					a = sheng2[j-5];
+				}
+				
+				int b = peis1;
 				boolean jls = a>2?b>2:b<3;
 				boolean jnn = (a%2==0)?(b%2==0):b%2==1;
 				
-				duis.append(jls?"1":"2");
-				duis.append(jnn?"1":"2");
+				
+				if(j<5) {
+					int e = (4-j)*2;
+					if(jls)ret1= ret1+(int)Math.pow(2, e+1);
+					if(jnn)ret1= ret1+(int)Math.pow(2, e);
+				}else {
+					int e = (4-(j-5))*2;
+					if(jls)ret2= ret2+(int)Math.pow(2, e+1);
+					if(jnn)ret2= ret2+(int)Math.pow(2, e);
+				}
+				
 				
 			}
-			duis.append(",");
 			
+			
+			duis.append(createDuiStr(ret1,ret2)+",");
 			
 		}
 		
 		return duis.deleteCharAt(duis.length()-1).toString();
 	}
 	
-	public String reckonGong(String sheng,String dui) {
-		String[] duis = dui.split(",");
-		String[] shengs = sheng.split(",");
-		StringBuilder gong = new StringBuilder();
+	public static String reckonDui2(GameConfig conf,String sheng,String pei) {
 		
-		for (int i = 0; i < duis.length; i++) {
-			String d = duis[i];
-			String s = shengs[i];
-			for (int j = 0; j < s.length(); j++) {
-				Integer jd1 =  Integer.parseInt(d.substring(j*2, j*2+1));
-				Integer jd2 =  Integer.parseInt(d.substring(j*2+1, j*2+2));
-				//取对应的生
-				Integer js =  Integer.parseInt(s.substring(j, j+1));
+		int group = conf.gameGroupNum;
+		int groupLength = SHENG_ITEM_SIZE;
+		int peis1 = Integer.parseInt(pei.substring(0, 1));
+		
+		
+		StringBuilder duis = new StringBuilder();
+		int v = 0b1111111111;
+		for (int i = 0; i < group; i++) {
+			int st = i*(groupLength+1);
+			int sheng1 = Long.valueOf(sheng.substring(st,st+2), 36).intValue();
+			int sheng2 = Long.valueOf(sheng.substring(st+2,st+4), 36).intValue();
+			
+			int ret1 = sheng1^peis1^v;
+			int ret2 = sheng2^peis1^v;
+			
+			duis.append(createDuiStr(ret1,ret2)+",");
 				
-				gong.append(js>2?(jd1==1?"老":"少"):(jd1==1?"少":"老"));
-				gong.append(js%2==0?(jd2==1?"女":"男"):(jd2==1?"男":"女"));			
-			}
-			gong.append(",");
+			
 		}
 		
-		return gong.deleteCharAt(gong.length()-1).toString();
+		return duis.deleteCharAt(duis.length()-1).toString();
 	}
-	
+		
+		
+	/**
+	 * 
+	 * @param sheng
+	 * @param dui 
+	 * @return 
+	 * 	老=0
+	 * 	少=1
+	 * 	男=0
+	 * 	女=1
+	 * 由以上构成二进制组合，两位一组五组一大组转换36进制返回
+	 * ag： 老男老男老男老男老男老男老男老男老男老男
+	 * 二进制： 00000000000000000000
+	 * 36进制：00
+	 */
+	public String reckonGong(GameConfig conf,String sheng,String dui) {
+		
+		int group = conf.gameGroupNum;
+		int groupLength = SHENG_ITEM_SIZE;
+		
+		
+		StringBuilder gong = new StringBuilder();
+			
+		for (int i = 0; i < group; i++) {
+			int st = i*(groupLength+1);
+			
+			int[] mapv1 = shengMap[Long.valueOf(sheng.substring(st,st+2), 36).intValue()];
+			int[] mapv2 = shengMap[Long.valueOf(sheng.substring(st+2,st+4), 36).intValue()];
+			boolean[] dui1 = duiMap[Long.valueOf(dui.substring(st,st+2), 36).intValue()];
+			boolean[] dui2 = duiMap[Long.valueOf(dui.substring(st+2,st+4), 36).intValue()];
+			
+			int ret1 = 0;
+			int ret2 = 0;
+			for (int j = 0; j < 5; j++) {
+				//老少列对错
+				boolean jd1 =  dui1[j*2];
+				//男女列对错
+				boolean jd2 =  dui1[j*2+1];
+				//取对应的生
+				Integer js =  mapv1[j];
+				int e = (4-j)*2;
+				if(js>2?!jd1:jd1)ret1= ret1+(int)Math.pow(2, e+1);
+				if(js%2==0?jd2:!jd2)ret1= ret1+(int)Math.pow(2, e);
+				
+			}
+			
+			for (int j = 0; j < 5; j++) {
+				//老少列对错
+				boolean jd1 =  dui2[j*2];
+				//男女列对错
+				boolean jd2 =  dui2[j*2+1];
+				//取对应的生
+				Integer js =  mapv2[j];
+				int e = (4-j)*2;
+				if(js>2?!jd1:jd1)ret2= ret2+(int)Math.pow(2, e+1);
+				if(js%2==0?jd2:!jd2)ret2= ret2+(int)Math.pow(2, e);
+				
+			}
+			
+			gong.append(createDuiStr(ret1,ret2)+",");
+		}
+			
+			
+			return gong.deleteCharAt(gong.length()-1).toString();
+	}
+		
 	/**
 	 * 
 	 * @param pei 只有一组
 	 * @param gong 多组
 	 * @return
+	 * 
+	 * 1：红色对
+	 * 0：白色错
+	 * 
 	 */
-	public String reckonGongCol(String pei,String gong) {
-		String[] gongs = gong.split(",");
+	public String reckonGongCol(GameConfig conf,String pei,String gong) {
+		int group = conf.gameGroupNum;
+		int groupLength = SHENG_ITEM_SIZE;
 		
 		StringBuilder gongCol = new StringBuilder();
-		
-		for (int i = 0; i < gongs.length; i++) {
-			String g = gongs[i];
+		int[] peis = toIntArray(pei);
+		for (int i = 0; i < group; i++) {
+			int st = i*(groupLength+1);
+			boolean[] gong1 = gongMap[Long.valueOf(gong.substring(st,st+2), 36).intValue()];
+			boolean[] gong2 = gongMap[Long.valueOf(gong.substring(st+2,st+4), 36).intValue()];
 			
-			for (int j = 0; j < pei.length(); j++) {
-				String jd1 =  g.substring(j*2, j*2+1);
-				String jd2 =  g.substring(j*2+1, j*2+2);
-				//取对应的生
-				Integer jp =  Integer.parseInt(pei.substring(j, j+1));
-				
-				gongCol.append((jp>2?jd1.equals("老"):jd1.equals("少"))?"2":"1");
-				gongCol.append((jp%2==0?jd2.equals("女"):jd2.equals("男"))?"2":"1");			
+			int ret1 = 0;
+			int ret2 = 0;
+			
+			for (int j = 0; j < 5; j++) {
+				//老少供
+				boolean jd1 =  gong1[j*2];
+				//男女列供
+				boolean jd2 =  gong1[j*2+1];
+				//取对应的配
+				int jp =  peis[j];
+				int e = (4-j)*2;
+				if(jp>2?!jd1:jd1)ret1= ret1+(int)Math.pow(2, e+1);
+				if(jp%2==0?jd2:!jd2)ret1= ret1+(int)Math.pow(2, e);
 			}
-			gongCol.append(",");
 			
+			for (int j = 0; j < 5; j++) {
+				//取对应的配
+				int jp =  peis[j+5];
+				//老少供
+				boolean jd1 =  gong2[j*2];
+				//男女列供
+				boolean jd2 =  gong2[j*2+1];
+				
+				int e = (4-j)*2;
+				if(jp>2?!jd1:jd1)ret2= ret2+(int)Math.pow(2, e+1);
+				if(jp%2==0?jd2:!jd2)ret2= ret2+(int)Math.pow(2, e);
+			}
+			
+			gongCol.append(createGongColStr(ret1,ret2)+",");
 			
 		}
 		
@@ -94,6 +265,66 @@ public class GameCoreServiceImpl implements GameCoreService{
 		
 
 	}
-	
+		
+		
+	/**
+	 * 
+	 * @param ten1 前10位十进制
+	 * @param ten2 后10位十进制
+	 * @return
+	 */
+	public static String createShengStr(int ten1,int ten2) {
+		String str = null;
+		if(ten1<36) {
+			str="0"+Long.toString(ten1, 36).toUpperCase();
+		}else str=Long.toString(ten1, 36).toUpperCase();
+			
+		if(ten2<36) {
+			str+="0"+Long.toString(ten2, 36).toUpperCase();
+		}else str+=Long.toString(ten2, 36).toUpperCase();
+		
+		return str;
+	}
+		
+		
+	/**
+	 * 
+	 * @param ten1 前10位十进制
+	 * @param ten2 后10位十进制
+	 * @return
+	 */
+	private static String createDuiStr(int ten1,int ten2) {
+		String str = null;
+		if(ten1<36) {
+			str="0"+Long.toString(ten1, 36).toUpperCase();
+		}else str=Long.toString(ten1, 36).toUpperCase();
+			
+		if(ten2<36) {
+			str+="0"+Long.toString(ten2, 36).toUpperCase();
+		}else str+=Long.toString(ten2, 36).toUpperCase();
+		
+		return str;
+	}
+
+	private static String createGongStr(int ten1,int ten2) {
+			
+		return createDuiStr(ten1,ten2);
+	}
+
+	private static String createGongColStr(int ten1,int ten2) {
+			
+		return createDuiStr(ten1,ten2);
+	}
+
+	private int[] toIntArray(String str) {
+			
+		char[] is = str.toCharArray();
+		int[] ret = new int[is.length];
+		for (int i = 0; i < is.length; i++) {
+			ret[i] = Integer.valueOf(String.valueOf(is[i]));
+		}
+			return ret;
+			
+	}
 	
 }

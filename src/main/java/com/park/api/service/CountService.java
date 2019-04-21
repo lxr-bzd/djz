@@ -1,5 +1,9 @@
 package com.park.api.service;
 
+import java.util.List;
+
+import com.park.api.entity.InputResult;
+import com.park.api.entity.YzDto;
 import com.park.api.service.GameService.GameEach;
 
 /**
@@ -412,7 +416,7 @@ public class CountService {
 	
 	/**
 	 * 提供报告汇总表A模式
-	 * @param allts
+	 * @param allts["老+少+老-少-男+女+男-女-";]
 	 * @return "[[大的下标值,和值],[大的下标值,和值],[大的下标值,和值],[大的下标值,和值],（老男为正数，少女为负数表示报告）,（同上）,原allts]"
 	 */
 	public static Object[] countAllTgA(long[] allts,Integer mod2) {
@@ -482,6 +486,31 @@ public class CountService {
 		
 	}
 	
+	
+	/**
+	 * 计算原值
+	 * @param allYz
+	 * @param upYz
+	 * @param upYzJgSum
+	 * @param pei
+	 * @param mod2
+	 * @return
+	 */
+	public static YzDto reckonYz(long[] allYz,Long[] upYz,long upYzJgSum,String pei,int mod2) {
+		long[] yzBg = CountService.reckonYzBg(allYz, mod2);
+		Long[] yzJg = upYz==null?null:CountService.countYzJg(pei.substring(0, 1), upYz);
+		
+		Long yzJgSum = yzJg==null?upYzJgSum:upYzJgSum+yzJg[0]+yzJg[1];
+		YzDto dto = new YzDto();
+		
+		dto.setYzBg(yzBg);
+		dto.setYzJg(yzJg);
+		dto.setYzJgSum(yzJgSum);
+		return dto;
+	}
+	
+	
+	
 	/**
 	 * 
 	 * @param yz
@@ -496,6 +525,51 @@ public class CountService {
 		}
 		
 		return ret;
+	}
+	
+	/**
+	 * 计算合并报告
+	 * @param yz
+	 * @param mod2
+	 * @return [正数为报告老负数报告少，正数为报告男负数报告女]
+	 */
+	public static long[] reckonHbBg(List<InputResult> results,YzDto yzDto ) {
+		
+		long[] data = new long[]{0,0};
+		long[] hzBg = new long[]{0,0};
+		long hzJgSum = 0;
+		
+		int f = 1;
+		for (InputResult result : results) {
+			f = result.getTg_sum()<0?-1:1;
+			data[0]+=(long)result.getRets()[4]*f;
+			data[1]+=(long)result.getRets()[5]*f;
+			
+			hzBg [0]+=(long)result.getRets()[4];
+			hzBg[1]+=(long)result.getRets()[5];
+			hzJgSum+=result.getTg_sum();
+		}
+		
+		f = hzJgSum<0?-1:1;
+		data[0]+=hzBg[0]*f;
+		data[1]+=hzBg[1]*f;
+		
+		f = yzDto.getYzJgSum()<0?-1:1;
+		data[0]+=yzDto.getYzBg()[0]*f;
+		data[1]+=yzDto.getYzBg()[1]*f;
+		
+		return data;
+	}
+	
+	public static Long[] reckonHbJg(String pei,Long[] upHb) {
+		
+		Long[] qhbg = upHb;
+		
+		Integer pv = Integer.valueOf(pei);
+		long jg1 =(pv>2?qhbg[0]:-qhbg[0]);
+		long	jg2 =(pv%2!=0?qhbg[1]:-qhbg[1]);
+		return new Long[] {jg1,jg2};
+		
 	}
 	
 	/**

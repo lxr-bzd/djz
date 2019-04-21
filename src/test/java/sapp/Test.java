@@ -155,6 +155,7 @@ public class Test {
 	
 	public static void main(String[] args) {
 		
+		System.out.println(0b1111111111);
 		int s = 0b0000000000;
 		int p = 0b0000000000;
 		int v = 0b1111111111;
