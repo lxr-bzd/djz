@@ -1,5 +1,10 @@
 package com.park.api.entity;
 
+import org.apache.commons.lang3.StringUtils;
+
+import com.alibaba.fastjson.JSONObject;
+import com.park.api.service.bean.GameConfig;
+
 public class Turn {
 	
 	String id;
@@ -7,6 +12,11 @@ public class Turn {
 	Integer mod2;
 	String rule;
 	Integer rule_type;
+	
+	String config_json;
+	
+	GameConfig config;
+	
 	public String getId() {
 		return id;
 	}
@@ -36,6 +46,22 @@ public class Turn {
 	}
 	public void setMod2(Integer mod2) {
 		this.mod2 = mod2;
+	}
+	public GameConfig getConfig() {
+		return config;
+	}
+	public void setConfig(GameConfig config) {
+		this.config = config;
+	}
+	public String getConfig_json() {
+		return config_json;
+	}
+	public void setConfig_json(String config_json) {
+		this.config_json = config_json;
+		if(StringUtils.isNotBlank(config_json))
+			setConfig(JSONObject.parseObject(config_json, GameConfig.class));
+		else setConfig(null);
+	
 	}
 	
 	

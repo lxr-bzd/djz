@@ -27,15 +27,35 @@
 			
 			.blue{background-color: #087ec3;color: white;}
 			.blue2{background-color: #92ebff;}
-			.locak_btn1{background-color: #dddddd;padding: 3px 12px;cursor: pointer;border-radius:5px}
-			.locak_btn2{background-color: yellow;padding: 3px 12px;cursor: pointer;border-radius:5px}
+			.locak_btn1{background-color: #dddddd;padding: 3px 3px;cursor: pointer;border-radius:5px}
+			.locak_btn2{background-color: yellow;padding: 3px 3px;cursor: pointer;border-radius:5px}
 			
+			.click_span{padding: 3px 8px;cursor: pointer;border-radius:5px}
 			
 			.btn1{cursor: pointer;text-align: center;margin: 5px;height: 40px;line-height: 40px;border-radius:5px}
 			
 			.bg-td{text-align: left; display: flex;}
 			.bg-td>span{flex:1;text-align: center;}
-		
+
+
+.test-panel { 
+position:absolute; /*绝对定位*/ 
+top:20px; /*距顶部50%*/ 
+left:0px; 
+padding:18px 15px;
+/* margin:-100px 0 0 -150px; */ /*设定这个div的margin-top的负值为自身的高度的一半,margin-left的值也是自身的宽度的一半的负值.(感觉在绕口令)*/ 
+width:160px; /*宽为400,那么margin-top为-200px*/ 
+height:85px; /*高为200那么margin-left为-100px;*/ 
+z-index:999999999; /*浮动在最上层 */ 
+/* filter:alpha(Opacity=80);-moz-opacity:0.8;opacity: 0.8; */
+background-color:#191970;
+} 
+
+.test-btn{
+font-weight:bold;
+font-size:16px;
+filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
+}
 		
 		</style>
 	</head>
@@ -66,10 +86,9 @@
 								<col style="width:110px;">
 								
 								
-								<col style="width:150px;">
-								<col style="width:60px;">
-								<col style="width:150px;">
-								<col style="width:150px;">
+								<col style="width:140px;">
+								<col style="width:140px;">
+								<col style="width:140px;">
 								
 								<col style="width:60px;">
 								
@@ -85,55 +104,55 @@
 							    	<td ><div class="blue btn1 exit_btn">關閉</div></td>
 							    	
 							    	<td colspan="2" id="input_group"><input type="text" style="width: 90%;background-color: #eee" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""></td>
-							    	<td colspan="2"> <div class="blue btn1 ok_btn">確定</div></td>
+							    	<td colspan="1"> <div class="blue btn1 ok_btn">確定</div></td>
 							    	<td rowspan="4" class="focus_row">--</td>
 							    	
 							  	</tr>
 							  	
 							  	<tr class="data_col">
 							    	
-							    	<td>1號 
-<span class="locak_btn1" >瑣定</span>
+							    	<td>1
+<span class="locak_btn1" >瑣</span>
 												</td>
 				
-							    	<td>2號 
-<span class="locak_btn1" >瑣定</span>
+							    	<td>2
+<span class="locak_btn1" >瑣</span>
 												</td>
 				
-							    	<td>3號 
-<span class="locak_btn1" >瑣定</span>
+							    	<td>3 
+<span class="locak_btn1" >瑣</span>
 												</td>
 				
-							    	<td>4號 
-<span class="locak_btn1" >瑣定</span>
+							    	<td>4
+<span class="locak_btn1" >瑣</span>
 												</td>
 				
-							    	<td>5號 
-<span class="locak_btn1" >瑣定</span>
+							    	<td>5
+<span class="locak_btn1" >瑣</span>
 												</td>
 				
-							    	<td>6號 
-<span class="locak_btn1" >瑣定</span>
+							    	<td>6
+<span class="locak_btn1" >瑣</span>
 												</td>
 				
-							    	<td>7號 
-<span class="locak_btn1" >瑣定</span>
+							    	<td>7
+<span class="locak_btn1" >瑣</span>
 												</td>
 				
-							    	<td>8號 
-<span class="locak_btn1" >瑣定</span>
+							    	<td>8
+<span class="locak_btn1" >瑣</span>
 												</td>
 				
-							    	<td>9號 
-<span class="locak_btn1" >瑣定</span>
+							    	<td>9
+<span class="locak_btn1" >瑣</span>
 												</td>
 				
-							    	<td>10號 
-<span class="locak_btn1" >瑣定</span>
+							    	<td>10
+<span class="locak_btn1" >瑣</span>
 												</td>
 							    	<td>匯總報告</td>
-							    	<td>求和報告</td>
-							    	<td>原值报告</td>
+							    	<td>合并報告</td>
+									<td>選擇報告</td>
 							    	
 							  	</tr>
 							  	<tr class="data_col ">
@@ -209,10 +228,9 @@
 								<col style="width:110px;">
 								
 								
-								<col style="width:150px;">
-								<col style="width:60px;">
-								<col style="width:150px;">
-								<col style="width:150px;">
+								<col style="width:140px;">
+								<col style="width:140px;">
+								<col style="width:140px;">
 								
 								<col style="width:60px;">
 								
@@ -262,10 +280,9 @@
 								<col style="width:110px;">
 								
 								
-								<col style="width:150px;">
-								<col style="width:60px;">
-								<col style="width:150px;">
-								<col style="width:150px;">
+								<col style="width:140px;">
+								<col style="width:140px;">
+								<col style="width:140px;">
 								
 								<col style="width:60px;">
 								
@@ -367,6 +384,7 @@
 				</div>
 			</div>
 		</section>
+		<div class="test-panel"></div>
 		
 		<script src="js/jquery-1.11.2.min.js"></script>
 		<script type="text/javascript">
@@ -499,13 +517,22 @@
 		$app.request("../user/game/input.do?pei="+val,function(data){
 			layer.close(index);
 			if(data.code!=1){
-				$app.alert(data.msg,"e");
+					layer.alert(data.msg,{
+						  success:function(layero){
+									layero.find('.layui-layer-content').css('font-size', '18px');
+									}
+						});    
+				
 				return;
 			}
+			
+			var gameRowNum = eval("("+data.data.turn.config_json+")").gameRowNum;
+			if(gameRowNum-data.data.turn.frow<=2)myTest.stop();
+			
 			cleanInput();
 			$app.msg("ok");
 			ref(data.data);
-			
+			onBusEnd();
 		}); 
 		
 	}
@@ -565,6 +592,47 @@
 	// 老 少 男 女
 	var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 	
+	var myTest = {
+			val:'',
+			open:false,
+			start:function(){
+				if(!$('#input_group>input').val()){
+					layer.msg('未輸入數字，啟動失敗');
+					return;
+				}
+				
+				$('.ok_btn').click();
+				this.val = $('#input_group>input').val();
+				this.open = true;
+				$(".test-panel").html('<div class=" btn1 test-btn" style="background-color:#7FFF00;" onclick="myTest.stop()">停止</div>');
+				
+				
+			},
+			input:function(){
+				$('#input_group>input').val(this.val);
+				$('.ok_btn').click();
+				
+				
+			}
+			,stop:function(){
+				this.val = '';
+				this.open = false;
+				$(".test-panel").html('<div class=" btn1 test-btn" style="background-color:yellow;" onclick="myTest.start()">啟動</div>');
+			},
+			init:function(){
+				this.stop();
+				
+				
+			}
+			};
+	
+	myTest.init();
+	
+function onBusEnd(){
+	if(myTest.open)	myTest.input();
+		
+	}
+	
 	
 	var notifyDialog;
 	
@@ -579,6 +647,8 @@
 					return;
 				}
 				
+				
+				
 				ref(data.data);
 			});
 		 
@@ -592,6 +662,22 @@
 		　　});
 		
 	});
+	
+	function openTip(){
+		layer.open({
+			title:'提示',
+			  type: 1,
+			  skin: 'layui-layer-molv', //样式类名
+			  closeBtn: 0, //不显示关闭按钮
+			  anim: 2,
+			  content: '<div style="padding:20px;width:180px;"></div>'
+			,btn:['關閉']
+			,success:function(layero){
+			  layero.find('.layui-layer-btn').css('text-align', 'center').find('a').css('padding','6px 80px').css('height','40px')
+			}
+			}); 
+		
+	}
 	
 	
 var etbHtml = "";
@@ -683,6 +769,46 @@ var etbHtml = "";
 		
 		
 		/* 结束处理合并报告  */
+		/* 开始处理合并求和  */
+		turn.hbqh = eval(turn.hbqh );
+		var hbqhBgData = createBg(turn.hbqh);
+		hbqhBgData.push(turn.hbqh_sum);
+		bgData["hbqh"] = hbqhBgData;
+		
+		
+		jgData['hbqh'] = {list:[null],jg:0,qh:0};
+		var hbqhjgs = turn.hbqh_jg?turn.hbqh_jg.split(","):[];
+		for (var i = 0; i < hbqhjgs.length; i++) {
+			if(!hbqhjgs[i])continue;
+			var v = new Number(hbqhjgs[i]);
+			jgData['hbqh'].list.push(v);
+			jgData['hbqh'].qh+=(v>0?1:(v<0?-1:0));
+			jgData['hbqh'].jg+=v;
+		}
+		
+		
+		/* 结束处理合并合并求和  */
+		
+		/* 开始处理選擇報告  */
+		turn.xz = eval(turn.xz );
+		var xzBgData = createBg(turn.xz);
+		xzBgData.push(turn.xz_sum);
+		bgData["xzBg"] = xzBgData;
+		
+		
+		jgData['xzBg'] = {list:[null],jg:turn.xz_jg_sum,qh:0};
+		var xzjgs = turn.xz_jg?turn.xz_jg.split(","):[];
+		for (var i = 0; i < xzjgs.length; i++) {
+			if(!xzjgs[i])continue;
+			var v = new Number(xzjgs[i]);
+			jgData['xzBg'].list.push(v);
+			jgData['xzBg'].qh+=(v>0?1:(v<0?-1:0));
+		}
+		
+		
+		/* 结束处理選擇報告  */
+		
+		
 		
 		return {turn:turn,bgData:bgData,jgData:jgData};
 		
@@ -719,10 +845,25 @@ var etbHtml = "";
 		var turn = oldTurn;
 		turn.info = eval(turn.info);
 		turn.user_lock = turn.user_lock.split(',');
+		turn.xzbg_lock = turn.xzbg_lock.split(',');
+		turn.hbbg_lock = turn.hbbg_lock.split(',');
+		turn.xzbg_config = turn.xzbg_config.split(',');
+		turn.hbbg_config = turn.hbbg_config.split(',');
 		return turn;
 	}
+	
+	
+	
 
 function ref(data){
+	
+	if(data.tip_open==1&&data.turn.queue_count>0){
+		openTip();
+		myTest.stop();
+	}
+		
+	
+	
 	var frow = data.turn.frow;
 	$(".focus_row").html(frow-2);
 	$(".mod_group").html(data.turn.mod==1?'A':'B');
@@ -735,10 +876,19 @@ function ref(data){
 		var vData = initViewData(data);
 	else
 	vData = {"turn":initTurn(data.turn)
-	,"bgData":{"hb":[{"name":'',"val":0},{"name":"","val":0},'',''],"hbBg":[{"name":'',"val":0},{"name":"","val":0},'','']
-	,"yzBg":[{"name":'',"val":0},{"name":"","val":0},'',''],"qhBg":[{"name":'',"val":0},{"name":"","val":0},'','']}
-	,"jgData":{"hb":{"list":[],"jg":0,"qh":0},"hbBg":{"list":[],"jg":0,"qh":0},"yzBg":{"list":[],"jg":0,"qh":0},"qhBg":{"list":[],"jg":0,"qh":0}}
-	,"qhData":[[{"name":"","val":0},{"name":"","val":0},""],{"list":[],"sum":0,"qh":0}]
+	,"bgData":{ "hb":[{"name":'',"val":0},{"name":"","val":0},'','']
+				,"hbBg":[{"name":'',"val":0},{"name":"","val":0},'','']
+				,"yzBg":[{"name":'',"val":0},{"name":"","val":0},'','']
+				,"qhBg":[{"name":'',"val":0},{"name":"","val":0},'','']
+				,"hbqh":[{"name":'',"val":0},{"name":"","val":0},'','']
+	,"xzBg":[{"name":'',"val":0},{"name":"","val":0},'','']}
+	,"jgData":{ "hb":{"list":[],"jg":0,"qh":0}
+				,"hbBg":{"list":[],"jg":0,"qh":0}
+				,"yzBg":{"list":[],"jg":0,"qh":0}
+				,"qhBg":{"list":[],"jg":0,"qh":0}
+				,"hbqh":{"list":[],"jg":0,"qh":0}
+				,"xzBg":{"list":[],"jg":0,"qh":0}
+				}
 	
 	}
 	
@@ -758,21 +908,20 @@ function ref(data){
 	}
 	
 	/**
+	mod:1 汇总报告，2：合并报告，3 選擇報告
 	*/
-	function setLock(tid,uid,val,btn){
+	function setLock(mod,tid,uid,val,btn){
 		
 		
 		$.ajax({
 			url:"../user/game/setLock.do",
-			data:{uid:uid,tid:tid,val:val},
+			data:{mod:mod,uid:uid,tid:tid,val:val},
 			type:"post",
 			async:false,
 			success:function(json){
 				if(json.code==1){
 					layer.msg('操作成功');
-					$(btn).attr('class',(val==1?'locak_btn1':'locak_btn2'));
-					$(btn).html(val==1?'瑣定':'解瑣');
-					$(btn).attr("onclick",'setLock('+tid+','+uid+','+(val==1?0:1)+',this)');
+					$(btn).replaceWith(getLockBtnHtml(mod,tid,uid,val));
 					
 				}else{
 					
@@ -785,6 +934,63 @@ function ref(data){
 		
 		
 	}
+	
+	function getLockBtnHtml(mod,tid,uid,val){
+		
+		return html  = '<span class="'+(val==1?'locak_btn1':'locak_btn2')+'" onclick="'
+		+'setLock('+mod+','+tid+','+uid+','+(val==1?0:1)+',this)" >'+(val==1?'瑣':'解')+'</span>';
+		
+	}
+	
+
+	
+	
+	function toSetConfig(mod,tid,uid,val,btn){
+		
+		val = $(btn).html();
+		var datas = val.split('-');
+		//在这里面输入任何合法的js语句
+		layer.open({
+		  type: 1,
+		  skin: 'layui-layer-demo', //样式类名
+		  closeBtn: 0, //不显示关闭按钮
+		  anim: 2,
+		  shadeClose: true, //开启遮罩关闭
+		  content: '<div class="context-div" style="margin:10px;"><input style="width:150px;height:30px;" name="start" type="number"/>-<input style="width:150px;height:30px;" name="end" class="int_item" type="number"/></dev>',
+		  btn:['保存','取消'],
+		yes: function(index, layero){
+			sval = layero.find(".context-div input[name=start]").val()+"-"+layero.find(".context-div input[name=end]").val();
+			$.ajax({
+				url:"../user/game/setConfig.do",
+				data:{mod:mod,uid:uid,tid:tid,val:sval},
+				type:"post",
+				async:false,
+				success:function(json){
+					layer.close(index); //如果设定了yes回调，需进行手工关闭
+					if(json.code==1){
+						layer.msg('保存成功');
+						$(btn).html(sval);
+						
+						
+					}else{
+						
+						alert(json.msg)
+					}
+				}
+			});
+		    
+		  },
+		 success: function(layero, index){
+			 layero.find(".context-div input[name=start]").val(datas[0]);
+			 layero.find(".context-div input[name=end]").val(datas[1]);
+		    console.log(layero, index);
+		  }
+
+		}); 
+		
+	}
+	
+	 
 	
 	/**
 	清空所有遊戲數據
@@ -823,16 +1029,39 @@ function ref(data){
 	<script type="text/html" id="bg_tmpl">
 	<tr class="data_col">
 				{{each turn.user_lock as val i}}
-							    	<td>{{i+1}}號 {{if val=='1'}}
-<span class="locak_btn1" onclick="setLock({{turn.id}},{{i+1}},0,this)" >瑣定</span>
+							    	<td>{{i+1}} 
+{{if val=='1'}}
+<span class="locak_btn1" onclick="setLock(1,{{turn.id}},{{i+1}},0,this)" >瑣</span>
 												{{else}}
-<span class="locak_btn2" onclick="setLock({{turn.id}},{{i+1}},1,this)" >解瑣</span>
-												{{/if}}</td>
+<span class="locak_btn2" onclick="setLock(1,{{turn.id}},{{i+1}},1,this)" >解</span>
+												{{/if}}
+{{if turn.hbbg_lock[i]=='1'}}
+<span class="locak_btn1" onclick="setLock(2,{{turn.id}},{{i+1}},0,this)" >瑣</span>
+												{{else}}
+<span class="locak_btn2" onclick="setLock(2,{{turn.id}},{{i+1}},1,this)" >解</span>
+												{{/if}}
+{{if turn.xzbg_lock[i]=='1'}}
+<span class="locak_btn1" onclick="setLock(3,{{turn.id}},{{i+1}},0,this)" >瑣</span>
+												{{else}}
+<span class="locak_btn2" onclick="setLock(3,{{turn.id}},{{i+1}},1,this)" >解</span>
+												{{/if}}
+
+<div><span class="click_span" onclick="toSetConfig(1,{{turn.id}},{{i+1}},'{{turn.hbbg_config[i]}}',this)" >{{turn.hbbg_config[i]}}</span>
+</div>
+<div><span class="click_span" onclick="toSetConfig(2,{{turn.id}},{{i+1}},'{{turn.hbbg_config[i]}}',this)" >{{turn.xzbg_config[i]}}</span>
+</div>
+
+
+
+</td>
 				{{/each}}
 							    	<td>匯總報告</td>
-							    	<td>求和報告</td>
-									<td>原值报告</td>
+									
+							    	<!--td>匯總求和</td-->
+									<!-- <td>原值報告</td> -->
 							    	<td>合并報告</td>
+									<!--td>合并求和</td-->
+									<td>選擇報告</td>
 							  	</tr>
 							  	<tr class="data_col ">
 							{{each turn.user_lock as val i}}
@@ -842,9 +1071,11 @@ function ref(data){
 									</td>
 							{{/each}}
 									<td> <div class="bg-td">{{bgData['hb'][0].name}}<span {{if bgData['hb'][0].val>0}}class="red"{{/if}}>{{if bgData['hb'][0].name}}{{bgData['hb'][0].val}}{{/if}}</span></div></td>
-							    	<td> <div class="bg-td">{{bgData['qhBg'][0].name}}<span {{if bgData['qhBg'][0].val>0}}class="red"{{/if}}>{{if bgData['qhBg'][0].name}}{{bgData['qhBg'][0].val}}{{/if}}</span></div></td>
-							    	<td> <div class="bg-td">{{bgData['yzBg'][0].name}}<span {{if bgData['yzBg'][0].val>0}}class="red"{{/if}}>{{if bgData['yzBg'][0].name}}{{bgData['yzBg'][0].val}}{{/if}}</span></div></td>
+									<!--td> <div class="bg-td">{{bgData['qhBg'][0].name}}<span {{if bgData['qhBg'][0].val>0}}class="red"{{/if}}>{{if bgData['qhBg'][0].name}}{{bgData['qhBg'][0].val}}{{/if}}</span></div></td-->
+							    	<!--td> <div class="bg-td">{{bgData['yzBg'][0].name}}<span {{if bgData['yzBg'][0].val>0}}class="red"{{/if}}>{{if bgData['yzBg'][0].name}}{{bgData['yzBg'][0].val}}{{/if}}</span></div></td-->
 							  		<td> <div class="bg-td">{{bgData['hbBg'][0].name}}<span {{if bgData['hbBg'][0].val>0}}class="red"{{/if}}>{{if bgData['hbBg'][0].name}}{{bgData['hbBg'][0].val}}{{/if}}</span></div></td>
+							    	<!--td> <div class="bg-td">{{bgData['hbqh'][0].name}}<span {{if bgData['hbqh'][0].val>0}}class="red"{{/if}}>{{if bgData['hbqh'][0].name}}{{bgData['hbqh'][0].val}}{{/if}}</span></div></td-->
+							    	<td> <div class="bg-td">{{bgData['xzBg'][0].name}}<span {{if bgData['xzBg'][0].val>0}}class="red"{{/if}}>{{if bgData['xzBg'][0].name}}{{bgData['xzBg'][0].val}}{{/if}}</span></div></td>
 							    	
 								</tr>
 							  <tr class="data_col">
@@ -855,9 +1086,12 @@ function ref(data){
 							{{/each}}
 							    	
 									<td><div class="bg-td">{{bgData['hb'][1].name}} <span {{if bgData['hb'][1].val>0}}class="red"{{/if}}>{{if bgData['hb'][1].name}}{{bgData['hb'][1].val}}{{/if}}</span></div></td>
-							    	<td><div class="bg-td">{{bgData['qhBg'][1].name}} <span {{if bgData['qhBg'][1].val>0}}class="red"{{/if}}>{{if bgData['qhBg'][1].name}}{{bgData['qhBg'][1].val}}{{/if}}</span></div></td>
-							    	<td><div class="bg-td">{{bgData['yzBg'][1].name}} <span {{if bgData['yzBg'][1].val>0}}class="red"{{/if}}>{{if bgData['yzBg'][1].name}}{{bgData['yzBg'][1].val}}{{/if}}</span></div></td>
+									<!--td><div class="bg-td">{{bgData['qhBg'][1].name}} <span {{if bgData['qhBg'][1].val>0}}class="red"{{/if}}>{{if bgData['qhBg'][1].name}}{{bgData['qhBg'][1].val}}{{/if}}</span></div></td-->
+							    	<!-- td><div class="bg-td">{{bgData['yzBg'][1].name}} <span {{if bgData['yzBg'][1].val>0}}class="red"{{/if}}>{{if bgData['yzBg'][1].name}}{{bgData['yzBg'][1].val}}{{/if}}</span></div></td -->
 							    	<td><div class="bg-td">{{bgData['hbBg'][1].name}} <span {{if bgData['hbBg'][1].val>0}}class="red"{{/if}}>{{if bgData['hbBg'][1].name}}{{bgData['hbBg'][1].val}}{{/if}}</span></div></td>
+							    	<!--td><div class="bg-td">{{bgData['hbqh'][1].name}} <span {{if bgData['hbqh'][1].val>0}}class="red"{{/if}}>{{if bgData['hbqh'][1].name}}{{bgData['hbqh'][1].val}}{{/if}}</span></div></td-->
+							    	<td><div class="bg-td">{{bgData['xzBg'][1].name}} <span {{if bgData['xzBg'][1].val>0}}class="red"{{/if}}>{{if bgData['xzBg'][1].name}}{{bgData['xzBg'][1].val}}{{/if}}</span></div></td>
+							    	
 							    	
 							    	
 							  	</tr>
@@ -868,10 +1102,13 @@ function ref(data){
 							{{/each}}
 							    	
 							    	<td class="blue"><div class="bg-td">共 <span >{{bgData['hb'][2]}}</span></div></td>
-							    	<td class="blue"><div class="bg-td">共 <span >{{bgData['qhBg'][2]}}</span></div></td>
-									<td class="blue"><div class="bg-td">共 <span >{{bgData['yzBg'][2]}}</span></div></td>
+									<!--td class="blue"><div class="bg-td">共 <span >{{bgData['qhBg'][2]}}</span></div></td-->
+									<!--td class="blue"><div class="bg-td">共 <span >{{bgData['yzBg'][2]}}</span></div></td-->
 									<td class="blue"><div class="bg-td">共 <span >{{bgData['hbBg'][2]}}</span></div></td>
-							    	<td>序號</td>
+							    	<!--td class="blue"><div class="bg-td">共 <span >{{bgData['hbqh'][2]}}</span></div></td-->
+							    	<td class="blue"><div class="bg-td">共 <span >{{bgData['xzBg'][2]}}</span></div></td>
+							    	
+									<td>序號</td>
 							  	</tr>
 	</script>
 	<script type="text/html" id="jg_tmpl">
@@ -887,9 +1124,12 @@ function ref(data){
 		{{/each}}
 	
 	<td {{if val>0}}class="red"{{/if}}>{{val}}</td>
-	<td {{if jgData['qhBg'].list[i]>0}}class="red"{{/if}}>{{jgData['qhBg'].list[i]}}</td>
-	<td {{if jgData['yzBg'].list[i]>0}}class="red"{{/if}}>{{jgData['yzBg'].list[i]}}</td>
+	<!--td {{if jgData['qhBg'].list[i]>0}}class="red"{{/if}}>{{jgData['qhBg'].list[i]}}</td-->
+	<!--td {{if jgData['yzBg'].list[i]>0}}class="red"{{/if}}>{{jgData['yzBg'].list[i]}}</td -->
 	<td {{if jgData['hbBg'].list[i]>0}}class="red"{{/if}}>{{jgData['hbBg'].list[i]}}</td>
+	<!--td {{if jgData['hbqh'].list[i]>0}}class="red"{{/if}}>{{jgData['hbqh'].list[i]}}</td-->
+	<td {{if jgData['xzBg'].list[i]>0}}class="red"{{/if}}>{{jgData['xzBg'].list[i]}}</td>
+	
 <td>{{i+1}}</td>
 	</tr>
 	{{/each}}
@@ -903,10 +1143,13 @@ function ref(data){
 									{{/each}}
 							    	
 							    	<td class="blue2 {{if jgData['hb'].jg>0}}red{{/if}}">{{jgData['hb'].jg}}</td>
-							    	<td class="blue2 {{if jgData['qhBg'].jg>0}}red{{/if}}">{{jgData['qhBg'].jg}}</td>
-									<td class="blue2 {{if jgData['yzBg'].jg>0}}red{{/if}}">{{jgData['yzBg'].jg}}</td>
+									<!--td class="blue2 {{if jgData['qhBg'].jg>0}}red{{/if}}">{{jgData['qhBg'].jg}}</td-->
+									<!--td class="blue2 {{if jgData['yzBg'].jg>0}}red{{/if}}">{{jgData['yzBg'].jg}}</td -->
 									<td class="blue2 {{if jgData['hbBg'].jg>0}}red{{/if}}">{{jgData['hbBg'].jg}}</td>
-									<td>結果</td>
+									<!--td class="blue2 {{if jgData['hbqh'].jg>0}}red{{/if}}">{{jgData['hbqh'].jg}}</td-->								
+									<td class="blue2 {{if jgData['xzBg'].jg>0}}red{{/if}}">{{jgData['xzBg'].jg}}</td>
+																		
+<td>結果</td>
 							  	</tr>
 							  	<tr>
 							  		<td>求和</td>
@@ -916,10 +1159,13 @@ function ref(data){
 									{{/each}}
 							    	
 							    	<td {{if jgData['hb'].qh>0}}class="red"{{/if}}>{{jgData['hb'].qh}}</td>
-							    	<td {{if jgData['qhBg'].qh>0}}class="red"{{/if}}>{{jgData['qhBg'].qh}}</td>
-									<td {{if jgData['yzBg'].qh>0}}class="red"{{/if}}>{{jgData['yzBg'].qh}}</td>
+									<!--td {{if jgData['qhBg'].qh>0}}class="red"{{/if}}>{{jgData['qhBg'].qh}}</td-->
+									<!--td {{if jgData['yzBg'].qh>0}}class="red"{{/if}}>{{jgData['yzBg'].qh}}</td-->
 									<td {{if jgData['hbBg'].qh>0}}class="red"{{/if}}>{{jgData['hbBg'].qh}}</td>
-									<td>求和</td>
+									<!--td {{if jgData['hbqh'].qh>0}}class="red"{{/if}}>{{jgData['hbqh'].qh}}</td-->
+									<td {{if jgData['xzBg'].qh>0}}class="red"{{/if}}>{{jgData['xzBg'].qh}}</td>
+									
+<td>求和</td>
 							  	</tr>
 							  	<tr style="height:40px;">
 							  		<td>共計</td>
@@ -929,10 +1175,14 @@ function ref(data){
 									{{/each}}
 							    	
 							    	<td class="blue">{{bgData['hb'][3]}}</td>
-							    	<td class="blue">{{bgData['qhBg'][3]}}</td>
-									<td class="blue">{{bgData['yzBg'][3]}}</td>
+									<!--td class="blue">{{bgData['qhBg'][3]}}</td-->
+									<!--td class="blue">{{bgData['yzBg'][3]}}</td-->
 									<td class="blue">{{bgData['hbBg'][3]}}</td>
-									<td>共計</td>
+									<!--td class="blue">{{bgData['hbqh'][3]}}</td-->
+									<td class="blue">{{bgData['xzBg'][3]}}</td>
+							    	
+									
+<td>共計</td>
 							  	</tr>
 	</script>
 	</body>

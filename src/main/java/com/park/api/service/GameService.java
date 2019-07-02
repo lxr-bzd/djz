@@ -24,6 +24,7 @@ import com.park.api.entity.InputResult;
 import com.park.api.entity.Tmpl;
 import com.park.api.entity.Turn;
 import com.park.api.service.CountService.CountQueueResult;
+import com.park.api.service.bean.GameConfig;
 
 @Service
 public class GameService {
@@ -32,7 +33,7 @@ public class GameService {
 	
 	
 	int GAME_COL = 10;
-	int GAME_ROW = 212;
+	//int GAME_ROW = 212;
 	//int GAME_ROW = 1202;
 	
 	@Autowired
@@ -74,19 +75,19 @@ public class GameService {
 		crowDao.createGame(game);
 		
 		countDao.save(game.getId(),turn.getMod(),turn.getRule_type(),turn.getRule(),turn.getId());
-		//createRunGame(uid,game.getId(), templateNo);
-		createNextGameRow(game, 1, templateNo);
+		//createRunGame(turn.getConfig(),uid,game.getId(), templateNo);
+		createNextGameRow(turn.getConfig(),game, 1, templateNo);
 		
 	}
 	
 	
 	
-	private void createNextGameRow(Game game,int row,int group) {
-		int rowNum = GAME_ROW;
+	private void createNextGameRow(GameConfig config,Game game,int row,int group) {
+		int rowNum = config.getGameRowNum();
 		
 		if(row>rowNum)return;
 		
-		Crow crow = getNewRow(row,group);
+		Crow crow = getNewRow(config,row,group);
 		crow.setUid(game.getUid());
 		crowDao.save(game.getId(),crow);
 
@@ -95,8 +96,8 @@ public class GameService {
 	
 	
 	
-	private Crow getNewRow(int row,int templateNo) {
-		int groupNum = GameCoreService2.SHENG_GROUP;
+	private Crow getNewRow(GameConfig config,int row,int templateNo) {
+		int groupNum = config.getGameGroupNum();
 		
 		Crow crow = new Crow();
 		if(templateNo==1) {
@@ -159,12 +160,12 @@ public class GameService {
 	 * 生成运行数据
 	 * @param group
 	 */
-	public void createRunGame(String uid,String hid,int group){
+	public void createRunGame(GameConfig config,String uid,String hid,int group){
 		List<Crow> ret = null;
 		
-		int groupNum = GameCoreService2.SHENG_GROUP;
+		int groupNum = config.getGameGroupNum();
 		
-		int rowNum = GAME_ROW;
+		int rowNum = config.getGameRowNum();
 		
 		if(group==1) {
 			ret = new ArrayList<>();
@@ -265,28 +266,29 @@ public class GameService {
 	
 	public InputResult doInput(Game game,String pei) {
 		
-		if(game == null)throw new ApplicationException("游戏未开始！");
+		if(game == null)throw new ApplicationException("遊戲未開始");
 		
 		Crow icrow =  getInputRow(game.getId(),game.getFocus_row());
 		
-		if(icrow==null)throw new ApplicationException("本轮游戏已结束！");
+		if(icrow==null)throw new ApplicationException("本輪已結束");
 		
+		GameConfig config = turnService.getInputTurn2().getConfig();
 		//基础计算开始
-		String dui = gameCoreService.reckonDui(icrow.getSheng(),pei);
+		String dui = gameCoreService.reckonDui(config,icrow.getSheng(),pei);
 		icrow.setDui(dui);
 		icrow.setPei(pei);
 		if(icrow.getRow()>1) {
-			String gongCol = gameCoreService.reckonGongCol(pei, icrow.getGong());
+			String gongCol = gameCoreService.reckonGongCol(config,pei, icrow.getGong());
 			icrow.setGong_col(gongCol);
 		}
 		//基础计算结束
 		
 		updateCrow(icrow);
 		
-		createNextGameRow(game, icrow.getRow()+1, game.getTbNum());
+		createNextGameRow(config,game, icrow.getRow()+1, game.getTbNum());
 		// insulateCleanGame(game.getId(),icrow.getRow());
 		
-		Crow nCrow = getNextRow(game.getId(), icrow.getRow());
+		Crow nCrow = getNextRow(config,game.getId(), icrow.getRow());
 		//System.out.println(uid+"输入行："+((System.currentTimeMillis()-start))+"ms");
 		//start = System.currentTimeMillis();
 		
@@ -295,7 +297,7 @@ public class GameService {
 		//start = System.currentTimeMillis();
 		//处理下一行开始
 		if(nCrow!=null) {
-			String gong = gameCoreService.reckonGong(nCrow.getSheng(), dui);
+			String gong = gameCoreService.reckonGong(config,nCrow.getSheng(), dui);
 			nCrow.setGong(gong);
 			updateCrow(nCrow);
 		}
@@ -336,7 +338,7 @@ public class GameService {
 		if(row<3) return null;
 		
 		Long start1 = System.currentTimeMillis();
-		Map<String, Object> map = ServiceManage.jdbcTemplate.queryForMap("select `id`,tid,   `queue`,  `queue_count`,  `grp_queue`,   `rule`,  `rule_type`,`mod`,tg_sum from game_runing_count where hid=?",hid);
+		Map<String, Object> map = ServiceManage.jdbcTemplate.queryForMap("select `id`,tid,   `queue`,  `queue_count`,  `grp_queue`,   `rule`,  `rule_type`,`mod`,tg_sum,jg_qh from game_runing_count where hid=?",hid);
 		System.out.println(hid+"查询："+((System.currentTimeMillis()-start1))+"ms");
 		start1 = System.currentTimeMillis();
 		String[] rule = map.get("rule").toString().split(",");
@@ -349,24 +351,31 @@ public class GameService {
 		
 		
 		JgHandel jgHandel = createJgHandel(row, rule_type, start, end, mod2);
-		
+		QueueHandel queueHandel = new QueueHandel(start);
 		CountTurn countTurn = null;
 		if(row>=3&&nCrow!=null) 
 			countTurn = createCountTurnHandel(mod,rule_type,start,end,mod2);
 		
 		
-		CountQueueResult rets = CountService.countQueue2(row,map.get("queue")==null?null:map.get("queue").toString(), map.get("queue_count").toString()
-				,"", gong,gongCol,nCrow!=null?nCrow.getGong():null,new GameEach[] {countTurn,jgHandel});
+		
+		CountQueueResult rets = CountService.countQueue2(turnService.getInputTurn().get().getConfig(),row,map.get("queue")==null?null:map.get("queue").toString(), map.get("queue_count").toString()
+				,"", gong,gongCol,nCrow!=null?nCrow.getGong():null,new GameEach[] {countTurn,jgHandel,queueHandel});
 		System.out.println(hid+"计算："+((System.currentTimeMillis()-start1))+"ms");
 		start1 = System.currentTimeMillis();
 		
+		
+		inputResult.setQueueNum(queueHandel.getqNum());
+		inputResult.setQueueCount(queueHandel.getCount());
 		/*Object[] countTurnResult = null;
 		if(countTurn!=null) 
 			countTurnResult = countTurn.getResult();*/
 		int[] tgResult = jgHandel.getResultVal();
-		long tg_sum = tgResult[0]+tgResult[1]+((long)map.get("tg_sum"));
-		ServiceManage.jdbcTemplate.update("UPDATE game_runing_count SET queue=?,queue_count=?,tg=CONCAT(tg,?),tg_sum=?,ys=ys+? WHERE id=?"
-				,rets.getQueue(),rets.getQueueCount(),jgHandel.getResult()+",",tg_sum,
+		int jg = tgResult[0]+tgResult[1];
+		long upjg_sum = ((long)map.get("tg_sum"));
+		long jg_sum = jg + upjg_sum;
+		long jg_qh =(jg>0?1:(jg<0?-1:0))+((int)map.get("jg_qh"));
+		ServiceManage.jdbcTemplate.update("UPDATE game_runing_count SET queue=?,queue_count=?,tg=CONCAT(tg,?),tg_sum=?,jg_qh=?,ys=ys+? WHERE id=?"
+				,rets.getQueue(),rets.getQueueCount(),jgHandel.getResult()+",",jg_sum,jg_qh,
 				rets.getYs(),map.get("id"));
 		System.out.println(hid+"update："+((System.currentTimeMillis()-start1))+"ms");
 		start1 = System.currentTimeMillis();
@@ -381,7 +390,9 @@ public class GameService {
 			long[] yz = countTurn.getYzResult();
 			inputResult.setYz(yz);
 			inputResult.setRets(objs);
-			inputResult.setTg_sum(tg_sum);
+			inputResult.setJg_sum(jg_sum);
+			inputResult.setUp_jg_sum(upjg_sum);
+			inputResult.setJg_qh(jg_qh);
 			
 			return objs;
 			
@@ -417,7 +428,7 @@ public class GameService {
 		
 		int mod2 = turnService.getInputTurn().get().getMod2();
 		
-		CountQueueResult rets = CountService.countQueue(row,map.get("queue")==null?null:map.get("queue").toString(), map.get("queue_count")==null?null:map.get("queue_count").toString(),map.get("grp_queue").toString()
+		CountQueueResult rets = CountService.countQueue(turnService.getInputTurn2().getConfig(),row,map.get("queue")==null?null:map.get("queue").toString(), map.get("queue_count")==null?null:map.get("queue_count").toString(),map.get("grp_queue").toString()
 				, gong,gongCol,rule_type,start,end,mod2);
 		System.out.println(hid+"计算："+((System.currentTimeMillis()-start1))+"ms");
 		start1 = System.currentTimeMillis();
@@ -471,8 +482,8 @@ public class GameService {
 	}
 	
 	 
-	 public void  insulateCleanGame(String hid,int frow) {
-		if(frow<=5||frow>GAME_ROW+5)return;
+	 public void  insulateCleanGame(GameConfig config,String hid,int frow) {
+		if(frow<=5||frow>config.getGameRowNum()+5)return;
 		ServiceManage.jdbcTemplate.update("UPDATE game_runing SET sheng='',pei=null,gong=null,gong_col=null WHERE hid=? AND row=?"
 				,hid,frow-5);
 
@@ -498,7 +509,7 @@ public class GameService {
 		int mod =Integer.parseInt(map.get("mod").toString());
 		if(mod==1) {
 			//A模式
-			long[] tgs = CountService.countTgA(queue, gong,rule_type, start, end);
+			long[] tgs = CountService.countTgA(turnService.getInputTurn2().getConfig(),queue, gong,rule_type, start, end);
 			Object[] objs = CountService.countAllTgA(tgs,mod2);
 			ServiceManage.jdbcTemplate.update("update game_runing_count set g=?,g_sum=g_sum+? where id=?",
 					JSONObject.toJSONString(objs),
@@ -533,8 +544,8 @@ public class GameService {
 	   
 			 
 			 //拷贝统计数据
-		ServiceManage.jdbcTemplate.update("INSERT INTO djt_history (tid,`hid`, `uid`, `tbNum`, `focus_row`, `queue_count`, `tg`, `rule`,ys,g,g_sum) " + 
-			 		"		 select a.tid,hid,b.uid,tbNum,focus_row,queue_count,tg,rule,ys,g,g_sum from game_runing_count a left join game_history b  on a.hid= b.id " + 
+		ServiceManage.jdbcTemplate.update("INSERT INTO djt_history (tid,`hid`, `uid`, `tbNum`, `focus_row`, `queue_count`, `tg`,`tg_sum`, `rule`,ys,g,g_sum) " + 
+			 		"		 select a.tid,hid,b.uid,tbNum,focus_row,queue_count,tg,tg_sum,rule,ys,g,g_sum from game_runing_count a left join game_history b  on a.hid= b.id " + 
 			 		"		  where hid = ? limit 1",hid);
 		ServiceManage.jdbcTemplate.update("UPDATE game_turn SET state=2 WHERE id =(select tid from game_runing_count where hid = ? limit 1)",hid);
 			
@@ -571,8 +582,8 @@ public class GameService {
 
 	}
 	
-	public Crow getNextRow(String hid,int frow) {
-		if(frow>=GAME_ROW)return null;
+	public Crow getNextRow(GameConfig config,String hid,int frow) {
+		if(frow>=config.getGameRowNum())return null;
 		
 		return crowDao.getRow(hid,frow+1);
 		
@@ -826,6 +837,59 @@ public static class GameEach{
 		
 	}
 	
+	
+	class QueueHandel extends GameEach{
+		
+		int qNum = 0;
+		
+		int count = 0;
+		
+		public QueueHandel(int qNum) {
+			this.qNum = qNum;
+			
+		}
+		
+		
+		public void exe(int groupIndex, int itemIndex, Integer queueVal, int newQueueVal
+				,boolean gong,boolean gongCol,Boolean nextGong) {
+				
+				
+				if(newQueueVal>CountService.QUEUE_VAL_OFFSET) {
+					if(newQueueVal-CountService.QUEUE_VAL_OFFSET==this.qNum)
+						this.count++;
+					
+				}else {
+					if(newQueueVal==this.qNum)
+						this.count++;
+					
+				}
+		
+		}
+
+
+		public int getCount() {
+			return count;
+		}
+
+
+		public void setCount(int count) {
+			this.count = count;
+		}
+
+
+		public int getqNum() {
+			return qNum;
+		}
+
+
+		public void setqNum(int qNum) {
+			this.qNum = qNum;
+		}
+		
+		
+		
+		
+	}
 	
 	
 }

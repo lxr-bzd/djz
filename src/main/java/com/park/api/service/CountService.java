@@ -1,10 +1,17 @@
 package com.park.api.service;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.park.api.entity.InputResult;
 import com.park.api.entity.YzDto;
 import com.park.api.service.GameService.GameEach;
+import com.park.api.service.bean.GameConfig;
 
 /**
  * 统计服务
@@ -28,11 +35,11 @@ public class CountService {
 	
 	
 	
-	public static CountQueueResult countQueue2(int row,String queue,String queueCounts,String dui,String gong,String gongCol,String nextGong,GameEach[] es) {
+	public static CountQueueResult countQueue2(GameConfig config,int row,String queue,String queueCounts,String dui,String gong,String gongCol,String nextGong,GameEach[] es) {
 		
 		
-		int group = GameCoreService2.SHENG_GROUP;
-		int groupNum = GameCoreService2.SHENG_GROUP_NUM;
+		int group = config.getGameGroupNum();
+		int groupNum = config.getGameGroupLen();
 		int queueGroupSize = queueItemSize*20;
 		int colGroupSize = 4;
 		
@@ -135,12 +142,13 @@ public class CountService {
 	 * @param queueCounts [队列数据，队列统计数据]
 	 * @return [队列扫描，总队列统计，组队列统计，老少-男女结果值]
 	 */
-	public static CountQueueResult countQueue(int row,String queue,String queueCounts,String grpQueue
+	public static CountQueueResult countQueue(GameConfig config,int row,String queue,String queueCounts,String grpQueue
 			,String gong,String gongCol,int rule_type,int start,int end,int mod2) {
 		
 		
-		int group = GameCoreService2.SHENG_GROUP;
-		int groupNum = GameCoreService2.SHENG_GROUP_NUM;
+		int group = config.getGameGroupNum();
+		//int groupNum = GameCoreService2.SHENG_GROUP_NUM;
+		int groupNum =  config.getGameGroupLen();
 		int queueGroupSize = queueItemSize*20;
 		int colGroupSize = 4;
 		
@@ -299,7 +307,7 @@ public class CountService {
 	
 	
 	private static String createItem(int num) {
-		String str = null;
+		String str = null; 
 		if(num<36) {
 			str="0"+Long.toString(num, 36).toUpperCase();
 		}else str=Long.toString(num, 36).toUpperCase();
@@ -309,10 +317,10 @@ public class CountService {
 	}
 	
 	
-	public static long[] countTgA(String queue,String gong,int rule_type,int start,int end) {
+	public static long[] countTgA(GameConfig config,String queue,String gong,int rule_type,int start,int end) {
 		
-		int group = GameCoreService2.SHENG_GROUP;
-		int groupNum = GameCoreService2.SHENG_GROUP_NUM;
+		int group = config.getGameGroupNum();
+		int groupNum = config.getGameGroupLen();
 		int queueGroupSize = queueItemSize*20;
 		int colGroupSize = 4;
 		long[] info = new long[]{
@@ -382,6 +390,67 @@ public class CountService {
 		return info;
 		
 
+	}
+	
+	/**
+	 *  	合并求和
+	 * @param qh
+	 * @return [老少合并求和，男女合并求和]
+	 */
+	public static Integer[] countHbQh(List<InputResult> results,GameConfig config ) {
+		Integer[] data = new Integer[]{0,0};
+		/*
+		 * long[] hzBg = new long[]{0,0}; long hzJgSum = 0;
+		 */
+		
+		int f = 1;
+		for (InputResult result : results) {
+			if(Math.abs(result.getJg_qh())<config.getHbQh())continue;
+			f = result.getJg_qh()<0?-1:(result.getJg_qh()>0?1:0);
+			long a1 = (long)result.getRets()[4];
+			long a2 = (long)result.getRets()[5];
+			if(Math.abs(a1)>Math.abs(a2))
+				data[0]+=(a1>0?1:(a1<0?-1:0))*f;
+			else if(Math.abs(a1)<Math.abs(a2))
+				data[1]+=(a2>0?1:(a2<0?-1:0))*f;
+			else {
+				data[0]+=(a1>0?1:(a1<0?-1:0))*f;
+				data[1]+=(a2>0?1:(a2<0?-1:0))*f;
+			}
+			
+			/*
+			 * hzBg[0]+=a1; hzBg[1]+=a2; hzJgSum+=result.getTg_sum();
+			 */
+		}
+		
+		/*
+		 * f = hzJgSum<0?-1:(hzJgSum>0?1:0); data[0]+=(hzBg[0]>0?1:(hzBg[0]<0?-1:0))*f;
+		 * data[1]+=(hzBg[1]>0?1:(hzBg[1]<0?-1:0))*f;
+		 * 
+		 * f = yzDto.getYzJgSum()<0?-1:(yzDto.getYzJgSum()>0?1:0);
+		 * data[0]+=(yzDto.getYzBg()[0]>0?1:(yzDto.getYzBg()[0]<0?-1:0))*f;
+		 * data[1]+=(yzDto.getYzBg()[1]>0?1:(yzDto.getYzBg()[1]<0?-1:0))*f;
+		 */
+		
+		return data;
+		
+	}
+	
+	/**
+	 *  	计算合并求和结果
+	 * @param pei
+	 * @param qh
+	 * @return
+	 */
+	public static Integer[] countHbQhJg(String pei,Integer[] upQh) {
+		
+		Integer[] qhbg = upQh;
+		
+		Integer pv = Integer.valueOf(pei);
+		int jg1 =(pv>2?qhbg[0]:-qhbg[0]);
+		int	jg2 =(pv%2!=0?qhbg[1]:-qhbg[1]);
+		return new Integer[] {jg1,jg2};
+		
 	}
 	
 	/**
@@ -533,42 +602,150 @@ public class CountService {
 	 * @param mod2
 	 * @return [正数为报告老负数报告少，正数为报告男负数报告女]
 	 */
-	public static long[] reckonHbBg(List<InputResult> results,YzDto yzDto ) {
+	public static long[] reckonHbBg(List<InputResult> results,GameConfig config ,String hbbgLock,String hbbgConfig) {
+		
+		String[] lock = hbbgLock.split(",");
+		String[] configs = hbbgConfig.split(",");
 		
 		long[] data = new long[]{0,0};
-		long[] hzBg = new long[]{0,0};
-		long hzJgSum = 0;
+		//long[] hzBg = new long[]{0,0};
+		//long hzJgSum = 0;
 		
 		int f = 1;
 		for (InputResult result : results) {
-			f = result.getTg_sum()<0?-1:1;
+			if(lock[Integer.valueOf(result.getUid())-1].equals("0"))
+				continue;
+			
+			String[] dt = configs[Integer.valueOf(result.getUid())-1].split("-");
+			
+			if(Math.abs(result.getJg_sum())<Integer.parseInt(dt[0])||Math.abs(result.getJg_sum())>Integer.parseInt(dt[1]))continue;
+			
+			/* if(Math.abs(result.getJg_sum())<config.getHbBg())continue; */
+			
+			f = result.getJg_sum()<0?-1:(result.getJg_sum()>0?1:0);
 			data[0]+=(long)result.getRets()[4]*f;
 			data[1]+=(long)result.getRets()[5]*f;
 			
-			hzBg [0]+=(long)result.getRets()[4];
-			hzBg[1]+=(long)result.getRets()[5];
-			hzJgSum+=result.getTg_sum();
+			//hzBg [0]+=(long)result.getRets()[4];
+			//hzBg[1]+=(long)result.getRets()[5];
+			//hzJgSum+=result.getTg_sum();
 		}
 		
-		f = hzJgSum<0?-1:1;
-		data[0]+=hzBg[0]*f;
-		data[1]+=hzBg[1]*f;
+		/*
+		 * f = hzJgSum<0?-1:(hzJgSum>0?1:0); data[0]+=hzBg[0]*f; data[1]+=hzBg[1]*f;
+		 */
 		
-		f = yzDto.getYzJgSum()<0?-1:1;
-		data[0]+=yzDto.getYzBg()[0]*f;
-		data[1]+=yzDto.getYzBg()[1]*f;
+		/*
+		 * f = yzDto.getYzJgSum()<0?-1:(yzDto.getYzJgSum()>0?1:0);
+		 * data[0]+=yzDto.getYzBg()[0]*f; data[1]+=yzDto.getYzBg()[1]*f;
+		 */
 		
 		return data;
 	}
 	
 	public static Long[] reckonHbJg(String pei,Long[] upHb) {
+		//if(length>=start&&length<end) {
 		
 		Long[] qhbg = upHb;
 		
 		Integer pv = Integer.valueOf(pei);
 		long jg1 =(pv>2?qhbg[0]:-qhbg[0]);
-		long	jg2 =(pv%2!=0?qhbg[1]:-qhbg[1]);
+		long jg2 =(pv%2!=0?qhbg[1]:-qhbg[1]);
 		return new Long[] {jg1,jg2};
+		
+		//}
+		
+		//return new Long[] {0l,0l};
+		
+	}
+	
+	
+	/**
+	 * 计算选择报告
+	 * @param yz
+	 * @param mod2
+	 * @return [正数为报告老负数报告少，正数为报告男负数报告女]
+	 */
+	public static long[] reckonXzBg(List<InputResult> results,String xzbgLock,String xzbgTrend ) {
+		
+		String[] lock = xzbgLock.split(",");
+		
+		String[] trends = xzbgTrend.split(",");
+		
+		long[] data = new long[]{0,0};
+		
+		int f = 1;
+		for (InputResult result : results) {
+			if(lock[Integer.valueOf(result.getUid())-1].equals("0"))
+				continue;
+			
+			//String[] dt = configs[Integer.valueOf(result.getUid())-1].split("-");
+			
+			//if(Math.abs(result.getJg_sum())<Integer.parseInt(dt[0])||Math.abs(result.getJg_sum())>Integer.parseInt(dt[1]))continue;
+			if(trends[Integer.valueOf(result.getUid())-1].equals("0"))continue;
+			
+			f = result.getJg_sum()>0?-1:(result.getJg_sum()<0?1:0);
+			data[0]+=(long)result.getRets()[4]*f;
+			data[1]+=(long)result.getRets()[5]*f;
+			
+		}
+		
+		
+		return data;
+	}
+	
+	
+	public static String reckonXzbgTrend(List<InputResult> results,String oldXzbgTrend,String xzbgConfig) {
+		
+		String[] configs = xzbgConfig.split(",");
+		
+		String[] trends = oldXzbgTrend.split(",");
+		for (InputResult result : results) {
+			int i = Integer.valueOf(result.getUid())-1;
+			String[] dt = configs[i].split("-");
+			
+			int up = Integer.parseInt(dt[0]);//上边界范围
+			int down = Integer.parseInt(dt[1]);//下边界范围
+			
+			long absUp_jg_sum = Math.abs(result.getUp_jg_sum());
+			
+			long absJg_sum = Math.abs(result.getJg_sum());
+			
+			if(trends[i].equals("0")) {
+				if(absJg_sum>=absUp_jg_sum)
+					continue;
+				
+				if(absUp_jg_sum>up&&absJg_sum*absUp_jg_sum>=0&&
+						absJg_sum<=up&&absJg_sum>=down)
+					trends[i] = result.getUp_jg_sum()>0?"1":"-1";
+				
+			}else {
+				if(absJg_sum<=up&&absJg_sum>=down&&
+						absJg_sum*absUp_jg_sum>=0)
+					continue;
+					trends[i] = "0";
+			}
+			
+			
+		}
+		
+		
+		return StringUtils.join(trends, ",");
+	}
+	
+	public static Long[] reckonXzJg(String pei,Long[] upHb) {
+		//if(length>=start&&length<end) {
+		
+		Long[] qhbg = upHb;
+		
+		Integer pv = Integer.valueOf(pei);
+		long jg1 =(pv>2?qhbg[0]:-qhbg[0]);
+		long jg2 =(pv%2!=0?qhbg[1]:-qhbg[1]);
+		return new Long[] {jg1,jg2};
+		
+		//}
+		
+		//return new Long[] {0l,0l};
 		
 	}
 	
@@ -591,8 +768,98 @@ public class CountService {
 	
 	
 	
+	  private static char[] charSet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray();
+	
+    /** 
+     * 将62进制转换成10进制数 
+     *  
+     * @param ident62 
+     * @return 
+     */  
+    public static String convertBase62ToDecimal( String ident62 ) {  
+        int decimal = 0;  
+        int base = 62;  
+        int keisu = 0;  
+        int cnt = 0;  
+  
+        byte ident[] = ident62.getBytes();  
+        for ( int i = ident.length - 1; i >= 0; i-- ) {  
+            int num = 0;  
+            if ( ident[i] > 48 && ident[i] <= 57 ) {  
+                num = ident[i] - 48;  
+            }  
+            else if ( ident[i] >= 65 && ident[i] <= 90 ) {  
+                num = ident[i] - 65 + 10;  
+            }  
+            else if ( ident[i] >= 97 && ident[i] <= 122 ) {  
+                num = ident[i] - 97 + 10 + 26;  
+            }  
+            keisu = (int) java.lang.Math.pow( (double) base, (double) cnt );  
+            decimal += num * keisu;  
+            cnt++;  
+        }  
+        return String.format( "%08d", decimal );  
+    }  
+      
+    /** 
+     * 将10进制转化为62进制  
+     * @param number  
+     * @param length 转化成的62进制长度，不足length长度的话高位补0，否则不改变什么 
+     * @return 
+     */  
+    public static String _10_to_62(long number, int length){  
+         Long rest=number;  
+         Stack<Character> stack=new Stack<Character>();  
+         StringBuilder result=new StringBuilder(0);  
+         while(rest!=0){  
+             stack.add(charSet[new Long((rest-(rest/62)*62)).intValue()]);  
+             rest=rest/62;  
+         }  
+         for(;!stack.isEmpty();){  
+             result.append(stack.pop());  
+         }  
+         int result_length = result.length();  
+         StringBuilder temp0 = new StringBuilder();  
+         for(int i = 0; i < length - result_length; i++){  
+             temp0.append('0');  
+         }  
+           
+         return temp0.toString() + result.toString();  
+  
+    }
+	
 	
 	public static void main(String[] args) {
+		
+		List<InputResult> results = new ArrayList<>();
+		InputResult result = new InputResult();
+		result.setJg_sum(-5);
+		result.setUp_jg_sum(-6);
+		result.setUid("1");
+		results.add(result);
+		
+		InputResult result2 = new InputResult();
+		result2.setJg_sum(-3);
+		result2.setUp_jg_sum(-6);
+		result2.setUid("2");
+		results.add(result2);
+		InputResult result3 = new InputResult();
+		result3.setJg_sum(-2);
+		result3.setUp_jg_sum(-6);
+		result3.setUid("3");
+		results.add(result3);
+		String oldXzbgTrend = "0,0,0,0,0,0,0,0,0,0";
+		String xzbgConfig = "5-3,5-3,5-3,5-3,5-3,5-3,5-3,5-3,5-3,5-3";
+		
+		String reString = reckonXzbgTrend(results,oldXzbgTrend,xzbgConfig);
+		if(true)return;
+		
+		for (int i = 0; i < 100; i++) {
+			System.out.println(StringUtils.join(new String[]{"1","2","3"}, ","));
+		}
+		//forwardedUrl(expectedUrl)
+		
+		System.out.println(Long.toString(-73, 36).toUpperCase());
 		
 		int row = 1;
 		String queue = null;
@@ -616,8 +883,11 @@ public class CountService {
 			else gongCol+=",4444444444";
 		}
 		
+		
+		
+		
 		Long s1 = System.currentTimeMillis();
-		countQueue(row, queue, queueCounts, grpQueue, gong, gongCol, rule_type, start, end, mod2);
+		countQueue(new GameConfig(),row, queue, queueCounts, grpQueue, gong, gongCol, rule_type, start, end, mod2);
 		System.out.println("finish:"+(System.currentTimeMillis()-s1)+"ms");
 	}
 	
@@ -659,7 +929,7 @@ public class CountService {
 	}
 	
 	
-	
+
 	
 	
 }

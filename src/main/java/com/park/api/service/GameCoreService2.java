@@ -3,6 +3,8 @@ package com.park.api.service;
 import java.util.Random;
 
 import org.springframework.stereotype.Service;
+
+import com.park.api.service.bean.GameConfig;
 @Service
 public class GameCoreService2 {
 	
@@ -55,7 +57,7 @@ public class GameCoreService2 {
 	
 	static final int COUNT_VLEN = 11;
 	 
-	static final int SHENG_GROUP = 100000;//总组数
+	//static final int SHENG_GROUP = 100000;//总组数
 	/*户数*/
 	static final int SHENG_GROUP_NUM = 10;
 	static final int SHENG_ITEM_SIZE = 4;//生行一组大小
@@ -68,9 +70,9 @@ public class GameCoreService2 {
 	 * @param pei
 	 * @return 1:对 ，2：错
 	 */
-	public static String reckonDui(String sheng,String pei) {
+	public static String reckonDui(GameConfig config,String sheng,String pei) {
 		
-		int group = SHENG_GROUP;
+		int group = config.getGameGroupNum();
 		int groupLength = SHENG_ITEM_SIZE;
 		int peis1 = Integer.parseInt(pei.substring(0, 1));
 		
@@ -120,9 +122,9 @@ public class GameCoreService2 {
 		return duis.deleteCharAt(duis.length()-1).toString();
 	}
 	
-	public static String reckonDui2(String sheng,String pei) {
+	public static String reckonDui2(GameConfig config,String sheng,String pei) {
 		
-		int group = SHENG_GROUP;
+		int group = config.getGameGroupNum();
 		int groupLength = SHENG_ITEM_SIZE;
 		int peis1 = Integer.parseInt(pei.substring(0, 1));
 		
@@ -160,9 +162,9 @@ public class GameCoreService2 {
 	 * 二进制： 00000000000000000000
 	 * 36进制：00
 	 */
-	public String reckonGong(String sheng,String dui) {
+	public String reckonGong(GameConfig config,String sheng,String dui) {
 		
-		int group = SHENG_GROUP;
+		int group = config.getGameGroupNum();
 		int groupLength = SHENG_ITEM_SIZE;
 		
 		
@@ -221,8 +223,8 @@ public class GameCoreService2 {
 	 * 0：白色错
 	 * 
 	 */
-	public String reckonGongCol(String pei,String gong) {
-		int group = SHENG_GROUP;
+	public String reckonGongCol(GameConfig config,String pei,String gong) {
+		int group = config.getGameGroupNum();
 		int groupLength = SHENG_ITEM_SIZE;
 		
 		StringBuilder gongCol = new StringBuilder();

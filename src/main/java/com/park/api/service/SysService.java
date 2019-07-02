@@ -2,6 +2,8 @@ package com.park.api.service;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.park.api.ServiceManage;
 import com.park.api.dao.SysDao;
 @Service
 public class SysService {
@@ -23,5 +25,12 @@ public class SysService {
 
 	}
 	
+	
+	public <T> T getSysConfig(String ckey,Class<T> reType){
+		
+		 T t = ServiceManage.jdbcTemplate.queryForObject("select val from djt_sys where ckey=?", reType,ckey);
+		 return t;
+		
+	}
 	
 }

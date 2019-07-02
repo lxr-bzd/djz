@@ -8,7 +8,14 @@ public class InputResult {
 	
 	long[] yz;
 	
-	long tg_sum;
+	long jg_sum;
+	
+	long up_jg_sum;
+	
+	long jg_qh;
+	
+	int queueNum;
+	int queueCount;
 	
 	public String getUid() {
 		return uid;
@@ -28,11 +35,36 @@ public class InputResult {
 	public void setYz(long[] yz) {
 		this.yz = yz;
 	}
-	public long getTg_sum() {
-		return tg_sum;
+	
+	public int getQueueNum() {
+		return queueNum;
 	}
-	public void setTg_sum(long tg_sum) {
-		this.tg_sum = tg_sum;
+	public void setQueueNum(int queueNum) {
+		this.queueNum = queueNum;
+	}
+	public int getQueueCount() {
+		return queueCount;
+	}
+	public void setQueueCount(int queueCount) {
+		this.queueCount = queueCount;
+	}
+	public long getJg_sum() {
+		return jg_sum;
+	}
+	public void setJg_sum(long jg_sum) {
+		this.jg_sum = jg_sum;
+	}
+	public long getJg_qh() {
+		return jg_qh;
+	}
+	public void setJg_qh(long jg_qh) {
+		this.jg_qh = jg_qh;
+	}
+	public long getUp_jg_sum() {
+		return up_jg_sum;
+	}
+	public void setUp_jg_sum(long up_jg_sum) {
+		this.up_jg_sum = up_jg_sum;
 	}
 	
 	

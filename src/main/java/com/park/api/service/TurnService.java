@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.lxr.commons.exception.ApplicationException;
 import com.park.api.ServiceManage;
 import com.park.api.dao.CrowDao;
 import com.park.api.entity.Crow;
@@ -29,6 +30,8 @@ import com.park.api.entity.Game;
 import com.park.api.entity.InputResult;
 import com.park.api.entity.Turn;
 import com.park.api.entity.YzDto;
+import com.park.api.service.bean.GameConfig;
+import com.park.api.utils.JsonUtils;
 
 @Service
 public class TurnService {
@@ -37,6 +40,8 @@ public class TurnService {
 	
 	@Autowired
 	GameService gameService;
+	@Autowired
+	SysService sysService;
 	
 	public ThreadLocal<Turn> turn = new ThreadLocal<>();
 	public ThreadLocal<Turn> inputTurn = new ThreadLocal<>();
@@ -56,6 +61,7 @@ public class TurnService {
 					"select b.id,b.tid,b.hid,b.tg,b.tg_sum,b.rule,b.rule_type,b.ys,b.g,b.g_sum,a.uid from game_history a left join game_runing_count b on a.id=b.hid  where a.state=1 AND b.tid=?",turn.get("id"));
 			ret.put("counts", maps);
 			ret.put("turn", turn);
+			ret.put("tip_open", ServiceManage.jdbcTemplate.queryForObject("select val from djt_sys where ckey = 'tip_open'",Integer.class));
 			return ret;
 			
 		} catch (EmptyResultDataAccessException e) {
@@ -71,7 +77,7 @@ public class TurnService {
 		inputTurn.set(null);
 		
 		Turn turn = getCurrentTurn();
-		if(turn==null)doRenewTurn();
+		if(turn==null)throw new ApplicationException("請刷新到下壹輪");
 		turn = getCurrentTurn();
 		inputTurn.set(turn);
 		List<Game> games = crowDao.getGames(turn.getId());
@@ -90,22 +96,30 @@ public class TurnService {
 		
 		
 		Map<String, Object> map = ServiceManage.jdbcTemplate.queryForMap(
-				"select id, `mod`,user_lock,qh,yz,yz_jg_sum,hb,hb_jg_sum from game_turn where state=1 limit 1");
+				"select id,rule,frow, `mod`,user_lock,qh,yz,yz_jg_sum,hb,hb_jg_sum,hbqh,hbqh_sum,xz,xz_jg_sum,xzbg_lock,xzbg_config,xzbg_trend,hbbg_lock,hbbg_config from game_turn where state=1 limit 1");
 		String[] uLock = map.get("user_lock").toString().split(",");
 		
+		String[] rule = map.get("rule").toString().split(",");
+		int start = Integer.parseInt(rule[0]);
+		int end = Integer.parseInt(rule[1]);
+		int frow = Integer.parseInt( map.get("frow").toString())-1;
 		
 		
 		List<Object> upQhList = StringUtils.isEmpty(map.get("qh").toString())?
 				null:JSONArray.parseArray(map.get("qh").toString()).getJSONArray(1);
+		
+		
 		Integer[] upQh = upQhList!=null?upQhList.toArray(new Integer[upQhList.size()]):null;
-		List<Long> upYzList = StringUtils.isEmpty(map.get("yz").toString())?
-				null:JSONArray.parseArray(JSONArray.parseArray(map.get("yz").toString()).getString(1),Long.class);
-		Long[] upYz = upYzList!=null?upYzList.toArray(new Long[upYzList.size()]):null;
+		
+		Long[] upYz = JsonUtils.toLongArray(StringUtils.isNotBlank(map.get("yz").toString())?JSONArray.parseArray(map.get("yz").toString()).getString(1):null);
+		
+		Long[] upHb = JsonUtils.toLongArray(map.get("hb")!=null?map.get("hb").toString():null);
+		
+		Long[] upXz = JsonUtils.toLongArray(map.get("xz")!=null?map.get("xz").toString():null);
 		
 		
-		List<Long> upHbList = StringUtils.isEmpty(map.get("hb").toString())?
-				null:JSONArray.parseArray(map.get("hb").toString(),Long.class);
-		Long[] upHb = upHbList!=null?upHbList.toArray(new Long[upHbList.size()]):null;
+		Integer[] upHbqh = JsonUtils.toIntArray(map.get("hbqh")!=null?map.get("hbqh").toString():null);
+		
 		
 		int mod = Integer.parseInt(map.get("mod").toString());
 		Integer[] qh = new Integer[]{0,0,0,0};
@@ -113,7 +127,12 @@ public class TurnService {
 			long[] allts = new long[]{0,0,0,0 ,0,0,0,0};
 			//汇总原值
 			long[] allYz = new long[] {0,0,0,0};
+			long hzSum = 0;
+			
+			int queueCount = 0;
 			for (InputResult result : results) {
+				queueCount+=result.getQueueCount();
+				
 				if(uLock[Integer.valueOf(result.getUid())-1].equals("0"))
 					continue;
 				Object[] objs = result.getRets();
@@ -140,32 +159,47 @@ public class TurnService {
 					
 					if((long)objs[5]>0)qh[2]++;
 					if((long)objs[5]<0)qh[3]++;
+				hzSum+=result.getJg_sum();
 			}
 			
 			int mod2 = getInputTurn().get().getMod2();
-			Object[] objs = CountService.countAllTgA(allts,mod2);
+			Object[] hzBg = CountService.countAllTgA(allts,mod2);
+			
+			//计算求和报告
 			Integer[] qhBg = CountService.countQh(qh,mod2);
 			Integer[] qhJg = upQh==null?null:CountService.countQhJg(pei.substring(0, 1), upQh);
 			
+			//计算原值报告
 			YzDto yzDto = CountService.reckonYz(allYz, upYz, Long.valueOf(map.get("yz_jg_sum").toString()), pei, mod2);
 			
 			
-			
-			long[] hbBg = CountService.reckonHbBg(results, yzDto);
+			//计算合并报告
+			long[] hbBg = CountService.reckonHbBg(results, turn.getConfig(),map.get("hbbg_lock").toString(),map.get("hbbg_config").toString());
 			Long[] hbJg = upHb==null?null:CountService.reckonHbJg(pei.substring(0, 1), upHb);
 			long hbJgSum = hbJg==null?Long.valueOf(map.get("hb_jg_sum").toString()):Long.valueOf(map.get("hb_jg_sum").toString())+hbJg[0]+hbJg[1];
-			/*
-			 * long[] yzBg = CountService.reckonYzBg(allYz, mod2); Long[] yzJg =
-			 * upYz==null?null:CountService.countYzJg(pei.substring(0, 1), upYz); Long
-			 * yzJgSum = Long.valueOf(map.get("yz_jg_sum").toString())+yzJg[0]+yzJg[1];
-			 */
-			ServiceManage.jdbcTemplate.update("update game_turn set info=?,lj=lj+?"
+
+			//计算合并求和
+			Integer[] hbqhBg = CountService.countHbQh(results, turn.getConfig());
+			Integer[] hbqhJg = upHbqh==null?null:CountService.countHbQhJg(pei.substring(0, 1), upHbqh);
+			
+			//计算选择报告
+			String newXzbg_trend = CountService.reckonXzbgTrend(results, map.get("xzbg_trend").toString(), map.get("xzbg_config").toString());
+			long[] xzBg = CountService.reckonXzBg(results,map.get("xzbg_lock").toString(),newXzbg_trend);
+			Long[] xzJg = upXz==null?null:CountService.reckonXzJg(pei.substring(0, 1), upXz);
+			long xzJgSum = xzJg==null?Long.valueOf(map.get("xz_jg_sum").toString()):Long.valueOf(map.get("xz_jg_sum").toString())+xzJg[0]+xzJg[1];
+
+			
+			ServiceManage.jdbcTemplate.update("update game_turn set info=?,lj=lj+?,jg_sum=?"
 					+ ",qh=?,qh_sum=qh_sum+?,qh_jg=CONCAT(qh_jg,?),qh_last_jg=? "
 					+ ",yz=?,yz_sum=yz_sum+?,yz_jg=CONCAT(yz_jg,?),yz_jg_sum=?,yz_last_jg=?"
 					+ ",hb=?,hb_sum=hb_sum+?,hb_jg=CONCAT(hb_jg,?),hb_jg_sum=?,hb_last_jg=?"
+							+ ",xz=?,xz_sum=xz_sum+?,xz_jg=CONCAT(xz_jg,?),xz_jg_sum=?,xz_last_jg=?,xzbg_trend=?"
+					+ ",hbqh=?,hbqh_sum=hbqh_sum+?,hbqh_jg=CONCAT(hbqh_jg,?),hbqh_last_jg=? "
+					+ ",queue_count = ?"
 					+ " where id=?",
-					JSONObject.toJSONString(objs),
-					Math.abs((long)objs[4])+Math.abs((long)objs[5]),
+					JSONObject.toJSONString(hzBg),
+					Math.abs((long)hzBg[4])+Math.abs((long)hzBg[5]),
+					hzSum,
 					
 					JSONObject.toJSONString(new Object[] {qh,qhBg}),
 					Math.abs(qhBg[0])+Math.abs(qhBg[1]),
@@ -184,6 +218,19 @@ public class TurnService {
 					hbJgSum,
 					hbJg==null?"":hbJg[0]+"_"+hbJg[1],
 							
+							JSONObject.toJSONString(xzBg),
+							Math.abs(xzBg[0])+Math.abs(xzBg[1]),
+							xzJg==null?"":(xzJg[0]+xzJg[1]+","),
+							xzJgSum,
+							xzJg==null?"":xzJg[0]+"_"+xzJg[1],
+									newXzbg_trend,
+							
+					JSONObject.toJSONString(hbqhBg),
+					Math.abs(hbqhBg[0])+Math.abs(hbqhBg[1]),
+					hbqhJg==null?"":(hbqhJg[0]+hbqhJg[1]+","),
+					hbqhJg==null?"":hbqhJg[0]+"_"+hbqhJg[1],
+							
+					queueCount,
 					countTurnId.get());
 		
 		}else {//B模式
@@ -224,10 +271,20 @@ public class TurnService {
 			rule = ServiceManage.jdbcTemplate.queryForObject("select val from djt_sys where ckey='rule2'", String.class);
 		Integer mod2 =  ServiceManage.jdbcTemplate.queryForObject("select val from djt_sys where ckey='mod2'", Integer.class);
 		
+		
 		turn.setMod2(mod2);
 		turn.setMod(1);
 		turn.setRule_type(rule_type);
 		turn.setRule(rule);
+		GameConfig config = new GameConfig();
+		config.setGameGroupNum(sysService.getSysConfig("gameGroupNum", Integer.class));
+		config.setGameRowNum(sysService.getSysConfig("gameRowNum", Integer.class));
+		config.setGameGroupLen(10);
+		config.setIsTemporary(1);
+		config.setHbBg(sysService.getSysConfig("hbBg", Integer.class));
+		config.setHbQh(sysService.getSysConfig("hbQh", Integer.class));
+		turn.setConfig(config);
+		turn.setConfig_json(JSONObject.toJSONString(config));
 		
 		
 		    KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -235,12 +292,15 @@ public class TurnService {
 		            new PreparedStatementCreator() {
 		                public PreparedStatement createPreparedStatement(Connection con) throws SQLException
 		                {
-		                	PreparedStatement ps = con.prepareStatement("INSERT INTO game_turn (`mod`,`mod2`,frow,info,lj  ,qh,qh_sum,qh_jg,qh_last_jg,  yz_jg, hb_jg,`rule`,rule_type,user_lock,state)"
-		                			+ " VALUES (?,?,1,'',0  ,'',0,'',''  ,'','' ,?,?,'1,1,1,1,1,1,1,1,1,1',1)",Statement.RETURN_GENERATED_KEYS); 
+		                	PreparedStatement ps = con.prepareStatement("INSERT INTO game_turn (`mod`,`mod2`,frow,info,lj  ,qh,qh_sum,qh_jg,qh_last_jg,  yz_jg, hb_jg,hbqh_jg,`rule`,rule_type,user_lock,state,config_json"
+		                			+ ",xz_jg,xzbg_lock,xzbg_config,xzbg_trend,hbbg_lock,hbbg_config)"
+		                			+ " VALUES (?,?,1,'',0  ,'',0,'',''   ,'','',''  ,?,?,'1,1,1,1,1,1,1,1,1,1',1,?,"
+		                			+ "'','0,0,0,0,0,0,0,0,0,0','500000-0,500000-0,500000-0,500000-0,500000-0,500000-0,500000-0,500000-0,500000-0,500000-0','0,0,0,0,0,0,0,0,0,0','1,1,1,1,1,1,1,1,1,1','0-100000,0-100000,0-100000,0-100000,0-100000,0-100000,0-100000,0-100000,0-100000,0-100000')",Statement.RETURN_GENERATED_KEYS); 
 		                	ps.setInt(1, turn.getMod());
 		                	ps.setInt(2, turn.getMod2());
 		                	ps.setString(3, turn.getRule());
 		                    ps.setInt(4, turn.getRule_type());
+		                    ps.setString(5, turn.getConfig_json());
 		                	return ps;
 		                }
 		            }, keyHolder);
@@ -258,9 +318,14 @@ public class TurnService {
 
 	private Turn getCurrentTurn() {
 
-		//ServiceManage.jdbcTemplate.queryFor
-		return ServiceManage.jdbcTemplate.queryForObject("select * from game_turn where state=1 limit 1", 
-				new BeanPropertyRowMapper<Turn>(Turn.class));
+		//ServiceManage.jdbcTemplate.queryFor\
+		try {
+			return ServiceManage.jdbcTemplate.queryForObject("select * from game_turn where state=1 limit 1", 
+					new BeanPropertyRowMapper<Turn>(Turn.class));
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+		
 
 	}
 	
@@ -302,6 +367,8 @@ public class TurnService {
 	}
 
 	
-	
+	public Turn getInputTurn2() {
+		return inputTurn.get();
+	}
 
 }
