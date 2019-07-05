@@ -49,7 +49,7 @@ public class TurnService {
 	public ThreadLocal<String> countTurnId = new ThreadLocal<>();
 	public ThreadLocal<Map<String, Object>> turnCount = new ThreadLocal<>();
 	
-	public Map<String, Object> getMainModel(String uid) {
+	public Map<String, Object> getMainModel() {
 		try {
 			Map<String, Object> turn = ServiceManage.jdbcTemplate.queryForMap(
 					"select * from game_turn where state=1 limit 1");
@@ -71,14 +71,14 @@ public class TurnService {
 	}
 	
 	
-	public void doInputTurn(String pei) {
+	public void doInputTurn(String pei,int turnNo) {
 		turnCount.set(null);
 		countTurnId.set(null);
 		inputTurn.set(null);
 		
-		Turn turn = getCurrentTurn();
+		Turn turn = getCurrentTurn(turnNo);
 		if(turn==null)throw new ApplicationException("請刷新到下壹輪");
-		turn = getCurrentTurn();
+		
 		inputTurn.set(turn);
 		List<Game> games = crowDao.getGames(turn.getId());
 		
@@ -316,12 +316,11 @@ public class TurnService {
 	}
 	
 
-	private Turn getCurrentTurn() {
-
-		//ServiceManage.jdbcTemplate.queryFor\
+	private Turn getCurrentTurn(int turnNo) {
+		
 		try {
-			return ServiceManage.jdbcTemplate.queryForObject("select * from game_turn where state=1 limit 1", 
-					new BeanPropertyRowMapper<Turn>(Turn.class));
+			return ServiceManage.jdbcTemplate.queryForObject("select * from game_turn where turn_no=? AND state=1 limit 1", 
+					new BeanPropertyRowMapper<Turn>(Turn.class),turnNo);
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}

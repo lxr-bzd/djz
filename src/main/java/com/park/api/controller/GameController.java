@@ -13,6 +13,7 @@ import com.lxr.commons.exception.ApplicationException;
 import com.lxr.framework.long1.JsonResult;
 import com.park.api.ServiceManage;
 import com.park.api.common.BaseController;
+import com.park.api.service.BigTurnService;
 import com.park.api.service.GameCoreService;
 import com.park.api.service.GameService;
 import com.park.api.service.TurnService;
@@ -25,8 +26,9 @@ public class GameController extends BaseController{
 	GameService gameService;
 	
 	
+	
 	@Autowired
-	TurnService turnService;
+	BigTurnService bigTurnService;
 	
 	                                                                                                      
 	@RequestMapping("input")
@@ -37,9 +39,9 @@ public class GameController extends BaseController{
 		Integer isSu = ServiceManage.jdbcTemplate.queryForObject("select is_su from djt_user where djt_u_id = ?", Integer.class,uid);
 		if(isSu!=1)throw new ApplicationException("不是超级会员无法操作");
 		
-		turnService.doInputTurn(pei);
+		bigTurnService.doInputBigTurn(pei);
 		System.gc();
-		Object ret = turnService.getMainModel(uid);
+		Object ret = bigTurnService.getMainModel();
 		if(ret==null)throw new ApplicationException("本輪已結束");
 		return JsonResult.getSuccessResult(ret);
 	}
@@ -48,11 +50,11 @@ public class GameController extends BaseController{
 	@ResponseBody
 	public Object data() {
 		String uid = ServiceManage.securityService.getSubjectId().toString();
-		Map<String, Object> ret = turnService.getMainModel(uid);
+		Map<String, Object> ret = bigTurnService.getMainModel();
 		Integer isSu = ServiceManage.jdbcTemplate.queryForObject("select is_su from djt_user where djt_u_id = ?", Integer.class,uid);
 		if(isSu==1&&ret==null) {
-			turnService.doRenewTurn();
-			ret = turnService.getMainModel(uid);
+			bigTurnService.doRenewTurn();
+			ret = bigTurnService.getMainModel();
 			
 		}
 		
@@ -68,10 +70,10 @@ public class GameController extends BaseController{
 		String uid = ServiceManage.securityService.getSessionSubject().getId().toString();
 		Integer isSu = ServiceManage.jdbcTemplate.queryForObject("select is_su from djt_user where djt_u_id = ?", Integer.class,uid);
 		if(isSu!=1)throw new ApplicationException("不是超级会员无法操作");
-		turnService.doFinishTurn();
-		turnService.doRenewTurn();
+		bigTurnService.doFinishTurn();
+		bigTurnService.doRenewTurn();
 		
-		Map<String, Object> ret = turnService.getMainModel(uid);
+		Map<String, Object> ret = bigTurnService.getMainModel();
 		
 		return JsonResult.getSuccessResult(ret);
 	}
