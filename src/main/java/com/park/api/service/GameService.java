@@ -53,18 +53,14 @@ public class GameService {
 	
 	
 	
-	public void doNewly(String uid) {
-		Game game1 = getRuningGame(uid);
-		if(game1!=null)finishGame(game1.getUid(), game1.getId());
+	public void doNewly(Turn turn,String uid) {
+		/*
+		 * Game game1 = getRuningGame(uid); if(game1!=null)finishGame(game1.getUid(),
+		 * game1.getId());
+		 */
 		
 		//读取使用的组
 		int templateNo = getGroup(uid);
-		
-		if(turnService.getTurn().get()==null) {
-			turnService.getTurn().set(turnService.createTurn());
-		 }
-		
-		Turn turn = turnService.getTurn().get();
 		
 		Game game = new Game();
 		game.setUid(uid);
@@ -547,7 +543,7 @@ public class GameService {
 		ServiceManage.jdbcTemplate.update("INSERT INTO djt_history (tid,`hid`, `uid`, `tbNum`, `focus_row`, `queue_count`, `tg`,`tg_sum`, `rule`,ys,g,g_sum) " + 
 			 		"		 select a.tid,hid,b.uid,tbNum,focus_row,queue_count,tg,tg_sum,rule,ys,g,g_sum from game_runing_count a left join game_history b  on a.hid= b.id " + 
 			 		"		  where hid = ? limit 1",hid);
-		ServiceManage.jdbcTemplate.update("UPDATE game_turn SET state=2 WHERE id =(select tid from game_runing_count where hid = ? limit 1)",hid);
+		//ServiceManage.jdbcTemplate.update("UPDATE game_turn SET state=2 WHERE id =(select tid from game_runing_count where hid = ? limit 1)",hid);
 			
 			 String[] sqls = new String[] {
 						"delete from game_history where id="+hid,

@@ -5,7 +5,7 @@
     <properties>  
         <property name="LOG_HOME">${sys:catalina.home}/logs</property>
         <property name="ERROR_LOG_FILE_NAME">error</property>  
-           <property name="APP_NAME">sapi</property> 
+           <property name="APP_NAME">djz</property> 
     </properties>  
   
   

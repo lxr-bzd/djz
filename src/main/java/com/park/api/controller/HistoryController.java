@@ -23,7 +23,7 @@ public class HistoryController extends BaseController{
 		Map<String, Object> map = new HashMap<>();
 		map.put("turns", ServiceManage.jdbcTemplate.queryForList("SELECT a.* FROM game_turn a WHERE a.state=2"));
 		map.put("his", ServiceManage.jdbcTemplate.queryForList("SELECT a.* FROM djt_history a "));
-		
+		map.put("bigTurns", ServiceManage.jdbcTemplate.queryForList("SELECT a.* FROM game_big_turn a WHERE a.state=2"));
 		
 		return JsonResult.getSuccessResult(map);
 
@@ -36,14 +36,17 @@ public class HistoryController extends BaseController{
 			if(StringUtils.isEmpty(tid))
 				throw new ApplicationException("参数错误");
 			ServiceManage.jdbcTemplate.batchUpdate(
-					 "delete from game_turn WHERE id="+tid
-					,"delete from djt_history WHERE tid="+tid);
+					"delete from djt_history WHERE tid in (select id from game_turn  WHERE big_turn_id="+tid+")"
+					,"delete from game_turn WHERE big_turn_id="+tid
+					 ,"delete from game_big_turn WHERE id="+tid
+					);
 			
 		} 
-		if(mod.equals("2")) {
+		if(mod.equals("2")) {//全部删除
 			ServiceManage.jdbcTemplate.batchUpdate(
-					 "delete from game_turn WHERE state=2"
-					,"delete from djt_history ");
+					"delete from djt_history "
+					, "delete from game_turn WHERE state=2"
+					,"delete from game_big_turn WHERE state=2");
 		}
 		
 		

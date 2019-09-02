@@ -1,5 +1,7 @@
 package com.park.api.entity;
 
+import com.park.api.service.bean.BigTurnConfig;
+
 public class BigTurn {
 	
 	Integer id;
@@ -10,8 +12,11 @@ public class BigTurn {
 	String jg;
 	String jg_hb;
 	String gj;
-	String gj_hb;
 	Integer state;
+	String config_json;
+	
+	BigTurnConfig bigTurnConfig;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -54,11 +59,13 @@ public class BigTurn {
 	public void setGj(String gj) {
 		this.gj = gj;
 	}
-	public String getGj_hb() {
-		return gj_hb;
+	
+	
+	public String getConfig_json() {
+		return config_json;
 	}
-	public void setGj_hb(String gj_hb) {
-		this.gj_hb = gj_hb;
+	public void setConfig_json(String config_json) {
+		this.config_json = config_json;
 	}
 	public Integer getState() {
 		return state;
@@ -66,6 +73,14 @@ public class BigTurn {
 	public void setState(Integer state) {
 		this.state = state;
 	}
+	public BigTurnConfig getBigTurnConfig() {
+		return bigTurnConfig;
+	}
+	public void setBigTurnConfig(BigTurnConfig bigTurnConfig) {
+		this.bigTurnConfig = bigTurnConfig;
+	}
+	
+	
 	
 	
 	

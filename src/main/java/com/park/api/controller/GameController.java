@@ -13,6 +13,7 @@ import com.lxr.commons.exception.ApplicationException;
 import com.lxr.framework.long1.JsonResult;
 import com.park.api.ServiceManage;
 import com.park.api.common.BaseController;
+import com.park.api.entity.BigTurn;
 import com.park.api.service.BigTurnService;
 import com.park.api.service.GameCoreService;
 import com.park.api.service.GameService;
@@ -85,6 +86,7 @@ public class GameController extends BaseController{
 	public Object removeAll() {
 		
 		ServiceManage.jdbcTemplate.batchUpdate(
+				"DELETE FROM `game_big_turn` WHERE state=1",
 				"DELETE FROM `game_turn` WHERE state=1" ,
 				"TRUNCATE `game_history`" ,
 				"TRUNCATE `game_runing`" ,
@@ -118,12 +120,14 @@ public class GameController extends BaseController{
 		}
 		
 		
-		String lockStr = ServiceManage.jdbcTemplate.queryForObject("select "+fname+" from game_turn where id = ?", String.class,tid);
+		BigTurn bigTurn = bigTurnService.getCurrentTurn();
+		
+		String lockStr = ServiceManage.jdbcTemplate.queryForObject("select "+fname+" from game_turn where turn_no = 0 AND big_turn_id=?", String.class,bigTurn.getId());
 		
 		String[] locks = lockStr.split(",");
 		locks[Integer.valueOf(uid)-1] = val;
 		String newLockStr = StringUtils.join(locks, ",");
-		ServiceManage.jdbcTemplate.update("UPDATE game_turn SET "+fname+"=? WHERE id=?",newLockStr,tid);
+		ServiceManage.jdbcTemplate.update("UPDATE game_turn SET "+fname+"=? WHERE  big_turn_id=?",newLockStr, bigTurn.getId());
 		
 		return JsonResult.getSuccessResult();
 	}
@@ -151,13 +155,14 @@ public class GameController extends BaseController{
 			break;
 		}
 		
+		BigTurn bigTurn = bigTurnService.getCurrentTurn();
 		
-		String lockStr = ServiceManage.jdbcTemplate.queryForObject("select "+fname+" from game_turn where id = ?", String.class,tid);
+		String lockStr = ServiceManage.jdbcTemplate.queryForObject("select "+fname+" from game_turn where turn_no = 0 AND big_turn_id=?", String.class,bigTurn.getId());
 		
 		String[] locks = lockStr.split(",");
 		locks[Integer.valueOf(uid)-1] = val;
 		String newLockStr = StringUtils.join(locks, ",");
-		ServiceManage.jdbcTemplate.update("UPDATE game_turn SET "+fname+"=? WHERE id=?",newLockStr,tid);
+		ServiceManage.jdbcTemplate.update("UPDATE game_turn SET "+fname+"=? WHERE  big_turn_id=?",newLockStr,bigTurn.getId());
 		
 		return JsonResult.getSuccessResult();
 	}

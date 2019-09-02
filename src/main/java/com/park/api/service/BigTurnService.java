@@ -1,19 +1,32 @@
 package com.park.api.service;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.lxr.commons.exception.ApplicationException;
 import com.park.api.ServiceManage;
+import com.park.api.entity.BigInputResult;
 import com.park.api.entity.BigTurn;
+import com.park.api.entity.InputResult;
 import com.park.api.entity.Turn;
-
-import sun.org.mozilla.javascript.internal.ast.ForInLoop;
+import com.park.api.service.bean.BigTurnConfig;
 
 @Service
 public class BigTurnService {
@@ -21,58 +34,166 @@ public class BigTurnService {
 	@Autowired
 	TurnService turnService;
 	
+	@Autowired
+	SysService sysService;
+	
 	 public void doInputBigTurn(String pei) {
-		 BigTurn bigTurn = getCreateTurn();
+		 BigTurn bigTurn = getCurrentTurn();
 		 if(bigTurn==null)throw new ApplicationException("请刷新本轮");
 		 
-		 for (int i = 0; i < 10; i++) {
+		 List<BigInputResult> results = new ArrayList<>();
+		 
+		 for (int i = 0; i < bigTurn.getBigTurnConfig().getTurnNum(); i++) {
 			 
-			 turnService.doInputTurn(pei, i);
+			 BigInputResult bigInputResult = turnService.doInputTurn(pei,bigTurn, i);
+			 results.add(bigInputResult);
 			
 		}
 		 
+		Long[][] newbBg = handelBg(results);
+		List<Long> gjList = JSONArray.parseArray(bigTurn.getGj(), Long.class);
+		Long[] newGj = handelGj(gjList.toArray(new Long[gjList.size()]),newbBg);
+		
+		ServiceManage.jdbcTemplate.update("UPDATE `game_big_turn` SET `frow` = ?, `bg` = ?,  `gj` = ? ,`state` = 1 WHERE `id` = ?" 
+				,bigTurn.getFrow()+1,
+				JSONObject.toJSONString(newbBg),
+				JSONObject.toJSONString(newGj),
+				bigTurn.getId()
+				);
+		
 		 
 	 }
 	 
 	 
-	 public Map<Integer, Object> getMainModel() {
-		 if(getCreateTurn()==null)return null;
+	 public Map<String, Object> getMainModel() {
+		 BigTurn bigTurn = getCurrentTurn();
+		 if(bigTurn==null)return null;
 		 
-		 Map<Integer, Object> map = new HashMap<Integer, Object>();
+		 Map<String, Object> map = new HashMap<String, Object>();
 		 
-		 for (int i = 0; i < 10; i++) {
-			 map.put(i, turnService.getMainModel());
+		 for (int i = 0; i < bigTurn.getBigTurnConfig().getTurnNum(); i++) {
+			 map.put(i+"", turnService.getMainModel(bigTurn,i));
 		}
-		 
+		 map.put("bigTurn", bigTurn);
 		 return map;
 	 }
 	 
 	public void doRenewTurn(){
 		
-		 for (int i = 0; i < 10; i++) {
-			 turnService.doRenewTurn();
+		BigTurn bigTurn = createBigTurn();
+		
+		 for (int i = 0; i < bigTurn.getBigTurnConfig().getTurnNum(); i++) {
+			 turnService.doRenewTurn(bigTurn,i);
 		}
 		 
 	}
 	
 	public void doFinishTurn(){
 		
-		 for (int i = 0; i < 10; i++) {
-			 turnService.doFinishTurn();
+		BigTurn bigTurn = getCurrentTurn();
+		if(bigTurn==null)return;
+		
+		 for (int i = 0; i < bigTurn.getBigTurnConfig().getTurnNum(); i++) {
+			 turnService.doFinishTurn(bigTurn,i);
 		}
 		
+		 ServiceManage.jdbcTemplate.update("UPDATE game_big_turn SET state=2 WHERE id =?",bigTurn.getId());
+			
 		
 	}
 	
 	
-	BigTurn getCreateTurn() {
+	public BigTurn createBigTurn() {
+		
+		BigTurnConfig config = new BigTurnConfig();
+		config.setTurnNum(sysService.getSysConfig("turn_num", Integer.class));
+		config.setConfLen(sysService.getSysConfig("conf_len", Integer.class));
+		config.setTgMod(sysService.getSysConfig("tg_mod", Integer.class));
+		config.setTgThre(sysService.getSysConfig("tg_thre", Integer.class));
+		
+		final BigTurn bigTurn = new BigTurn();
+		bigTurn.setFrow(1);
+		bigTurn.setGj("[0,0,0,0,0,0,0,0,0,0,0,0,0]");
+		bigTurn.setConfig_json(JSONObject.toJSONString(config));
+		bigTurn.setBigTurnConfig(config);
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+	    ServiceManage.jdbcTemplate.update(
+	            new PreparedStatementCreator() {
+	                public PreparedStatement createPreparedStatement(Connection con) throws SQLException
+	                {
+	                	PreparedStatement ps = con.prepareStatement("INSERT INTO `game_big_turn`( `frow`, `bg`, `bg_hb`, `jg`, `jg_hz`, `gj`,`config_json`, `state`) "
+	                			+ "VALUES ( ?, '', '', '', '', ?,?, 1)" 
+	                			,Statement.RETURN_GENERATED_KEYS); 
+	                	
+	                	ps.setInt(1, bigTurn.getFrow());
+	                	ps.setString(2, bigTurn.getGj());
+	                	ps.setString(3, bigTurn.getConfig_json());
+	                	return ps;
+	                }
+	            }, keyHolder);
+	    bigTurn.setId(keyHolder.getKey().intValue());
+	    return bigTurn;
+	}
+	
+	public BigTurn getCurrentTurn() {
 		try {
-			return ServiceManage.jdbcTemplate.queryForObject("select * from game_big_turn where turn_no=? AND state=1 limit 1", 
+			
+			BigTurn bigTurn = ServiceManage.jdbcTemplate.queryForObject("select * from game_big_turn where  state=1 limit 1", 
 					new BeanPropertyRowMapper<BigTurn>(BigTurn.class));
+			if(StringUtils.isNotBlank(bigTurn.getConfig_json()))
+				bigTurn.setBigTurnConfig(JSONObject.parseObject(bigTurn.getConfig_json(), BigTurnConfig.class));
+			BigTurnConfig config = bigTurn.getBigTurnConfig();
+			config.setConfLen(sysService.getSysConfig("conf_len", Integer.class));
+			config.setTgThre(sysService.getSysConfig("tg_thre", Integer.class));
+			
+			
+			return bigTurn;
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
 	}
 	
+	
+	private Long[][] handelBg( List<BigInputResult> results) {
+		Long[][] ret= new Long[][] {new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L}};
+		
+		for (BigInputResult bigInputResult : results) {
+			
+			for (InputResult inputResult : bigInputResult.getResults()) {
+				int i = Integer.valueOf(inputResult.getUid())-1;
+				ret[i][0]+=(long)inputResult.getRets()[4];
+				ret[i][1]+=(long)inputResult.getRets()[5];
+			}
+			if(bigInputResult.getHzBg()!=null) {
+				ret[10][0]+=(long)bigInputResult.getHzBg()[0];
+				ret[10][1]+=(long)bigInputResult.getHzBg()[1];
+			}
+			
+			if(bigInputResult.getHbBg()!=null) {
+				ret[11][0]+=(long)bigInputResult.getHbBg()[0];
+				ret[11][1]+=(long)bigInputResult.getHbBg()[1];
+				
+			}
+			
+			if(bigInputResult.getXzBg()!=null) {
+			ret[12][0]+=(long)bigInputResult.getXzBg()[0];
+			ret[12][1]+=(long)bigInputResult.getXzBg()[1];
+			}
+		}
+		
+		return ret;
+
+	}
+	
+	private Long[] handelGj(Long[] oldGj,Long[][] newbBg) {
+		Long[] gj = new Long[13];
+		
+		for (int i = 0; i < gj.length; i++) {
+			gj[i] = oldGj[i]+Math.abs(newbBg[i][0])+Math.abs(newbBg[i][1]);
+		}
+		
+		return gj;
+		
+	}
 
 }

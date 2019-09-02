@@ -61,16 +61,14 @@
 											<col style="width:100px;"><col style="width:60px;">
 											<col style="width:60px;">
 											<col style="width:120px;"><col style="width:80px;">
-											<col style="width:120px;"><col style="width:80px;">
-											<col style="width:120px;"><col style="width:80px;">
-											<col style="width:120px;"><col style="width:80px;">
+											
 											<col style="width:120px;"><col style="width:80px;">
 											<col style="width:120px;"><col style="width:80px;">
 											<col style="width:120px;">
 											
 										</colgroup>
 								<tbody id="head_group">
-							  	<tr class="data_col"> <td colspan="1"><a href="javascript:history.back(-1)">返回</a></td><td colspan="33">歷史記錄</td><td colspan="1"><a href="javascript:history.back(-1)">返回</a></td></tr>
+							  	<tr class="data_col"> <td colspan="1"><a href="javascript:history.back(-1)">返回</a></td><td colspan="27">歷史記錄</td><td colspan="1"><a href="javascript:history.back(-1)">返回</a></td></tr>
 							  	<tr class="data_col">
 							    	<td rowspan="2">序號</td>
 							    	<td colspan="2">1號</td>
@@ -85,10 +83,10 @@
 							    	<td colspan="2">10號</td>
 							    	<td rowspan="2">序號</td>
 							    	<td colspan="2">匯總結果</td>
-							    	<td colspan="2">求和結果</td>
-							    	<td colspan="2">原值結果</td>
+							    	<!-- <td colspan="2">求和結果</td>
+							    	<td colspan="2">原值結果</td> -->
 							    	<td colspan="2">合并報告</td>
-							    	<td colspan="2">合并求和</td>
+							    	<!-- <td colspan="2">合并求和</td> -->
 							    	<td colspan="2">選擇報告</td>
 							    	<td rowspan="2"><a href="javascript:tableExport()">導出</a></td>
 							    	
@@ -117,14 +115,10 @@
 							    	
 							    	<td >結果</td>
 							    	<td >求和</td>
+							    	
 							    	<td >結果</td>
 							    	<td >求和</td>
-							    	<td >結果</td>
-							    	<td >求和</td>
-							    	<td >結果</td>
-							    	<td >求和</td>
-							    	<td >結果</td>
-							    	<td >求和</td>
+							    	
 							    	<td >結果</td>
 							    	<td >求和</td>
 							  	</tr>
@@ -152,10 +146,6 @@
 											<col style="width:100px;"><col style="width:60px;">
 											<col style="width:100px;"><col style="width:60px;">
 											<col style="width:60px;">
-											<col style="width:120px;"><col style="width:80px;">
-											<col style="width:120px;"><col style="width:80px;">
-											<col style="width:120px;"><col style="width:80px;">
-											<col style="width:120px;"><col style="width:80px;">
 											<col style="width:120px;"><col style="width:80px;">
 											<col style="width:120px;"><col style="width:80px;">
 											<col style="width:120px;"><col style="width:80px;">
@@ -195,11 +185,11 @@
 							    	<td colspan="2">9號</td>
 							    	<td colspan="2">10號</td>
 							    	<td rowspan="2">序號</td>
-							    	<td colspan="2">匯總結果</td>
+							    	<td colspan="2">匯總結果</td><!-- 
 							    	<td colspan="2">求和結果</td>
-							    	<td colspan="2">原值結果</td>
-							    	<td colspan="2">合并報告</td>
-							    	<td colspan="2">合并求和</td>
+							    	<td colspan="2">原值結果</td> -->
+							    	<td colspan="2">合并報告</td><!-- 
+							    	<td colspan="2">合并求和</td> -->
 							    	<td colspan="2">選擇報告</td>
 							    	<td rowspan="2"><a href="javascript:del(2)">刪除全部</a></td>
 							    	
@@ -224,6 +214,8 @@
 		<script src="../js/tableExport.min.js"></script>
 		<script src="../js/jquery.base64.js"></script>
 		
+		<script src="./js/turn-core.js"></script>
+		
 		<script type="text/javascript">
 		
 		$(function(){
@@ -238,200 +230,14 @@
 			
 		});
 		
-		// L  X  D  S
-		// 老 少 男 女
-		var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 		
-		function initViewData(data){
-			 
-			var mod = data.turn.mod;
-			var turn = initTurn(data.turn);
-			var counts = data.counts;
-			var bgData = {hb:mod==1?bgA(turn.info):bgB(turn.info)}; bgData['hb'].push(turn.lj);
-			var jgData = {hb:{list:[],jg:0,qh:0}};
-			for (var i = 0; i < counts.length; i++) {
-				var count = counts[i];
-				count.g = eval(count.g);
-				bgData[count.uid] = mod==1?bgA(count.g):bgB(count.g);
-				bgData[count.uid].push(count.g_sum);
-				jgData[count.uid] = {list:[],jg:count.tg_sum,qh:0};
-				var ts = count.tg?count.tg.split(","):[];
-				for (var j = 0; j < ts.length; j++) {
-					if(!ts[j])continue;
-					var jg = jgData[count.uid];
-					var v = new Number(ts[j].split("_")[0])+new Number(ts[j].split("_")[1]);
-					jg.list[j] = v;
-					jg.qh+=(v>0?1:(v<0?-1:0));
-					if(turn.user_lock[count.uid-1]=='1'){
-						if(isNaN(jgData['hb'].list[j]))jgData['hb'].list[j] = 0;
-						jgData['hb'].list[j]+=v;
-						
-					}
-					
-				}
-			}
-			
-			for (var i = 0; i < jgData['hb'].list.length; i++) {
-				var v = jgData['hb'].list[i];
-				jgData['hb'].jg+=v;
-				jgData['hb'].qh+=(v>0?1:(v<0?-1:0));
-				
-			}
-			//處理求和結果
-			
-			turn.qh = eval(turn.qh );
-			var qhBg = createBg([turn.qh[1][0],turn.qh[1][1]]);qhBg.push(turn.qh_sum);
-			bgData['qhBg'] =qhBg;
-			var qhJg = {list:[null],jg:0,qh:0};
-			jgData['qhBg'] =qhJg;
-			
-			var qhjgs = turn.qh_jg?turn.qh_jg.split(","):[];
-			for (var i = 0; i < qhjgs.length; i++) {
-				if(!qhjgs[i])continue;
-				var v = new Number(qhjgs[i]);
-				qhJg.list.push(v);
-				qhJg.jg+=v;
-				qhJg.qh+=(v>0?1:(v<0?-1:0));
-			}
-			/* 开始处理原值数据 */
-			
-			turn.yz = eval(turn.yz );
-			var yzBg = createBg([turn.yz[1][0],turn.yz[1][1]]);
-			yzBg.push(turn.yz_sum);
-			bgData['yzBg'] =yzBg;
-			var yzJg = {list:[null],jg: turn.yz_jg_sum,qh:0}
-			jgData['yzBg'] =yzJg;
-			var yzjgs = turn.yz_jg?turn.yz_jg.split(","):[];
-			for (var i = 0; i < yzjgs.length; i++) {
-				if(!yzjgs[i])continue;
-				var v = new Number(yzjgs[i]);
-				yzJg.list.push(v);
-				yzJg.qh+=(v>0?1:(v<0?-1:0));
-			}
-			
-			/* 结束处理原值数据 */
-			
-			
-			/* 开始处理合并报告  */
-			turn.hb = eval(turn.hb );
-			var hbBgData = createBg(turn.hb);
-			hbBgData.push(turn.hb_sum);
-			bgData["hbBg"] = hbBgData;
-			
-			
-			jgData['hbBg'] = {list:[null],jg:turn.hb_jg_sum,qh:0};
-			var hbjgs = turn.hb_jg?turn.hb_jg.split(","):[];
-			for (var i = 0; i < hbjgs.length; i++) {
-				if(!hbjgs[i])continue;
-				var v = new Number(hbjgs[i]);
-				jgData['hbBg'].list.push(v);
-				jgData['hbBg'].qh+=(v>0?1:(v<0?-1:0));
-			}
-			
-			
-			/* 结束处理合并报告  */
-			/* 开始处理合并求和  */
-		turn.hbqh = eval(turn.hbqh );
-		var hbqhBgData = createBg(turn.hbqh);
-		hbqhBgData.push(turn.hbqh_sum);
-		bgData["hbqh"] = hbqhBgData;
+
 		
-		
-		jgData['hbqh'] = {list:[null],jg:0,qh:0};
-		var hbqhjgs = turn.hbqh_jg?turn.hbqh_jg.split(","):[];
-		for (var i = 0; i < hbqhjgs.length; i++) {
-			if(!hbqhjgs[i])continue;
-			var v = new Number(hbqhjgs[i]);
-			jgData['hbqh'].list.push(v);
-			jgData['hbqh'].qh+=(v>0?1:(v<0?-1:0));
-			jgData['hbqh'].jg+=v;
-		}
-		
-		
-		/* 结束处理合并合并求和  */
-		
-		/* 开始处理选择报告  */
-		turn.xz = eval(turn.xz );
-		var xzBgData = createBg(turn.xz);
-		xzBgData.push(turn.xz_sum);
-		bgData["xzBg"] = xzBgData;
-		
-		
-		jgData['xzBg'] = {list:[null],jg:turn.xz_jg_sum,qh:0};
-		var xzjgs = turn.xz_jg?turn.xz_jg.split(","):[];
-		for (var i = 0; i < xzjgs.length; i++) {
-			if(!xzjgs[i])continue;
-			var v = new Number(xzjgs[i]);
-			jgData['xzBg'].list.push(v);
-			jgData['xzBg'].qh+=(v>0?1:(v<0?-1:0));
-		}
-		
-		
-		/* 结束处理选择报告  */
-		
-			
-			return {turn:turn,bgData:bgData,jgData:jgData};
-			
-			function bgA(g){
-				var ret = [{name:'',val:''},{name:'',val:''},0];
-				ret[0].name = g[4]>0?conf1.L:(g[4]<0?conf1.X:'');
-				ret[0].val = ret[0].name?Math.abs(g[4]):0;
-				ret[1].name = g[5]>0?conf1.D:(g[5]<0?conf1.S:'');
-				ret[1].val = ret[1].name?Math.abs(g[5]):0;
-				ret[2] = ret[0].val+ret[1].val
-				return ret;
-				
-			}
-			function bgB(g){
-				
-				
-			}
-			
-			function createBg(arr){
-				var ret = [{name:'',val:''},{name:'',val:''},0];
-				ret[0].name = arr[0]>0?conf1.L:(arr[0]<0?conf1.X:'');
-				ret[0].val = ret[0].name?Math.abs(arr[0]):0;
-				ret[1].name = arr[1]>0?conf1.D:(arr[1]<0?conf1.S:'');
-				ret[1].val = ret[1].name?Math.abs(arr[1]):0;
-				ret[2] = ret[0].val+ret[1].val
-				return ret;
-				
-			}
-			
-			
-		}
-		
-		function initTurn(oldTurn){
-			var turn = oldTurn;
-			turn.info = eval(turn.info);
-			turn.user_lock = turn.user_lock.split(',');
-			return turn;
-		}
-		
-		function getDefVData(turn){
-			
-			
-			return{"turn":initTurn(turn)
-				,"bgData":{ "hb":[{"name":'',"val":0},{"name":"","val":0},0,0]
-					,"hbBg":[{"name":'',"val":0},{"name":"","val":0},0,0]
-					,"yzBg":[{"name":'',"val":0},{"name":"","val":0},0,0]
-					,"qhBg":[{"name":'',"val":0},{"name":"","val":0},0,0]
-					,"hbqh":[{"name":'',"val":0},{"name":"","val":0},0,0]
-				,"xzBg":[{"name":'',"val":0},{"name":"","val":0},'','']}
-			,"jgData":{ "hb":{"list":[],"jg":0,"qh":0}
-						,"hbBg":{"list":[],"jg":0,"qh":0}
-						,"yzBg":{"list":[],"jg":0,"qh":0}
-						,"qhBg":{"list":[],"jg":0,"qh":0}
-						,"hbqh":{"list":[],"jg":0,"qh":0}
-						,"xzBg":{"list":[],"jg":0,"qh":0}
-						}
-			
-			}
-			}
 		
 		
 		function ref(data){
-			console.log(data)
+			console.log(data);
+			var bigTurns = data.bigTurns||[];
 			var turns = data.turns||[];
 			var his = data.his||[];
 			var hisMap  = {};
@@ -439,19 +245,31 @@
 				if(!hisMap[his[i].tid])hisMap[his[i].tid] = [];
 				hisMap[his[i].tid].push(his[i]);
 			}
-			var vData = [];
-			var sumData = {hb:{jg:0,qh:0},hbBg:{jg:0,qh:0},qh:{sum:0,qh:0,jg:0},yz:{sum:0,qh:0,jg:0},hbqh:{sum:0,qh:0,jg:0},xzBg:{sum:0,qh:0,jg:0}};
-			var gHzData = {hb:0,qh:0,yz:0,hbBg:0,hbqh:0,xzBg:0};
+			var vDataMap = [];
 			for (var i = 0; i < turns.length; i++) {
-				//if(turns[i].frow<4)continue;
+				
 				if(turns[i].frow>=4)
 					var tData = initViewData({turn:turns[i],counts:hisMap[turns[i].id]});
-				else var tData = getDefVData(turns[i]);
+				else var tData = getDefVdata(turns[i]);
+				if(!vDataMap[tData.turn.big_turn_id])vDataMap[tData.turn.big_turn_id] = [];
+				vDataMap[tData.turn.big_turn_id].push(tData);
+			}
+			
+			console.log(vDataMap);
+			var vData = [];
+			
+			
+			var sumData = {hb:{jg:0,qh:0},hbBg:{jg:0,qh:0},qh:{sum:0,qh:0,jg:0},yz:{sum:0,qh:0,jg:0},hbqh:{sum:0,qh:0,jg:0},xzBg:{sum:0,qh:0,jg:0}};
+			var gHzData = {hb:0,qh:0,yz:0,hbBg:0,hbqh:0,xzBg:0};
+			
+			for (var i = 0; i < bigTurns.length; i++) {
+				bigTurns[i].bigTurnConfig = eval("("+bigTurns[i].config_json+")");
+				var tData = createBigVdata(bigTurns[i],vDataMap[bigTurns[i].id]);
 				 
 				console.log(tData);
 				
 				vData.push(tData);
-				sumData['xzBg'].jg+=tData.jgData['xzBg'].jg;
+				/* sumData['xzBg'].jg+=tData.jgData['xzBg'].jg;
 				sumData['xzBg'].qh+=tData.jgData['xzBg'].qh;
 				
 				sumData['hbqh'].jg+=tData.jgData['hbqh'].jg;
@@ -469,18 +287,19 @@
 				gHzData.yz+=tData.bgData["yzBg"][3];
 				gHzData.hbBg+=tData.bgData["hbBg"][3];
 				gHzData.hbqh+=tData.bgData["hbqh"][3];
-				gHzData.xzBg+=tData.bgData["xzBg"][3];
-				for (var j = 0; j < 10; j++) {
+				gHzData.xzBg+=tData.bgData["xzBg"][3]; */
+				var index = [1,2,3,4,5,6,7,8,9,10,'hb'/* ,'xzBg','yz' */,'hbBg',/* 'hbqh', */'xzBg']
+				for (var j = 0; j < index.length; j++) {
+					var col = index[j];
+					if(!sumData[col])sumData[col] = {jg:0,qh:0};
+					if(!gHzData[col])gHzData[col] = 0;
 					
-					if(!sumData[j+1])sumData[j+1] = {jg:0,qh:0};
-					if(!gHzData[j+1])gHzData[j+1] = 0;
-					
-					if(tData.jgData[j+1]){
-						sumData[j+1].jg+=tData.jgData[j+1].jg;
-						sumData[j+1].qh+=tData.jgData[j+1].qh;
+					if(tData.jgData[col]){
+						sumData[col].jg+=tData.jgData[col].jg;
+						sumData[col].qh+=tData.jgData[col].qh;
 					}
-					if(tData.bgData[j+1]){
-						gHzData[j+1]+=tData.bgData[j+1][3];
+					if(tData.bgData[col]){
+						gHzData[col]+=isNaN(tData.bgData[col][3])?0:new Number(tData.bgData[col][3]);
 					}
 					
 				}
@@ -550,18 +369,15 @@
 		
 		<script type="text/html" id="tb_tmpl">
 		{{each vData as tData j}}
-			<tr class="data_col "><td>{{tData.turn.id}}</td>
+			<tr class="data_col "><td>{{tData.bigTurn.id}}</td>
 				{{each u as val i}}
 					{{if tData.jgData[i+1]}}<td {{if tData.jgData[i+1].jg>0}}class="red"{{/if}}>{{tData.jgData[i+1].jg}}</td><td {{if tData.jgData[i+1].qh>0}}class="red"{{/if}}>{{tData.jgData[i+1].qh}}</td>{{else}}<td></td><td></td>{{/if}}
 				{{/each}}
-				<td>{{tData.turn.id}}</td>
+				<td>{{tData.bigTurn.id}}</td>
 				<td {{if tData.jgData['hb'].jg>0}}class="red"{{/if}}>{{tData.jgData['hb'].jg}}</td><td {{if tData.jgData['hb'].qh>0}}class="red"{{/if}}>{{tData.jgData['hb'].qh}}</td>
-				<td {{if tData.jgData['qhBg'].jg>0}}class="red"{{/if}}>{{tData.jgData['qhBg'].jg}}</td><td {{if tData.jgData['qhBg'].qh>0}}class="red"{{/if}}>{{tData.jgData['qhBg'].qh}}</td>
-				<td {{if tData.jgData['yzBg'].jg>0}}class="red"{{/if}}>{{tData.jgData['yzBg'].jg}}</td><td {{if tData.jgData['yzBg'].qh>0}}class="red"{{/if}}>{{tData.jgData['yzBg'].qh}}</td>
 				<td {{if tData.jgData['hbBg'].jg>0}}class="red"{{/if}}>{{tData.jgData['hbBg'].jg}}</td><td {{if tData.jgData['hbBg'].qh>0}}class="red"{{/if}}>{{tData.jgData['hbBg'].qh}}</td>	
-				<td {{if tData.jgData['hbqh'].jg>0}}class="red"{{/if}}>{{tData.jgData['hbqh'].jg}}</td><td {{if tData.jgData['hbqh'].qh>0}}class="red"{{/if}}>{{tData.jgData['hbqh'].qh}}</td>
 				<td {{if tData.jgData['xzBg'].jg>0}}class="red"{{/if}}>{{tData.jgData['xzBg'].jg}}</td><td {{if tData.jgData['xzBg'].qh>0}}class="red"{{/if}}>{{tData.jgData['xzBg'].qh}}</td>					
-<td><a href="javascript:del(1,{{tData.turn.id}})">刪除</a></td>
+<td><a href="javascript:del(1,{{tData.bigTurn.id}})">刪除</a></td>
 			</tr>
 		{{/each}}
 			<tr class="data_col blue2"><td>匯總</td>
@@ -570,10 +386,7 @@
 				{{/each}}
 				<td>匯總</td>
 				<td {{if sumData['hb'].jg>0}}class="red"{{/if}}>{{sumData['hb'].jg}}</td><td {{if sumData['hb'].qh>0}}class="red"{{/if}}>{{sumData['hb'].qh}}</td>
-				<td {{if sumData['qh'].jg>0}}class="red"{{/if}}>{{sumData['qh'].jg}}</td><td {{if sumData['qh'].qh>0}}class="red"{{/if}}>{{sumData['qh'].qh}}</td>
-				<td {{if sumData['yz'].jg>0}}class="red"{{/if}}>{{sumData['yz'].jg}}</td><td {{if sumData['yz'].qh>0}}class="red"{{/if}}>{{sumData['yz'].qh}}</td>
 				<td {{if sumData['hbBg'].jg>0}}class="red"{{/if}}>{{sumData['hbBg'].jg}}</td><td {{if sumData['hbBg'].qh>0}}class="red"{{/if}}>{{sumData['hbBg'].qh}}</td>				
-				<td {{if sumData['hbqh'].jg>0}}class="red"{{/if}}>{{sumData['hbqh'].jg}}</td><td {{if sumData['hbqh'].qh>0}}class="red"{{/if}}>{{sumData['hbqh'].qh}}</td>				
 				<td {{if sumData['xzBg'].jg>0}}class="red"{{/if}}>{{sumData['xzBg'].jg}}</td><td {{if sumData['xzBg'].qh>0}}class="red"{{/if}}>{{sumData['xzBg'].qh}}</td>				
 									
 <td>匯總</td>
@@ -584,10 +397,7 @@
 				{{/each}}
 				<td>共計</td>
 				<td colspan="2"  {{if gHzData['hb']>0}}class=""{{/if}}>{{gHzData['hb']}}</td>
-				<td colspan="2"  {{if gHzData['qh']>0}}class=""{{/if}}>{{gHzData['qh']}}</td>
-				<td colspan="2"  {{if gHzData['yz']>0}}class=""{{/if}}>{{gHzData['yz']}}</td>
 				<td colspan="2"  {{if gHzData['hbBg']>0}}class=""{{/if}}>{{gHzData['hbBg']}}</td>
-				<td colspan="2"  {{if gHzData['hbqh']>0}}class=""{{/if}}>{{gHzData['hbqh']}}</td>
 				<td colspan="2"  {{if gHzData['xzBg']>0}}class=""{{/if}}>{{gHzData['xzBg']}}</td>				
 <td>共計</td>
 			</tr>

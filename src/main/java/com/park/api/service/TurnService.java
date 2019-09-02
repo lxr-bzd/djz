@@ -25,6 +25,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.lxr.commons.exception.ApplicationException;
 import com.park.api.ServiceManage;
 import com.park.api.dao.CrowDao;
+import com.park.api.entity.BigInputResult;
+import com.park.api.entity.BigTurn;
 import com.park.api.entity.Crow;
 import com.park.api.entity.Game;
 import com.park.api.entity.InputResult;
@@ -49,10 +51,10 @@ public class TurnService {
 	public ThreadLocal<String> countTurnId = new ThreadLocal<>();
 	public ThreadLocal<Map<String, Object>> turnCount = new ThreadLocal<>();
 	
-	public Map<String, Object> getMainModel() {
+	public Map<String, Object> getMainModel(BigTurn bigTurn,Integer turnNo) {
 		try {
 			Map<String, Object> turn = ServiceManage.jdbcTemplate.queryForMap(
-					"select * from game_turn where state=1 limit 1");
+					"select * from game_turn where big_turn_id=? AND turn_no=? limit 1",bigTurn.getId(),turnNo);
 			
 			Map<String, Object> ret = new HashMap<>();
 			
@@ -71,12 +73,15 @@ public class TurnService {
 	}
 	
 	
-	public void doInputTurn(String pei,int turnNo) {
+	public BigInputResult doInputTurn(String pei,BigTurn bigTurn,int turnNo) {
+		
+		
+		
 		turnCount.set(null);
 		countTurnId.set(null);
 		inputTurn.set(null);
 		
-		Turn turn = getCurrentTurn(turnNo);
+		Turn turn = getCurrentTurn(bigTurn,turnNo);
 		if(turn==null)throw new ApplicationException("請刷新到下壹輪");
 		
 		inputTurn.set(turn);
@@ -91,12 +96,13 @@ public class TurnService {
 		
 		
 		ServiceManage.jdbcTemplate.update("UPDATE game_turn SET frow=frow+1 WHERE id=?",turn.getId());
-		
-		if(countTurnId.get()==null)return;
+		BigInputResult bigInputResult = new BigInputResult();
+		bigInputResult.setResults(results);
+		if(countTurnId.get()==null)return bigInputResult;
 		
 		
 		Map<String, Object> map = ServiceManage.jdbcTemplate.queryForMap(
-				"select id,rule,frow, `mod`,user_lock,qh,yz,yz_jg_sum,hb,hb_jg_sum,hbqh,hbqh_sum,xz,xz_jg_sum,xzbg_lock,xzbg_config,xzbg_trend,hbbg_lock,hbbg_config from game_turn where state=1 limit 1");
+				"select id,rule,frow, `mod`,user_lock,qh,yz,yz_jg_sum,hb,hb_jg_sum,hbqh,hbqh_sum,xz,xz_jg_sum,xzbg_lock,xzbg_config,xzbg_trend,hbbg_lock,hbbg_config,hbbg_trend from game_turn where id=? limit 1",turn.getId());
 		String[] uLock = map.get("user_lock").toString().split(",");
 		
 		String[] rule = map.get("rule").toString().split(",");
@@ -174,7 +180,11 @@ public class TurnService {
 			
 			
 			//计算合并报告
-			long[] hbBg = CountService.reckonHbBg(results, turn.getConfig(),map.get("hbbg_lock").toString(),map.get("hbbg_config").toString());
+			
+			String[] newHbbgConfigAndTrend = CountService.reckonHbbgTrend(results, map.get("hbbg_trend").toString(), map.get("hbbg_config").toString(),map.get("xzbg_config").toString(),bigTurn.getBigTurnConfig());
+			String newHbbg_config = newHbbgConfigAndTrend[0];
+			String newHbbg_trend = newHbbgConfigAndTrend[2];
+			long[] hbBg = CountService.reckonHbBg(results,map.get("hbbg_lock").toString(),newHbbg_trend,bigTurn.getBigTurnConfig());
 			Long[] hbJg = upHb==null?null:CountService.reckonHbJg(pei.substring(0, 1), upHb);
 			long hbJgSum = hbJg==null?Long.valueOf(map.get("hb_jg_sum").toString()):Long.valueOf(map.get("hb_jg_sum").toString())+hbJg[0]+hbJg[1];
 
@@ -183,17 +193,24 @@ public class TurnService {
 			Integer[] hbqhJg = upHbqh==null?null:CountService.countHbQhJg(pei.substring(0, 1), upHbqh);
 			
 			//计算选择报告
-			String newXzbg_trend = CountService.reckonXzbgTrend(results, map.get("xzbg_trend").toString(), map.get("xzbg_config").toString());
-			long[] xzBg = CountService.reckonXzBg(results,map.get("xzbg_lock").toString(),newXzbg_trend);
+			String newXzbg_config = newHbbgConfigAndTrend[1];
+			String[] newXzbgConfigAndTrend = CountService.reckonXzbgTrend(results, map.get("xzbg_trend").toString(), newXzbg_config,bigTurn.getBigTurnConfig());
+			
+			//String newXzbg_config = newXzbgConfigAndTrend[0];
+			String newXzbg_trend = newXzbgConfigAndTrend[1];
+			long[] xzBg = CountService.reckonXzBg(results,map.get("xzbg_lock").toString(),newXzbg_trend,bigTurn.getBigTurnConfig());
 			Long[] xzJg = upXz==null?null:CountService.reckonXzJg(pei.substring(0, 1), upXz);
 			long xzJgSum = xzJg==null?Long.valueOf(map.get("xz_jg_sum").toString()):Long.valueOf(map.get("xz_jg_sum").toString())+xzJg[0]+xzJg[1];
 
-			
+			//构建返回参数
+			bigInputResult.setHzBg(new long[] {(long)hzBg[4],(long)hzBg[5]});
+			bigInputResult.setHbBg(hbBg);
+			bigInputResult.setXzBg(xzBg);
 			ServiceManage.jdbcTemplate.update("update game_turn set info=?,lj=lj+?,jg_sum=?"
 					+ ",qh=?,qh_sum=qh_sum+?,qh_jg=CONCAT(qh_jg,?),qh_last_jg=? "
 					+ ",yz=?,yz_sum=yz_sum+?,yz_jg=CONCAT(yz_jg,?),yz_jg_sum=?,yz_last_jg=?"
-					+ ",hb=?,hb_sum=hb_sum+?,hb_jg=CONCAT(hb_jg,?),hb_jg_sum=?,hb_last_jg=?"
-							+ ",xz=?,xz_sum=xz_sum+?,xz_jg=CONCAT(xz_jg,?),xz_jg_sum=?,xz_last_jg=?,xzbg_trend=?"
+					+ ",hb=?,hb_sum=hb_sum+?,hb_jg=CONCAT(hb_jg,?),hb_jg_sum=?,hb_last_jg=?,hbbg_trend=?,hbbg_config=?"
+							+ ",xz=?,xz_sum=xz_sum+?,xz_jg=CONCAT(xz_jg,?),xz_jg_sum=?,xz_last_jg=?,xzbg_trend=?,xzbg_config=?"
 					+ ",hbqh=?,hbqh_sum=hbqh_sum+?,hbqh_jg=CONCAT(hbqh_jg,?),hbqh_last_jg=? "
 					+ ",queue_count = ?"
 					+ " where id=?",
@@ -217,13 +234,14 @@ public class TurnService {
 					hbJg==null?"":(hbJg[0]+hbJg[1]+","),
 					hbJgSum,
 					hbJg==null?"":hbJg[0]+"_"+hbJg[1],
+					newHbbg_trend,newHbbg_config,
 							
 							JSONObject.toJSONString(xzBg),
 							Math.abs(xzBg[0])+Math.abs(xzBg[1]),
 							xzJg==null?"":(xzJg[0]+xzJg[1]+","),
 							xzJgSum,
 							xzJg==null?"":xzJg[0]+"_"+xzJg[1],
-									newXzbg_trend,
+									newXzbg_trend,newXzbg_config,
 							
 					JSONObject.toJSONString(hbqhBg),
 					Math.abs(hbqhBg[0])+Math.abs(hbqhBg[1]),
@@ -239,28 +257,38 @@ public class TurnService {
 		
 		
 		getTurn().set(null);
+		
+		
+		
+		return bigInputResult;
 	}
 	
 	
-	public void doFinishTurn() {
-		List<String> games = ServiceManage.jdbcTemplate.queryForList("select id from game_history where state=1", String.class);
+	public void doFinishTurn(BigTurn bigTurn,Integer turnNo) {
+		Turn turn = getCurrentTurn(bigTurn, turnNo);
+		List<String> games = ServiceManage.jdbcTemplate.queryForList("select id from game_history where state=1 AND tid=?", String.class,turn.getId());
 		for (int i = 0; i < games.size(); i++) {
 			gameService.finishGame(null, games.get(i));
 		}
+		
+		ServiceManage.jdbcTemplate.update("UPDATE game_turn SET state=2 WHERE id =?",turn.getId());
+		
 
 	}
 	
-	public void doRenewTurn() {
-		List<String> uids = getUids();
+	public void doRenewTurn(BigTurn bigTurn,Integer turnNo) {
 		
+		Turn turn = createTurn(bigTurn, turnNo);
+		
+		List<String> uids = getUids();
 		for (String uid : uids) {
-			gameService.doNewly(uid);
+			gameService.doNewly(turn,uid);
 		}
-		getTurn().set(null);
+		//getTurn().set(null);
 	 }
 	
 	
-	public Turn createTurn() {
+	public Turn createTurn(final BigTurn bigTurn,final Integer turnNo) {
 		
 		final Turn turn = new Turn();
 		Integer rule_type = ServiceManage.jdbcTemplate.queryForObject("select val from djt_sys where ckey='use_rule'", Integer.class);
@@ -285,6 +313,17 @@ public class TurnService {
 		config.setHbQh(sysService.getSysConfig("hbQh", Integer.class));
 		turn.setConfig(config);
 		turn.setConfig_json(JSONObject.toJSONString(config));
+		Integer conf_len = sysService.getSysConfig("conf_len", Integer.class);
+		
+		String s1 = "";
+		String s2 = "";
+		for (int i = 0; i < 10; i++) {
+			
+			s1+=(conf_len+"-1")+(i==9?"":",");
+			s2+=("1-"+conf_len)+(i==9?"":",");
+		}
+		final String xzbgConfig = s1;
+		final String hbbgConfig = s2;
 		
 		
 		    KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -292,15 +331,22 @@ public class TurnService {
 		            new PreparedStatementCreator() {
 		                public PreparedStatement createPreparedStatement(Connection con) throws SQLException
 		                {
-		                	PreparedStatement ps = con.prepareStatement("INSERT INTO game_turn (`mod`,`mod2`,frow,info,lj  ,qh,qh_sum,qh_jg,qh_last_jg,  yz_jg, hb_jg,hbqh_jg,`rule`,rule_type,user_lock,state,config_json"
-		                			+ ",xz_jg,xzbg_lock,xzbg_config,xzbg_trend,hbbg_lock,hbbg_config)"
-		                			+ " VALUES (?,?,1,'',0  ,'',0,'',''   ,'','',''  ,?,?,'1,1,1,1,1,1,1,1,1,1',1,?,"
-		                			+ "'','0,0,0,0,0,0,0,0,0,0','500000-0,500000-0,500000-0,500000-0,500000-0,500000-0,500000-0,500000-0,500000-0,500000-0','0,0,0,0,0,0,0,0,0,0','1,1,1,1,1,1,1,1,1,1','0-100000,0-100000,0-100000,0-100000,0-100000,0-100000,0-100000,0-100000,0-100000,0-100000')",Statement.RETURN_GENERATED_KEYS); 
-		                	ps.setInt(1, turn.getMod());
-		                	ps.setInt(2, turn.getMod2());
-		                	ps.setString(3, turn.getRule());
-		                    ps.setInt(4, turn.getRule_type());
-		                    ps.setString(5, turn.getConfig_json());
+		                	PreparedStatement ps = con.prepareStatement("INSERT INTO game_turn (big_turn_id,turn_no,`mod`,`mod2`,frow,info,lj  ,qh,qh_sum,qh_jg,qh_last_jg,  yz_jg, hb_jg,hbqh_jg,`rule`,rule_type,user_lock,state,config_json"
+		                			+ ",xz_jg,xzbg_lock,xzbg_config,xzbg_trend,hbbg_lock,hbbg_config,hbbg_trend)"
+		                			+ " VALUES (?,?,?,?,1,'',0  ,'',0,'',''   ,'','',''  ,?,?,'1,1,1,1,1,1,1,1,1,1',1,?,"
+		                			+ "'','1,1,1,1,1,1,1,1,1,1',?,'0,0,0,0,0,0,0,0,0,0','1,1,1,1,1,1,1,1,1,1',?,'0,0,0,0,0,0,0,0,0,0')",Statement.RETURN_GENERATED_KEYS); 
+		                	
+		                	ps.setInt(1, bigTurn.getId());
+		                	ps.setInt(2, turnNo);
+		                	
+		                	
+		                	ps.setInt(3, turn.getMod());
+		                	ps.setInt(4, turn.getMod2());
+		                	ps.setString(5, turn.getRule());
+		                    ps.setInt(6, turn.getRule_type());
+		                    ps.setString(7, turn.getConfig_json());
+		                    ps.setString(8, xzbgConfig);
+		                    ps.setString(9, hbbgConfig);
 		                	return ps;
 		                }
 		            }, keyHolder);
@@ -316,11 +362,11 @@ public class TurnService {
 	}
 	
 
-	private Turn getCurrentTurn(int turnNo) {
+	private Turn getCurrentTurn(BigTurn bigTurn,int turnNo) {
 		
 		try {
-			return ServiceManage.jdbcTemplate.queryForObject("select * from game_turn where turn_no=? AND state=1 limit 1", 
-					new BeanPropertyRowMapper<Turn>(Turn.class),turnNo);
+			return ServiceManage.jdbcTemplate.queryForObject("select * from game_turn where big_turn_id=? AND turn_no=? AND state=1 limit 1", 
+					new BeanPropertyRowMapper<Turn>(Turn.class),bigTurn.getId(),turnNo);
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
