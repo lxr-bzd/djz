@@ -49,11 +49,17 @@ public class BigTurnService {
 	 
 	public void doRenewTurn(){
 		
-		 
+		 for (int i = 0; i < 10; i++) {
+			 turnService.doRenewTurn();
+		}
 		 
 	}
 	
 	public void doFinishTurn(){
+		
+		 for (int i = 0; i < 10; i++) {
+			 turnService.doFinishTurn();
+		}
 		
 		
 	}
