@@ -54,7 +54,7 @@ public class BigTurnService {
 		List<Long> gjList = JSONArray.parseArray(bigTurn.getGj(), Long.class);
 		Long[] newGj = handelGj(gjList.toArray(new Long[gjList.size()]),newbBg);
 		
-		ServiceManage.jdbcTemplate.update("UPDATE `game_big_turn` SET `frow` = ?, `bg` = ?,  `gj` = ? ,`state` = 1 WHERE `id` = ?" 
+		ServiceManage.jdbcTemplate.update("UPDATE `game_big_turn` SET `frow` = ?, `bg` = ?,  `gj` = ?  WHERE `id` = ?" 
 				,bigTurn.getFrow()+1,
 				JSONObject.toJSONString(newbBg),
 				JSONObject.toJSONString(newGj),
@@ -113,7 +113,7 @@ public class BigTurnService {
 		
 		final BigTurn bigTurn = new BigTurn();
 		bigTurn.setFrow(1);
-		bigTurn.setGj("[0,0,0,0,0,0,0,0,0,0,0,0,0]");
+		bigTurn.setGj("[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]");
 		bigTurn.setConfig_json(JSONObject.toJSONString(config));
 		bigTurn.setBigTurnConfig(config);
 		KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -121,8 +121,8 @@ public class BigTurnService {
 	            new PreparedStatementCreator() {
 	                public PreparedStatement createPreparedStatement(Connection con) throws SQLException
 	                {
-	                	PreparedStatement ps = con.prepareStatement("INSERT INTO `game_big_turn`( `frow`, `bg`, `bg_hb`, `jg`, `jg_hz`, `gj`,`config_json`, `state`) "
-	                			+ "VALUES ( ?, '', '', '', '', ?,?, 1)" 
+	                	PreparedStatement ps = con.prepareStatement("INSERT INTO `game_big_turn`( `frow`, `bg`, `gj`,`config_json`, `state`) "
+	                			+ "VALUES ( ?, '', ?,?, 1)" 
 	                			,Statement.RETURN_GENERATED_KEYS); 
 	                	
 	                	ps.setInt(1, bigTurn.getFrow());
@@ -155,7 +155,9 @@ public class BigTurnService {
 	
 	
 	private Long[][] handelBg( List<BigInputResult> results) {
-		Long[][] ret= new Long[][] {new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L}};
+		Long[][] ret= new Long[][] {new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L}
+		,new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L}
+		,new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L}};
 		
 		for (BigInputResult bigInputResult : results) {
 			
@@ -164,20 +166,41 @@ public class BigTurnService {
 				ret[i][0]+=(long)inputResult.getRets()[4];
 				ret[i][1]+=(long)inputResult.getRets()[5];
 			}
-			if(bigInputResult.getHzBg()!=null) {
-				ret[10][0]+=(long)bigInputResult.getHzBg()[0];
-				ret[10][1]+=(long)bigInputResult.getHzBg()[1];
+			int i = 10;
+			if(bigInputResult.getHzBg()!=null) {//汇总报告
+				ret[i][0]+=(long)bigInputResult.getHzBg()[0];
+				ret[i][1]+=(long)bigInputResult.getHzBg()[1];
 			}
 			
+			i++;
+			if(bigInputResult.getHzqhBg()!=null) {//汇总求和
+				ret[i][0]+=(long)bigInputResult.getHzqhBg()[0];
+				ret[i][1]+=(long)bigInputResult.getHzqhBg()[1];
+				
+			}
+			i++;
 			if(bigInputResult.getHbBg()!=null) {
-				ret[11][0]+=(long)bigInputResult.getHbBg()[0];
-				ret[11][1]+=(long)bigInputResult.getHbBg()[1];
+				ret[i][0]+=(long)bigInputResult.getHbBg()[0];
+				ret[i][1]+=(long)bigInputResult.getHbBg()[1];
+				
+			}
+			i++;
+			if(bigInputResult.getHbqhBg()!=null) {
+				ret[i][0]+=(long)bigInputResult.getHbqhBg()[0];
+				ret[i][1]+=(long)bigInputResult.getHbqhBg()[1];
 				
 			}
 			
+			i++;
 			if(bigInputResult.getXzBg()!=null) {
-			ret[12][0]+=(long)bigInputResult.getXzBg()[0];
-			ret[12][1]+=(long)bigInputResult.getXzBg()[1];
+				ret[i][0]+=(long)bigInputResult.getXzBg()[0];
+				ret[i][1]+=(long)bigInputResult.getXzBg()[1];
+			}
+			i++;
+			if(bigInputResult.getXzqhBg()!=null) {
+				ret[i][0]+=(long)bigInputResult.getXzqhBg()[0];
+				ret[i][1]+=(long)bigInputResult.getXzqhBg()[1];
+				
 			}
 		}
 		
@@ -186,7 +209,7 @@ public class BigTurnService {
 	}
 	
 	private Long[] handelGj(Long[] oldGj,Long[][] newbBg) {
-		Long[] gj = new Long[13];
+		Long[] gj = new Long[16];
 		
 		for (int i = 0; i < gj.length; i++) {
 			gj[i] = oldGj[i]+Math.abs(newbBg[i][0])+Math.abs(newbBg[i][1]);

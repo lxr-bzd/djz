@@ -37,6 +37,7 @@
 			
 			.bg-td{text-align: left; display: flex;}
 			.bg-td>span{flex:1;text-align: center;}
+			
 
 
 .test-panel { 
@@ -65,30 +66,33 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 		<section class="reception_wrap" style="overflow-x: scroll;height: 100%;">
 			<div class="reception_box">
 			<table border="0"><tr><td>
-			<div class="top-body">
+			<div class="">
 				<div class="top-body">
 			<table border="0" style="border: 1px solid #000;width:100%">
 							<colgroup>
+								<col style="width:50px;">
+								
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								
+								
+								<col style="width:100px;">
+								<col style="width:60px;">
+								<col style="width:100px;">
+								<col style="width:60px;">
+								<col style="width:100px;">
 								<col style="width:60px;">
 								
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								
-								
-								<col style="width:140px;">
-								<col style="width:140px;">
-								<col style="width:140px;">
-								
-								<col style="width:60px;">
+								<col style="width:50px;">
 								
 							</colgroup>
 							  	<tbody >
@@ -101,9 +105,9 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							    	<td><div class="blue btn1 remove-all">清空</div></td>
 							    	<td><div class="blue btn1 exit_btn">關閉</div></td>
 							    	
-							    	<td colspan="1" id="input_group"><input type="text" style="width: 90%;background-color: #eee" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""></td>
-							    	<td colspan="1"> <div class="blue btn1 ok_btn">確定</div></td>
-							    	<td colspan="1">
+							    	<td colspan="2" id="input_group"><input type="text" style="width: 90%;background-color: #eee" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""></td>
+							    	<td colspan="2"> <div class="blue btn1 ok_btn">確定</div></td>
+							    	<td colspan="2">
 							    		<table style="height:100%">
 											<tr><td style="height:auto;font-size:16px;">開始<input type="number" id="tg_thre" value="" style="width: 40%;background-color: #eee;font-size:19px;">
 														<input value="保存" style="border:auto;width:auto;font-size:16px;padding:1px 5px;" type="button"  onclick="saveConfig('tg_thre',$('#tg_thre').val())"></td>
@@ -130,8 +134,11 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							    	<td>9<span class="locak_btn1"></span></td>
 							    	<td>10<span class="locak_btn1"></span></td>
 							    	<td>匯總報告</td>
+							    	<td>匯總求和</td>
 							    	<td>合并報告</td>
+							    	<td>合并求和</td>
 									<td>選擇報告</td>
+									<td>選擇求和</td>
 							    	
 							  	</tr>
 							  
@@ -140,7 +147,7 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 				</div>
 			</div>	</td></tr>  <tr><td>
 				<!--内部一层[[-->
-				<div class="scroll-body1">
+				<div class="">
 				<table>
 					<tr class="reception">
 						<!--A表-->
@@ -148,26 +155,29 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 						<div class="top-body">
 							<table border="0" style="border: 1px solid #000;width:100%">
 							<colgroup>
+								<col style="width:50px;">
+								
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								
+								
+								<col style="width:100px;">
+								<col style="width:60px;">
+								<col style="width:100px;">
+								<col style="width:60px;">
+								<col style="width:100px;">
 								<col style="width:60px;">
 								
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								
-								
-								<col style="width:140px;">
-								<col style="width:140px;">
-								<col style="width:140px;">
-								
-								<col style="width:60px;">
+								<col style="width:50px;">
 								
 							</colgroup>
 							<tbody id="bg_group">
@@ -307,6 +317,9 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							    	<td> <span class="red"></span></td>
 							    	<td> <span class="red"></span></td>
 							    	<td> <span class="red"></span></td>
+							    	<td> <span class="red"></span></td>
+							    	<td> <span class="red"></span></td>
+							    	<td> <span class="red"></span></td>
 							    	<td rowspan="3"> <span class="" >汇总</span></td>
 							  	</tr>
 							  <tr class="data_col ">
@@ -323,6 +336,9 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							    	<td><span class="red"></span></td>
 							    	<td><span class="red"></span></td>
 							    	<td><span class="red"></span></td>
+							    	<td> <span class="red"></span></td>
+							    	<td> <span class="red"></span></td>
+							    	<td> <span class="red"></span></td>
 							  	</tr>
 							  	<tr class="data_col ">
 							    	<td class="blue"></td>
@@ -339,6 +355,9 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							    	<td class="blue"></td>
 							    	<td class="blue"></td>
 							    	<td class="blue"></td>
+							    	<td class="blue"></td>
+							    	<td class="blue"></td>
+							    	<td class="blue"></td>
 							  	</tr>
 							  	</tbody>
 							</table>
@@ -351,26 +370,29 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							<div class="scroll-body">
 							<table class="rec-table-one" style="height:auto;width:100%;">
 								<colgroup>
+								<col style="width:50px;">
+								
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								
+								
+								<col style="width:100px;">
+								<col style="width:60px;">
+								<col style="width:100px;">
+								<col style="width:60px;">
+								<col style="width:100px;">
 								<col style="width:60px;">
 								
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								
-								
-								<col style="width:140px;">
-								<col style="width:140px;">
-								<col style="width:140px;">
-								
-								<col style="width:60px;">
+								<col style="width:50px;">
 								
 							</colgroup>
 								<tbody id="jg_group">
@@ -403,26 +425,29 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							<div class="bottom-body">
 							<table class="table_top" style="width:100%">
 								<colgroup>
+								<col style="width:50px;">
+								
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								<col style="width:103px;">
+								
+								
+								<col style="width:100px;">
+								<col style="width:60px;">
+								<col style="width:100px;">
+								<col style="width:60px;">
+								<col style="width:100px;">
 								<col style="width:60px;">
 								
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								<col style="width:110px;">
-								
-								
-								<col style="width:140px;">
-								<col style="width:140px;">
-								<col style="width:140px;">
-								
-								<col style="width:60px;">
+								<col style="width:50px;">
 								
 							</colgroup>
 								<tbody id="bottom_group">
@@ -439,6 +464,9 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							    	<td class="blue2"></td>
 							    	<td class="blue2"></td>
 							    	
+							    	<td class="blue2"></td>
+							    	<td class="blue2"></td>
+							    	<td class="blue2"></td>
 							    	<td class="blue2"></td>
 							    	<td class="blue2"></td>
 							    	<td class="blue2"></td>
@@ -460,6 +488,9 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							    	<td></td>
 							    	<td></td>
 							    	<td></td>
+							    	<td></td>
+							    	<td></td>
+							    	<td></td>
 							    	<td>求和</td>
 							  	</tr>
 							  	<tr >
@@ -475,6 +506,9 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							    	<td class="blue"></td>
 							    	<td class="blue"></td>
 							    	
+							    	<td class="blue"></td>
+							    	<td class="blue"></td>
+							    	<td class="blue"></td>
 							    	<td class="blue"></td>
 							    	<td class="blue"></td>
 							    	<td class="blue"></td>
@@ -738,6 +772,9 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 	// 老 少 男 女
 	var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 	
+	var gailv = [0,0,0,0]
+	
+	
 	var myTest = {
 			val:'',
 			open:false,
@@ -755,7 +792,15 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 				
 			},
 			input:function(){
-				this.val = Math.floor(Math.random()*4)+1;
+				var g = [[1,20],[21,50],[51,80],[81,100]];
+				var n = Math.ceil(Math.random()*100);
+				for (var i = 0; i < g.length; i++) {
+					
+					if(n>=g[i][0]&&n<=g[i][1]){this.val = i+1;continue;}
+				}
+				
+				gailv[this.val-1]+=1;
+				//this.val = Math.ceil(Math.random()*100);
 				$('#input_group>input').val(this.val);
 				$('.ok_btn').click();
 				
@@ -880,7 +925,7 @@ function ref(data){
 	
 	
 	
-	if(frow>=4){
+	/* if(frow>=4){
 		var bigvData = {bigTurn:data.bigTurn,jgData:{},bgData:{}};
 	
 		handelBg(bigvData,data.bigTurn);
@@ -901,24 +946,20 @@ function ref(data){
 		
 	}else{
 		
+		var cols = ["hb","qhBg","hbBg","hbqh","xzBg","xzqh"];
 		var bigvData = {"bigTurn":data.bigTurn
-				,"bgData":{ "hb":[{"name":'',"val":0},{"name":"","val":0},'','']
-							,"hbBg":[{"name":'',"val":0},{"name":"","val":0},'','']
-							,"yzBg":[{"name":'',"val":0},{"name":"","val":0},'','']
-							,"qhBg":[{"name":'',"val":0},{"name":"","val":0},'','']
-							,"hbqh":[{"name":'',"val":0},{"name":"","val":0},'','']
-							,"xzBg":[{"name":'',"val":0},{"name":"","val":0},'','']}
-				,"jgData":{ "hb":{"list":[],"jg":0,"qh":0}
-							,"hbBg":{"list":[],"jg":0,"qh":0}
-							,"yzBg":{"list":[],"jg":0,"qh":0}
-							,"qhBg":{"list":[],"jg":0,"qh":0}
-							,"hbqh":{"list":[],"jg":0,"qh":0}
-							,"xzBg":{"list":[],"jg":0,"qh":0}
-							}
+				,"bgData":{}
+				,"jgData":{}
 				}
+		
+		for(var i in cols){
+			bigvData.bgData[i] = [{"name":'',"val":0},{"name":"","val":0},'',''];
+			bigvData.jgData[i] = {"list":[],"jg":0,"qh":0};
+		}
 
 		
-	}
+	} */
+	var bigvData = createBigVdata(data.bigTurn,vDatas);
 	
 	console.log(bigvData);
 	
@@ -945,11 +986,11 @@ function ref(data){
 	location.href="#bottom2";
 	}
 	
-	function handelBg(bigvData,bigTurn){
+	/* function handelBg(bigvData,bigTurn){
 		var bgData = bigvData.bgData;
 		var bg = eval(bigTurn.bg);
 		var gj = eval(bigTurn.gj);
-		var col = [1,2,3,4,5,6,7,8,9,10,'hb','hbBg','xzBg'];
+		var col = [1,2,3,4,5,6,7,8,9,10,'hb','qhBg','hbBg','hbqh','xzBg','xzqh'];
 		for (var i = 0; i < col.length; i++) {
 			
 			var nm = col[i];
@@ -957,12 +998,12 @@ function ref(data){
 			bgData[nm].push(gj[i]);
 		}
 		
-	}
+	} */
 	
-	function add2BigVdata(bigVdata,vData){
+	/* function add2BigVdata(bigVdata,vData){
 		
 		var jgData = bigVdata.jgData;
-		var col = [1,2,3,4,5,6,7,8,9,10,'hb','hbBg','xzBg'];
+		var col = [1,2,3,4,5,6,7,8,9,10,'hb','qhBg','hbBg','hbqh','xzBg','xzqh'];
 		
 		
 		for (var j = 0; j < col.length; j++) {
@@ -984,7 +1025,7 @@ function ref(data){
 		
 		
 		
-	}
+	} */
 	
 	
 	function initLockHtml(bigTurn){
@@ -1005,9 +1046,9 @@ function ref(data){
 		}
 		
 		
-		html+='<td>匯總報告</td>'+
-    	'<td>合并報告</td>'+
-		'<td>選擇報告</td>';
+		html+='<td>匯總報告</td><td>匯總求和</td>'
+	    	+'<td>合并報告</td><td>合并求和</td>'
+	    	+'<td>選擇報告</td><td>選擇求和</td>';
 		return html;
 	}
 	
@@ -1268,10 +1309,15 @@ function ref(data){
 										{{/if}}
 									</td>
 							{{/each}}
+
 									<td> <div class="bg-td">{{bgData['hb'][0].name}}<span {{if bgData['hb'][0].val>0}}class="red"{{/if}}>{{if bgData['hb'][0].name}}{{bgData['hb'][0].val}}{{/if}}</span></div></td>
+									<td> <div class="bg-td">{{bgData['qhBg'][0].name}}<span {{if bgData['qhBg'][0].val>0}}class="red"{{/if}}>{{if bgData['qhBg'][0].name}}{{bgData['qhBg'][0].val}}{{/if}}</span></div></td>
 									<td> <div class="bg-td">{{bgData['hbBg'][0].name}}<span {{if bgData['hbBg'][0].val>0}}class="red"{{/if}}>{{if bgData['hbBg'][0].name}}{{bgData['hbBg'][0].val}}{{/if}}</span></div></td>
+							    	<td> <div class="bg-td">{{bgData['hbqh'][0].name}}<span {{if bgData['hbqh'][0].val>0}}class="red"{{/if}}>{{if bgData['hbqh'][0].name}}{{bgData['hbqh'][0].val}}{{/if}}</span></div></td>
 							    	<td> <div class="bg-td">{{bgData['xzBg'][0].name}}<span {{if bgData['xzBg'][0].val>0}}class="red"{{/if}}>{{if bgData['xzBg'][0].name}}{{bgData['xzBg'][0].val}}{{/if}}</span></div></td>
-							    <td rowspan="3"> <span class="">匯總</span></td>	
+							    	<td> <div class="bg-td">{{bgData['xzqh'][0].name}}<span {{if bgData['xzqh'][0].val>0}}class="red"{{/if}}>{{if bgData['xzqh'][0].name}}{{bgData['xzqh'][0].val}}{{/if}}</span></div></td>
+
+									<td rowspan="3"> <span class="">匯總</span></td>	
 								</tr>
 							  <tr class="data_col">
 							{{each bigTurn.user_lock as val i}}
@@ -1279,11 +1325,14 @@ function ref(data){
 										<div class="bg-td">{{bgData[i+1][1].name}} <span {{if bgData[i+1][1].val>0}}class="red"{{/if}}>{{if bgData[i+1][1].name}}{{bgData[i+1][1].val}}{{/if}}</span></div>
 									{{/if}}</td>
 							{{/each}}
-							    	
+							    
 									<td><div class="bg-td">{{bgData['hb'][1].name}} <span {{if bgData['hb'][1].val>0}}class="red"{{/if}}>{{if bgData['hb'][1].name}}{{bgData['hb'][1].val}}{{/if}}</span></div></td>
+							    	<td> <div class="bg-td">{{bgData['qhBg'][1].name}}<span {{if bgData['qhBg'][1].val>0}}class="red"{{/if}}>{{if bgData['qhBg'][1].name}}{{bgData['qhBg'][1].val}}{{/if}}</span></div></td>
 									<td><div class="bg-td">{{bgData['hbBg'][1].name}} <span {{if bgData['hbBg'][1].val>0}}class="red"{{/if}}>{{if bgData['hbBg'][1].name}}{{bgData['hbBg'][1].val}}{{/if}}</span></div></td>
+							    	<td> <div class="bg-td">{{bgData['hbqh'][1].name}}<span {{if bgData['hbqh'][1].val>0}}class="red"{{/if}}>{{if bgData['hbqh'][1].name}}{{bgData['hbqh'][1].val}}{{/if}}</span></div></td>
 							    	<td><div class="bg-td">{{bgData['xzBg'][1].name}} <span {{if bgData['xzBg'][1].val>0}}class="red"{{/if}}>{{if bgData['xzBg'][1].name}}{{bgData['xzBg'][1].val}}{{/if}}</span></div></td>
-							    	
+							    	<td> <div class="bg-td">{{bgData['xzqh'][1].name}}<span {{if bgData['xzqh'][1].val>0}}class="red"{{/if}}>{{if bgData['xzqh'][1].name}}{{bgData['xzqh'][1].val}}{{/if}}</span></div></td>
+
 							  	</tr>
 							  	<tr class="data_col">
 							  		
@@ -1292,9 +1341,12 @@ function ref(data){
 							{{/each}}
 							    	
 							    	<td class="blue"><div class="bg-td">共 <span >{{bgData['hb'][2]}}</span></div></td>
+									<td class="blue"><div class="bg-td">共 <span >{{bgData['qhBg'][2]}}</span></div></td>
 									<td class="blue"><div class="bg-td">共 <span >{{bgData['hbBg'][2]}}</span></div></td>
-							    	<td class="blue"><div class="bg-td">共 <span >{{bgData['xzBg'][2]}}</span></div></td>
-							    	
+							    	<td class="blue"><div class="bg-td">共 <span >{{bgData['hbqh'][2]}}</span></div></td>
+									<td class="blue"><div class="bg-td">共 <span >{{bgData['xzBg'][2]}}</span></div></td>
+							    	<td class="blue"><div class="bg-td">共 <span >{{bgData['xzqh'][2]}}</span></div></td>
+									
 									
 							  	</tr>
 
@@ -1314,8 +1366,11 @@ function ref(data){
 		{{/each}}
 	
 	<td {{if val>0}}class="red"{{/if}}>{{val}}</td>
+	<td {{if jgData['qhBg'].list[i]>0}}class="red"{{/if}}>{{jgData['qhBg'].list[i]}}</td>
 	<td {{if jgData['hbBg'].list[i]>0}}class="red"{{/if}}>{{jgData['hbBg'].list[i]}}</td>
+	<td {{if jgData['hbqh'].list[i]>0}}class="red"{{/if}}>{{jgData['hbqh'].list[i]}}</td>
 	<td {{if jgData['xzBg'].list[i]>0}}class="red"{{/if}}>{{jgData['xzBg'].list[i]}}</td>
+	<td {{if jgData['xzqh'].list[i]>0}}class="red"{{/if}}>{{jgData['xzqh'].list[i]}}</td>
 	
 <td>{{i+1}}</td>
 	</tr>
@@ -1332,8 +1387,13 @@ function ref(data){
 									{{/each}}
 							    	
 							    	<td class="blue2 {{if jgData['hb'].jg>0}}red{{/if}}">{{jgData['hb'].jg}}</td>
+									<td class="blue2 {{if jgData['qhBg'].jg>0}}red{{/if}}">{{jgData['qhBg'].jg}}</td>
+									
 									<td class="blue2 {{if jgData['hbBg'].jg>0}}red{{/if}}">{{jgData['hbBg'].jg}}</td>
+									<td class="blue2 {{if jgData['hbqh'].jg>0}}red{{/if}}">{{jgData['hbqh'].jg}}</td>
+																		
 									<td class="blue2 {{if jgData['xzBg'].jg>0}}red{{/if}}">{{jgData['xzBg'].jg}}</td>
+									<td class="blue2 {{if jgData['xzqh'].jg>0}}red{{/if}}">{{jgData['xzqh'].jg}}</td>
 																		
 <td>結果</td>
 							  	</tr>
@@ -1345,8 +1405,13 @@ function ref(data){
 									{{/each}}
 							    	
 							    	<td {{if jgData['hb'].qh>0}}class="red"{{/if}}>{{jgData['hb'].qh}}</td>
+									<td {{if jgData['qhBg'].qh>0}}class="red"{{/if}}>{{jgData['qhBg'].qh}}</td>
+									
 									<td {{if jgData['hbBg'].qh>0}}class="red"{{/if}}>{{jgData['hbBg'].qh}}</td>
+									<td {{if jgData['hbqh'].qh>0}}class="red"{{/if}}>{{jgData['hbqh'].qh}}</td>
+									
 									<td {{if jgData['xzBg'].qh>0}}class="red"{{/if}}>{{jgData['xzBg'].qh}}</td>
+									<td {{if jgData['xzqh'].qh>0}}class="red"{{/if}}>{{jgData['xzqh'].qh}}</td>
 									
 <td>求和</td>
 							  	</tr>
@@ -1358,8 +1423,11 @@ function ref(data){
 									{{/each}}
 							    	
 							    	<td class="blue">{{bgData['hb'][3]}}</td>
+<td class="blue">{{bgData['qhBg'][3]}}</td>
 									<td class="blue">{{bgData['hbBg'][3]}}</td>
+<td class="blue">{{bgData['hbqh'][3]}}</td>
 									<td class="blue">{{bgData['xzBg'][3]}}</td>
+<td class="blue">{{bgData['xzqh'][3]}}</td>
 							    	
 									
 <td>共計</td>

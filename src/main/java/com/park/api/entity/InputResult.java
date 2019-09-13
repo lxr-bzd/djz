@@ -8,14 +8,19 @@ public class InputResult {
 	
 	long[] yz;
 	
-	long jg_sum;
 	
-	long up_jg_sum;
 	
 	long jg_qh;
 	
 	int queueNum;
 	int queueCount;
+	
+	//本次的结果总和
+	long jg_sum;
+	//上一次的结果总和
+	long up_jg_sum;
+	//当前产生的结果
+	int jg;
 	
 	public String getUid() {
 		return uid;
@@ -65,6 +70,12 @@ public class InputResult {
 	}
 	public void setUp_jg_sum(long up_jg_sum) {
 		this.up_jg_sum = up_jg_sum;
+	}
+	public int getJg() {
+		return jg;
+	}
+	public void setJg(int jg) {
+		this.jg = jg;
 	}
 	
 	

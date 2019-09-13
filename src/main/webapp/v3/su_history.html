@@ -61,14 +61,16 @@
 											<col style="width:100px;"><col style="width:60px;">
 											<col style="width:60px;">
 											<col style="width:120px;"><col style="width:80px;">
-											
+											<col style="width:120px;"><col style="width:80px;">
+											<col style="width:120px;"><col style="width:80px;">
+											<col style="width:120px;"><col style="width:80px;">
 											<col style="width:120px;"><col style="width:80px;">
 											<col style="width:120px;"><col style="width:80px;">
 											<col style="width:120px;">
 											
 										</colgroup>
 								<tbody id="head_group">
-							  	<tr class="data_col"> <td colspan="1"><a href="javascript:history.back(-1)">返回</a></td><td colspan="27">歷史記錄</td><td colspan="1"><a href="javascript:history.back(-1)">返回</a></td></tr>
+							  	<tr class="data_col"> <td colspan="1"><a href="javascript:history.back(-1)">返回</a></td><td colspan="33">歷史記錄</td><td colspan="1"><a href="javascript:history.back(-1)">返回</a></td></tr>
 							  	<tr class="data_col">
 							    	<td rowspan="2">序號</td>
 							    	<td colspan="2">1號</td>
@@ -83,11 +85,11 @@
 							    	<td colspan="2">10號</td>
 							    	<td rowspan="2">序號</td>
 							    	<td colspan="2">匯總結果</td>
-							    	<!-- <td colspan="2">求和結果</td>
-							    	<td colspan="2">原值結果</td> -->
+							    	<td colspan="2">匯總求和</td>
 							    	<td colspan="2">合并報告</td>
-							    	<!-- <td colspan="2">合并求和</td> -->
+							    	<td colspan="2">合并求和</td>
 							    	<td colspan="2">選擇報告</td>
+							    	<td colspan="2">選擇求和</td>
 							    	<td rowspan="2"><a href="javascript:tableExport()">導出</a></td>
 							    	
 							  	</tr>
@@ -115,10 +117,14 @@
 							    	
 							    	<td >結果</td>
 							    	<td >求和</td>
-							    	
 							    	<td >結果</td>
 							    	<td >求和</td>
-							    	
+							    	<td >結果</td>
+							    	<td >求和</td>
+							    	<td >結果</td>
+							    	<td >求和</td>
+							    	<td >結果</td>
+							    	<td >求和</td>
 							    	<td >結果</td>
 							    	<td >求和</td>
 							  	</tr>
@@ -146,6 +152,9 @@
 											<col style="width:100px;"><col style="width:60px;">
 											<col style="width:100px;"><col style="width:60px;">
 											<col style="width:60px;">
+											<col style="width:120px;"><col style="width:80px;">
+											<col style="width:120px;"><col style="width:80px;">
+											<col style="width:120px;"><col style="width:80px;">
 											<col style="width:120px;"><col style="width:80px;">
 											<col style="width:120px;"><col style="width:80px;">
 											<col style="width:120px;"><col style="width:80px;">
@@ -185,12 +194,12 @@
 							    	<td colspan="2">9號</td>
 							    	<td colspan="2">10號</td>
 							    	<td rowspan="2">序號</td>
-							    	<td colspan="2">匯總結果</td><!-- 
-							    	<td colspan="2">求和結果</td>
-							    	<td colspan="2">原值結果</td> -->
-							    	<td colspan="2">合并報告</td><!-- 
-							    	<td colspan="2">合并求和</td> -->
+							    	<td colspan="2">匯總結果</td>
+							    	<td colspan="2">匯總求和</td>
+							    	<td colspan="2">合并報告</td>
+							    	<td colspan="2">合并求和</td>
 							    	<td colspan="2">選擇報告</td>
+							    	<td colspan="2">選擇求和</td>
 							    	<td rowspan="2"><a href="javascript:del(2)">刪除全部</a></td>
 							    	
 							  	</tr>
@@ -269,26 +278,7 @@
 				console.log(tData);
 				
 				vData.push(tData);
-				/* sumData['xzBg'].jg+=tData.jgData['xzBg'].jg;
-				sumData['xzBg'].qh+=tData.jgData['xzBg'].qh;
-				
-				sumData['hbqh'].jg+=tData.jgData['hbqh'].jg;
-				sumData['hbqh'].qh+=tData.jgData['hbqh'].qh;
-				sumData['hbBg'].jg+=tData.jgData['hbBg'].jg;
-				sumData['hbBg'].qh+=tData.jgData['hbBg'].qh;
-				sumData['hb'].jg+=tData.jgData['hb'].jg;
-				sumData['hb'].qh+=tData.jgData['hb'].qh;
-				sumData['qh'].jg+=tData.jgData['qhBg'].jg;
-				sumData['qh'].qh+=tData.jgData['qhBg'].qh;
-				sumData['yz'].jg+=tData.jgData['yzBg'].jg;
-				sumData['yz'].qh+=tData.jgData['yzBg'].qh;
-				gHzData.hb+=tData.bgData["hb"][3];
-				gHzData.qh+=tData.bgData["qhBg"][3];
-				gHzData.yz+=tData.bgData["yzBg"][3];
-				gHzData.hbBg+=tData.bgData["hbBg"][3];
-				gHzData.hbqh+=tData.bgData["hbqh"][3];
-				gHzData.xzBg+=tData.bgData["xzBg"][3]; */
-				var index = [1,2,3,4,5,6,7,8,9,10,'hb'/* ,'xzBg','yz' */,'hbBg',/* 'hbqh', */'xzBg']
+				var index = [1,2,3,4,5,6,7,8,9,10,'hb','qhBg','hbBg', 'hbqh','xzBg','xzqh']
 				for (var j = 0; j < index.length; j++) {
 					var col = index[j];
 					if(!sumData[col])sumData[col] = {jg:0,qh:0};
@@ -375,8 +365,11 @@
 				{{/each}}
 				<td>{{tData.bigTurn.id}}</td>
 				<td {{if tData.jgData['hb'].jg>0}}class="red"{{/if}}>{{tData.jgData['hb'].jg}}</td><td {{if tData.jgData['hb'].qh>0}}class="red"{{/if}}>{{tData.jgData['hb'].qh}}</td>
-				<td {{if tData.jgData['hbBg'].jg>0}}class="red"{{/if}}>{{tData.jgData['hbBg'].jg}}</td><td {{if tData.jgData['hbBg'].qh>0}}class="red"{{/if}}>{{tData.jgData['hbBg'].qh}}</td>	
-				<td {{if tData.jgData['xzBg'].jg>0}}class="red"{{/if}}>{{tData.jgData['xzBg'].jg}}</td><td {{if tData.jgData['xzBg'].qh>0}}class="red"{{/if}}>{{tData.jgData['xzBg'].qh}}</td>					
+				<td {{if tData.jgData['qhBg'].jg>0}}class="red"{{/if}}>{{tData.jgData['qhBg'].jg}}</td><td {{if tData.jgData['qhBg'].qh>0}}class="red"{{/if}}>{{tData.jgData['qhBg'].qh}}</td>
+				<td {{if tData.jgData['hbBg'].jg>0}}class="red"{{/if}}>{{tData.jgData['hbBg'].jg}}</td><td {{if tData.jgData['hbBg'].qh>0}}class="red"{{/if}}>{{tData.jgData['hbBg'].qh}}</td>
+				<td {{if tData.jgData['hbqh'].jg>0}}class="red"{{/if}}>{{tData.jgData['hbqh'].jg}}</td><td {{if tData.jgData['hbqh'].qh>0}}class="red"{{/if}}>{{tData.jgData['hbqh'].qh}}</td>	
+				<td {{if tData.jgData['xzBg'].jg>0}}class="red"{{/if}}>{{tData.jgData['xzBg'].jg}}</td><td {{if tData.jgData['xzBg'].qh>0}}class="red"{{/if}}>{{tData.jgData['xzBg'].qh}}</td>
+				<td {{if tData.jgData['xzqh'].jg>0}}class="red"{{/if}}>{{tData.jgData['xzqh'].jg}}</td><td {{if tData.jgData['xzqh'].qh>0}}class="red"{{/if}}>{{tData.jgData['xzqh'].qh}}</td>					
 <td><a href="javascript:del(1,{{tData.bigTurn.id}})">刪除</a></td>
 			</tr>
 		{{/each}}
@@ -386,8 +379,11 @@
 				{{/each}}
 				<td>匯總</td>
 				<td {{if sumData['hb'].jg>0}}class="red"{{/if}}>{{sumData['hb'].jg}}</td><td {{if sumData['hb'].qh>0}}class="red"{{/if}}>{{sumData['hb'].qh}}</td>
-				<td {{if sumData['hbBg'].jg>0}}class="red"{{/if}}>{{sumData['hbBg'].jg}}</td><td {{if sumData['hbBg'].qh>0}}class="red"{{/if}}>{{sumData['hbBg'].qh}}</td>				
+				<td {{if sumData['qhBg'].jg>0}}class="red"{{/if}}>{{sumData['qhBg'].jg}}</td><td {{if sumData['qhBg'].qh>0}}class="red"{{/if}}>{{sumData['qhBg'].qh}}</td>
+				<td {{if sumData['hbBg'].jg>0}}class="red"{{/if}}>{{sumData['hbBg'].jg}}</td><td {{if sumData['hbBg'].qh>0}}class="red"{{/if}}>{{sumData['hbBg'].qh}}</td>
+				<td {{if sumData['hbqh'].jg>0}}class="red"{{/if}}>{{sumData['hbqh'].jg}}</td><td {{if sumData['hbqh'].qh>0}}class="red"{{/if}}>{{sumData['hbqh'].qh}}</td>				
 				<td {{if sumData['xzBg'].jg>0}}class="red"{{/if}}>{{sumData['xzBg'].jg}}</td><td {{if sumData['xzBg'].qh>0}}class="red"{{/if}}>{{sumData['xzBg'].qh}}</td>				
+				<td {{if sumData['xzqh'].jg>0}}class="red"{{/if}}>{{sumData['xzqh'].jg}}</td><td {{if sumData['xzqh'].qh>0}}class="red"{{/if}}>{{sumData['xzqh'].qh}}</td>				
 									
 <td>匯總</td>
 			</tr>
@@ -397,8 +393,11 @@
 				{{/each}}
 				<td>共計</td>
 				<td colspan="2"  {{if gHzData['hb']>0}}class=""{{/if}}>{{gHzData['hb']}}</td>
+				<td colspan="2"  {{if gHzData['qhBg']>0}}class=""{{/if}}>{{gHzData['qhBg']}}</td>
 				<td colspan="2"  {{if gHzData['hbBg']>0}}class=""{{/if}}>{{gHzData['hbBg']}}</td>
-				<td colspan="2"  {{if gHzData['xzBg']>0}}class=""{{/if}}>{{gHzData['xzBg']}}</td>				
+				<td colspan="2"  {{if gHzData['hbqh']>0}}class=""{{/if}}>{{gHzData['hbqh']}}</td>
+				<td colspan="2"  {{if gHzData['xzBg']>0}}class=""{{/if}}>{{gHzData['xzBg']}}</td>
+				<td colspan="2"  {{if gHzData['xzqh']>0}}class=""{{/if}}>{{gHzData['xzqh']}}</td>				
 <td>共計</td>
 			</tr>
 

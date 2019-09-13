@@ -10,6 +10,15 @@ public class BigInputResult {
 	long[] hbBg;
 	long[] xzBg;
 	
+	
+	Integer[] hzqhBg;
+	Integer[] hbqhBg;
+	Integer[] xzqhBg;
+	
+	Long hzJg;
+	Long hbJg;
+	Long xzJg;
+	
 	public List<InputResult> getResults() {
 		return results;
 	}
@@ -41,6 +50,56 @@ public class BigInputResult {
 	public void setXzBg(long[] xzBg) {
 		this.xzBg = xzBg;
 	}
+
+	public Long getHzJg() {
+		return hzJg;
+	}
+
+	public void setHzJg(Long hzJg) {
+		this.hzJg = hzJg;
+	}
+
+	public Long getHbJg() {
+		return hbJg;
+	}
+
+	public void setHbJg(Long hbJg) {
+		this.hbJg = hbJg;
+	}
+
+	public Long getXzJg() {
+		return xzJg;
+	}
+
+	public void setXzJg(Long xzJg) {
+		this.xzJg = xzJg;
+	}
+
+	public Integer[] getHzqhBg() {
+		return hzqhBg;
+	}
+
+	public void setHzqhBg(Integer[] hzqhBg) {
+		this.hzqhBg = hzqhBg;
+	}
+
+	public Integer[] getHbqhBg() {
+		return hbqhBg;
+	}
+
+	public void setHbqhBg(Integer[] hbqhBg) {
+		this.hbqhBg = hbqhBg;
+	}
+
+	public Integer[] getXzqhBg() {
+		return xzqhBg;
+	}
+
+	public void setXzqhBg(Integer[] xzqhBg) {
+		this.xzqhBg = xzqhBg;
+	}
+
+	
 
 	
 

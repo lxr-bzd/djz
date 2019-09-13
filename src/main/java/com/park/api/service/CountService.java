@@ -4,9 +4,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.park.api.entity.InputResult;
@@ -395,10 +397,98 @@ public class CountService {
 	}
 	
 	/**
+	   *  合并求和
+	 * @param results
+	 * @param hbbgLock
+	 * @param hbbgTrend
+	 * @param config
+	 * @return
+	 */
+	public static Integer[] countXzQh(long[] xzBg/*
+										 * List<InputResult> results,String xzbgLock,String xzbgTrend,GameConfig config
+										 */) {
+		
+		Integer[] qhbg = new Integer[] {
+				(xzBg[0]>0?1:-1)*(Math.abs(xzBg[0])>Math.abs(xzBg[1])?1:0),
+				(xzBg[1]>0?1:-1)*(Math.abs(xzBg[0])<Math.abs(xzBg[1])?1:0)};
+		
+		return qhbg;
+		
+		
+		/*
+		 * Integer[] data = new Integer[]{0,0}; String[] lock = xzbgLock.split(",");
+		 * String[] trends = xzbgTrend.split(",");
+		 * 
+		 * 
+		 * 
+		 * int f = 1; for (InputResult result : results) {
+		 * if(lock[Integer.valueOf(result.getUid())-1].equals("0"))continue;
+		 * if(trends[Integer.valueOf(result.getUid())-1].equals("0"))continue;
+		 * 
+		 * long a1 = (long)result.getRets()[4]; long a2 = (long)result.getRets()[5];
+		 * if(Math.abs(a1)>Math.abs(a2)) data[0]+=(a1>0?1:(a1<0?-1:0))*f; else
+		 * if(Math.abs(a1)<Math.abs(a2)) data[1]+=(a2>0?1:(a2<0?-1:0))*f; else {
+		 * data[0]+=(a1>0?1:(a1<0?-1:0))*f; data[1]+=(a2>0?1:(a2<0?-1:0))*f; } } return
+		 * data;
+		 */
+	}
+	
+	/**
+	 * 计算选择求和结果
+	 * @param pei
+	 * @param qh
+	 * @return
+	 */
+	public static Integer[] countXzQhJg(String pei,Integer[] upQh) {
+		
+		Integer[] qhbg = upQh;
+		
+		Integer pv = Integer.valueOf(pei);
+		int jg1 =(pv>2?qhbg[0]:-qhbg[0]);
+		int	jg2 =(pv%2!=0?qhbg[1]:-qhbg[1]);
+		return new Integer[] {jg1,jg2};
+		
+	}
+	
+	/**
+	   *  合并求和
+	 * @param results
+	 * @param hbbgLock
+	 * @param hbbgTrend
+	 * @param config
+	 * @return
+	 */
+	public static Integer[] countHbQh2(long[] hbBg) {
+		
+		Integer[] qhbg = new Integer[] {
+				(hbBg[0]>0?1:-1)*(Math.abs(hbBg[0])>Math.abs(hbBg[1])?1:0),
+				(hbBg[1]>0?1:-1)*(Math.abs(hbBg[0])<Math.abs(hbBg[1])?1:0)};
+		
+		return qhbg;
+		/*
+		 * Integer[] data = new Integer[]{0,0}; String[] lock = hbbgLock.split(",");
+		 * String[] trends = hbbgTrend.split(",");
+		 * 
+		 * 
+		 * 
+		 * int f = 1; for (InputResult result : results) {
+		 * if(lock[Integer.valueOf(result.getUid())-1].equals("0"))continue;
+		 * if(trends[Integer.valueOf(result.getUid())-1].equals("0"))continue;
+		 * 
+		 * long a1 = (long)result.getRets()[4]; long a2 = (long)result.getRets()[5];
+		 * if(Math.abs(a1)>Math.abs(a2)) data[0]+=(a1>0?1:(a1<0?-1:0))*f; else
+		 * if(Math.abs(a1)<Math.abs(a2)) data[1]+=(a2>0?1:(a2<0?-1:0))*f; else {
+		 * data[0]+=(a1>0?1:(a1<0?-1:0))*f; data[1]+=(a2>0?1:(a2<0?-1:0))*f; } } return
+		 * data;
+		 */
+	}
+	
+	/**
 	 *  	合并求和
 	 * @param qh
 	 * @return [老少合并求和，男女合并求和]
 	 */
+	@Deprecated
 	public static Integer[] countHbQh(List<InputResult> results,GameConfig config ) {
 		Integer[] data = new Integer[]{0,0};
 		/*
@@ -462,6 +552,19 @@ public class CountService {
 	 */
 	public static Integer[] countQh(Integer[] qh,int mod2) {
 		Integer[] qhbg = new Integer[] {qh[0]-qh[1],qh[2]-qh[3]};
+		
+		return qhbg;
+		
+	}
+	/**
+	 * 报告求和
+	 * @param qh
+	 * @return
+	 */
+	public static Integer[] countQh2(long[] hzBg) {
+		Integer[] qhbg = new Integer[] {
+				(hzBg[0]>0?1:-1)*(Math.abs(hzBg[0])>Math.abs(hzBg[1])?1:0),
+				(hzBg[1]>0?1:-1)*(Math.abs(hzBg[0])<Math.abs(hzBg[1])?1:0)};
 		
 		return qhbg;
 		
@@ -555,6 +658,28 @@ public class CountService {
 		
 		return null;
 		
+	}
+	
+	
+	/**
+	 * 计算合总结果
+	 * @param results
+	 * @return 当前结果
+	 */
+	public static Long reckonHzJg(List<InputResult> results,String[] uLock) {
+		
+		if(CollectionUtils.isEmpty(results))return null;
+		
+		long jg = 0;
+		for (InputResult result : results) {
+			
+			if(uLock[Integer.valueOf(result.getUid())-1].equals("0"))
+				continue;
+			
+			jg+=result.getJg();
+		}
+		
+		return jg;
 	}
 	
 	

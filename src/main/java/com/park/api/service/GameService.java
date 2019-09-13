@@ -386,6 +386,7 @@ public class GameService {
 			long[] yz = countTurn.getYzResult();
 			inputResult.setYz(yz);
 			inputResult.setRets(objs);
+			inputResult.setJg(jg);
 			inputResult.setJg_sum(jg_sum);
 			inputResult.setUp_jg_sum(upjg_sum);
 			inputResult.setJg_qh(jg_qh);
