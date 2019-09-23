@@ -404,33 +404,37 @@ public class CountService {
 	 * @param config
 	 * @return
 	 */
-	public static Integer[] countXzQh(long[] xzBg/*
-										 * List<InputResult> results,String xzbgLock,String xzbgTrend,GameConfig config
-										 */) {
-		
-		Integer[] qhbg = new Integer[] {
-				(xzBg[0]>0?1:-1)*(Math.abs(xzBg[0])>Math.abs(xzBg[1])?1:0),
-				(xzBg[1]>0?1:-1)*(Math.abs(xzBg[0])<Math.abs(xzBg[1])?1:0)};
-		
-		return qhbg;
-		
+	public static Integer[] countXzQh(/* long[] xzBg */
+										 List<InputResult> results,String xzbgLock,String xzbgTrend,BigTurnConfig bigTurnConfig
+										 ) {
 		
 		/*
-		 * Integer[] data = new Integer[]{0,0}; String[] lock = xzbgLock.split(",");
-		 * String[] trends = xzbgTrend.split(",");
+		 * Integer[] qhbg = new Integer[] {
+		 * (xzBg[0]>0?1:-1)*(Math.abs(xzBg[0])>Math.abs(xzBg[1])?1:0),
+		 * (xzBg[1]>0?1:-1)*(Math.abs(xzBg[0])<Math.abs(xzBg[1])?1:0)};
 		 * 
-		 * 
-		 * 
-		 * int f = 1; for (InputResult result : results) {
-		 * if(lock[Integer.valueOf(result.getUid())-1].equals("0"))continue;
-		 * if(trends[Integer.valueOf(result.getUid())-1].equals("0"))continue;
-		 * 
-		 * long a1 = (long)result.getRets()[4]; long a2 = (long)result.getRets()[5];
-		 * if(Math.abs(a1)>Math.abs(a2)) data[0]+=(a1>0?1:(a1<0?-1:0))*f; else
-		 * if(Math.abs(a1)<Math.abs(a2)) data[1]+=(a2>0?1:(a2<0?-1:0))*f; else {
-		 * data[0]+=(a1>0?1:(a1<0?-1:0))*f; data[1]+=(a2>0?1:(a2<0?-1:0))*f; } } return
-		 * data;
+		 * return qhbg;
 		 */
+		
+		
+		
+		Integer[] data = new Integer[]{0,0}; String[] lock = xzbgLock.split(",");
+		String[] trends = xzbgTrend.split(",");
+		
+		
+		
+		int f = 1; for (InputResult result : results) {
+		if(lock[Integer.valueOf(result.getUid())-1].equals("0"))continue;
+		if(trends[Integer.valueOf(result.getUid())-1].equals("0"))continue;
+		if(Math.abs(result.getJg_sum())<bigTurnConfig.getTgThre())continue;
+		f = result.getJg_sum()>0?-1:(result.getJg_sum()<0?1:0);
+		
+		long a1 = (long)result.getRets()[4]; long a2 = (long)result.getRets()[5];
+		if(Math.abs(a1)>Math.abs(a2)) data[0]+=(a1>0?1:(a1<0?-1:0))*f; else
+		if(Math.abs(a1)<Math.abs(a2)) data[1]+=(a2>0?1:(a2<0?-1:0))*f; else {
+		data[0]+=(a1>0?1:(a1<0?-1:0))*f; data[1]+=(a2>0?1:(a2<0?-1:0))*f; } } return
+		data;
+		
 	}
 	
 	/**
@@ -458,29 +462,36 @@ public class CountService {
 	 * @param config
 	 * @return
 	 */
-	public static Integer[] countHbQh2(long[] hbBg) {
+	public static Integer[] countHbQh2(/* long[] hbBg */ List<InputResult> results,String hbbgLock,String hbbgTrend,BigTurnConfig bigTurnConfig) {
 		
-		Integer[] qhbg = new Integer[] {
-				(hbBg[0]>0?1:-1)*(Math.abs(hbBg[0])>Math.abs(hbBg[1])?1:0),
-				(hbBg[1]>0?1:-1)*(Math.abs(hbBg[0])<Math.abs(hbBg[1])?1:0)};
-		
-		return qhbg;
 		/*
-		 * Integer[] data = new Integer[]{0,0}; String[] lock = hbbgLock.split(",");
-		 * String[] trends = hbbgTrend.split(",");
+		 * Integer[] qhbg = new Integer[] {
+		 * (hbBg[0]>0?1:-1)*(Math.abs(hbBg[0])>Math.abs(hbBg[1])?1:0),
+		 * (hbBg[1]>0?1:-1)*(Math.abs(hbBg[0])<Math.abs(hbBg[1])?1:0)};
 		 * 
-		 * 
-		 * 
-		 * int f = 1; for (InputResult result : results) {
-		 * if(lock[Integer.valueOf(result.getUid())-1].equals("0"))continue;
-		 * if(trends[Integer.valueOf(result.getUid())-1].equals("0"))continue;
-		 * 
-		 * long a1 = (long)result.getRets()[4]; long a2 = (long)result.getRets()[5];
-		 * if(Math.abs(a1)>Math.abs(a2)) data[0]+=(a1>0?1:(a1<0?-1:0))*f; else
-		 * if(Math.abs(a1)<Math.abs(a2)) data[1]+=(a2>0?1:(a2<0?-1:0))*f; else {
-		 * data[0]+=(a1>0?1:(a1<0?-1:0))*f; data[1]+=(a2>0?1:(a2<0?-1:0))*f; } } return
-		 * data;
+		 * return qhbg;
 		 */
+		
+		 Integer[] data = new Integer[]{0,0}; String[] lock = hbbgLock.split(",");
+		 String[] trends = hbbgTrend.split(",");
+		 
+		 
+		 
+		 int f = 1; 
+		 for (InputResult result : results) {
+		 if(lock[Integer.valueOf(result.getUid())-1].equals("0"))continue;
+		 if(trends[Integer.valueOf(result.getUid())-1].equals("0"))continue;
+		 if(Math.abs(result.getJg_sum())<bigTurnConfig.getTgThre())continue;
+		 
+		 
+		 f = result.getJg_sum()<0?-1:(result.getJg_sum()>0?1:0);
+		 
+		 long a1 = (long)result.getRets()[4]; long a2 = (long)result.getRets()[5];
+		 if(Math.abs(a1)>Math.abs(a2)) data[0]+=(a1>0?1:(a1<0?-1:0))*f; else
+		 if(Math.abs(a1)<Math.abs(a2)) data[1]+=(a2>0?1:(a2<0?-1:0))*f; else {
+		 data[0]+=(a1>0?1:(a1<0?-1:0))*f; data[1]+=(a2>0?1:(a2<0?-1:0))*f; } } return
+		 data;
+	
 	}
 	
 	/**
@@ -561,12 +572,37 @@ public class CountService {
 	 * @param qh
 	 * @return
 	 */
-	public static Integer[] countQh2(long[] hzBg) {
-		Integer[] qhbg = new Integer[] {
-				(hzBg[0]>0?1:-1)*(Math.abs(hzBg[0])>Math.abs(hzBg[1])?1:0),
-				(hzBg[1]>0?1:-1)*(Math.abs(hzBg[0])<Math.abs(hzBg[1])?1:0)};
+	public static Integer[] countQh2(List<InputResult> results,String[] uLock) {
+		/*
+		 * Integer[] qhbg = new Integer[] {
+		 * (hzBg[0]>0?1:-1)*(Math.abs(hzBg[0])>Math.abs(hzBg[1])?1:0),
+		 * (hzBg[1]>0?1:-1)*(Math.abs(hzBg[0])<Math.abs(hzBg[1])?1:0)};
+		 * 
+		 * return qhbg;
+		 */
 		
-		return qhbg;
+		Integer[] data = new Integer[]{0,0}; 
+		String[] lock = uLock;
+		 
+		 
+		 
+		 int f = 1; 
+		 for (InputResult result : results) {
+		 if(lock[Integer.valueOf(result.getUid())-1].equals("0"))continue;
+		 
+		 long a1 = (long)result.getRets()[4]; 
+		 long a2 = (long)result.getRets()[5];
+		 if(Math.abs(a1)>Math.abs(a2)) 
+			 data[0]+=(a1>0?1:(a1<0?-1:0))*f; 
+		 else if(Math.abs(a1)<Math.abs(a2))
+			 data[1]+=(a2>0?1:(a2<0?-1:0))*f;
+		 else {
+			 data[0]+=(a1>0?1:(a1<0?-1:0))*f; 
+			 data[1]+=(a2>0?1:(a2<0?-1:0))*f; 
+			 } 
+		 
+		 } 
+		 return data;
 		
 	}
 	
@@ -738,10 +774,7 @@ public class CountService {
 		
 		int f = 1;
 		for (InputResult result : results) {
-			if(lock[Integer.valueOf(result.getUid())-1].equals("0"))
-				continue;
-			
-			
+			if(lock[Integer.valueOf(result.getUid())-1].equals("0"))continue;
 			if(trends[Integer.valueOf(result.getUid())-1].equals("0"))continue;
 			if(Math.abs(result.getJg_sum())<bigTurnConfig.getTgThre())continue;
 			
@@ -790,9 +823,7 @@ public class CountService {
 		
 		int f = 1;
 		for (InputResult result : results) {
-			if(lock[Integer.valueOf(result.getUid())-1].equals("0"))
-				continue;
-			
+			if(lock[Integer.valueOf(result.getUid())-1].equals("0"))continue;
 			if(trends[Integer.valueOf(result.getUid())-1].equals("0"))continue;
 			if(Math.abs(result.getJg_sum())<bigTurnConfig.getTgThre())continue;
 			
@@ -818,8 +849,8 @@ public static String[] reckonHbbgTrend(List<InputResult> results,String oldHbbgT
 			int i = Integer.valueOf(result.getUid())-1;
 			String[] dt = configs[i].split("-");
 			
-			int up = Integer.parseInt(dt[1]);//上边界范围
-			int down = Integer.parseInt(dt[0]);//下边界范围
+			long up = Long.parseLong(dt[1]);//上边界范围
+			long down = Long.parseLong(dt[0]);//下边界范围
 			
 			long absUp_jg_sum = Math.abs(result.getUp_jg_sum());
 			
@@ -836,11 +867,11 @@ public static String[] reckonHbbgTrend(List<InputResult> results,String oldHbbgT
 				if(bigTurnConfig.getTgMod()==2)
 					if (absJg_sum > up/* &&absJg_sum>=bigTurnConfig.getTgThre() */) {
 					//变更区间
-					int[] newConf = calNewZone(down,up,bigTurnConfig.getConfLen(),absJg_sum,true);
+					long[] newConf = calNewZone2(down,up,bigTurnConfig.getConfLen(),absJg_sum,true);
 					configs[i] = newConf[0]+"-"+newConf[1];
-					int xzbgConfStart = 1;
-					if(newConf[0]-bigTurnConfig.getConfLen()>=1)xzbgConfStart = newConf[0]-bigTurnConfig.getConfLen();
-					xzbgConfigs[i] = (xzbgConfStart+bigTurnConfig.getConfLen()-1)+"-"+xzbgConfStart;
+					long xzbgConfStart = 1;
+					if(newConf[0]-(long)bigTurnConfig.getConfLen()>=1)xzbgConfStart = newConf[0]-(long)bigTurnConfig.getConfLen();
+					xzbgConfigs[i] = (xzbgConfStart+(long)bigTurnConfig.getConfLen()-1)+"-"+xzbgConfStart;
 					trends[i] = result.getJg_sum()>0?"1":"-1";
 				}
 					
@@ -856,11 +887,11 @@ public static String[] reckonHbbgTrend(List<InputResult> results,String oldHbbgT
 							result.getJg_sum()
 									* result.getUp_jg_sum() >= 0/* &&absJg_sum>=bigTurnConfig.getTgThre() */) {
 					//变更区间
-					int[] newConf = calNewZone(down,up,bigTurnConfig.getConfLen(),absJg_sum,true);
+					long[] newConf = calNewZone2(down,up,bigTurnConfig.getConfLen(),absJg_sum,true);
 					configs[i] = newConf[0]+"-"+newConf[1];
-					int xzbgConfStart = 1;
-					if(newConf[0]-bigTurnConfig.getConfLen()>=1)xzbgConfStart = newConf[0]-bigTurnConfig.getConfLen();
-					xzbgConfigs[i] = (xzbgConfStart+bigTurnConfig.getConfLen()-1)+"-"+xzbgConfStart;
+					long xzbgConfStart = 1;
+					if(newConf[0]-(long)bigTurnConfig.getConfLen()>=1)xzbgConfStart = newConf[0]-(long)bigTurnConfig.getConfLen();
+					xzbgConfigs[i] = (xzbgConfStart+(long)bigTurnConfig.getConfLen()-1)+"-"+xzbgConfStart;
 					
 					continue;
 				}
@@ -937,6 +968,43 @@ public static String[] reckonHbbgTrend(List<InputResult> results,String oldHbbgT
 	 * @param val
 	 * @param isUp
 	 */
+	private static long[] calNewZone2(long oldDown,long oldUp,int confLen,long val,boolean isUp) {
+		
+		long a1 = (isUp?(val-oldUp):(oldDown-val));//相差量
+		long a2 = a1/confLen+(a1%confLen>0?1:0);//区间差数量,余数大于0，加一个区间
+		
+		
+		if(isUp) {
+			long[] ret = new long[] {oldUp+a2*confLen-(confLen-1),oldUp+a2*confLen};
+			if(ret[0]<0||ret[1]<0) {
+				
+				System.out.println();
+			}
+			
+			return ret;
+		}else {
+			
+			if(val==0)
+				return new long[] {1,confLen};
+			
+			long[] ret = new long[] {oldDown-a2*confLen,oldDown-a2*confLen+(confLen-1)};
+			if(ret[0]<0||ret[1]<0) {
+				
+				System.out.println();
+			}
+			return ret;
+		}
+		
+		
+	}
+	/**
+	 * 计算区间
+	 * @param oldUp
+	 * @param oldDown
+	 * @param confLen
+	 * @param val
+	 * @param isUp
+	 */
 	private static int[] calNewZone(int oldDown,int oldUp,int confLen,long val,boolean isUp) {
 		
 		int a1 = (int) (isUp?(val-oldUp):(oldDown-val));//相差量
@@ -944,15 +1012,20 @@ public static String[] reckonHbbgTrend(List<InputResult> results,String oldHbbgT
 		
 		
 		if(isUp) {
-			return new int[] {oldUp+a2*confLen-(confLen-1),oldUp+a2*confLen};
+			int[] ret = new int[] {oldUp+a2*confLen-(confLen-1),oldUp+a2*confLen};
+			if(ret[0]<0||ret[1]<0) {
+				
+				System.out.println();
+			}
 			
+			return ret;
 		}else {
 			
 			if(val==0)
 				return new int[] {1,confLen};
 			
 			int[] ret = new int[] {oldDown-a2*confLen,oldDown-a2*confLen+(confLen-1)};
-			if(ret[0]<0) {
+			if(ret[0]<0||ret[1]<0) {
 				
 				System.out.println();
 			}
@@ -1061,20 +1134,13 @@ public static String[] reckonHbbgTrend(List<InputResult> results,String oldHbbgT
 	
 	public static void main(String[] args) {
 		
-		/*
-		 * List<InputResult> results = new ArrayList<>(); InputResult result = new
-		 * InputResult(); result.setJg_sum(-5); result.setUp_jg_sum(-6);
-		 * result.setUid("1"); results.add(result);
-		 * 
-		 * InputResult result2 = new InputResult(); result2.setJg_sum(-3);
-		 * result2.setUp_jg_sum(-6); result2.setUid("2"); results.add(result2);
-		 * InputResult result3 = new InputResult(); result3.setJg_sum(-2);
-		 * result3.setUp_jg_sum(-6); result3.setUid("3"); results.add(result3); String
-		 * oldXzbgTrend = "0,0,0,0,0,0,0,0,0,0"; String xzbgConfig =
-		 * "5-3,5-3,5-3,5-3,5-3,5-3,5-3,5-3,5-3,5-3";
-		 * 
-		 * String reString = reckonXzbgTrend(results,oldXzbgTrend,xzbgConfig);
-		 */
+		boolean isUp = true;
+		int oldUp = 1;
+		long val = 4294939463L;
+		int oldDown = 1;
+		
+		//int a1 = (int) (isUp?(val-oldUp):(oldDown-val));//相差量
+		long[] a1 =calNewZone2(oldDown,oldUp,1,val,isUp);
 		
 		for (int i = 0; i < 20; i++) {
 			

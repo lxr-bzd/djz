@@ -175,7 +175,7 @@ public class TurnService {
 			Long hzJg = CountService.reckonHzJg(results,uLock);
 			
 			//计算求和报告
-			Integer[] qhBg = CountService.countQh2(new long[] {(long)hzBg[4],(long)hzBg[5]});
+			Integer[] qhBg = CountService.countQh2(results,uLock);
 			Integer[] qhJg = upQh==null?null:CountService.countQhJg(pei.substring(0, 1), upQh);
 			
 			//计算原值报告
@@ -192,7 +192,8 @@ public class TurnService {
 			long hbJgSum = hbJg==null?Long.valueOf(map.get("hb_jg_sum").toString()):Long.valueOf(map.get("hb_jg_sum").toString())+hbJg[0]+hbJg[1];
 
 			//计算合并求和
-			Integer[] hbqhBg = CountService.countHbQh2(hbBg);
+			//Integer[] hbqhBg = CountService.countHbQh2(hbBg);
+			Integer[] hbqhBg = CountService.countHbQh2(results,map.get("hbbg_lock").toString(),newHbbg_trend,bigTurn.getBigTurnConfig());
 			Integer[] hbqhJg = upHbqh==null?null:CountService.countHbQhJg(pei.substring(0, 1), upHbqh);
 			
 			//计算选择报告
@@ -206,7 +207,7 @@ public class TurnService {
 			long xzJgSum = xzJg==null?Long.valueOf(map.get("xz_jg_sum").toString()):Long.valueOf(map.get("xz_jg_sum").toString())+xzJg[0]+xzJg[1];
 
 			//计算选择求和
-			Integer[] xzqhBg = CountService.countXzQh(xzBg);
+			Integer[] xzqhBg = CountService.countXzQh(results,map.get("xzbg_lock").toString(),newXzbg_trend,bigTurn.getBigTurnConfig());
 			Integer[] xzqhJg = upHbqh==null?null:CountService.countXzQhJg(pei.substring(0, 1), upXzqh);
 			
 			
