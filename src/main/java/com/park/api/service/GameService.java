@@ -334,7 +334,7 @@ public class GameService {
 		if(row<3) return null;
 		
 		Long start1 = System.currentTimeMillis();
-		Map<String, Object> map = ServiceManage.jdbcTemplate.queryForMap("select `id`,tid,   `queue`,  `queue_count`,  `grp_queue`,   `rule`,  `rule_type`,`mod`,tg_sum,jg_qh from game_runing_count where hid=?",hid);
+		Map<String, Object> map = ServiceManage.jdbcTemplate.queryForMap("select `id`,tid,   `queue`,  `queue_count`,  `grp_queue`,   `rule`,  `rule_type`,`mod`,tg_sum,tg_trend,jg_qh from game_runing_count where hid=?",hid);
 		System.out.println(hid+"查询："+((System.currentTimeMillis()-start1))+"ms");
 		start1 = System.currentTimeMillis();
 		String[] rule = map.get("rule").toString().split(",");
@@ -344,6 +344,8 @@ public class GameService {
 		int mod =Integer.parseInt(map.get("mod").toString());
 		int mod2 = turnService.getInputTurn().get().getMod2();
 		String tid = map.get("tid").toString();
+		
+		Integer oldTgTrend = (Integer)map.get("tg_trend");
 		
 		
 		JgHandel jgHandel = createJgHandel(row, rule_type, start, end, mod2);
@@ -370,8 +372,17 @@ public class GameService {
 		long upjg_sum = ((long)map.get("tg_sum"));
 		long jg_sum = jg + upjg_sum;
 		long jg_qh =(jg>0?1:(jg<0?-1:0))+((int)map.get("jg_qh"));
-		ServiceManage.jdbcTemplate.update("UPDATE game_runing_count SET queue=?,queue_count=?,tg=CONCAT(tg,?),tg_sum=?,jg_qh=?,ys=ys+? WHERE id=?"
-				,rets.getQueue(),rets.getQueueCount(),jgHandel.getResult()+",",jg_sum,jg_qh,
+		Integer newTgTrend = oldTgTrend;
+		if(jg!=0) {
+			if(oldTgTrend!=0&&oldTgTrend*jg>0)//同号
+				newTgTrend = oldTgTrend+(jg>0?1:-1);
+			else //不同号或者为0
+				newTgTrend = (jg>0?1:-1);
+				
+		}
+		
+		ServiceManage.jdbcTemplate.update("UPDATE game_runing_count SET queue=?,queue_count=?,tg=CONCAT(tg,?),tg_trend=?,tg_sum=?,jg_qh=?,ys=ys+? WHERE id=?"
+				,rets.getQueue(),rets.getQueueCount(),jgHandel.getResult()+",",newTgTrend,jg_sum,jg_qh,
 				rets.getYs(),map.get("id"));
 		System.out.println(hid+"update："+((System.currentTimeMillis()-start1))+"ms");
 		start1 = System.currentTimeMillis();
@@ -390,6 +401,8 @@ public class GameService {
 			inputResult.setJg_sum(jg_sum);
 			inputResult.setUp_jg_sum(upjg_sum);
 			inputResult.setJg_qh(jg_qh);
+			inputResult.setTgTrend(newTgTrend);
+			
 			
 			return objs;
 			

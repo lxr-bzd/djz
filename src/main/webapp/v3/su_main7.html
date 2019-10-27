@@ -91,6 +91,7 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 								<col style="width:60px;">
 								<col style="width:100px;">
 								<col style="width:60px;">
+								<col style="width:100px;">
 								
 								<col style="width:50px;">
 								
@@ -99,15 +100,16 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							  	<tr class="data_col person_int">
 							    	<td rowspan="4" class="focus_row">--</td>
 							    	<td colspan="6" class="blue" style="font-size:24px">計 算 表</td>
-							    	<!-- <td colspan="3" class="blue mod_group">--</td> -->
 							    	<td><div class="blue btn1 refresh_btn">刷新</div></td>
+							    	<td><a href="setting.html"><div class="blue btn1">設置</div></a></td>
+							    	
 							    	<td><a href="su_history.html"><div class="blue btn1">記錄</div></a></td>
-							    	<td><div class="blue btn1 remove-all">清空</div></td>
+							    	<!-- <td><div class="blue btn1 remove-all">清空</div></td> -->
 							    	<td><div class="blue btn1 exit_btn">關閉</div></td>
 							    	
-							    	<td colspan="2" id="input_group"><input type="text" style="width: 90%;background-color: #eee" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""></td>
-							    	<td colspan="2"> <div class="blue btn1 ok_btn">確定</div></td>
-							    	<td colspan="2">
+							    	<td colspan="4" id="input_group"><input type="text" style="width: 90%;background-color: #eee" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""></td>
+							    	<td colspan="3"> <div class="blue btn1 ok_btn">確定</div></td>
+							    <!-- 	<td colspan="2">
 							    		<table style="height:100%">
 											<tr><td style="height:auto;font-size:16px;">開始<input type="number" id="tg_thre" value="" style="width: 40%;background-color: #eee;font-size:19px;">
 														<input value="保存" style="border:auto;width:auto;font-size:16px;padding:1px 5px;" type="button"  onclick="saveConfig('tg_thre',$('#tg_thre').val())"></td>
@@ -116,7 +118,7 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 														<input value="保存" style="border:auto;width:auto;font-size:16px;padding:1px 5px;" type="button"  onclick="saveConfig('conf_len',$('#conf_len').val())"></td>
 											</tr>
 										</table>
-									</td>
+									</td> -->
 							    	<td rowspan="4" class="focus_row">--</td>
 							    	
 							  	</tr>
@@ -139,6 +141,7 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							    	<td>合并求和</td>
 									<td>選擇報告</td>
 									<td>選擇求和</td>
+									<td>結果報告</td>
 							    	
 							  	</tr>
 							  
@@ -176,6 +179,7 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 								<col style="width:60px;">
 								<col style="width:100px;">
 								<col style="width:60px;">
+								<col style="width:100px;">
 								
 								<col style="width:50px;">
 								
@@ -391,6 +395,7 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 								<col style="width:60px;">
 								<col style="width:100px;">
 								<col style="width:60px;">
+								<col style="width:100px;">
 								
 								<col style="width:50px;">
 								
@@ -446,6 +451,7 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 								<col style="width:60px;">
 								<col style="width:100px;">
 								<col style="width:60px;">
+								<col style="width:100px;">
 								
 								<col style="width:50px;">
 								
@@ -1048,7 +1054,8 @@ function ref(data){
 		
 		html+='<td>匯總報告</td><td>匯總求和</td>'
 	    	+'<td>合并報告</td><td>合并求和</td>'
-	    	+'<td>選擇報告</td><td>選擇求和</td>';
+	    	+'<td>選擇報告</td><td>選擇求和</td>'
+	    	+'<td>結果報告</td>';
 		return html;
 	}
 	
@@ -1147,7 +1154,7 @@ function ref(data){
 			  btn: ['是','否'] 
 			}, function(){
 				$.ajax({
-					url:"../user/game/removeAll.do",
+					url:"../user/game/clear.do",
 					type:"post",
 					async:false,
 					success:function(result){
@@ -1170,51 +1177,12 @@ function ref(data){
 		
 	
 	</script>
+	
 	<script type="text/javascript">
 	
-	$(function(){
-		 $app.request("../user/config/getConfig.do",function(json){
-			 if(json.code==1){
-					$("#tg_thre").val(json.data.tg_thre)
-					$("#conf_len").val(json.data.conf_len)
-					
-				}else{
-					
-					alert(json.msg)
-				}
-			 
-		 });
-		
-		
-		
-	})
+	 
 	
-	function saveConfig(mod,val){
-		
-		
-		
-		$.ajax({
-			url:"../user/config/setConfig.do",
-			data:{mod:mod,val:val},
-			type:"post",
-			async:false,
-			success:function(json){
-				if(json.code==1){
-					layer.msg('操作成功');
-					
-					
-				}else{
-					
-					alert(json.msg)
-				}
-			}
-		});
-		
-		
-	}
-	
-	
-	
+
 	
 	
 	</script>
@@ -1316,6 +1284,7 @@ function ref(data){
 							    	<td> <div class="bg-td">{{bgData['hbqh'][0].name}}<span {{if bgData['hbqh'][0].val>0}}class="red"{{/if}}>{{if bgData['hbqh'][0].name}}{{bgData['hbqh'][0].val}}{{/if}}</span></div></td>
 							    	<td> <div class="bg-td">{{bgData['xzBg'][0].name}}<span {{if bgData['xzBg'][0].val>0}}class="red"{{/if}}>{{if bgData['xzBg'][0].name}}{{bgData['xzBg'][0].val}}{{/if}}</span></div></td>
 							    	<td> <div class="bg-td">{{bgData['xzqh'][0].name}}<span {{if bgData['xzqh'][0].val>0}}class="red"{{/if}}>{{if bgData['xzqh'][0].name}}{{bgData['xzqh'][0].val}}{{/if}}</span></div></td>
+							    	<td> <div class="bg-td">{{bgData['jgbg'][0].name}}<span {{if bgData['jgbg'][0].val>0}}class="red"{{/if}}>{{if bgData['jgbg'][0].name}}{{bgData['jgbg'][0].val}}{{/if}}</span></div></td>
 
 									<td rowspan="3"> <span class="">匯總</span></td>	
 								</tr>
@@ -1332,6 +1301,7 @@ function ref(data){
 							    	<td> <div class="bg-td">{{bgData['hbqh'][1].name}}<span {{if bgData['hbqh'][1].val>0}}class="red"{{/if}}>{{if bgData['hbqh'][1].name}}{{bgData['hbqh'][1].val}}{{/if}}</span></div></td>
 							    	<td><div class="bg-td">{{bgData['xzBg'][1].name}} <span {{if bgData['xzBg'][1].val>0}}class="red"{{/if}}>{{if bgData['xzBg'][1].name}}{{bgData['xzBg'][1].val}}{{/if}}</span></div></td>
 							    	<td> <div class="bg-td">{{bgData['xzqh'][1].name}}<span {{if bgData['xzqh'][1].val>0}}class="red"{{/if}}>{{if bgData['xzqh'][1].name}}{{bgData['xzqh'][1].val}}{{/if}}</span></div></td>
+							    	<td> <div class="bg-td">{{bgData['jgbg'][1].name}}<span {{if bgData['jgbg'][1].val>0}}class="red"{{/if}}>{{if bgData['jgbg'][1].name}}{{bgData['jgbg'][1].val}}{{/if}}</span></div></td>
 
 							  	</tr>
 							  	<tr class="data_col">
@@ -1346,6 +1316,7 @@ function ref(data){
 							    	<td class="blue"><div class="bg-td">共 <span >{{bgData['hbqh'][2]}}</span></div></td>
 									<td class="blue"><div class="bg-td">共 <span >{{bgData['xzBg'][2]}}</span></div></td>
 							    	<td class="blue"><div class="bg-td">共 <span >{{bgData['xzqh'][2]}}</span></div></td>
+									<td class="blue"><div class="bg-td">共 <span >{{bgData['jgbg'][2]}}</span></div></td>
 									
 									
 							  	</tr>
@@ -1371,6 +1342,8 @@ function ref(data){
 	<td {{if jgData['hbqh'].list[i]>0}}class="red"{{/if}}>{{jgData['hbqh'].list[i]}}</td>
 	<td {{if jgData['xzBg'].list[i]>0}}class="red"{{/if}}>{{jgData['xzBg'].list[i]}}</td>
 	<td {{if jgData['xzqh'].list[i]>0}}class="red"{{/if}}>{{jgData['xzqh'].list[i]}}</td>
+	<td {{if jgData['jgbg'].list[i]>0}}class="red"{{/if}}>{{jgData['jgbg'].list[i]}}</td>
+
 	
 <td>{{i+1}}</td>
 	</tr>
@@ -1394,7 +1367,8 @@ function ref(data){
 																		
 									<td class="blue2 {{if jgData['xzBg'].jg>0}}red{{/if}}">{{jgData['xzBg'].jg}}</td>
 									<td class="blue2 {{if jgData['xzqh'].jg>0}}red{{/if}}">{{jgData['xzqh'].jg}}</td>
-																		
+									<td class="blue2 {{if jgData['jgbg'].jg>0}}red{{/if}}">{{jgData['jgbg'].jg}}</td>
+																			
 <td>結果</td>
 							  	</tr>
 							  	<tr>
@@ -1412,6 +1386,7 @@ function ref(data){
 									
 									<td {{if jgData['xzBg'].qh>0}}class="red"{{/if}}>{{jgData['xzBg'].qh}}</td>
 									<td {{if jgData['xzqh'].qh>0}}class="red"{{/if}}>{{jgData['xzqh'].qh}}</td>
+									<td {{if jgData['jgbg'].qh>0}}class="red"{{/if}}>{{jgData['jgbg'].qh}}</td>
 									
 <td>求和</td>
 							  	</tr>
@@ -1428,6 +1403,7 @@ function ref(data){
 <td class="blue">{{bgData['hbqh'][3]}}</td>
 									<td class="blue">{{bgData['xzBg'][3]}}</td>
 <td class="blue">{{bgData['xzqh'][3]}}</td>
+<td class="blue">{{bgData['jgbg'][3]}}</td>
 							    	
 									
 <td>共計</td>

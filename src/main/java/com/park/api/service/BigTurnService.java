@@ -111,9 +111,11 @@ public class BigTurnService {
 		config.setTgMod(sysService.getSysConfig("tg_mod", Integer.class));
 		config.setTgThre(sysService.getSysConfig("tg_thre", Integer.class));
 		
+		config.setRule3(sysService.getSysConfig("rule3", String.class));
+		
 		final BigTurn bigTurn = new BigTurn();
 		bigTurn.setFrow(1);
-		bigTurn.setGj("[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]");
+		bigTurn.setGj("[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]");
 		bigTurn.setConfig_json(JSONObject.toJSONString(config));
 		bigTurn.setBigTurnConfig(config);
 		KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -157,7 +159,8 @@ public class BigTurnService {
 	private Long[][] handelBg( List<BigInputResult> results) {
 		Long[][] ret= new Long[][] {new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L}
 		,new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L}
-		,new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L}};
+		,new Long[] {0L,0L},new Long[] {0L,0L},new Long[] {0L,0L}
+		,new Long[] {0L,0L}};
 		
 		for (BigInputResult bigInputResult : results) {
 			
@@ -202,6 +205,12 @@ public class BigTurnService {
 				ret[i][1]+=(long)bigInputResult.getXzqhBg()[1];
 				
 			}
+			i++;
+			if(bigInputResult.getJgbgBg()!=null) {
+				ret[i][0]+=(long)bigInputResult.getJgbgBg()[0];
+				ret[i][1]+=(long)bigInputResult.getJgbgBg()[1];
+				
+			}
 		}
 		
 		return ret;
@@ -209,7 +218,7 @@ public class BigTurnService {
 	}
 	
 	private Long[] handelGj(Long[] oldGj,Long[][] newbBg) {
-		Long[] gj = new Long[16];
+		Long[] gj = new Long[newbBg.length];
 		
 		for (int i = 0; i < gj.length; i++) {
 			gj[i] = oldGj[i]+Math.abs(newbBg[i][0])+Math.abs(newbBg[i][1]);

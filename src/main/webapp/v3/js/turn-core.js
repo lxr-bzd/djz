@@ -161,6 +161,23 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 		
 		
 		/* 结束选择求和  */
+		/* 开始结果报告  */
+		turn.jgbg = eval(turn.jgbg );
+		var jgbgBgData = createBg(turn.jgbg);
+		jgbgBgData.push(turn.jgbg_sum);
+		bgData["jgbg"] = jgbgBgData;
+		
+		
+		jgData['jgbg'] = {list:[null],jg:0,qh:0};
+		var jgbgjgs = turn.jgbg_jg?turn.jgbg_jg.split(","):[];
+		for (var i = 0; i < jgbgjgs.length; i++) {
+			if(!jgbgjgs[i])continue;
+			var v = new Number(jgbgjgs[i]);
+			jgData['jgbg'].list.push(v);
+			jgData['jgbg'].qh+=(v>0?1:(v<0?-1:0));
+			jgData['jgbg'].jg+=v;
+		}
+		/* 结束结果报告  */
 		
 		
 		
@@ -220,22 +237,20 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 	
 	function getDefVdata(turn){
 		
-		return {"turn":initTurn(turn)
-				,"bgData":{ "hb":[{"name":'',"val":0},{"name":"","val":0},'','']
-							,"hbBg":[{"name":'',"val":0},{"name":"","val":0},'','']
-							,"yzBg":[{"name":'',"val":0},{"name":"","val":0},'','']
-							,"qhBg":[{"name":'',"val":0},{"name":"","val":0},'','']
-							,"hbqh":[{"name":'',"val":0},{"name":"","val":0},'','']
-				,"xzBg":[{"name":'',"val":0},{"name":"","val":0},'','']}
-				,"jgData":{ "hb":{"list":[],"jg":0,"qh":0}
-							,"hbBg":{"list":[],"jg":0,"qh":0}
-							,"yzBg":{"list":[],"jg":0,"qh":0}
-							,"qhBg":{"list":[],"jg":0,"qh":0}
-							,"hbqh":{"list":[],"jg":0,"qh":0}
-							,"xzBg":{"list":[],"jg":0,"qh":0}
-							}
+		var ret = {"turn":initTurn(turn)
+				,"bgData":{ }
+				,"jgData":{ }
 				
 				}
+		
+		var cols = ["hb","qhBg","hbBg","hbqh","xzBg","xzqh","jgbg"];
+		
+		for (var i = 0; i < cols.length; i++) {
+			
+			ret.bgData[cols[i]] = [{"name":'',"val":0},{"name":"","val":0},'',''];
+			ret.jgData[cols[i]] = {"list":[],"jg":0,"qh":0};
+		}
+		return ret;
 	}
 	
 	function createBigVdata(bigTurn,vDatas){
@@ -260,7 +275,7 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 			
 		}else{
 			
-			var cols = ["hb","qhBg","hbBg","hbqh","xzBg","xzqh"];
+			var cols = ["hb","qhBg","hbBg","hbqh","xzBg","xzqh","jgbg"];
 			var bigvData = {"bigTurn":bigTurn,"bgData":{},"jgData":{}};
 			
 			for (var i = 0; i < cols.length; i++) {
@@ -278,7 +293,7 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 			var bgData = bigvData.bgData;
 			var bg = eval(bigTurn.bg);
 			var gj = eval(bigTurn.gj);
-			var col = [1,2,3,4,5,6,7,8,9,10,'hb','qhBg','hbBg','hbqh','xzBg','xzqh'];
+			var col = [1,2,3,4,5,6,7,8,9,10,'hb','qhBg','hbBg','hbqh','xzBg','xzqh','jgbg'];
 			for (var i = 0; i < col.length; i++) {
 				
 				var nm = col[i];
@@ -291,7 +306,7 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 		function add2BigVdata(bigVdata,vData){
 			
 			var jgData = bigVdata.jgData;
-			var col = [1,2,3,4,5,6,7,8,9,10,'hb','qhBg','hbBg','hbqh','xzBg','xzqh'];
+			var col = [1,2,3,4,5,6,7,8,9,10,'hb','qhBg','hbBg','hbqh','xzBg','xzqh','jgbg'];
 			
 			
 			for (var j = 0; j < col.length; j++) {

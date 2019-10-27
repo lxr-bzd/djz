@@ -2,6 +2,7 @@ package com.park.api.service.bean;
 
 public class BigTurnConfig {
 
+	String rule3;
 	
 	Integer turnNum;
 	
@@ -10,6 +11,16 @@ public class BigTurnConfig {
 	Integer confLen;
 	
 	Integer tgThre;
+	
+	
+
+	public String getRule3() {
+		return rule3;
+	}
+
+	public void setRule3(String rule3) {
+		this.rule3 = rule3;
+	}
 
 	public Integer getTurnNum() {
 		return turnNum;

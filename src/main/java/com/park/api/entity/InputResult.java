@@ -22,6 +22,8 @@ public class InputResult {
 	//当前产生的结果
 	int jg;
 	
+	int tgTrend;
+	
 	public String getUid() {
 		return uid;
 	}
@@ -76,6 +78,12 @@ public class InputResult {
 	}
 	public void setJg(int jg) {
 		this.jg = jg;
+	}
+	public int getTgTrend() {
+		return tgTrend;
+	}
+	public void setTgTrend(int tgTrend) {
+		this.tgTrend = tgTrend;
 	}
 	
 	

@@ -9,6 +9,7 @@ public class BigInputResult {
 	long[] hzBg;
 	long[] hbBg;
 	long[] xzBg;
+	long[] jgbgBg;
 	
 	
 	Integer[] hzqhBg;
@@ -97,6 +98,14 @@ public class BigInputResult {
 
 	public void setXzqhBg(Integer[] xzqhBg) {
 		this.xzqhBg = xzqhBg;
+	}
+
+	public long[] getJgbgBg() {
+		return jgbgBg;
+	}
+
+	public void setJgbgBg(long[] jgbgBg) {
+		this.jgbgBg = jgbgBg;
 	}
 
 	

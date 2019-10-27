@@ -837,6 +837,41 @@ public class CountService {
 		return data;
 	}
 	
+	/**
+	 * 计算结果报告
+	 * @param yz
+	 * @param mod2
+	 * @return [正数为报告老负数报告少，正数为报告男负数报告女]
+	 */
+	public static long[] reckonJgBg(List<InputResult> results,BigTurnConfig bigTurnConfig ) {
+		
+		
+		int start = Integer.parseInt(bigTurnConfig.getRule3().split(",")[0]);
+		int end = Integer.parseInt(bigTurnConfig.getRule3().split(",")[1]);
+		
+		long[] data = new long[]{0,0};
+		for (InputResult result : results) {
+			
+			int length = Math.abs(result.getTgTrend());
+			if(!(length>=start&&length<=end))continue;
+			long f = length<1?0:(long) (Math.pow(2,length-start));
+			if(result.getTgTrend()<0)f = f*-1L;
+			long ls = (long)result.getRets()[4];
+			long nv = (long)result.getRets()[5];
+			if(Math.abs(ls)>Math.abs(nv))
+				data[0]+=(ls>0?1L:-1L)*f;
+			else if(Math.abs(nv)>Math.abs(ls))
+				data[1]+=(nv>0?1L:-1L)*f;
+			else if(Math.abs(ls)>0&&Math.abs(nv)>0) {
+				data[0]+=(ls>0?1L:-1L)*f;
+				data[1]+=(nv>0?1L:-1L)*f;
+			}
+			
+		}
+		
+		
+		return data;
+	}
 	
 public static String[] reckonHbbgTrend(List<InputResult> results,String oldHbbgTrend,String hbbgConfig,String oldXzbgConfig,BigTurnConfig bigTurnConfig) {
 		
@@ -1037,6 +1072,22 @@ public static String[] reckonHbbgTrend(List<InputResult> results,String oldHbbgT
 	
 	
 	public static Long[] reckonXzJg(String pei,Long[] upHb) {
+		//if(length>=start&&length<end) {
+		
+		Long[] qhbg = upHb;
+		
+		Integer pv = Integer.valueOf(pei);
+		long jg1 =(pv>2?qhbg[0]:-qhbg[0]);
+		long jg2 =(pv%2!=0?qhbg[1]:-qhbg[1]);
+		return new Long[] {jg1,jg2};
+		
+		//}
+		
+		//return new Long[] {0l,0l};
+		
+	}
+	
+	public static Long[] reckonJgJg(String pei,Long[] upHb) {
 		//if(length>=start&&length<end) {
 		
 		Long[] qhbg = upHb;

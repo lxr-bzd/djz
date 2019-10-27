@@ -1,4 +1,8 @@
 package com.park.api.service;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +35,17 @@ public class SysService {
 		 T t = ServiceManage.jdbcTemplate.queryForObject("select val from djt_sys where ckey=?", reType,ckey);
 		 return t;
 		
+	}
+	
+	public Map<String, String> getAllConfig() {
+		List<Map<String, Object>> list = ServiceManage.jdbcTemplate.queryForList("select ckey,val from djt_sys ");
+		Map<String, String> map = new HashMap<String, String>(); 
+		for (int i = 0; i < list.size(); i++) {
+			map.put(list.get(i).get("ckey").toString(), list.get(i).get("val").toString());
+		}
+		
+		return map;
+
 	}
 	
 }

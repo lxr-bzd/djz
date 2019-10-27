@@ -86,6 +86,21 @@ public class GameController extends BaseController{
 	public Object removeAll() {
 		
 		ServiceManage.jdbcTemplate.batchUpdate(
+				"TRUNCATE `game_big_turn`" ,
+				"TRUNCATE `game_turn`" ,
+				"TRUNCATE `djt_history`" ,
+				"TRUNCATE `game_history`" ,
+				"TRUNCATE `game_runing`" ,
+				"TRUNCATE `game_runing_count`");
+		
+		return JsonResult.getSuccessResult();
+	}
+	
+	@RequestMapping("clear")
+	@ResponseBody
+	public Object clear() {
+		
+		ServiceManage.jdbcTemplate.batchUpdate(
 				"DELETE FROM `game_big_turn` WHERE state=1",
 				"DELETE FROM `game_turn` WHERE state=1" ,
 				"TRUNCATE `game_history`" ,
