@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+
+	    <meta name="description" content="">
+	
+	    <meta name="Keywords" content="">
+	
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<link rel="stylesheet" type="text/css" href="css/main.css"/>
+		<style type="text/css">
+			table{border-collapse: collapse;}
+			table td,table th{
+				border: 1px solid rgba(0,0,0,1);
+			}
+			.top-body{overflow-y: scroll;}
+			.top-body>table{table-layout: fixed;}
+			.scroll-body{overflow-y: scroll;max-height: 615px;}
+			.scroll-body>table{table-layout: fixed;}
+			.scroll-body td{height: 33px;}
+			.bottom-body{overflow-y: scroll;}
+			.bottom-body>table{table-layout: fixed;}
+			.bottom-body>td{height: 38px;}
+			
+			.blue{background-color: #087ec3;color: white;}
+			.blue2{background-color: #92ebff;}
+			.yellow{background-color: yellow;}
+			
+			
+			.btn1{text-align: center;margin: 5px;height: 40px;line-height: 40px;border-radius:5px}
+			input{font-size: 19px;font-weight: bold;}
+		
+		</style>
+	</head>
+	<body>
+		<!--前臺表-->
+		<section class="reception_wrap" style="overflow-x: scroll;height: 100%;">
+			<div class="reception_box">
+				<!--數據表-->
+				<table>
+					<tr class="reception">
+						<!--A表-->
+						<td  class="table_top rec-table-one">
+						<div class="top-body">
+							<table >
+							<colgroup>
+											<col style="width:340px;">
+											<col style="width:10000px;">
+											
+										</colgroup>
+								<tbody id="head_group">
+							  	<tr class="data_col"> <td colspan="1"><a href="javascript:history.back(-1)">返回</a></td><td colspan="1"></td><!-- <td colspan="1"><a href="javascript:history.back(-1)">返回</a></td> --></tr>
+							  	<tr class="data_col">
+							    	<td colspan="3">
+							    		<div  class="key-widget" data-key="mod2" data-type="enum"  style="text-align: left;padding: 10px 20px;">
+											<span>設置模式：</span>
+											<input type="radio" name="mod2" value="1"> A模式
+											<input type="radio" name="mod2" value="2"> B模式
+											<input value="保存" type="button" class="save">
+										</div></td>
+									
+							    	
+							  	</tr>
+							  	<tr class="data_col">
+							    	<td colspan="3">
+							    		<div class="key-widget" data-key="gameGroupNum" data-type="enum" style="text-align: left;padding: 10px 20px;">
+										<span>設置組數：</span>
+											<input type="radio" name="gameGroupNum" value="10"> 大
+											<input type="radio" name="gameGroupNum" value="1"> 小
+											<input value="保存" type="button" class="save">
+										</div></td>
+							  	</tr>
+							  	
+							  	<tr>
+							  	<td colspan="3">
+										<div class="key-widget" data-key="gameRowNum" data-type="enum" style="text-align: left;padding: 10px 20px;">
+											<span>設置行數：</span>
+											<input type="radio" name="gameRowNum" value="212" >210行
+											<input type="radio" name="gameRowNum" value="2002">2000行
+											<input value="保存" type="button" class="save">
+										</div>
+										</td>
+							  	</tr>
+							  	<tr>
+							  	<td colspan="3">
+										<div class="key-widget" data-key="tip_open" data-type="enum" style="text-align: left;padding: 10px 20px;">
+												<span>是否開啟提示：</span>
+												<input type="radio" name="tip_open" value="1">是
+												<input type="radio" name="tip_open" value="2" >否
+												<input value="保存" type="button" class="save">
+											</div>
+										</td>
+							  	</tr>
+							  	<tr>
+							  	<td colspan="3">
+										<div class="key-widget" data-key="turn_num" style="text-align: left;padding: 10px 20px;">
+											<span>版數：</span>
+											<input type="number" class="target" value="">
+											<input value="保存" type="button" class="save">
+										</div>
+										</td>
+							  	</tr>
+							  	
+							  	
+							  	<tr>
+							  	<td colspan="3">
+										<div class="key-widget" data-key="tg_thre" style="text-align: left;padding: 10px 20px;">
+											<span>開始：</span><input class="target" type="number"> <input value="保存" type="button" class="save">
+										</div>
+										<div class="key-widget" data-key="conf_len" style="text-align: left;padding: 10px 20px;">
+											<span>間隔：</span><input class="target" type="number"> <input value="保存" type="button" class="save">
+										</div>
+										</td>
+							  	</tr>
+							  	<tr>
+							  	<td colspan="3">
+										<div class="key-widget" data-key="rule" data-type="range" style="padding: 10px;text-align: left;">
+										
+											<span>表1：</span><input class="start" type="number">
+											<span>- </span><input class="end" type="number">
+											<input value="保存" type="button" class="save">
+										</div>
+										</td>
+							  	</tr>
+							  	<tr>
+							  	<td colspan="3">
+										<div class="key-widget" data-key="rule2" data-type="range" style="padding: 10px;text-align: left;">
+										
+											<span>表2：</span><input class="start" type="number">
+											<span>- </span><input class="end" type="number">
+											<input value="保存" type="button" class="save">
+										</div>
+										</td>
+							  	</tr>
+							  	<tr>
+							  	<td colspan="3">
+										<div class="key-widget" data-key="rule3" data-type="range" style="padding: 10px;text-align: left;">
+										
+											<span>表3：</span><input class="start" type="number">
+											<span>- </span><input class="end" type="number">
+											<input value="保存" type="button" class="save">
+										</div>
+										</td>
+							  	</tr>
+							  	<tr>
+							  	<td colspan="3">
+										<div style="padding: 10px;text-align: left;">
+											<input type="button" value="清空所有數據"  onclick="removeAll()">
+										</div>
+										</td>
+							  	</tr>
+							  	
+							  	
+							  	</tbody>
+							  
+							</table>
+							</div>
+						</td>
+						
+					</tr>
+				
+				</table>
+				
+				
+				
+			</div>
+		</section>
+		
+		<script src="js/jquery-1.11.2.min.js"></script>
+		<script src="../js/app.js"></script>
+		<script src="../jslib/layer/layer.js"></script>
+		<script type="text/javascript" src="../js/template-web.js"></script>
+		<script src="../js/tableExport.min.js"></script>
+		<script src="../js/jquery.base64.js"></script>
+		
+		<script src="./js/turn-core.js"></script>
+		
+		<script type="text/javascript">
+		$(function(){
+			
+			
+			
+			
+			 $app.request("../user/config/getConfig.do",function(json){
+				 if(json.code==1){
+						$(".key-widget").each(function(i,e){
+							var key = $(e).attr("data-key");
+							if(key)setWidgetVal($(e),json.data[key])
+							
+						});
+						
+					}else{
+						
+						alert(json.msg)
+					}
+				 
+			 });
+			 
+			 
+			 $(".key-widget .save").click(function(e){
+				 
+				 var gep = $(e.target).attr("data-group");
+				 var $g = null;
+				 if(gep)
+					 $g = $(gep);
+				 else $g = $(e.target).parent(".key-widget");
+				 
+				 var key = $g.attr("data-key");
+				 var val = getWidgetVal( $g);
+				 
+				 saveConfig(key,val);
+				 
+			 });
+			
+			 
+			
+			
+		});
+		
+		function saveConfig(mod,val){
+			
+			
+			
+			$.ajax({
+				url:"../user/config/setConfig.do",
+				data:{mod:mod,val:val},
+				type:"post",
+				async:false,
+				success:function(json){
+					if(json.code==1){
+						layer.msg('操作成功');
+						
+						
+					}else{
+						
+						alert(json.msg)
+					}
+				}
+			});
+			
+			
+		}
+		
+		
+		
+		
+		
+		function setWidgetVal($e,val){
+			
+			var type = $e.attr("data-type");
+			var key = $e.attr("data-key");
+			
+			switch (type) {
+			case "enum":
+				$e.find("input[name="+key+"][value="+val+"]").attr('checked', 'true');
+				break;
+			case "range":
+				var start = val.split(",")[0];
+				var end = val.split(",")[1];
+				$e.find(".start").val(start);
+				$e.find(".end").val(end);
+				break;
+
+			default:$e.find(".target").val(val);
+				break;
+			}
+			
+			
+		}
+		
+		function getWidgetVal($e){
+			
+			var type = $e.attr("data-type");
+			var key = $e.attr("data-key");
+			
+			switch (type) {
+			case "enum":
+				return $e.find("input[name="+key+"]:checked").val();
+				break;
+			case "range":
+				var start = $e.find(".start").val();
+				var end = $e.find(".end").val();
+				return start+","+end;
+				break;
+
+			default:
+				return $e.find(".target").val();
+				break;
+			}
+			
+			
+		}
+		
+		/**
+		清空所有遊戲數據
+		*/
+		function removeAll(){
+			layer.confirm('確定清空數據？', {
+				  btn: ['是','否'] 
+				}, function(){
+					$.ajax({
+						url:"../user/game/removeAll.do",
+						type:"post",
+						async:false,
+						success:function(result){
+							if(result.code==1){
+								layer.msg('成功');
+								location.reload();
+							}
+							else{
+								
+								alert(result.msg)
+							}
+						}
+					});
+				  
+				}, function(){
+				 
+				});
+			
+		}
+		
+		</script>
+		
+		
+		 
+		
+		
+	</body>
+</html>
