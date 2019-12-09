@@ -92,6 +92,7 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 								<col style="width:100px;">
 								<col style="width:60px;">
 								<col style="width:100px;">
+								<col style="width:60px;">
 								
 								<col style="width:50px;">
 								
@@ -108,7 +109,7 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							    	<td><div class="blue btn1 exit_btn">關閉</div></td>
 							    	
 							    	<td colspan="4" id="input_group"><input type="text" style="width: 90%;background-color: #eee" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""></td>
-							    	<td colspan="3"> <div class="blue btn1 ok_btn">確定</div></td>
+							    	<td colspan="4"> <div class="blue btn1 ok_btn">確定</div></td>
 							    <!-- 	<td colspan="2">
 							    		<table style="height:100%">
 											<tr><td style="height:auto;font-size:16px;">開始<input type="number" id="tg_thre" value="" style="width: 40%;background-color: #eee;font-size:19px;">
@@ -180,6 +181,7 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 								<col style="width:100px;">
 								<col style="width:60px;">
 								<col style="width:100px;">
+								<col style="width:60px;">
 								
 								<col style="width:50px;">
 								
@@ -396,6 +398,7 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 								<col style="width:100px;">
 								<col style="width:60px;">
 								<col style="width:100px;">
+								<col style="width:60px;">
 								
 								<col style="width:50px;">
 								
@@ -452,6 +455,7 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 								<col style="width:100px;">
 								<col style="width:60px;">
 								<col style="width:100px;">
+									<col style="width:60px;">
 								
 								<col style="width:50px;">
 								
@@ -885,7 +889,8 @@ function onBusEnd(){
 		data.bigTurn.hbbg_lock =  data[0].turn.hbbg_lock.split(',');
 		data.bigTurn.xzbg_config = data[0].turn.xzbg_config.split(',');
 		data.bigTurn.hbbg_config = data[0].turn.hbbg_config.split(',');
-		
+        data.bigTurn.zd_lock = data.bigTurn.zd_lock.split(',');
+
 		data.bigTurn.config_json = eval("("+data[0].turn.config_json+")")
 		data.bigTurn.tip_open = data[0].tip_open;
 		data.bigTurn.queue_count = 0;
@@ -1039,6 +1044,7 @@ function ref(data){
 		var userlock = bigTurn.user_lock;
 		var hbbgLock = bigTurn.hbbg_lock;
 		var xzbgLock = bigTurn.xzbg_lock;
+        var zdLock = bigTurn.zd_lock;
 		var html = "";
 		
 		for (var i = 0; i < userlock.length; i++) {
@@ -1046,16 +1052,21 @@ function ref(data){
 			var cHtml = '<div><span class="click_span" onclick="toSetConfig(1,0,'+(i+1)+',\''+bigTurn.hbbg_config[i]+'\',this)" >'+bigTurn.hbbg_config[i]+'</span></div>'
 			+'<div><span class="click_span" onclick="toSetConfig(2,0,'+(i+1)+',\''+bigTurn.xzbg_config[i]+'\',this)" >'+bigTurn.xzbg_config[i]+'</span></div>';
 			
-			html+='<td>'+(i+1)+' '+getLockBtnHtml(1,0,i+1,userlock[i])
+			html+='<td>'+(i+1)+' <br>'+getLockBtnHtml(1,0,i+1,userlock[i])
 			+' '+getLockBtnHtml(2,0,i+1,hbbgLock[i])
-			+' '+getLockBtnHtml(3,0,i+1,xzbgLock[i])+cHtml+'</td>'
+			+' '+getLockBtnHtml(3,0,i+1,xzbgLock[i])
+                +' '+getLockBtnHtml(4,0,i+1,zdLock[i])+cHtml+'</td>'
 		}
-		
-		
-		html+='<td>匯總報告</td><td>匯總求和</td>'
-	    	+'<td>合并報告</td><td>合并求和</td>'
-	    	+'<td>選擇報告</td><td>選擇求和</td>'
-	    	+'<td>結果報告</td>';
+
+		var cols = ['匯總報告','匯總求和','合并報告','合并求和',
+            '選擇報告','選擇求和',
+            '結果報告'];
+
+        for (let i = 0; i < cols.length; i++) {
+            html+='<td>'+getLockBtnHtml(4,0,i+1+10,zdLock[i+10])+'<br>'+cols[i]+'</td>';
+
+        }
+        html+='<td>终端報告</td>';
 		return html;
 	}
 	
@@ -1285,6 +1296,7 @@ function ref(data){
 							    	<td> <div class="bg-td">{{bgData['xzBg'][0].name}}<span {{if bgData['xzBg'][0].val>0}}class="red"{{/if}}>{{if bgData['xzBg'][0].name}}{{bgData['xzBg'][0].val}}{{/if}}</span></div></td>
 							    	<td> <div class="bg-td">{{bgData['xzqh'][0].name}}<span {{if bgData['xzqh'][0].val>0}}class="red"{{/if}}>{{if bgData['xzqh'][0].name}}{{bgData['xzqh'][0].val}}{{/if}}</span></div></td>
 							    	<td> <div class="bg-td">{{bgData['jgbg'][0].name}}<span {{if bgData['jgbg'][0].val>0}}class="red"{{/if}}>{{if bgData['jgbg'][0].name}}{{bgData['jgbg'][0].val}}{{/if}}</span></div></td>
+									<td> <div class="bg-td">{{bgData['zdbg'][0].name}}<span {{if bgData['zdbg'][0].val>0}}class="red"{{/if}}>{{if bgData['zdbg'][0].name}}{{bgData['zdbg'][0].val}}{{/if}}</span></div></td>
 
 									<td rowspan="3"> <span class="">匯總</span></td>	
 								</tr>
@@ -1302,6 +1314,7 @@ function ref(data){
 							    	<td><div class="bg-td">{{bgData['xzBg'][1].name}} <span {{if bgData['xzBg'][1].val>0}}class="red"{{/if}}>{{if bgData['xzBg'][1].name}}{{bgData['xzBg'][1].val}}{{/if}}</span></div></td>
 							    	<td> <div class="bg-td">{{bgData['xzqh'][1].name}}<span {{if bgData['xzqh'][1].val>0}}class="red"{{/if}}>{{if bgData['xzqh'][1].name}}{{bgData['xzqh'][1].val}}{{/if}}</span></div></td>
 							    	<td> <div class="bg-td">{{bgData['jgbg'][1].name}}<span {{if bgData['jgbg'][1].val>0}}class="red"{{/if}}>{{if bgData['jgbg'][1].name}}{{bgData['jgbg'][1].val}}{{/if}}</span></div></td>
+								  <td> <div class="bg-td">{{bgData['zdbg'][1].name}}<span {{if bgData['zdbg'][1].val>0}}class="red"{{/if}}>{{if bgData['zdbg'][1].name}}{{bgData['zdbg'][1].val}}{{/if}}</span></div></td>
 
 							  	</tr>
 							  	<tr class="data_col">
@@ -1317,7 +1330,7 @@ function ref(data){
 									<td class="blue"><div class="bg-td">共 <span >{{bgData['xzBg'][2]}}</span></div></td>
 							    	<td class="blue"><div class="bg-td">共 <span >{{bgData['xzqh'][2]}}</span></div></td>
 									<td class="blue"><div class="bg-td">共 <span >{{bgData['jgbg'][2]}}</span></div></td>
-									
+									<td class="blue"><div class="bg-td">共 <span >{{bgData['zdbg'][2]}}</span></div></td>
 									
 							  	</tr>
 
@@ -1343,8 +1356,8 @@ function ref(data){
 	<td {{if jgData['xzBg'].list[i]>0}}class="red"{{/if}}>{{jgData['xzBg'].list[i]}}</td>
 	<td {{if jgData['xzqh'].list[i]>0}}class="red"{{/if}}>{{jgData['xzqh'].list[i]}}</td>
 	<td {{if jgData['jgbg'].list[i]>0}}class="red"{{/if}}>{{jgData['jgbg'].list[i]}}</td>
+		<td {{if jgData['zdbg'].list[i]>0}}class="red"{{/if}}>{{jgData['zdbg'].list[i]}}</td>
 
-	
 <td>{{i+1}}</td>
 	</tr>
 	{{/each}}
@@ -1368,8 +1381,8 @@ function ref(data){
 									<td class="blue2 {{if jgData['xzBg'].jg>0}}red{{/if}}">{{jgData['xzBg'].jg}}</td>
 									<td class="blue2 {{if jgData['xzqh'].jg>0}}red{{/if}}">{{jgData['xzqh'].jg}}</td>
 									<td class="blue2 {{if jgData['jgbg'].jg>0}}red{{/if}}">{{jgData['jgbg'].jg}}</td>
-																			
-<td>結果</td>
+									<td class="blue2 {{if jgData['zdbg'].jg>0}}red{{/if}}">{{jgData['zdbg'].jg}}</td>
+					<td>結果</td>
 							  	</tr>
 							  	<tr>
 							  		<td>求和</td>
@@ -1387,8 +1400,9 @@ function ref(data){
 									<td {{if jgData['xzBg'].qh>0}}class="red"{{/if}}>{{jgData['xzBg'].qh}}</td>
 									<td {{if jgData['xzqh'].qh>0}}class="red"{{/if}}>{{jgData['xzqh'].qh}}</td>
 									<td {{if jgData['jgbg'].qh>0}}class="red"{{/if}}>{{jgData['jgbg'].qh}}</td>
-									
-<td>求和</td>
+									<td {{if jgData['zdbg'].qh>0}}class="red"{{/if}}>{{jgData['zdbg'].qh}}</td>
+
+									<td>求和</td>
 							  	</tr>
 							  	<tr style="height:40px;">
 							  		<td>共計</td>
@@ -1404,7 +1418,7 @@ function ref(data){
 									<td class="blue">{{bgData['xzBg'][3]}}</td>
 <td class="blue">{{bgData['xzqh'][3]}}</td>
 <td class="blue">{{bgData['jgbg'][3]}}</td>
-							    	
+									<td class="blue">{{bgData['zdbg'][3]}}</td>
 									
 <td>共計</td>
 							  	</tr>

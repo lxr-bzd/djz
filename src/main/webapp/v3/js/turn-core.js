@@ -256,26 +256,26 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 	function createBigVdata(bigTurn,vDatas){
 		if(bigTurn.frow>=4){
 			var bigvData = {bigTurn:bigTurn,jgData:{},bgData:{}};
-		
+
 			handelBg(bigvData,bigTurn);
 			for (var i = 0; i < bigTurn.bigTurnConfig.turnNum; i++) {
 				add2BigVdata(bigvData,vDatas[i]);
 			}
-			
+
 			for (var i in bigvData.jgData) {
 				var item = bigvData.jgData[i];
 				for(var j in item.list){
-					
+
 					item.qh+=item.list[j]>0?1:(item.list[j]<0?-1:0);
-					
+
 				}
-				
+
 			}
-			
+            handelZdbg(bigTurn,bigvData);
 			
 		}else{
 			
-			var cols = ["hb","qhBg","hbBg","hbqh","xzBg","xzqh","jgbg"];
+			var cols = ["hb","qhBg","hbBg","hbqh","xzBg","xzqh","jgbg","zdbg"];
 			var bigvData = {"bigTurn":bigTurn,"bgData":{},"jgData":{}};
 			
 			for (var i = 0; i < cols.length; i++) {
@@ -301,6 +301,34 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 				bgData[nm].push(gj[i]);
 			}
 			
+		}
+
+		function handelZdbg(bigTurn,bigvData){
+
+            bigvData.bgData['zdbg'] = createBg(eval(bigTurn.zd));
+            bigvData.bgData['zdbg'].push(bigTurn.zd_sum);
+            var zdjg = {list:[null],jg: bigTurn.zd_jg_sum,qh:0};
+            bigvData.jgData['zdbg'] = zdjg;
+
+            var zdjgs = bigTurn.zd_jg?bigTurn.zd_jg.split(","):[];
+            for (var i = 0; i < zdjgs.length; i++) {
+                if(!zdjgs[i])continue;
+                var v = new Number(zdjgs[i]);
+                zdjg.list.push(v);
+                zdjg.qh+=(v>0?1:(v<0?-1:0));
+            }
+
+            function createBg(arr){
+                var ret = [{name:'',val:''},{name:'',val:''},0];
+                ret[0].name = arr[0]>0?conf1.L:(arr[0]<0?conf1.X:'');
+                ret[0].val = ret[0].name?Math.abs(arr[0]):0;
+                ret[1].name = arr[1]>0?conf1.D:(arr[1]<0?conf1.S:'');
+                ret[1].val = ret[1].name?Math.abs(arr[1]):0;
+                ret[2] = ret[0].val+ret[1].val
+                return ret;
+
+            }
+
 		}
 		
 		function add2BigVdata(bigVdata,vData){

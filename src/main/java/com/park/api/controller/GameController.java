@@ -129,21 +129,37 @@ public class GameController extends BaseController{
 		case 3:
 			fname = "xzbg_lock";
 			break;
+		case 4:
+				fname = "zd_lock";
+				break;
 
 		default:
-			break;
+			throw new ApplicationException("错误的类型");
 		}
 		
 		
 		BigTurn bigTurn = bigTurnService.getCurrentTurn();
-		
-		String lockStr = ServiceManage.jdbcTemplate.queryForObject("select "+fname+" from game_turn where turn_no = 0 AND big_turn_id=?", String.class,bigTurn.getId());
-		
-		String[] locks = lockStr.split(",");
-		locks[Integer.valueOf(uid)-1] = val;
-		String newLockStr = StringUtils.join(locks, ",");
-		ServiceManage.jdbcTemplate.update("UPDATE game_turn SET "+fname+"=? WHERE  big_turn_id=?",newLockStr, bigTurn.getId());
-		
+
+		if(mod==4){
+			String lockStr = ServiceManage.jdbcTemplate.queryForObject("select "+fname+" from game_big_turn where id=?", String.class,bigTurn.getId());
+
+			String[] locks = lockStr.split(",");
+			locks[Integer.valueOf(uid)-1] = val;
+			String newLockStr = StringUtils.join(locks, ",");
+			ServiceManage.jdbcTemplate.update("UPDATE game_big_turn SET "+fname+"=? WHERE  id=?",newLockStr, bigTurn.getId());
+
+
+		}else{
+			String lockStr = ServiceManage.jdbcTemplate.queryForObject("select "+fname+" from game_turn where turn_no = 0 AND big_turn_id=?", String.class,bigTurn.getId());
+
+			String[] locks = lockStr.split(",");
+			locks[Integer.valueOf(uid)-1] = val;
+			String newLockStr = StringUtils.join(locks, ",");
+			ServiceManage.jdbcTemplate.update("UPDATE game_turn SET "+fname+"=? WHERE  big_turn_id=?",newLockStr, bigTurn.getId());
+
+
+		}
+
 		return JsonResult.getSuccessResult();
 	}
 	
@@ -181,6 +197,10 @@ public class GameController extends BaseController{
 		
 		return JsonResult.getSuccessResult();
 	}
-	
+
+
+	public static void main(String[] args) {
+		Integer.parseInt("4294963100");
+	}
 	
 }

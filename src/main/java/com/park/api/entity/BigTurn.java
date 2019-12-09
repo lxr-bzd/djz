@@ -10,9 +10,13 @@ public class BigTurn {
 	String bg;
 	String gj;
 	
-	String hz_jg;
-	String hb_jg;
-	String xz_hb;
+	String zd;
+	String zd_jg;
+	Long zd_sum;
+	String zd_last_jg;
+	Long zd_jg_sum;
+
+	String zd_lock;
 	
 	Integer state;
 	String config_json;
@@ -51,28 +55,44 @@ public class BigTurn {
 		this.gj = gj;
 	}
 
-	public String getHz_jg() {
-		return hz_jg;
+	public String getZd() {
+		return zd;
 	}
 
-	public void setHz_jg(String hz_jg) {
-		this.hz_jg = hz_jg;
+	public void setZd(String zd) {
+		this.zd = zd;
 	}
 
-	public String getHb_jg() {
-		return hb_jg;
+	public String getZd_jg() {
+		return zd_jg;
 	}
 
-	public void setHb_jg(String hb_jg) {
-		this.hb_jg = hb_jg;
+	public void setZd_jg(String zd_jg) {
+		this.zd_jg = zd_jg;
 	}
 
-	public String getXz_hb() {
-		return xz_hb;
+	public Long getZd_sum() {
+		return zd_sum;
 	}
 
-	public void setXz_hb(String xz_hb) {
-		this.xz_hb = xz_hb;
+	public void setZd_sum(Long zd_sum) {
+		this.zd_sum = zd_sum;
+	}
+
+	public String getZd_last_jg() {
+		return zd_last_jg;
+	}
+
+	public void setZd_last_jg(String zd_last_jg) {
+		this.zd_last_jg = zd_last_jg;
+	}
+
+	public Long getZd_jg_sum() {
+		return zd_jg_sum;
+	}
+
+	public void setZd_jg_sum(Long zd_jg_sum) {
+		this.zd_jg_sum = zd_jg_sum;
 	}
 
 	public Integer getState() {
@@ -98,8 +118,12 @@ public class BigTurn {
 	public void setBigTurnConfig(BigTurnConfig bigTurnConfig) {
 		this.bigTurnConfig = bigTurnConfig;
 	}
-	
-	
-	
 
+	public String getZd_lock() {
+		return zd_lock;
+	}
+
+	public void setZd_lock(String zd_lock) {
+		this.zd_lock = zd_lock;
+	}
 }

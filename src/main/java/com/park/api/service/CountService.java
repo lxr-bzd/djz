@@ -839,8 +839,6 @@ public class CountService {
 	
 	/**
 	 * 计算结果报告
-	 * @param yz
-	 * @param mod2
 	 * @return [正数为报告老负数报告少，正数为报告男负数报告女]
 	 */
 	public static long[] reckonJgBg(List<InputResult> results,BigTurnConfig bigTurnConfig ) {
@@ -951,8 +949,8 @@ public static String[] reckonHbbgTrend(List<InputResult> results,String oldHbbgT
 			int i = Integer.valueOf(result.getUid())-1;
 			String[] dt = configs[i].split("-");
 			
-			int up = Integer.parseInt(dt[0]);//上边界范围
-			int down = Integer.parseInt(dt[1]);//下边界范围
+			long up = Integer.parseInt(dt[0]);//上边界范围
+			long down = Integer.parseInt(dt[1]);//下边界范围
 			
 			long absUp_jg_sum = Math.abs(result.getUp_jg_sum());
 			
