@@ -1,6 +1,11 @@
 package com.park.api.service;
 
 
+import com.park.api.entity.BigInputResult;
+import com.park.api.entity.InputResult;
+import com.park.api.service.bean.BigTurnConfig;
+
+import java.util.List;
 
 public class BigCoreService {
 
@@ -43,6 +48,41 @@ public class BigCoreService {
         int	jg2 =(pv%2!=0?bg[1]:-bg[1]);
         return new Integer[] {jg1,jg2};
 
+    }
+
+
+
+    /**
+     * 获取报告AB
+     */
+    public static long[] reckonBgAB(List<BigInputResult> results, BigTurnConfig bigTurnConfig ) {
+
+
+        int start = Integer.parseInt(bigTurnConfig.getRule_A().split(",")[0]);
+        int end = Integer.parseInt(bigTurnConfig.getRule_A().split(",")[1]);
+
+        long[] data = new long[]{0,0};
+        for (BigInputResult result : results) {
+
+            int length = Math.abs(result.getTgTrend());
+            if(!(length>=start&&length<=end))continue;
+            long f = length<1?0:(long) (Math.pow(2,length-start));
+            if(result.getTgTrend()<0)f = f*-1L;
+            long ls = (long)result.getRets()[4];
+            long nv = (long)result.getRets()[5];
+            if(Math.abs(ls)>Math.abs(nv))
+                data[0]+=(ls>0?1L:-1L)*f;
+            else if(Math.abs(nv)>Math.abs(ls))
+                data[1]+=(nv>0?1L:-1L)*f;
+            else if(Math.abs(ls)>0&&Math.abs(nv)>0) {
+                data[0]+=(ls>0?1L:-1L)*f;
+                data[1]+=(nv>0?1L:-1L)*f;
+            }
+
+        }
+
+
+        return data;
     }
 
 

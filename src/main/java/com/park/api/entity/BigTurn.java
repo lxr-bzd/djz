@@ -16,6 +16,19 @@ public class BigTurn {
 	String zd_last_jg;
 	Long zd_jg_sum;
 
+
+	String bga;
+	String bga_jg;
+	Long bga_sum;
+	String bga_last_jg;
+	Long bga_jg_sum;
+
+	String bgb;
+	String bgb_jg;
+	Long bgb_sum;
+	String bgb_last_jg;
+	Long bgb_jg_sum;
+
 	String zd_lock;
 	
 	Integer state;
@@ -117,6 +130,86 @@ public class BigTurn {
 
 	public void setBigTurnConfig(BigTurnConfig bigTurnConfig) {
 		this.bigTurnConfig = bigTurnConfig;
+	}
+
+	public String getBga() {
+		return bga;
+	}
+
+	public void setBga(String bga) {
+		this.bga = bga;
+	}
+
+	public String getBga_jg() {
+		return bga_jg;
+	}
+
+	public void setBga_jg(String bga_jg) {
+		this.bga_jg = bga_jg;
+	}
+
+	public Long getBga_sum() {
+		return bga_sum;
+	}
+
+	public void setBga_sum(Long bga_sum) {
+		this.bga_sum = bga_sum;
+	}
+
+	public String getBga_last_jg() {
+		return bga_last_jg;
+	}
+
+	public void setBga_last_jg(String bga_last_jg) {
+		this.bga_last_jg = bga_last_jg;
+	}
+
+	public Long getBga_jg_sum() {
+		return bga_jg_sum;
+	}
+
+	public void setBga_jg_sum(Long bga_jg_sum) {
+		this.bga_jg_sum = bga_jg_sum;
+	}
+
+	public String getBgb() {
+		return bgb;
+	}
+
+	public void setBgb(String bgb) {
+		this.bgb = bgb;
+	}
+
+	public String getBgb_jg() {
+		return bgb_jg;
+	}
+
+	public void setBgb_jg(String bgb_jg) {
+		this.bgb_jg = bgb_jg;
+	}
+
+	public Long getBgb_sum() {
+		return bgb_sum;
+	}
+
+	public void setBgb_sum(Long bgb_sum) {
+		this.bgb_sum = bgb_sum;
+	}
+
+	public String getBgb_last_jg() {
+		return bgb_last_jg;
+	}
+
+	public void setBgb_last_jg(String bgb_last_jg) {
+		this.bgb_last_jg = bgb_last_jg;
+	}
+
+	public Long getBgb_jg_sum() {
+		return bgb_jg_sum;
+	}
+
+	public void setBgb_jg_sum(Long bgb_jg_sum) {
+		this.bgb_jg_sum = bgb_jg_sum;
 	}
 
 	public String getZd_lock() {

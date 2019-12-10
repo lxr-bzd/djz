@@ -75,8 +75,8 @@ public class BigTurnService {
 
 
 			ServiceManage.jdbcTemplate.update("UPDATE `game_big_turn` SET `frow` = ?, `bg` = ?,  `gj` = ?,  " +
-							" zd=?, zd_sum=zd_sum+?," +
-							" zd_jg=CONCAT(zd_jg,?), zd_jg_sum = zd_jg_sum+?" +
+							" zd=?, zd_sum=zd_sum+?," +" zd_jg=CONCAT(zd_jg,?), zd_jg_sum = zd_jg_sum+?," +
+							" zd=?, zd_sum=zd_sum+?," +" zd_jg=CONCAT(zd_jg,?), zd_jg_sum = zd_jg_sum+?," +
 							" WHERE `id` = ?"
 					,bigTurn.getFrow()+1,
 					JSONObject.toJSONString(newbBg),
