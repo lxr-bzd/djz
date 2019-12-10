@@ -33,6 +33,9 @@ public class BigTurn {
 	
 	Integer state;
 	String config_json;
+
+
+	String tg_trends;
 	
 	BigTurnConfig bigTurnConfig;
 
@@ -218,5 +221,13 @@ public class BigTurn {
 
 	public void setZd_lock(String zd_lock) {
 		this.zd_lock = zd_lock;
+	}
+
+	public String getTg_trends() {
+		return tg_trends;
+	}
+
+	public void setTg_trends(String tg_trends) {
+		this.tg_trends = tg_trends;
 	}
 }

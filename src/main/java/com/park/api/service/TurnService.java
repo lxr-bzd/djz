@@ -102,7 +102,8 @@ public class TurnService {
 		
 		
 		Map<String, Object> map = ServiceManage.jdbcTemplate.queryForMap(
-				"select id,rule,frow, `mod`,user_lock,qh,yz,yz_jg_sum,hb,hb_jg_sum,hbqh,hbqh_sum,xz,xz_jg_sum,jgbg,jgbg_jg_sum,xzqh,xzqh_sum,xzbg_lock,xzbg_config,xzbg_trend,hbbg_lock,hbbg_config,hbbg_trend from game_turn where id=? limit 1",turn.getId());
+				"select id,rule,frow, `mod`,user_lock,qh,yz,yz_jg_sum,hb,hb_jg_sum,hbqh,hbqh_sum,xz,xz_jg_sum,jgbg,jgbg_jg_sum,xzqh,xzqh_sum,xzbg_lock,xzbg_config,xzbg_trend,hbbg_lock,hbbg_config,hbbg_trend" +
+						",jgbgA,jgbgA_jg_sum,jgbgB,jgbgB_jg_sum from game_turn where id=? limit 1",turn.getId());
 		String[] uLock = map.get("user_lock").toString().split(",");
 		
 		String[] rule = map.get("rule").toString().split(",");
@@ -120,7 +121,9 @@ public class TurnService {
 		Long[] upHb = JsonUtils.toLongArray(map.get("hb")!=null?map.get("hb").toString():null);
 		Long[] upXz = JsonUtils.toLongArray(map.get("xz")!=null?map.get("xz").toString():null);
 		Long[] upJgbg = JsonUtils.toLongArray(map.get("jgbg")!=null?map.get("jgbg").toString():null);
-		
+		Long[] upJgbgA = JsonUtils.toLongArray(map.get("jgbgA")!=null?map.get("jgbgA").toString():null);
+		Long[] upJgbgB = JsonUtils.toLongArray(map.get("jgbgB")!=null?map.get("jgbgB").toString():null);
+
 		Integer[] upHbqh = JsonUtils.toIntArray(map.get("hbqh")!=null?map.get("hbqh").toString():null);
 		Integer[] upXzqh = JsonUtils.toIntArray(map.get("xzqh")!=null?map.get("xzqh").toString():null);
 		
@@ -209,10 +212,23 @@ public class TurnService {
 			
 			//计算结果报告
 			long[] jgbgBg = CountService.reckonJgBg(results,bigTurn.getBigTurnConfig());
-			Long[] jgbgJg = upJgbg==null?null:CountService.reckonJgJg(pei.substring(0, 1), upJgbg);
-			long jgbgJgSum = jgbgJg==null?Long.valueOf(map.get("jgbg_jg_sum").toString()):Long.valueOf(map.get("jgbg_jg_sum").toString())+jgbgJg[0]+jgbgJg[1];
+			CountProcessBean pbJgbg = doCountProcess(upJgbg,pei,Long.valueOf(map.get("jgbg_jg_sum").toString()));
 
-			
+			/*Long[] jgbgJg = upJgbg==null?null:CountService.reckonJg(pei.substring(0, 1), upJgbg);
+			long jgbgJgSum = jgbgJg==null?Long.valueOf(map.get("jgbg_jg_sum").toString()):Long.valueOf(map.get("jgbg_jg_sum").toString())+jgbgJg[0]+jgbgJg[1];
+*/
+
+
+			long[][] jgbgBgAB = CountService.reckonJgBgAB(results,bigTurn.getBigTurnConfig());
+			//计算 结果报告1
+			long[] jgbgBgA = jgbgBgAB[0];
+			CountProcessBean pbJgbgA = doCountProcess(upJgbgA,pei,Long.valueOf(map.get("jgbgA_jg_sum").toString()));
+
+			//计算 结果报告2
+			long[] jgbgBgB = jgbgBgAB[0];
+			CountProcessBean pbJgbgB = doCountProcess(upJgbgB,pei,Long.valueOf(map.get("jgbgB_jg_sum").toString()));
+
+
 			//构建返回参数
 			bigInputResult.setHzBg(new long[] {(long)hzBg[4],(long)hzBg[5]});
 			bigInputResult.setHbBg(hbBg);
@@ -231,6 +247,8 @@ public class TurnService {
 						+ ",jgbg=?,jgbg_sum=jgbg_sum+?,jgbg_jg=CONCAT(jgbg_jg,?),jgbg_jg_sum=?,jgbg_last_jg=?"
 					+ ",hbqh=?,hbqh_sum=hbqh_sum+?,hbqh_jg=CONCAT(hbqh_jg,?),hbqh_last_jg=? "
 					+ ",xzqh=?,xzqh_sum=xzqh_sum+?,xzqh_jg=CONCAT(xzqh_jg,?),xzqh_last_jg=? "
+							+ ",jgbgA=?,jgbgA_sum=jgbgA_sum+?,jgbgA_jg=CONCAT(jgbgA_jg,?),jgbgA_jg_sum=?"
+							+ ",jgbgB=?,jgbgB_sum=jgbgB_sum+?,jgbgB_jg=CONCAT(jgbgB_jg,?),jgbgB_jg_sum=?"
 					+ ",queue_count = ?"
 					+ " where id=?",
 					JSONObject.toJSONString(hzBg),
@@ -265,9 +283,9 @@ public class TurnService {
 									
 							JSONObject.toJSONString(jgbgBg),
 							Math.abs(jgbgBg[0])+Math.abs(jgbgBg[1]),
-							jgbgJg==null?"":(jgbgJg[0]+jgbgJg[1]+","),
-							jgbgJgSum,
-							jgbgJg==null?"":jgbgJg[0]+"_"+jgbgJg[1],
+					pbJgbg.getBgJg()==null?"":(pbJgbg.getBgJg()[0]+pbJgbg.getBgJg()[1]+","),
+					pbJgbg.getNewBgJgSum(),
+					pbJgbg.getBgJg()==null?"":pbJgbg.getBgJg()[0]+"_"+pbJgbg.getBgJg()[1],
 							
 					JSONObject.toJSONString(hbqhBg),
 					Math.abs(hbqhBg[0])+Math.abs(hbqhBg[1]),
@@ -278,6 +296,16 @@ public class TurnService {
 					Math.abs(xzqhBg[0])+Math.abs(xzqhBg[1]),
 					xzqhJg==null?"":(xzqhJg[0]+xzqhJg[1]+","),
 					xzqhJg==null?"":xzqhJg[0]+"_"+xzqhJg[1],
+
+					JSONObject.toJSONString(jgbgBgA),
+					Math.abs(jgbgBgA[0])+Math.abs(jgbgBgA[1]),
+					pbJgbgA.getBgJg()==null?"":(pbJgbgA.getBgJg()[0]+pbJgbgA.getBgJg()[1]+","),
+					pbJgbgA.getNewBgJgSum(),
+
+					JSONObject.toJSONString(jgbgBgB),
+					Math.abs(jgbgBgB[0])+Math.abs(jgbgBgB[1]),
+					pbJgbgB.getBgJg()==null?"":(pbJgbgB.getBgJg()[0]+pbJgbgB.getBgJg()[1]+","),
+					pbJgbgB.getNewBgJgSum(),
 							
 					queueCount,
 					countTurnId.get());
@@ -293,8 +321,23 @@ public class TurnService {
 		
 		return bigInputResult;
 	}
-	
-	
+
+
+	private CountProcessBean doCountProcess(Long[] upBg,String pei,Long upBgJgSum){
+
+		Long[] bgJg = upBg==null?null:CountService.reckonJg(pei.substring(0, 1), upBg);
+		Long newBgJgSum = bgJg==null?upBgJgSum:upBgJgSum+bgJg[0]+bgJg[1];
+
+		CountProcessBean processBean = new CountProcessBean();
+		processBean.setBg(upBg);
+		processBean.setBgJg(bgJg);
+		processBean.setNewBgJgSum(newBgJgSum);
+		return processBean;
+
+	}
+
+
+
 	public void doFinishTurn(BigTurn bigTurn,Integer turnNo) {
 		Turn turn = getCurrentTurn(bigTurn, turnNo);
 		List<String> games = ServiceManage.jdbcTemplate.queryForList("select id from game_history where state=1 AND tid=?", String.class,turn.getId());
@@ -364,9 +407,11 @@ public class TurnService {
 		                {
 		                	PreparedStatement ps = con.prepareStatement("INSERT INTO game_turn ("
 		                			+ "big_turn_id,turn_no,`mod`,`mod2`,frow,info,lj ,hz_jg  ,qh,qh_sum,qh_jg,qh_last_jg,  yz_jg, hb_jg,hbqh_jg,xzqh_jg  ,`rule`,rule_type,user_lock,state,config_json"
-		                			+ ",xz_jg,xzbg_lock,xzbg_config,xzbg_trend,hbbg_lock,hbbg_config,hbbg_trend,jgbg_jg)"
+		                			+ ",xz_jg,xzbg_lock,xzbg_config,xzbg_trend,hbbg_lock,hbbg_config,hbbg_trend,jgbg_jg" +
+									",jgbgA_jg,jgbgB_jg)"
 		                			+ " VALUES (?,?,?,?,1,'',0,''  ,'',0,'',''   ,'','','',''  ,?,?,'1,1,1,1,1,1,1,1,1,1',1,?,"
-		                			+ "'','1,1,1,1,1,1,1,1,1,1',?,'0,0,0,0,0,0,0,0,0,0','1,1,1,1,1,1,1,1,1,1',?,'0,0,0,0,0,0,0,0,0,0','')",Statement.RETURN_GENERATED_KEYS); 
+		                			+ "'','1,1,1,1,1,1,1,1,1,1',?,'0,0,0,0,0,0,0,0,0,0','1,1,1,1,1,1,1,1,1,1',?,'0,0,0,0,0,0,0,0,0,0',''" +
+									",'','')",Statement.RETURN_GENERATED_KEYS);
 		                	
 		                	ps.setInt(1, bigTurn.getId());
 		                	ps.setInt(2, turnNo);
@@ -447,5 +492,38 @@ public class TurnService {
 	public Turn getInputTurn2() {
 		return inputTurn.get();
 	}
+
+
+	class CountProcessBean{
+
+		Long[] bg;
+		Long[] bgJg;
+		Long newBgJgSum;
+
+		public Long[] getBg() {
+			return bg;
+		}
+
+		public void setBg(Long[] bg) {
+			this.bg = bg;
+		}
+
+		public Long[] getBgJg() {
+			return bgJg;
+		}
+
+		public void setBgJg(Long[] bgJg) {
+			this.bgJg = bgJg;
+		}
+
+		public Long getNewBgJgSum() {
+			return newBgJgSum;
+		}
+
+		public void setNewBgJgSum(Long newBgJgSum) {
+			this.newBgJgSum = newBgJgSum;
+		}
+	}
+
 
 }

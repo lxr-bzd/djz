@@ -19,6 +19,8 @@ public class BigInputResult {
 	Long hzJg;
 	Long hbJg;
 	Long xzJg;
+
+	int  tgTrend;
 	
 	public List<InputResult> getResults() {
 		return results;

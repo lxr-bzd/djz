@@ -55,34 +55,87 @@ public class BigCoreService {
     /**
      * 获取报告AB
      */
-    public static long[] reckonBgAB(List<BigInputResult> results, BigTurnConfig bigTurnConfig ) {
+    public static long[][] reckonBgAB(Long[][] newbBg,int[] tgTrends, BigTurnConfig bigTurnConfig ) {
 
 
         int start = Integer.parseInt(bigTurnConfig.getRule_A().split(",")[0]);
         int end = Integer.parseInt(bigTurnConfig.getRule_A().split(",")[1]);
 
-        long[] data = new long[]{0,0};
-        for (BigInputResult result : results) {
+        long[] dataA = new long[]{0,0};
+        long[] dataB = new long[]{0,0};
+        for (int i = 0; i < 10; i++) {
 
-            int length = Math.abs(result.getTgTrend());
+            Long[] ret = newbBg[i];
+
+            int length = Math.abs(tgTrends[i]);
             if(!(length>=start&&length<=end))continue;
             long f = length<1?0:(long) (Math.pow(2,length-start));
-            if(result.getTgTrend()<0)f = f*-1L;
-            long ls = (long)result.getRets()[4];
-            long nv = (long)result.getRets()[5];
-            if(Math.abs(ls)>Math.abs(nv))
-                data[0]+=(ls>0?1L:-1L)*f;
-            else if(Math.abs(nv)>Math.abs(ls))
-                data[1]+=(nv>0?1L:-1L)*f;
-            else if(Math.abs(ls)>0&&Math.abs(nv)>0) {
-                data[0]+=(ls>0?1L:-1L)*f;
-                data[1]+=(nv>0?1L:-1L)*f;
+            //黑色的取反
+            if(tgTrends[i]<0)f = f*-1L;
+            long ls = ret[0];
+            long nv = ret[1];
+            if(tgTrends[i]>0){
+                if(Math.abs(ls)>Math.abs(nv))
+                    dataA[0]+=(ls>0?1L:-1L)*f;
+                else if(Math.abs(nv)>Math.abs(ls))
+                    dataA[1]+=(nv>0?1L:-1L)*f;
+                else if(Math.abs(ls)>0&&Math.abs(nv)>0) {
+                    dataA[0]+=(ls>0?1L:-1L)*f;
+                    dataA[1]+=(nv>0?1L:-1L)*f;
+                }
             }
+            if(tgTrends[i]<0){
+                if(Math.abs(ls)>Math.abs(nv))
+                    dataB[0]+=(ls>0?1L:-1L)*f;
+                else if(Math.abs(nv)>Math.abs(ls))
+                    dataB[1]+=(nv>0?1L:-1L)*f;
+                else if(Math.abs(ls)>0&&Math.abs(nv)>0) {
+                    dataB[0]+=(ls>0?1L:-1L)*f;
+                    dataB[1]+=(nv>0?1L:-1L)*f;
+                }
+            }
+
 
         }
 
 
-        return data;
+        return new long[][]{dataA,dataB};
+    }
+
+
+    public static int[] reckonTgTrends(List<BigInputResult> bigResults,int[] oldTgTrends){
+
+        int[] newTgTrends = new int[10];
+
+        long[] jgs = new long[10];
+        for (BigInputResult bigResult :bigResults) {
+            List<InputResult> inputResults = bigResult.getResults();
+            for (InputResult result: inputResults){
+
+                jgs[Integer.parseInt(result.getUid())-1]+=result.getJg();
+
+            }
+
+        }
+
+        for (int i = 0; i < newTgTrends.length; i++) {
+
+            long jg = jgs[i];
+            int oldTgTrend = oldTgTrends[i];
+            Integer newTgTrend = oldTgTrend;
+            if(jg!=0) {
+                if(oldTgTrend!=0&&oldTgTrend*jg>0)//同号
+                    newTgTrend = oldTgTrend+(jg>0?1:-1);
+                else //不同号或者为0
+                    newTgTrend = (jg>0?1:-1);
+
+            }
+
+            newTgTrends[i] = newTgTrend;
+        }
+
+        return newTgTrends;
+
     }
 
 

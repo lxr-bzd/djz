@@ -870,6 +870,58 @@ public class CountService {
 		
 		return data;
 	}
+
+
+	/**
+	 * 计算结果报告AB
+	 * @return [正数为报告老负数报告少，正数为报告男负数报告女]
+	 */
+	public static long[][] reckonJgBgAB(List<InputResult> results,BigTurnConfig bigTurnConfig ) {
+
+
+		int start = Integer.parseInt(bigTurnConfig.getRule3().split(",")[0]);
+		int end = Integer.parseInt(bigTurnConfig.getRule3().split(",")[1]);
+
+		//long[] data = new long[]{0,0};
+
+		long[] dataA = new long[]{0,0};
+		long[] dataB = new long[]{0,0};
+
+		for (InputResult result : results) {
+
+			int length = Math.abs(result.getTgTrend());
+			if(!(length>=start&&length<=end))continue;
+			long f = length<1?0:(long) (Math.pow(2,length-start));
+			if(result.getTgTrend()<0)f = f*-1L;
+			long ls = (long)result.getRets()[4];
+			long nv = (long)result.getRets()[5];
+
+			if(result.getTgTrend()>0) {
+				if (Math.abs(ls) > Math.abs(nv))
+					dataA[0] += (ls > 0 ? 1L : -1L) * f;
+				else if (Math.abs(nv) > Math.abs(ls))
+					dataA[1] += (nv > 0 ? 1L : -1L) * f;
+				else if (Math.abs(ls) > 0 && Math.abs(nv) > 0) {
+					dataA[0] += (ls > 0 ? 1L : -1L) * f;
+					dataA[1] += (nv > 0 ? 1L : -1L) * f;
+				}
+			}else {
+				if (Math.abs(ls) > Math.abs(nv))
+					dataB[0] += (ls > 0 ? 1L : -1L) * f;
+				else if (Math.abs(nv) > Math.abs(ls))
+					dataB[1] += (nv > 0 ? 1L : -1L) * f;
+				else if (Math.abs(ls) > 0 && Math.abs(nv) > 0) {
+					dataB[0] += (ls > 0 ? 1L : -1L) * f;
+					dataB[1] += (nv > 0 ? 1L : -1L) * f;
+				}
+
+			}
+
+		}
+
+
+		return new long[][]{dataA,dataB};
+	}
 	
 public static String[] reckonHbbgTrend(List<InputResult> results,String oldHbbgTrend,String hbbgConfig,String oldXzbgConfig,BigTurnConfig bigTurnConfig) {
 		
@@ -1095,16 +1147,18 @@ public static String[] reckonHbbgTrend(List<InputResult> results,String oldHbbgT
 		long jg2 =(pv%2!=0?qhbg[1]:-qhbg[1]);
 		return new Long[] {jg1,jg2};
 		
-		//}
-		
-		//return new Long[] {0l,0l};
-		
 	}
+
+
+
+
+
+
+
 	
 	/**
 	 * 计算原值结果
 	 * @param pei
-	 * @param qh
 	 * @return
 	 */
 	public static Long[] countYzJg(String pei,Long[] upYz) {
@@ -1117,10 +1171,26 @@ public static String[] reckonHbbgTrend(List<InputResult> results,String oldHbbgT
 		return new Long[] {jg1,jg2};
 		
 	}
+
+
+	/**
+	 * 公共的计算结果
+	 * @param pei
+	 * @param upBg
+	 * @return
+	 */
+	public static Long[] reckonJg(String pei,Long[] upBg) {
+
+		Integer pv = Integer.valueOf(pei);
+		long jg1 =(pv>2?upBg[0]:-upBg[0]);
+		long jg2 =(pv%2!=0?upBg[1]:-upBg[1]);
+		return new Long[] {jg1,jg2};
+
+	}
 	
 	
 	
-	  private static char[] charSet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray();
+	private static char[] charSet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray();
 	
     /** 
      * 将62进制转换成10进制数 
