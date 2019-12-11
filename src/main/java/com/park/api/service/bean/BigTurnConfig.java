@@ -12,10 +12,16 @@ public class BigTurnConfig {
 	
 	Integer tgThre;
 
+	String rule_jg_A;
+
+	String rule_jg_B;
+
 	String rule_A;
 
 	String rule_B;
-	
+
+
+
 	
 
 	public String getRule3() {
@@ -56,6 +62,22 @@ public class BigTurnConfig {
 
 	public void setTgThre(Integer tgThre) {
 		this.tgThre = tgThre;
+	}
+
+	public String getRule_jg_A() {
+		return rule_jg_A;
+	}
+
+	public void setRule_jg_A(String rule_jg_A) {
+		this.rule_jg_A = rule_jg_A;
+	}
+
+	public String getRule_jg_B() {
+		return rule_jg_B;
+	}
+
+	public void setRule_jg_B(String rule_jg_B) {
+		this.rule_jg_B = rule_jg_B;
 	}
 
 	public String getRule_A() {
