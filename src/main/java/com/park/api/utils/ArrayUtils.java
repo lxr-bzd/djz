@@ -25,4 +25,15 @@ public class ArrayUtils {
 
     }
 
+    public static long[] toBasic(Long[] arr){
+
+        long[] data = new long[arr.length];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = arr[i].longValue();
+        }
+
+        return data;
+
+    }
+
 }

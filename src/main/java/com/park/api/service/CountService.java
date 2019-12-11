@@ -879,9 +879,12 @@ public class CountService {
 	public static long[][] reckonJgBgAB(List<InputResult> results,BigTurnConfig bigTurnConfig ) {
 
 
-		int start = Integer.parseInt(bigTurnConfig.getRule3().split(",")[0]);
-		int end = Integer.parseInt(bigTurnConfig.getRule3().split(",")[1]);
+		int startA = Integer.parseInt(bigTurnConfig.getRule_jg_A().split(",")[0]);
+		int endA = Integer.parseInt(bigTurnConfig.getRule_jg_A().split(",")[1]);
 
+
+		int startB = Integer.parseInt(bigTurnConfig.getRule_jg_B().split(",")[0]);
+		int endB = Integer.parseInt(bigTurnConfig.getRule_jg_B().split(",")[1]);
 		//long[] data = new long[]{0,0};
 
 		long[] dataA = new long[]{0,0};
@@ -890,13 +893,14 @@ public class CountService {
 		for (InputResult result : results) {
 
 			int length = Math.abs(result.getTgTrend());
-			if(!(length>=start&&length<=end))continue;
-			long f = length<1?0:(long) (Math.pow(2,length-start));
-			if(result.getTgTrend()<0)f = f*-1L;
-			long ls = (long)result.getRets()[4];
-			long nv = (long)result.getRets()[5];
+
 
 			if(result.getTgTrend()>0) {
+				if(!(length>=startA&&length<=endA))continue;
+				long f = length<1?0:(long) (Math.pow(2,length-startA));
+				if(result.getTgTrend()<0)f = f*-1L;
+				long ls = (long)result.getRets()[4];
+				long nv = (long)result.getRets()[5];
 				if (Math.abs(ls) > Math.abs(nv))
 					dataA[0] += (ls > 0 ? 1L : -1L) * f;
 				else if (Math.abs(nv) > Math.abs(ls))
@@ -905,7 +909,12 @@ public class CountService {
 					dataA[0] += (ls > 0 ? 1L : -1L) * f;
 					dataA[1] += (nv > 0 ? 1L : -1L) * f;
 				}
-			}else {
+			}else if(result.getTgTrend()<0){
+				if(!(length>=startB&&length<=endB))continue;
+				long f = length<1?0:(long) (Math.pow(2,length-startB));
+				if(result.getTgTrend()<0)f = f*-1L;
+				long ls = (long)result.getRets()[4];
+				long nv = (long)result.getRets()[5];
 				if (Math.abs(ls) > Math.abs(nv))
 					dataB[0] += (ls > 0 ? 1L : -1L) * f;
 				else if (Math.abs(nv) > Math.abs(ls))

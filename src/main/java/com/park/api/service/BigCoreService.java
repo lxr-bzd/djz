@@ -11,12 +11,12 @@ public class BigCoreService {
 
 
 
-    public static Integer[] countZdBg(Long[][] newbBg,String lockStr){
+    public static Integer[] countZdBg(Long[][] newbBg,String lockStr,int start,int end){
         Integer[] ret = new Integer[]{0,0};
 
         String[] lock = lockStr.split(",");
 
-        for (int i = 0; i < newbBg.length;i++) {
+        for (int i = start; i < end;i++) {
             if("0".equals(lock[i]))continue;
 
             Long[] item = newbBg[i];

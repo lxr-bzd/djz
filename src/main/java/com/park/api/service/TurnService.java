@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.park.api.utils.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -237,6 +238,8 @@ public class TurnService {
 			bigInputResult.setHbqhBg(hbqhBg);
 			bigInputResult.setXzqhBg(xzqhBg);
 			bigInputResult.setJgbgBg(jgbgBg);
+			bigInputResult.setJgABg(jgbgBgAB[0]);
+			bigInputResult.setJgBBg(jgbgBgAB[1]);
 			ServiceManage.jdbcTemplate.update("update game_turn set "
 					+ "info=?,lj=lj+?,hz_jg=CONCAT(hz_jg,?),jg_sum=jg_sum+?"
 					+ ",qh=?,qh_sum=qh_sum+?,qh_jg=CONCAT(qh_jg,?),qh_last_jg=? "

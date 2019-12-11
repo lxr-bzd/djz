@@ -93,7 +93,13 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 								<col style="width:60px;">
 								<col style="width:100px;">
 								<col style="width:60px;">
-								
+
+								<col style="width:60px;">
+								<col style="width:60px;">
+								<col style="width:60px;">
+								<col style="width:60px;">
+								<col style="width:60px;">
+
 								<col style="width:50px;">
 								
 							</colgroup>
@@ -108,8 +114,8 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							    	<!-- <td><div class="blue btn1 remove-all">清空</div></td> -->
 							    	<td><div class="blue btn1 exit_btn">關閉</div></td>
 							    	
-							    	<td colspan="4" id="input_group"><input type="text" style="width: 90%;background-color: #eee" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""></td>
-							    	<td colspan="4"> <div class="blue btn1 ok_btn">確定</div></td>
+							    	<td colspan="8" id="input_group"><input type="text" style="width: 90%;background-color: #eee" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""></td>
+							    	<td colspan="5"> <div class="blue btn1 ok_btn">確定</div></td>
 							    <!-- 	<td colspan="2">
 							    		<table style="height:100%">
 											<tr><td style="height:auto;font-size:16px;">開始<input type="number" id="tg_thre" value="" style="width: 40%;background-color: #eee;font-size:19px;">
@@ -181,6 +187,12 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 								<col style="width:100px;">
 								<col style="width:60px;">
 								<col style="width:100px;">
+								<col style="width:60px;">
+
+								<col style="width:60px;">
+								<col style="width:60px;">
+								<col style="width:60px;">
+								<col style="width:60px;">
 								<col style="width:60px;">
 								
 								<col style="width:50px;">
@@ -399,6 +411,12 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 								<col style="width:60px;">
 								<col style="width:100px;">
 								<col style="width:60px;">
+
+									<col style="width:60px;">
+									<col style="width:60px;">
+									<col style="width:60px;">
+									<col style="width:60px;">
+									<col style="width:60px;">
 								
 								<col style="width:50px;">
 								
@@ -455,6 +473,12 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 								<col style="width:100px;">
 								<col style="width:60px;">
 								<col style="width:100px;">
+									<col style="width:60px;">
+
+									<col style="width:60px;">
+									<col style="width:60px;">
+									<col style="width:60px;">
+									<col style="width:60px;">
 									<col style="width:60px;">
 								
 								<col style="width:50px;">
@@ -890,6 +914,7 @@ function onBusEnd(){
 		data.bigTurn.xzbg_config = data[0].turn.xzbg_config.split(',');
 		data.bigTurn.hbbg_config = data[0].turn.hbbg_config.split(',');
         data.bigTurn.zd_lock = data.bigTurn.zd_lock.split(',');
+        data.bigTurn.jgzd_lock = data.bigTurn.jgzd_lock.split(',');
 
 		data.bigTurn.config_json = eval("("+data[0].turn.config_json+")")
 		data.bigTurn.tip_open = data[0].tip_open;
@@ -985,11 +1010,22 @@ function ref(data){
 	
 
 	//$("#bg_group").html(bgHtml);
-	
+
+
+	//显示这些列
+    let bgCols = ['hb','qhBg','hbBg','hbqh','xzBg','xzqh','jgbg','zdbg','jgAbg','jgBbg','bgA','bgB','bgB'];
+    let jgCols = ['hb','qhBg','hbBg','hbqh','xzBg','xzqh','jgbg','zdbg','jgAbg','jgBbg','bgA','bgB','bgB'];
+
+    bigvData['viewBg'] = bgCols;
+    bigvData['jgCols'] = jgCols;
+
+
 	$("#head_group").html(initLockHtml(bigvData.bigTurn));
+    $("#hzbg_group").html(template("hzbg_tmpl",bigvData));
+
 	$("#jg_group").html(template("jg_tmpl",bigvData));
 	$("#jg_group>tr:last").attr("id","bottom2");
-	$("#hzbg_group").html(template("hzbg_tmpl",bigvData));
+
 	$("#bottom_group").html(template("bottom_tmpl",bigvData));
 	$("#bottom_group>tr:last").attr("id","bottom1");
 	
@@ -1045,6 +1081,7 @@ function ref(data){
 		var hbbgLock = bigTurn.hbbg_lock;
 		var xzbgLock = bigTurn.xzbg_lock;
         var zdLock = bigTurn.zd_lock;
+        var jgzdLock = bigTurn.jgzd_lock;;
 		var html = "";
 		
 		for (var i = 0; i < userlock.length; i++) {
@@ -1067,13 +1104,22 @@ function ref(data){
 
         }
         html+='<td>终端報告</td>';
+
+        var cols2 = ['表1','表2','表3','表4'];
+
+        for (let i = 0; i < cols2.length; i++) {
+            html+='<td>'+getLockBtnHtml(5,0,i+1,jgzdLock[i])+'<br>'+cols2[i]+'</td>';
+
+        }
+        html+='<td>结果终端</td>';
+
 		return html;
 	}
 	
 	
 	
 	/**
-	mod:1 汇总报告，2：合并报告，3 選擇報告
+	mod:1 汇总报告，2：合并报告，3 選擇報告,4 终端报告,5 结果
 	*/
 	function setLock(mod,tid,uid,val,btn){
 		
@@ -1289,15 +1335,20 @@ function ref(data){
 									</td>
 							{{/each}}
 
-									<td> <div class="bg-td">{{bgData['hb'][0].name}}<span {{if bgData['hb'][0].val>0}}class="red"{{/if}}>{{if bgData['hb'][0].name}}{{bgData['hb'][0].val}}{{/if}}</span></div></td>
+							{{each viewBg as val i}}
+							<td>
+								<div class="bg-td">{{bgData[val][0].name}} <span {{if bgData[val][0].val>0}}class="red"{{/if}}>{{if bgData[val][0].name}}{{bgData[val][0].val}}{{/if}}</span></div>
+
+							</td>
+							{{/each}}
+									<!--td> <div class="bg-td">{{bgData['hb'][0].name}}<span {{if bgData['hb'][0].val>0}}class="red"{{/if}}>{{if bgData['hb'][0].name}}{{bgData['hb'][0].val}}{{/if}}</span></div></td>
 									<td> <div class="bg-td">{{bgData['qhBg'][0].name}}<span {{if bgData['qhBg'][0].val>0}}class="red"{{/if}}>{{if bgData['qhBg'][0].name}}{{bgData['qhBg'][0].val}}{{/if}}</span></div></td>
 									<td> <div class="bg-td">{{bgData['hbBg'][0].name}}<span {{if bgData['hbBg'][0].val>0}}class="red"{{/if}}>{{if bgData['hbBg'][0].name}}{{bgData['hbBg'][0].val}}{{/if}}</span></div></td>
 							    	<td> <div class="bg-td">{{bgData['hbqh'][0].name}}<span {{if bgData['hbqh'][0].val>0}}class="red"{{/if}}>{{if bgData['hbqh'][0].name}}{{bgData['hbqh'][0].val}}{{/if}}</span></div></td>
 							    	<td> <div class="bg-td">{{bgData['xzBg'][0].name}}<span {{if bgData['xzBg'][0].val>0}}class="red"{{/if}}>{{if bgData['xzBg'][0].name}}{{bgData['xzBg'][0].val}}{{/if}}</span></div></td>
 							    	<td> <div class="bg-td">{{bgData['xzqh'][0].name}}<span {{if bgData['xzqh'][0].val>0}}class="red"{{/if}}>{{if bgData['xzqh'][0].name}}{{bgData['xzqh'][0].val}}{{/if}}</span></div></td>
 							    	<td> <div class="bg-td">{{bgData['jgbg'][0].name}}<span {{if bgData['jgbg'][0].val>0}}class="red"{{/if}}>{{if bgData['jgbg'][0].name}}{{bgData['jgbg'][0].val}}{{/if}}</span></div></td>
-									<td> <div class="bg-td">{{bgData['zdbg'][0].name}}<span {{if bgData['zdbg'][0].val>0}}class="red"{{/if}}>{{if bgData['zdbg'][0].name}}{{bgData['zdbg'][0].val}}{{/if}}</span></div></td>
-
+									<td> <div class="bg-td">{{bgData['zdbg'][0].name}}<span {{if bgData['zdbg'][0].val>0}}class="red"{{/if}}>{{if bgData['zdbg'][0].name}}{{bgData['zdbg'][0].val}}{{/if}}</span></div></td-->
 									<td rowspan="3"> <span class="">匯總</span></td>	
 								</tr>
 							  <tr class="data_col">
@@ -1306,31 +1357,39 @@ function ref(data){
 										<div class="bg-td">{{bgData[i+1][1].name}} <span {{if bgData[i+1][1].val>0}}class="red"{{/if}}>{{if bgData[i+1][1].name}}{{bgData[i+1][1].val}}{{/if}}</span></div>
 									{{/if}}</td>
 							{{/each}}
+							{{each viewBg as val i}}
+								  <td>
+									  <div class="bg-td">{{bgData[val][1].name}} <span {{if bgData[val][1].val>0}}class="red"{{/if}}>{{if bgData[val][1].name}}{{bgData[val][1].val}}{{/if}}</span></div>
+
+								  </td>
+							{{/each}}
 							    
-									<td><div class="bg-td">{{bgData['hb'][1].name}} <span {{if bgData['hb'][1].val>0}}class="red"{{/if}}>{{if bgData['hb'][1].name}}{{bgData['hb'][1].val}}{{/if}}</span></div></td>
+									<!--td><div class="bg-td">{{bgData['hb'][1].name}} <span {{if bgData['hb'][1].val>0}}class="red"{{/if}}>{{if bgData['hb'][1].name}}{{bgData['hb'][1].val}}{{/if}}</span></div></td>
 							    	<td> <div class="bg-td">{{bgData['qhBg'][1].name}}<span {{if bgData['qhBg'][1].val>0}}class="red"{{/if}}>{{if bgData['qhBg'][1].name}}{{bgData['qhBg'][1].val}}{{/if}}</span></div></td>
 									<td><div class="bg-td">{{bgData['hbBg'][1].name}} <span {{if bgData['hbBg'][1].val>0}}class="red"{{/if}}>{{if bgData['hbBg'][1].name}}{{bgData['hbBg'][1].val}}{{/if}}</span></div></td>
 							    	<td> <div class="bg-td">{{bgData['hbqh'][1].name}}<span {{if bgData['hbqh'][1].val>0}}class="red"{{/if}}>{{if bgData['hbqh'][1].name}}{{bgData['hbqh'][1].val}}{{/if}}</span></div></td>
 							    	<td><div class="bg-td">{{bgData['xzBg'][1].name}} <span {{if bgData['xzBg'][1].val>0}}class="red"{{/if}}>{{if bgData['xzBg'][1].name}}{{bgData['xzBg'][1].val}}{{/if}}</span></div></td>
 							    	<td> <div class="bg-td">{{bgData['xzqh'][1].name}}<span {{if bgData['xzqh'][1].val>0}}class="red"{{/if}}>{{if bgData['xzqh'][1].name}}{{bgData['xzqh'][1].val}}{{/if}}</span></div></td>
 							    	<td> <div class="bg-td">{{bgData['jgbg'][1].name}}<span {{if bgData['jgbg'][1].val>0}}class="red"{{/if}}>{{if bgData['jgbg'][1].name}}{{bgData['jgbg'][1].val}}{{/if}}</span></div></td>
-								  <td> <div class="bg-td">{{bgData['zdbg'][1].name}}<span {{if bgData['zdbg'][1].val>0}}class="red"{{/if}}>{{if bgData['zdbg'][1].name}}{{bgData['zdbg'][1].val}}{{/if}}</span></div></td>
-
-							  	</tr>
+								  <td> <div class="bg-td">{{bgData['zdbg'][1].name}}<span {{if bgData['zdbg'][1].val>0}}class="red"{{/if}}>{{if bgData['zdbg'][1].name}}{{bgData['zdbg'][1].val}}{{/if}}</span></div></td-->
+							  </tr>
 							  	<tr class="data_col">
 							  		
 							{{each bigTurn.user_lock as val i}}
 									<td class="blue"><div class="bg-td">共 <span >{{if bgData[i+1]}}{{bgData[i+1][2]}}{{/if}}</span></div></td>
 							{{/each}}
+							{{each viewBg as val i}}
+									<td class="blue"><div class="bg-td">共 <span >{{bgData[val][2]}}</span></div></td>
+							{{/each}}
 							    	
-							    	<td class="blue"><div class="bg-td">共 <span >{{bgData['hb'][2]}}</span></div></td>
+							    	<!--td class="blue"><div class="bg-td">共 <span >{{bgData['hb'][2]}}</span></div></td>
 									<td class="blue"><div class="bg-td">共 <span >{{bgData['qhBg'][2]}}</span></div></td>
 									<td class="blue"><div class="bg-td">共 <span >{{bgData['hbBg'][2]}}</span></div></td>
 							    	<td class="blue"><div class="bg-td">共 <span >{{bgData['hbqh'][2]}}</span></div></td>
 									<td class="blue"><div class="bg-td">共 <span >{{bgData['xzBg'][2]}}</span></div></td>
 							    	<td class="blue"><div class="bg-td">共 <span >{{bgData['xzqh'][2]}}</span></div></td>
 									<td class="blue"><div class="bg-td">共 <span >{{bgData['jgbg'][2]}}</span></div></td>
-									<td class="blue"><div class="bg-td">共 <span >{{bgData['zdbg'][2]}}</span></div></td>
+									<td class="blue"><div class="bg-td">共 <span >{{bgData['zdbg'][2]}}</span></div></td-->
 									
 							  	</tr>
 
@@ -1348,15 +1407,21 @@ function ref(data){
 				<td></td>
 			{{/if}}
 		{{/each}}
+
+		{{each jgCols as col jj}}
+
+			<td {{if jgData[col].list[i]>0}}class="red"{{/if}}>{{jgData[col].list[i]}}</td>
+
+		{{/each}}
 	
-	<td {{if val>0}}class="red"{{/if}}>{{val}}</td>
+	<!--td {{if val>0}}class="red"{{/if}}>{{val}}</td>
 	<td {{if jgData['qhBg'].list[i]>0}}class="red"{{/if}}>{{jgData['qhBg'].list[i]}}</td>
 	<td {{if jgData['hbBg'].list[i]>0}}class="red"{{/if}}>{{jgData['hbBg'].list[i]}}</td>
 	<td {{if jgData['hbqh'].list[i]>0}}class="red"{{/if}}>{{jgData['hbqh'].list[i]}}</td>
 	<td {{if jgData['xzBg'].list[i]>0}}class="red"{{/if}}>{{jgData['xzBg'].list[i]}}</td>
 	<td {{if jgData['xzqh'].list[i]>0}}class="red"{{/if}}>{{jgData['xzqh'].list[i]}}</td>
 	<td {{if jgData['jgbg'].list[i]>0}}class="red"{{/if}}>{{jgData['jgbg'].list[i]}}</td>
-		<td {{if jgData['zdbg'].list[i]>0}}class="red"{{/if}}>{{jgData['zdbg'].list[i]}}</td>
+		<td {{if jgData['zdbg'].list[i]>0}}class="red"{{/if}}>{{jgData['zdbg'].list[i]}}</td>-->
 
 <td>{{i+1}}</td>
 	</tr>
@@ -1365,33 +1430,40 @@ function ref(data){
 	
 	
 	<script type="text/html" id="bottom_tmpl">
-							<tr>
-							  		<td>結果</td>
-									{{each bigTurn.user_lock as val j}}
-										{{if jgData[j+1]}}
-							    		<td class="blue2{{if jgData[j+1].jg>0}} red{{/if}}">{{jgData[j+1].jg}}</td>{{else}}<td  class="blue2"></td>{{/if}}	
-									{{/each}}
-							    	
-							    	<td class="blue2 {{if jgData['hb'].jg>0}}red{{/if}}">{{jgData['hb'].jg}}</td>
-									<td class="blue2 {{if jgData['qhBg'].jg>0}}red{{/if}}">{{jgData['qhBg'].jg}}</td>
-									
-									<td class="blue2 {{if jgData['hbBg'].jg>0}}red{{/if}}">{{jgData['hbBg'].jg}}</td>
-									<td class="blue2 {{if jgData['hbqh'].jg>0}}red{{/if}}">{{jgData['hbqh'].jg}}</td>
-																		
-									<td class="blue2 {{if jgData['xzBg'].jg>0}}red{{/if}}">{{jgData['xzBg'].jg}}</td>
-									<td class="blue2 {{if jgData['xzqh'].jg>0}}red{{/if}}">{{jgData['xzqh'].jg}}</td>
-									<td class="blue2 {{if jgData['jgbg'].jg>0}}red{{/if}}">{{jgData['jgbg'].jg}}</td>
-									<td class="blue2 {{if jgData['zdbg'].jg>0}}red{{/if}}">{{jgData['zdbg'].jg}}</td>
-					<td>結果</td>
-							  	</tr>
+		<tr>
+			<td>結果</td>
+			{{each bigTurn.user_lock as val j}}
+			{{if jgData[j+1]}}
+			<td class="blue2{{if jgData[j+1].jg>0}} red{{/if}}">{{jgData[j+1].jg}}</td>{{else}}<td  class="blue2"></td>{{/if}}
+			{{/each}}
+
+			{{each jgCols as col j}}
+			<td class="blue2 {{if jgData[col].jg>0}}red{{/if}}">{{jgData[col].jg}}</td>
+			{{/each}}
+
+			<!--<td class="blue2 {{if jgData['hb'].jg>0}}red{{/if}}">{{jgData['hb'].jg}}</td>
+			<td class="blue2 {{if jgData['qhBg'].jg>0}}red{{/if}}">{{jgData['qhBg'].jg}}</td>
+
+			<td class="blue2 {{if jgData['hbBg'].jg>0}}red{{/if}}">{{jgData['hbBg'].jg}}</td>
+			<td class="blue2 {{if jgData['hbqh'].jg>0}}red{{/if}}">{{jgData['hbqh'].jg}}</td>
+
+			<td class="blue2 {{if jgData['xzBg'].jg>0}}red{{/if}}">{{jgData['xzBg'].jg}}</td>
+			<td class="blue2 {{if jgData['xzqh'].jg>0}}red{{/if}}">{{jgData['xzqh'].jg}}</td>
+			<td class="blue2 {{if jgData['jgbg'].jg>0}}red{{/if}}">{{jgData['jgbg'].jg}}</td>
+			<td class="blue2 {{if jgData['zdbg'].jg>0}}red{{/if}}">{{jgData['zdbg'].jg}}</td>-->
+			<td>結果</td>
+		</tr>
 							  	<tr>
 							  		<td>求和</td>
 									{{each bigTurn.user_lock as val j}}
 										{{if jgData[j+1]}}<td {{if jgData[j+1].qh>0}}class="red"{{/if}}>{{jgData[j+1].qh}}</td>{{else}}<td></td>{{/if}}
 							    	
 									{{/each}}
+									{{each jgCols as col j}}
+										<td {{if jgData[col].qh>0}}class="red"{{/if}}>{{jgData[col].qh}}</td>
+									{{/each}}
 							    	
-							    	<td {{if jgData['hb'].qh>0}}class="red"{{/if}}>{{jgData['hb'].qh}}</td>
+							    	<!--<td {{if jgData['hb'].qh>0}}class="red"{{/if}}>{{jgData['hb'].qh}}</td>
 									<td {{if jgData['qhBg'].qh>0}}class="red"{{/if}}>{{jgData['qhBg'].qh}}</td>
 									
 									<td {{if jgData['hbBg'].qh>0}}class="red"{{/if}}>{{jgData['hbBg'].qh}}</td>
@@ -1400,7 +1472,7 @@ function ref(data){
 									<td {{if jgData['xzBg'].qh>0}}class="red"{{/if}}>{{jgData['xzBg'].qh}}</td>
 									<td {{if jgData['xzqh'].qh>0}}class="red"{{/if}}>{{jgData['xzqh'].qh}}</td>
 									<td {{if jgData['jgbg'].qh>0}}class="red"{{/if}}>{{jgData['jgbg'].qh}}</td>
-									<td {{if jgData['zdbg'].qh>0}}class="red"{{/if}}>{{jgData['zdbg'].qh}}</td>
+									<td {{if jgData['zdbg'].qh>0}}class="red"{{/if}}>{{jgData['zdbg'].qh}}</td>-->
 
 									<td>求和</td>
 							  	</tr>
@@ -1410,15 +1482,19 @@ function ref(data){
 										{{if bgData[j+1]}}<td class="blue">{{bgData[j+1][3]}}</td>{{else}}<td class="blue"></td>{{/if}}
 							    	
 									{{/each}}
+
+									{{each jgCols as col j}}
+									<td class="blue">{{bgData[col][3]}}</td>
+									{{/each}}
 							    	
-							    	<td class="blue">{{bgData['hb'][3]}}</td>
+							    	<!--<td class="blue">{{bgData['hb'][3]}}</td>
 <td class="blue">{{bgData['qhBg'][3]}}</td>
 									<td class="blue">{{bgData['hbBg'][3]}}</td>
 <td class="blue">{{bgData['hbqh'][3]}}</td>
 									<td class="blue">{{bgData['xzBg'][3]}}</td>
 <td class="blue">{{bgData['xzqh'][3]}}</td>
 <td class="blue">{{bgData['jgbg'][3]}}</td>
-									<td class="blue">{{bgData['zdbg'][3]}}</td>
+									<td class="blue">{{bgData['zdbg'][3]}}</td>-->
 									
 <td>共計</td>
 							  	</tr>

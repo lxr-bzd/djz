@@ -36,6 +36,8 @@ public class BigTurn {
 
 
 	String tg_trends;
+
+	String jgzd_lock;
 	
 	BigTurnConfig bigTurnConfig;
 
@@ -221,6 +223,14 @@ public class BigTurn {
 
 	public void setZd_lock(String zd_lock) {
 		this.zd_lock = zd_lock;
+	}
+
+	public String getJgzd_lock() {
+		return jgzd_lock;
+	}
+
+	public void setJgzd_lock(String jgzd_lock) {
+		this.jgzd_lock = jgzd_lock;
 	}
 
 	public String getTg_trends() {

@@ -163,7 +163,10 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 		/* 结束选择求和  */
 		/* 开始结果报告  */
 		turn.jgbg = eval(turn.jgbg );
-		var jgbgBgData = createBg(turn.jgbg);
+        var jgbg = getBgJg(turn.jgbg,turn.jgbg_sum,turn.jgbg_jg?turn.jgbg_jg.split(","):[]);
+        bgData["jgbg"] = jgbg[0];
+        jgData['jgbg'] = jgbg[1];
+		/*var jgbgBgData = createBg(turn.jgbg);
 		jgbgBgData.push(turn.jgbg_sum);
 		bgData["jgbg"] = jgbgBgData;
 		
@@ -176,12 +179,50 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 			jgData['jgbg'].list.push(v);
 			jgData['jgbg'].qh+=(v>0?1:(v<0?-1:0));
 			jgData['jgbg'].jg+=v;
-		}
+		}*/
 		/* 结束结果报告  */
-		
+
+
+        /* 开始结果A报告  */
+        turn.jgbgA = eval(turn.jgbgA);
+        var jgbgA = getBgJg(turn.jgbgA,turn.jgbgA_sum,turn.jgbgA_jg?turn.jgbgA_jg.split(","):[]);
+        bgData["jgAbg"] = jgbgA[0];
+        jgData['jgAbg'] = jgbgA[1];
+        /* 结束结果A报告  */
+        /* 开始结果B报告  */
+        turn.jgbgB = eval(turn.jgbgB);
+        var jgbgB = getBgJg(turn.jgbgB,turn.jgbgA_sum,turn.jgbgB_jg?turn.jgbgB_jg.split(","):[]);
+        bgData["jgBbg"] = jgbgB[0];
+        jgData['jgBbg'] = jgbgB[1];
+        /* 结束结果B报告  */
 		
 		
 		return {turn:turn,bgData:bgData,jgData:jgData};
+
+        /**
+		 *
+         * @param cBg 报告数组
+         * @param cBgSum
+         * @param jgArray
+         * @returns {*[]}
+         */
+		function getBgJg(cBg,cBgSum,jgArray){
+
+            let bgRet = createBg(cBg);
+            bgRet.push(cBgSum);
+
+            let jgRet = {list:[null],jg:0,qh:0};
+            for (var i = 0; i < jgArray.length; i++) {
+                if(!jgArray[i])continue;
+                var v = new Number(jgArray[i]);
+                jgRet.list.push(v);
+                jgRet.qh+=(v>0?1:(v<0?-1:0));
+                jgRet.jg+=v;
+            }
+            return [bgRet,jgRet];
+
+		}
+
 		
 		function bgA(g){
 			var ret = [{name:'',val:''},{name:'',val:''},0];
@@ -243,7 +284,7 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 				
 				}
 		
-		var cols = ["hb","qhBg","hbBg","hbqh","xzBg","xzqh","jgbg"];
+		var cols = ["hb","qhBg","hbBg","hbqh","xzBg","xzqh","jgbg","jgbgA","jgbgB"];
 		
 		for (var i = 0; i < cols.length; i++) {
 			
@@ -271,11 +312,15 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 				}
 
 			}
+
             handelZdbg(bigTurn,bigvData);
+
+            handelJgABbg(bigTurn,bigvData);
 			
 		}else{
 			
-			var cols = ["hb","qhBg","hbBg","hbqh","xzBg","xzqh","jgbg","zdbg"];
+			var cols = ["hb","qhBg","hbBg","hbqh","xzBg","xzqh","jgbg","zdbg"
+				,"jgAbg","jgBbg","bgA","bgB","jgZd"];
 			var bigvData = {"bigTurn":bigTurn,"bgData":{},"jgData":{}};
 			
 			for (var i = 0; i < cols.length; i++) {
@@ -293,7 +338,7 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 			var bgData = bigvData.bgData;
 			var bg = eval(bigTurn.bg);
 			var gj = eval(bigTurn.gj);
-			var col = [1,2,3,4,5,6,7,8,9,10,'hb','qhBg','hbBg','hbqh','xzBg','xzqh','jgbg'];
+			var col = [1,2,3,4,5,6,7,8,9,10,'hb','qhBg','hbBg','hbqh','xzBg','xzqh','jgbg','jgAbg','jgBbg'];
 			for (var i = 0; i < col.length; i++) {
 				
 				var nm = col[i];
@@ -318,23 +363,59 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
                 zdjg.qh+=(v>0?1:(v<0?-1:0));
             }
 
-            function createBg(arr){
-                var ret = [{name:'',val:''},{name:'',val:''},0];
-                ret[0].name = arr[0]>0?conf1.L:(arr[0]<0?conf1.X:'');
-                ret[0].val = ret[0].name?Math.abs(arr[0]):0;
-                ret[1].name = arr[1]>0?conf1.D:(arr[1]<0?conf1.S:'');
-                ret[1].val = ret[1].name?Math.abs(arr[1]):0;
-                ret[2] = ret[0].val+ret[1].val
-                return ret;
 
-            }
 
 		}
-		
-		function add2BigVdata(bigVdata,vData){
+
+        function createBg(arr){
+            var ret = [{name:'',val:''},{name:'',val:''},0];
+            ret[0].name = arr[0]>0?conf1.L:(arr[0]<0?conf1.X:'');
+            ret[0].val = ret[0].name?Math.abs(arr[0]):0;
+            ret[1].name = arr[1]>0?conf1.D:(arr[1]<0?conf1.S:'');
+            ret[1].val = ret[1].name?Math.abs(arr[1]):0;
+            ret[2] = ret[0].val+ret[1].val
+            return ret;
+
+        }
+
+        function handelJgABbg(bigTurn,bigvData){
+
+            bigvData.bgData['bgA'] = createBg(eval(bigTurn.bga));
+            bigvData.bgData['bgA'].push(bigTurn.bga_sum);
+            var jgArrA = {list:[null],jg: bigTurn.bga_jg_sum,qh:0};
+            bigvData.jgData['bgA'] = jgArrA;
+
+            var arrA = bigTurn.bga_jg?bigTurn.bga_jg.split(","):[];
+            for (var i = 0; i < arrA.length; i++) {
+                if(!arrA[i])continue;
+                var v = new Number(arrA[i]);
+                jgArrA.list.push(v);
+                jgArrA.qh+=(v>0?1:(v<0?-1:0));
+            }
+
+
+            bigvData.bgData['bgB'] = createBg(eval(bigTurn.bgb));
+            bigvData.bgData['bgB'].push(bigTurn.bgb_sum);
+            var jgArrB = {list:[null],jg: bigTurn.bgb_jg_sum,qh:0};
+            bigvData.jgData['bgB'] = jgArrB;
+
+            var arrB = bigTurn.bgb_jg?bigTurn.bgb_jg.split(","):[];
+            for (var i = 0; i < arrB.length; i++) {
+                if(!arrB[i])continue;
+                var v = new Number(arrB[i]);
+                jgArrB.list.push(v);
+                jgArrB.qh+=(v>0?1:(v<0?-1:0));
+            }
+
+
+
+        }
+
+
+        function add2BigVdata(bigVdata,vData){
 			
 			var jgData = bigVdata.jgData;
-			var col = [1,2,3,4,5,6,7,8,9,10,'hb','qhBg','hbBg','hbqh','xzBg','xzqh','jgbg'];
+			var col = [1,2,3,4,5,6,7,8,9,10,'hb','qhBg','hbBg','hbqh','xzBg','xzqh','jgbg','jgAbg','jgBbg'];
 			
 			
 			for (var j = 0; j < col.length; j++) {
