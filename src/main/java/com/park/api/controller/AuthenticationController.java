@@ -45,11 +45,8 @@ public class AuthenticationController extends BaseController{
 	public Object test(HttpServletRequest request) {
 		return JsonResult.getSuccessResult();
 	}
-	@RequestMapping("test2") 
-	@ResponseBody
-	public Object test2(HttpServletRequest request) {
-		return JsonResult.getSuccessResult();
-	}
+
+
 	
 	@RequestMapping("logout")
 	@ResponseBody

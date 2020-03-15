@@ -109,24 +109,29 @@ public class GameService {
 		}else if(templateNo==2||templateNo==3||templateNo==4||templateNo==5){
 			
 			String u = null;
+			String u1 = null;
 			
 			switch (templateNo) {
 			case 2:
+				u1 = "0000";
 				u = "0000,0000,0000,0000,0000,0000,0000,0000,0000,0000,";
 				break;
 			case 3:
+				u1 = "J0J0";
 				u = "J0J0,J0J0,J0J0,J0J0,J0J0,J0J0,J0J0,J0J0,J0J0,J0J0,";
 				break;
 			case 4:
+				u1 = "IYIY";
 				u = "IYIY,IYIY,IYIY,IYIY,IYIY,IYIY,IYIY,IYIY,IYIY,IYIY,";
 				break;
 			case 5:
+				u1 = "SFSF";
 				u = "SFSF,SFSF,SFSF,SFSF,SFSF,SFSF,SFSF,SFSF,SFSF,SFSF,";
 				break;
 			}
 			
 			//100组
-			String ten0 = "";
+			/*String ten0 = "";
 			
 			for (int i = 0; i < 10; i++) {
 				ten0+=u;
@@ -137,8 +142,13 @@ public class GameService {
 					sheng.append(ten0);
 					
 				}
-				crow.setSheng(sheng.substring(0,sheng.length()-1));
-				
+				crow.setSheng(sheng.substring(0,sheng.length()-1))*/;
+			StringBuilder sheng = new StringBuilder();
+			for (int j = 0; j < groupNum; j++) {
+				sheng.append(u1+",");
+			}
+
+			crow.setSheng(sheng.substring(0, sheng.length()-1));
 			
 		}else {
 			throw new ApplicationException("无法创建模板");

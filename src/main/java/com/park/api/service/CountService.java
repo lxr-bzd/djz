@@ -1010,8 +1010,8 @@ public static String[] reckonHbbgTrend(List<InputResult> results,String oldHbbgT
 			int i = Integer.valueOf(result.getUid())-1;
 			String[] dt = configs[i].split("-");
 			
-			long up = Integer.parseInt(dt[0]);//上边界范围
-			long down = Integer.parseInt(dt[1]);//下边界范围
+			long up = Long.parseLong(dt[0]);//上边界范围
+			long down = Long.parseLong(dt[1]);//下边界范围
 			
 			long absUp_jg_sum = Math.abs(result.getUp_jg_sum());
 			

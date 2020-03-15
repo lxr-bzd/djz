@@ -56,7 +56,10 @@ public class TurnService {
 		try {
 			Map<String, Object> turn = ServiceManage.jdbcTemplate.queryForMap(
 					"select * from game_turn where big_turn_id=? AND turn_no=? limit 1",bigTurn.getId(),turnNo);
-			
+			Map<String, Object> turn2 = ServiceManage.jdbcTemplate.queryForMap(
+					"select * from game_turn2 where turn_id=? limit 1",turn.get("id"));
+			turn.putAll(turn2);
+
 			Map<String, Object> ret = new HashMap<>();
 			
 			//ret.put("lastRow", crowDao.getInputRow(game.getId()));
@@ -104,7 +107,12 @@ public class TurnService {
 		
 		Map<String, Object> map = ServiceManage.jdbcTemplate.queryForMap(
 				"select id,rule,frow, `mod`,user_lock,qh,yz,yz_jg_sum,hb,hb_jg_sum,hbqh,hbqh_sum,xz,xz_jg_sum,jgbg,jgbg_jg_sum,xzqh,xzqh_sum,xzbg_lock,xzbg_config,xzbg_trend,hbbg_lock,hbbg_config,hbbg_trend" +
-						",jgbgA,jgbgA_jg_sum,jgbgB,jgbgB_jg_sum from game_turn where id=? limit 1",turn.getId());
+						" from game_turn where id=? limit 1",turn.getId());
+		Map<String, Object> map2 = ServiceManage.jdbcTemplate.queryForMap(
+				"select jgbgA,jgbgA_jg_sum,jgbgB,jgbgB_jg_sum from game_turn2 where turn_id=? limit 1",turn.getId());
+
+		map.putAll(map2);
+
 		String[] uLock = map.get("user_lock").toString().split(",");
 		
 		String[] rule = map.get("rule").toString().split(",");
@@ -226,7 +234,7 @@ public class TurnService {
 			CountProcessBean pbJgbgA = doCountProcess(upJgbgA,pei,Long.valueOf(map.get("jgbgA_jg_sum").toString()));
 
 			//计算 结果报告2
-			long[] jgbgBgB = jgbgBgAB[0];
+			long[] jgbgBgB = jgbgBgAB[1];
 			CountProcessBean pbJgbgB = doCountProcess(upJgbgB,pei,Long.valueOf(map.get("jgbgB_jg_sum").toString()));
 
 
@@ -250,9 +258,9 @@ public class TurnService {
 						+ ",jgbg=?,jgbg_sum=jgbg_sum+?,jgbg_jg=CONCAT(jgbg_jg,?),jgbg_jg_sum=?,jgbg_last_jg=?"
 					+ ",hbqh=?,hbqh_sum=hbqh_sum+?,hbqh_jg=CONCAT(hbqh_jg,?),hbqh_last_jg=? "
 					+ ",xzqh=?,xzqh_sum=xzqh_sum+?,xzqh_jg=CONCAT(xzqh_jg,?),xzqh_last_jg=? "
-							+ ",jgbgA=?,jgbgA_sum=jgbgA_sum+?,jgbgA_jg=CONCAT(jgbgA_jg,?),jgbgA_jg_sum=?"
+					/*		+ ",jgbgA=?,jgbgA_sum=jgbgA_sum+?,jgbgA_jg=CONCAT(jgbgA_jg,?),jgbgA_jg_sum=?"
 							+ ",jgbgB=?,jgbgB_sum=jgbgB_sum+?,jgbgB_jg=CONCAT(jgbgB_jg,?),jgbgB_jg_sum=?"
-					+ ",queue_count = ?"
+					*/+ ",queue_count = ?"
 					+ " where id=?",
 					JSONObject.toJSONString(hzBg),
 					Math.abs((long)hzBg[4])+Math.abs((long)hzBg[5]),
@@ -300,6 +308,24 @@ public class TurnService {
 					xzqhJg==null?"":(xzqhJg[0]+xzqhJg[1]+","),
 					xzqhJg==null?"":xzqhJg[0]+"_"+xzqhJg[1],
 
+					/*JSONObject.toJSONString(jgbgBgA),
+					Math.abs(jgbgBgA[0])+Math.abs(jgbgBgA[1]),
+					pbJgbgA.getBgJg()==null?"":(pbJgbgA.getBgJg()[0]+pbJgbgA.getBgJg()[1]+","),
+					pbJgbgA.getNewBgJgSum(),
+
+					JSONObject.toJSONString(jgbgBgB),
+					Math.abs(jgbgBgB[0])+Math.abs(jgbgBgB[1]),
+					pbJgbgB.getBgJg()==null?"":(pbJgbgB.getBgJg()[0]+pbJgbgB.getBgJg()[1]+","),
+					pbJgbgB.getNewBgJgSum(),*/
+							
+					queueCount,
+					countTurnId.get());
+
+			//分表更新
+			ServiceManage.jdbcTemplate.update("update game_turn2 set "
+					+ " jgbgA=?,jgbgA_sum=jgbgA_sum+?,jgbgA_jg=CONCAT(jgbgA_jg,?),jgbgA_jg_sum=?"
+					+ ",jgbgB=?,jgbgB_sum=jgbgB_sum+?,jgbgB_jg=CONCAT(jgbgB_jg,?),jgbgB_jg_sum=?"
+					+ " where turn_id=?",
 					JSONObject.toJSONString(jgbgBgA),
 					Math.abs(jgbgBgA[0])+Math.abs(jgbgBgA[1]),
 					pbJgbgA.getBgJg()==null?"":(pbJgbgA.getBgJg()[0]+pbJgbgA.getBgJg()[1]+","),
@@ -309,8 +335,6 @@ public class TurnService {
 					Math.abs(jgbgBgB[0])+Math.abs(jgbgBgB[1]),
 					pbJgbgB.getBgJg()==null?"":(pbJgbgB.getBgJg()[0]+pbJgbgB.getBgJg()[1]+","),
 					pbJgbgB.getNewBgJgSum(),
-							
-					queueCount,
 					countTurnId.get());
 		
 		}else {//B模式
@@ -411,10 +435,10 @@ public class TurnService {
 		                	PreparedStatement ps = con.prepareStatement("INSERT INTO game_turn ("
 		                			+ "big_turn_id,turn_no,`mod`,`mod2`,frow,info,lj ,hz_jg  ,qh,qh_sum,qh_jg,qh_last_jg,  yz_jg, hb_jg,hbqh_jg,xzqh_jg  ,`rule`,rule_type,user_lock,state,config_json"
 		                			+ ",xz_jg,xzbg_lock,xzbg_config,xzbg_trend,hbbg_lock,hbbg_config,hbbg_trend,jgbg_jg" +
-									",jgbgA_jg,jgbgB_jg)"
+									")"
 		                			+ " VALUES (?,?,?,?,1,'',0,''  ,'',0,'',''   ,'','','',''  ,?,?,'1,1,1,1,1,1,1,1,1,1',1,?,"
 		                			+ "'','1,1,1,1,1,1,1,1,1,1',?,'0,0,0,0,0,0,0,0,0,0','1,1,1,1,1,1,1,1,1,1',?,'0,0,0,0,0,0,0,0,0,0',''" +
-									",'','')",Statement.RETURN_GENERATED_KEYS);
+									")",Statement.RETURN_GENERATED_KEYS);
 		                	
 		                	ps.setInt(1, bigTurn.getId());
 		                	ps.setInt(2, turnNo);
@@ -431,6 +455,8 @@ public class TurnService {
 		                }
 		            }, keyHolder);
 		    turn.setId(keyHolder.getKey().intValue()+"");
+			ServiceManage.jdbcTemplate.update("INSERT INTO game_turn2 (turn_id,jgbgA_jg,jgbgB_jg) " +
+					"VALUES(?,'','')",keyHolder.getKey().intValue());
 		    return turn;
 
 	}

@@ -21,7 +21,7 @@ public class HistoryController extends BaseController{
 	@ResponseBody
 	public Object his() {
 		Map<String, Object> map = new HashMap<>();
-		map.put("turns", ServiceManage.jdbcTemplate.queryForList("SELECT a.* FROM game_turn a WHERE a.state=2"));
+		map.put("turns", ServiceManage.jdbcTemplate.queryForList("SELECT a.*,b.* FROM game_turn a left join game_turn2 b on a.id=b.turn_id WHERE a.state=2"));
 		map.put("his", ServiceManage.jdbcTemplate.queryForList("SELECT a.* FROM djt_history a "));
 		map.put("bigTurns", ServiceManage.jdbcTemplate.queryForList("SELECT a.* FROM game_big_turn a WHERE a.state=2"));
 		
@@ -37,6 +37,7 @@ public class HistoryController extends BaseController{
 				throw new ApplicationException("参数错误");
 			ServiceManage.jdbcTemplate.batchUpdate(
 					"delete from djt_history WHERE tid in (select id from game_turn  WHERE big_turn_id="+tid+")"
+					,"delete from game_turn2 WHERE turn_id in (select id from game_turn where big_turn_id="+tid+")"
 					,"delete from game_turn WHERE big_turn_id="+tid
 					 ,"delete from game_big_turn WHERE id="+tid
 					);
@@ -45,6 +46,7 @@ public class HistoryController extends BaseController{
 		if(mod.equals("2")) {//全部删除
 			ServiceManage.jdbcTemplate.batchUpdate(
 					"delete from djt_history "
+					, "delete from game_turn2 WHERE turn_id in (select id from game_turn WHERE state=2)"
 					, "delete from game_turn WHERE state=2"
 					,"delete from game_big_turn WHERE state=2");
 		}

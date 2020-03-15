@@ -1,3 +1,2 @@
-2019-1-16
-10用户同时计算耗时
-7.29,4.62s,5.68,4.75,5.49,5.25,5.06,5.09
+<td {{if sumData[col].jg>0}}class="red"{{/if}}>{{sumData[col].jg}}</td><td {{if sumData[col].qh>0}}class="red"{{/if}}>{{sumData[col].qh}}</td>
+				

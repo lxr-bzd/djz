@@ -5,9 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
-
 import com.park.api.utils.ArrayUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -24,7 +22,6 @@ import com.park.api.ServiceManage;
 import com.park.api.entity.BigInputResult;
 import com.park.api.entity.BigTurn;
 import com.park.api.entity.InputResult;
-import com.park.api.entity.Turn;
 import com.park.api.service.bean.BigTurnConfig;
 
 @Service
@@ -46,13 +43,15 @@ public class BigTurnService {
 			 
 			 BigInputResult bigInputResult = turnService.doInputTurn(pei,bigTurn, i);
 			 results.add(bigInputResult);
-			
 		}
+
+		String[] inverseLockArr = bigTurn.getInverse_lock().split(",");
 		 
 		Long[][] newbBg = handelBg(results);
+
+		 newbBg = inverseNewBg(newbBg,inverseLockArr);
 		List<Long> gjList = JSONArray.parseArray(bigTurn.getGj(), Long.class);
 		Long[] newGj = handelGj(gjList.toArray(new Long[gjList.size()]),newbBg);
-
 
 
 		if(bigTurn.getFrow()<3){
@@ -71,45 +70,64 @@ public class BigTurnService {
 			//计算连续rule_A
 			int[] oldTgTrends = ArrayUtils.str2int(bigTurn.getTg_trends().split(","));
 			int[] newTgTrends = BigCoreService.reckonTgTrends(results,oldTgTrends);
+			//AB报告
+			long[][] bgAB = BigCoreService.reckonBgAB(newbBg,newTgTrends,bigTurn.getBigTurnConfig());
+			bgAB = inverseBgAB(bgAB,inverseLockArr);
+			long[] bgA = bgAB[0];
+			long[] bgB = bgAB[1];
 
-			//z终端报告
+			//求和终端报告
 			List<Object> upZdList = StringUtils.isEmpty(bigTurn.getZd())?null:JSONArray.parseArray(bigTurn.getZd());
 			Integer[] upZdBg = bigTurn.getZd()!=null?upZdList.toArray(new Integer[upZdList.size()]):null;
-			Integer[] zdBg = BigCoreService.countZdBg(newbBg,bigTurn.getZd_lock(),0,17);
+			Integer[] zdBg = BigCoreService.countZdBg(newbBg,bigTurn.getZd_lock(),0,19,bgAB);
+				zdBg = inverseQhzd(zdBg,inverseLockArr);
 			Integer[] zdJg = upZdBg==null?null:BigCoreService.countJg(pei.substring(0, 1),upZdBg);
 			Long zd_jg_sum = zdJg==null?0:Long.valueOf(zdJg[0]+zdJg[1]);
 
 
-			//AB报告
-			long[][] bgAB = BigCoreService.reckonBgAB(newbBg,newTgTrends,bigTurn.getBigTurnConfig());
-			long[] bgA = bgAB[0];
-			long[] bgB = bgAB[1];
+
 
 			//A报告
 			List<Object> upBgaList = StringUtils.isEmpty(bigTurn.getBga())?null:JSONArray.parseArray(bigTurn.getBga());
 			Integer[] upBgaBg = StringUtils.isNotEmpty(bigTurn.getBga())?upBgaList.toArray(new Integer[upBgaList.size()]):null;
 			Integer[] bgaJg = upBgaBg==null?null:BigCoreService.countJg(pei.substring(0, 1),upBgaBg);
-			Long bga_jg_sum = zdJg==null?0:Long.valueOf(bgaJg[0]+bgaJg[1]);
+			Long bga_jg_sum = bgaJg==null?0:Long.valueOf(bgaJg[0]+bgaJg[1]);
 
 
 			//B报告
 			List<Object> upBgbList = StringUtils.isEmpty(bigTurn.getBgb())?null:JSONArray.parseArray(bigTurn.getBgb());
 			Integer[] upBgbBg = StringUtils.isNotEmpty(bigTurn.getBgb())?upBgbList.toArray(new Integer[upBgbList.size()]):null;
 			Integer[] bgbJg = upBgaBg==null?null:BigCoreService.countJg(pei.substring(0, 1),upBgbBg);
-			Long bgb_jg_sum = zdJg==null?0:Long.valueOf(bgbJg[0]+bgbJg[1]);
+			Long bgb_jg_sum = bgbJg==null?0:Long.valueOf(bgbJg[0]+bgbJg[1]);
+
+
+			Long[][] jgzdInputBg = new Long[][]{ArrayUtils.int2Long(zdBg),newbBg[17],newbBg[18],ArrayUtils.toObject(bgA),ArrayUtils.toObject(bgB)};
+
+			//结果终端报告
+			List<Long> upJgzdList = StringUtils.isEmpty(bigTurn.getJgzd())?null:JSONArray.parseArray(bigTurn.getJgzd(),Long.class);
+			Long[] upJgzdBg = StringUtils.isNotEmpty(bigTurn.getJgzd())?upJgzdList.toArray(new Long[upJgzdList.size()]):null;
+			Long[] jgzdBg = BigCoreService.countJgzdBg(jgzdInputBg,bigTurn.getJgzd_lock());
+			Long[] jgzdJg = upJgzdBg==null?null:BigCoreService.countJg(pei.substring(0, 1),upJgzdBg);
+			Long jgzd_jg_sum = jgzdJg==null?0:Long.valueOf(jgzdJg[0]+jgzdJg[1]);
 
 
 			ServiceManage.jdbcTemplate.update("UPDATE `game_big_turn` SET `frow` = ?, `bg` = ?,  `gj` = ?,  "+
 							" tg_trends=?,"+
-							" zd=?, zd_sum=zd_sum+?," +" zd_jg=CONCAT(zd_jg,?), zd_jg_sum = zd_jg_sum+?," +
-							" bga=?, bga_sum=bga_sum+?," +" bga_jg=CONCAT(bga_jg,?), bga_jg_sum = bga_jg_sum+?," +
-							" bgb=?, bgb_sum=bgb_sum+?," +" bgb_jg=CONCAT(bgb_jg,?), bgb_jg_sum = bgb_jg_sum+? " +
+							" zd=?, zd_sum=zd_sum+?, zd_jg=CONCAT(zd_jg,?), zd_jg_sum = zd_jg_sum+?," +
+							" bga=?, bga_sum=bga_sum+?, bga_jg=CONCAT(bga_jg,?), bga_jg_sum = bga_jg_sum+?," +
+							" bgb=?, bgb_sum=bgb_sum+?, bgb_jg=CONCAT(bgb_jg,?), bgb_jg_sum = bgb_jg_sum+?, " +
+							" jgzd=?, jgzd_sum=jgzd_sum+?, jgzd_jg=CONCAT(jgzd_jg,?), jgzd_jg_sum = jgzd_jg_sum+? " +
 							" WHERE `id` = ?"
 					,bigTurn.getFrow()+1,
 					JSONObject.toJSONString(newbBg),
 					JSONObject.toJSONString(newGj),
 
 					StringUtils.join(ArrayUtils.toObject(newTgTrends),","),
+
+					JSONArray.toJSONString(zdBg),
+					Math.abs(zdBg[0])+Math.abs(zdBg[1]),
+					zdJg==null?"":(zdJg[0]+zdJg[1]+","),
+					zd_jg_sum,
 
 					JSONArray.toJSONString(bgA),
 					Math.abs(bgA[0])+Math.abs(bgA[1]),
@@ -121,18 +139,59 @@ public class BigTurnService {
 					bgbJg==null?"":(bgbJg[0]+bgbJg[1]+","),
 					bgb_jg_sum,
 
-					JSONArray.toJSONString(zdBg),
-					Math.abs(zdBg[0])+Math.abs(zdBg[1]),
-					zdJg==null?"":(zdJg[0]+zdJg[1]+","),
-					zd_jg_sum,
+
+
+					JSONArray.toJSONString(jgzdBg),
+					Math.abs(jgzdBg[0])+Math.abs(jgzdBg[1]),
+					jgzdJg==null?"":(jgzdJg[0]+jgzdJg[1]+","),
+					jgzd_jg_sum,
 
 					bigTurn.getId()
 			);
 		}
 
-		
-		 
 	 }
+
+
+
+	public long[][] inverseBgAB(long[][] bgAB,String[] lockArr){
+
+		for (int i = 0; i < 2; i++) {
+			int li = i+10;
+			if(lockArr[li].equals("1")){
+				bgAB[i][0] = -bgAB[i][0];
+				bgAB[i][1] = -bgAB[i][1];
+			}
+
+
+		}
+		return bgAB;
+	}
+
+	public Integer[] inverseQhzd(Integer[] qhzd,String[] lockArr){
+
+		if(lockArr[7].equals("1")){
+			qhzd[0] = -qhzd[0];
+			qhzd[1] = -qhzd[1];
+		}
+	 	return qhzd;
+	}
+	public Long[][] inverseNewBg(Long[][] newbBg,String[] lockArr){
+
+		for (int i = 10; i < 19; i++) {
+			int li = i-10;
+			if(i>16)li+=1;
+			if(lockArr[li].equals("1")){
+				newbBg[i][0] = -newbBg[i][0];
+				newbBg[i][1] = -newbBg[i][1];
+			}
+
+
+		}
+
+
+		return newbBg;
+	}
 	 
 	 
 	 public Map<String, Object> getMainModel() {
@@ -191,10 +250,11 @@ public class BigTurnService {
 		bigTurn.setZd_sum(0l);
 		bigTurn.setZd_jg("");
 		bigTurn.setZd_jg_sum(0l);
-		bigTurn.setZd_lock("1,1,1,1,1"+",1,1,1,1,1"+",1,1,1,1,1"+",1,1");
+		bigTurn.setZd_lock("1,1,1,1,1"+",1,1,1,1,1"+",1,1,1,1,1"+",1,1,1,1,1,1");
 		bigTurn.setTg_trends("0,0,0,0,0,0,0,0,0,0");
 
-		bigTurn.setJgzd_lock("1,1,1,1");
+		bigTurn.setJgzd_lock("1,1,1,1,1");
+		bigTurn.setInverse_lock("0,0,0,0,0,"+"0,0,0,0,0,"+"0,0");
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -204,9 +264,9 @@ public class BigTurnService {
 	                public PreparedStatement createPreparedStatement(Connection con) throws SQLException
 	                {
 	                	PreparedStatement ps = con.prepareStatement("INSERT INTO `game_big_turn`( `frow`, `bg`, `gj`,`config_json`, `state`,   zd_sum,zd_jg,zd_jg_sum,zd_lock,tg_trends," +
-										"bga_jg,bgb_jg,jgzd_lock) "
+										"bga_jg,bgb_jg,jgzd_jg,jgzd_lock,inverse_lock) "
 	                			+ "VALUES ( ?, '', ?,?, 1,  ?,?,?,?, ?" +
-										",'','',?)"
+										",'','','',?,?)"
 	                			,Statement.RETURN_GENERATED_KEYS); 
 	                	
 	                	ps.setInt(1, bigTurn.getFrow());
@@ -220,6 +280,7 @@ public class BigTurnService {
 
 						ps.setString(8, bigTurn.getTg_trends());
 						ps.setString(9, bigTurn.getJgzd_lock());
+						ps.setString(10, bigTurn.getInverse_lock());
 	                	return ps;
 	                }
 	            }, keyHolder);

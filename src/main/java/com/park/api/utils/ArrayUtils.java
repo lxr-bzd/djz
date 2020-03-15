@@ -2,6 +2,15 @@ package com.park.api.utils;
 
 public class ArrayUtils {
 
+    public static Long[] int2Long(Integer[] ints){
+
+        Long[] data = new Long[ints.length];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = new Long(ints[i]);
+        }
+
+        return data;
+    }
 
     public static int[] str2int(String[] strs){
 
@@ -19,6 +28,17 @@ public class ArrayUtils {
         Integer[] data = new Integer[ints.length];
         for (int i = 0; i < data.length; i++) {
             data[i] = Integer.valueOf(ints[i]);
+        }
+
+        return data;
+
+    }
+
+    public static Long[] toObject(long[] ints){
+
+        Long[] data = new Long[ints.length];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = Long.valueOf(ints[i]);
         }
 
         return data;

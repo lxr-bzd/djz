@@ -38,6 +38,13 @@ public class BigTurn {
 	String tg_trends;
 
 	String jgzd_lock;
+
+	String jgzd;
+	String jgzd_jg;
+	Long jgzd_sum;
+	Long jgzd_jg_sum;
+
+	String inverse_lock;
 	
 	BigTurnConfig bigTurnConfig;
 
@@ -239,5 +246,45 @@ public class BigTurn {
 
 	public void setTg_trends(String tg_trends) {
 		this.tg_trends = tg_trends;
+	}
+
+	public String getJgzd() {
+		return jgzd;
+	}
+
+	public void setJgzd(String jgzd) {
+		this.jgzd = jgzd;
+	}
+
+	public String getJgzd_jg() {
+		return jgzd_jg;
+	}
+
+	public void setJgzd_jg(String jgzd_jg) {
+		this.jgzd_jg = jgzd_jg;
+	}
+
+	public Long getJgzd_sum() {
+		return jgzd_sum;
+	}
+
+	public void setJgzd_sum(Long jgzd_sum) {
+		this.jgzd_sum = jgzd_sum;
+	}
+
+	public Long getJgzd_jg_sum() {
+		return jgzd_jg_sum;
+	}
+
+	public void setJgzd_jg_sum(Long jgzd_jg_sum) {
+		this.jgzd_jg_sum = jgzd_jg_sum;
+	}
+
+	public String getInverse_lock() {
+		return inverse_lock;
+	}
+
+	public void setInverse_lock(String inverse_lock) {
+		this.inverse_lock = inverse_lock;
 	}
 }

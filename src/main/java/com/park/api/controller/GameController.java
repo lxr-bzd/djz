@@ -1,8 +1,10 @@
 package com.park.api.controller;
 
 
+import java.util.HashMap;
 import java.util.Map;
 
+import com.park.api.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,10 +16,8 @@ import com.lxr.framework.long1.JsonResult;
 import com.park.api.ServiceManage;
 import com.park.api.common.BaseController;
 import com.park.api.entity.BigTurn;
-import com.park.api.service.BigTurnService;
-import com.park.api.service.GameCoreService;
-import com.park.api.service.GameService;
-import com.park.api.service.TurnService;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RequestMapping("user/game")
 @Controller
@@ -25,8 +25,9 @@ public class GameController extends BaseController{
 	
 	@Autowired
 	GameService gameService;
-	
-	
+
+	@Autowired
+	UserService userService;
 	
 	@Autowired
 	BigTurnService bigTurnService;
@@ -88,6 +89,7 @@ public class GameController extends BaseController{
 		ServiceManage.jdbcTemplate.batchUpdate(
 				"TRUNCATE `game_big_turn`" ,
 				"TRUNCATE `game_turn`" ,
+				"TRUNCATE `game_turn2`" ,
 				"TRUNCATE `djt_history`" ,
 				"TRUNCATE `game_history`" ,
 				"TRUNCATE `game_runing`" ,
@@ -132,6 +134,12 @@ public class GameController extends BaseController{
 		case 4:
 				fname = "zd_lock";
 				break;
+			case 5:
+				fname = "jgzd_lock";
+				break;
+			case 6:
+				fname = "inverse_lock";
+				break;
 
 		default:
 			throw new ApplicationException("错误的类型");
@@ -140,7 +148,7 @@ public class GameController extends BaseController{
 		
 		BigTurn bigTurn = bigTurnService.getCurrentTurn();
 
-		if(mod==4){
+		if(mod==4||mod==5||mod==6){
 			String lockStr = ServiceManage.jdbcTemplate.queryForObject("select "+fname+" from game_big_turn where id=?", String.class,bigTurn.getId());
 
 			String[] locks = lockStr.split(",");
@@ -196,6 +204,25 @@ public class GameController extends BaseController{
 		ServiceManage.jdbcTemplate.update("UPDATE game_turn SET "+fname+"=? WHERE  big_turn_id=?",newLockStr,bigTurn.getId());
 		
 		return JsonResult.getSuccessResult();
+	}
+
+	@RequestMapping("validationSettingPwd")
+	@ResponseBody
+	public Object validationSettingPwd(HttpServletRequest request, String pwd) {
+
+		String account = ServiceManage.securityService.getSessionSubject().getAccount();
+		Map userMap = userService.getByAccount(account);
+		Map map = new HashMap();
+		if(pwd.equals(userMap.get("settingPwd"))){
+			map.put("result","1");
+			map.put("msg","成功");
+		}else{
+			map.put("result","0");
+			map.put("msg","验证失败");
+		}
+
+
+		return JsonResult.getSuccessResult(map);
 	}
 
 

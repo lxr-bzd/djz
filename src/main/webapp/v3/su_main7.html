@@ -28,8 +28,8 @@
 			
 			.blue{background-color: #087ec3;color: white;}
 			.blue2{background-color: #92ebff;}
-			.locak_btn1{background-color: #dddddd;padding: 3px 3px;cursor: pointer;border-radius:5px}
-			.locak_btn2{background-color: yellow;padding: 3px 3px;cursor: pointer;border-radius:5px}
+			.locak_btn1{background-color: #dddddd;padding: 2px 1px;cursor: pointer;border-radius:5px}
+			.locak_btn2{background-color: yellow;padding: 2px 1px;cursor: pointer;border-radius:5px}
 			
 			.click_span{padding: 3px 8px;cursor: pointer;border-radius:5px}
 			
@@ -91,14 +91,14 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 								<col style="width:60px;">
 								<col style="width:100px;">
 								<col style="width:60px;">
-								<col style="width:100px;">
+								<col style="width:60px;">
 								<col style="width:60px;">
 
 								<col style="width:60px;">
 								<col style="width:60px;">
 								<col style="width:60px;">
 								<col style="width:60px;">
-								<col style="width:60px;">
+								<col style="width:100px;">
 
 								<col style="width:50px;">
 								
@@ -107,14 +107,16 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							  	<tr class="data_col person_int">
 							    	<td rowspan="4" class="focus_row">--</td>
 							    	<td colspan="6" class="blue" style="font-size:24px">計 算 表</td>
+									<!--<td><a onclick="toSetting()"><div class="blue btn1">設置</div></a></td>-->
 							    	<td><div class="blue btn1 refresh_btn">刷新</div></td>
-							    	<td><a href="setting.html"><div class="blue btn1">設置</div></a></td>
+
 							    	
 							    	<td><a href="su_history.html"><div class="blue btn1">記錄</div></a></td>
 							    	<!-- <td><div class="blue btn1 remove-all">清空</div></td> -->
 							    	<td><div class="blue btn1 exit_btn">關閉</div></td>
-							    	
-							    	<td colspan="8" id="input_group"><input type="text" style="width: 90%;background-color: #eee" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""></td>
+									<td><input id="setting-input" type="password" style="width: 90%;background-color: #eee"  placeholder=""></td>
+
+									<td colspan="8" id="input_group"><input type="text" style="width: 90%;background-color: #eee" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""></td>
 							    	<td colspan="5"> <div class="blue btn1 ok_btn">確定</div></td>
 							    <!-- 	<td colspan="2">
 							    		<table style="height:100%">
@@ -186,14 +188,14 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 								<col style="width:60px;">
 								<col style="width:100px;">
 								<col style="width:60px;">
-								<col style="width:100px;">
+								<col style="width:60px;">
 								<col style="width:60px;">
 
 								<col style="width:60px;">
 								<col style="width:60px;">
 								<col style="width:60px;">
 								<col style="width:60px;">
-								<col style="width:60px;">
+								<col style="width:100px;">
 								
 								<col style="width:50px;">
 								
@@ -409,14 +411,14 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 								<col style="width:60px;">
 								<col style="width:100px;">
 								<col style="width:60px;">
-								<col style="width:100px;">
+								<col style="width:60px;">
 								<col style="width:60px;">
 
 									<col style="width:60px;">
 									<col style="width:60px;">
 									<col style="width:60px;">
 									<col style="width:60px;">
-									<col style="width:60px;">
+									<col style="width:100px;">
 								
 								<col style="width:50px;">
 								
@@ -472,14 +474,14 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 								<col style="width:60px;">
 								<col style="width:100px;">
 								<col style="width:60px;">
-								<col style="width:100px;">
+								<col style="width:60px;">
 									<col style="width:60px;">
 
 									<col style="width:60px;">
 									<col style="width:60px;">
 									<col style="width:60px;">
 									<col style="width:60px;">
-									<col style="width:60px;">
+									<col style="width:100px;">
 								
 								<col style="width:50px;">
 								
@@ -786,6 +788,47 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 		 
 		
 	}
+
+	$("#setting-input").keypress(function (e) {
+		if (e.which == 13) {
+
+            toSetting(e.target);
+		}
+	});
+
+	function toSetting(e){
+        var val = $(e).val();
+        if(!val){
+            $app.alert("請輸入設置密碼");
+            return;
+        }
+        $app.request("../user/game/validationSettingPwd.do",function(data){
+            if(data.data.result==1){
+                $(e).val('');
+                window.location.href = "setting.html";
+            }else{
+                $app.alert(data.data.msg);
+            }
+
+        },{param:{pwd:val}});
+
+        /*layer.prompt({title: '請輸入設置密碼', formType: 1,offset: 't',btn:['確認','取消']},function(val, index){
+            if(!val){
+                $app.alert("請輸入設置密碼");
+                return;
+			}
+            layer.close(index);
+            $app.request("../user/game/validationSettingPwd.do",function(data){
+                if(data.data.result==1){
+                    window.location.href = "setting.html";
+				}else{
+                    $app.alert(data.data.msg);
+				}
+
+            },{param:{pwd:val}});
+        });*/
+	}
+
 	
 	function tableExport(){
 		var tb = $(etbHtml);
@@ -915,6 +958,8 @@ function onBusEnd(){
 		data.bigTurn.hbbg_config = data[0].turn.hbbg_config.split(',');
         data.bigTurn.zd_lock = data.bigTurn.zd_lock.split(',');
         data.bigTurn.jgzd_lock = data.bigTurn.jgzd_lock.split(',');
+        data.bigTurn.inverse_lock = data.bigTurn.inverse_lock.split(',');
+
 
 		data.bigTurn.config_json = eval("("+data[0].turn.config_json+")")
 		data.bigTurn.tip_open = data[0].tip_open;
@@ -1013,8 +1058,8 @@ function ref(data){
 
 
 	//显示这些列
-    let bgCols = ['hb','qhBg','hbBg','hbqh','xzBg','xzqh','jgbg','zdbg','jgAbg','jgBbg','bgA','bgB','bgB'];
-    let jgCols = ['hb','qhBg','hbBg','hbqh','xzBg','xzqh','jgbg','zdbg','jgAbg','jgBbg','bgA','bgB','bgB'];
+    let bgCols = ['hb','qhBg','hbBg','hbqh','xzBg','xzqh','jgbg','zdbg','jgAbg','jgBbg','bgA','bgB','jgzd'];
+    let jgCols = ['hb','qhBg','hbBg','hbqh','xzBg','xzqh','jgbg','zdbg','jgAbg','jgBbg','bgA','bgB','jgzd'];
 
     bigvData['viewBg'] = bgCols;
     bigvData['jgCols'] = jgCols;
@@ -1081,18 +1126,22 @@ function ref(data){
 		var hbbgLock = bigTurn.hbbg_lock;
 		var xzbgLock = bigTurn.xzbg_lock;
         var zdLock = bigTurn.zd_lock;
-        var jgzdLock = bigTurn.jgzd_lock;;
+        var jgzdLock = bigTurn.jgzd_lock;
+        var inverse_lock = bigTurn.inverse_lock;
 		var html = "";
-		
+
+		var jgzdLockIndex = 0;
+		var qhzdLockIndex = 0;
 		for (var i = 0; i < userlock.length; i++) {
 			
 			var cHtml = '<div><span class="click_span" onclick="toSetConfig(1,0,'+(i+1)+',\''+bigTurn.hbbg_config[i]+'\',this)" >'+bigTurn.hbbg_config[i]+'</span></div>'
 			+'<div><span class="click_span" onclick="toSetConfig(2,0,'+(i+1)+',\''+bigTurn.xzbg_config[i]+'\',this)" >'+bigTurn.xzbg_config[i]+'</span></div>';
 			
 			html+='<td>'+(i+1)+' <br>'+getLockBtnHtml(1,0,i+1,userlock[i])
-			+' '+getLockBtnHtml(2,0,i+1,hbbgLock[i])
-			+' '+getLockBtnHtml(3,0,i+1,xzbgLock[i])
-                +' '+getLockBtnHtml(4,0,i+1,zdLock[i])+cHtml+'</td>'
+			+' '+getLockBtnHtml(2,0,i+1,hbbgLock[i],'合并报告')
+			+' '+getLockBtnHtml(3,0,i+1,xzbgLock[i],'選擇報告')
+                +' '+getLockBtnHtml(4,0,qhzdLockIndex+1,zdLock[qhzdLockIndex],'求和终端')+cHtml+'</td>';
+            qhzdLockIndex++;
 		}
 
 		var cols = ['匯總報告','匯總求和','合并報告','合并求和',
@@ -1100,26 +1149,30 @@ function ref(data){
             '結果報告'];
 
         for (let i = 0; i < cols.length; i++) {
-            html+='<td>'+getLockBtnHtml(4,0,i+1+10,zdLock[i+10])+'<br>'+cols[i]+'</td>';
-
+            html+='<td>'+getInverseBtnHtml(6,i+1,inverse_lock[i])+' '+getLockBtnHtml(4,0,qhzdLockIndex+1,zdLock[qhzdLockIndex],'求和终端')+'<br>'+cols[i]+'</td>';
+            qhzdLockIndex++;
         }
-        html+='<td>终端報告</td>';
+        html+='<td>'+getInverseBtnHtml(6,cols.length+1,inverse_lock[cols.length])+' '+getLockBtnHtml(5,0,jgzdLockIndex+1,jgzdLock[jgzdLockIndex])+'<br>求和终端</td>';
 
-        var cols2 = ['表1','表2','表3','表4'];
+        jgzdLockIndex++;
+        var cols2 = ['結果1','結果2','結果3','結果4'];
 
         for (let i = 0; i < cols2.length; i++) {
-            html+='<td>'+getLockBtnHtml(5,0,i+1,jgzdLock[i])+'<br>'+cols2[i]+'</td>';
-
+            html+='<td>'+getInverseBtnHtml(6,cols.length+2+i,inverse_lock[cols.length+1+i])+' '+getLockBtnHtml(5,0,jgzdLockIndex+1,jgzdLock[jgzdLockIndex],'结果')+' '+getLockBtnHtml(4,0,qhzdLockIndex+1,zdLock[qhzdLockIndex],'求和终端')+'<br>'+cols2[i]+'</td>';
+            qhzdLockIndex++;
+            jgzdLockIndex++;
         }
         html+='<td>结果终端</td>';
 
 		return html;
 	}
-	
+
+
+
 	
 	
 	/**
-	mod:1 汇总报告，2：合并报告，3 選擇報告,4 终端报告,5 结果
+	mod:1 汇总报告，2：合并报告，3 選擇報告,4 终端报告,5 结果,6结果反转
 	*/
 	function setLock(mod,tid,uid,val,btn){
 		
@@ -1132,7 +1185,12 @@ function ref(data){
 			success:function(json){
 				if(json.code==1){
 					layer.msg('操作成功');
-					$(btn).replaceWith(getLockBtnHtml(mod,tid,uid,val));
+					if(mod==6){
+                        $(btn).replaceWith(getInverseBtnHtml(mod,uid,val));
+					}else{
+                        $(btn).replaceWith(getLockBtnHtml(mod,tid,uid,val));
+					}
+
 					
 				}else{
 					
@@ -1145,14 +1203,23 @@ function ref(data){
 		
 		
 	}
+
+    function getInverseBtnHtml(mod,index,val){
+
+        return html  = '<span class="'+(val==0?'locak_btn1':'locak_btn2')+'" onclick="'
+            +'setLock('+mod+',0,'+index+','+(val==1?0:1)+',this)" >'+(val==1?'正':'反')+'</span>';
+
+    }
 	
-	function getLockBtnHtml(mod,tid,uid,val){
+	function getLockBtnHtml(mod,tid,uid,val,title){
 		
-		return html  = '<span class="'+(val==1?'locak_btn1':'locak_btn2')+'" onclick="'
+		return html  = '<span title="'+title+'" class="'+(val==1?'locak_btn1':'locak_btn2')+'" onclick="'
 		+'setLock('+mod+','+tid+','+uid+','+(val==1?0:1)+',this)" >'+(val==1?'瑣':'解')+'</span>';
 		
 	}
-	
+
+
+
 
 	
 	

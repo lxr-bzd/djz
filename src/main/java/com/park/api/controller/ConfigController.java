@@ -39,6 +39,7 @@ public class ConfigController extends BaseController{
 		Object valObj = val;
 		switch (mod) {
 		case "mod2":
+			case "use_rule":
 		case "tip_open":
 			
 			if(!ArrayUtils.contains(new String[] {"1","2"}, val)) throw new ApplicationException();

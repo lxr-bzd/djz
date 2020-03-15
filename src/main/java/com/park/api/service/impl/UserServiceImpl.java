@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService{
 		
 		if(StringUtils.isBlank(account))throw new ApplicationException("账号不能为空");
 		try {
-			return ServiceManage.jdbcTemplate.queryForMap("select djt_u_id id,djt_u_name account,djt_u_password pwd from djt_user where djt_u_name = ?", account);
+			return ServiceManage.jdbcTemplate.queryForMap("select djt_u_id id,djt_u_name account,djt_u_password pwd,djt_setting_pwd settingPwd from djt_user where djt_u_name = ?", account);
 	  }catch (EmptyResultDataAccessException e) {  
           return null;  
       }  
