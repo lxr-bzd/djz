@@ -45,14 +45,9 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 			hzJg.qh+=(v>0?1:(v<0?-1:0));
 		}
 		
-		/*for (var i = 0; i < jgData['hb'].list.length; i++) {
-			var v = jgData['hb'].list[i];
-			jgData['hb'].jg+=v;
-			jgData['hb'].qh+=(v>0?1:(v<0?-1:0));
-			
-		}*/
+
 		//處理 汇总求和結果
-		turn.qh = eval(turn.qh );
+		/*turn.qh = eval(turn.qh );
 		var qhBg = createBg([turn.qh[1][0],turn.qh[1][1]]);qhBg.push(turn.qh_sum);
 		bgData['qhBg'] =qhBg;
 		var qhJg = {list:[null],jg:0,qh:0};
@@ -65,9 +60,8 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 			qhJg.list.push(v);
 			qhJg.jg+=v;
 			qhJg.qh+=(v>0?1:(v<0?-1:0));
-		}
+		}*/
 		/* 开始处理原值数据 */
-		
 		turn.yz = eval(turn.yz );
 		var yzBg = createBg([turn.yz[1][0],turn.yz[1][1]]);
 		yzBg.push(turn.yz_sum);
@@ -86,7 +80,7 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 		
 		
 		/* 开始处理合并报告  */
-		turn.hb = eval(turn.hb );
+		/*turn.hb = eval(turn.hb );
 		var hbBgData = createBg(turn.hb);
 		hbBgData.push(turn.hb_sum);
 		bgData["hbBg"] = hbBgData;
@@ -99,17 +93,15 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 			var v = new Number(hbjgs[i]);
 			jgData['hbBg'].list.push(v);
 			jgData['hbBg'].qh+=(v>0?1:(v<0?-1:0));
-		}
-		
-		
+		}*/
 		/* 结束处理合并报告  */
+
 		/* 开始处理合并求和  */
-		turn.hbqh = eval(turn.hbqh );
+		/*turn.hbqh = eval(turn.hbqh );
 		var hbqhBgData = createBg(turn.hbqh);
 		hbqhBgData.push(turn.hbqh_sum);
 		bgData["hbqh"] = hbqhBgData;
-		
-		
+
 		jgData['hbqh'] = {list:[null],jg:0,qh:0};
 		var hbqhjgs = turn.hbqh_jg?turn.hbqh_jg.split(","):[];
 		for (var i = 0; i < hbqhjgs.length; i++) {
@@ -118,13 +110,11 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 			jgData['hbqh'].list.push(v);
 			jgData['hbqh'].qh+=(v>0?1:(v<0?-1:0));
 			jgData['hbqh'].jg+=v;
-		}
-		
-		
+		}*/
 		/* 结束处理合并合并求和  */
 		
 		/* 开始处理選擇報告  */
-		turn.xz = eval(turn.xz );
+		/*turn.xz = eval(turn.xz );
 		var xzBgData = createBg(turn.xz);
 		xzBgData.push(turn.xz_sum);
 		bgData["xzBg"] = xzBgData;
@@ -137,13 +127,11 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 			var v = new Number(xzjgs[i]);
 			jgData['xzBg'].list.push(v);
 			jgData['xzBg'].qh+=(v>0?1:(v<0?-1:0));
-		}
-		
-		
+		}*/
 		/* 结束处理選擇報告  */
 		
 		/* 开始选择求和  */
-		turn.xzqh = eval(turn.xzqh );
+		/*turn.xzqh = eval(turn.xzqh );
 		var xzqhBgData = createBg(turn.xzqh);
 		xzqhBgData.push(turn.xzqh_sum);
 		bgData["xzqh"] = xzqhBgData;
@@ -157,29 +145,14 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 			jgData['xzqh'].list.push(v);
 			jgData['xzqh'].qh+=(v>0?1:(v<0?-1:0));
 			jgData['xzqh'].jg+=v;
-		}
-		
+		}*/
 		
 		/* 结束选择求和  */
 		/* 开始结果报告  */
-		turn.jgbg = eval(turn.jgbg );
+		/*turn.jgbg = eval(turn.jgbg );
         var jgbg = getBgJg(turn.jgbg,turn.jgbg_sum,turn.jgbg_jg?turn.jgbg_jg.split(","):[]);
         bgData["jgbg"] = jgbg[0];
-        jgData['jgbg'] = jgbg[1];
-		/*var jgbgBgData = createBg(turn.jgbg);
-		jgbgBgData.push(turn.jgbg_sum);
-		bgData["jgbg"] = jgbgBgData;
-		
-		
-		jgData['jgbg'] = {list:[null],jg:0,qh:0};
-		var jgbgjgs = turn.jgbg_jg?turn.jgbg_jg.split(","):[];
-		for (var i = 0; i < jgbgjgs.length; i++) {
-			if(!jgbgjgs[i])continue;
-			var v = new Number(jgbgjgs[i]);
-			jgData['jgbg'].list.push(v);
-			jgData['jgbg'].qh+=(v>0?1:(v<0?-1:0));
-			jgData['jgbg'].jg+=v;
-		}*/
+        jgData['jgbg'] = jgbg[1];*/
 		/* 结束结果报告  */
 
 
@@ -313,15 +286,29 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 
 			}
 
-            handelZdbg(bigTurn,bigvData);
+			//终端报告
+            handelDefBg(bigvData,bigTurn,{viewKey:'zdbg',bg:'zd',bgSum:'zd_sum',bgJg:'zd_jg',bgJgSum:'zd_jg_sum'})
+            //handelZdbg(bigTurn,bigvData);
 
-            handelJgABbg(bigTurn,bigvData);
+			//报告AB
+            handelDefBg(bigvData,bigTurn,
+				{viewKey:'bgA',bg:'bga',bgSum:'bga_sum',bgJg:'bga_jg',bgJgSum:'bga_jg_sum'})
+            handelDefBg(bigvData,bigTurn,
+                {viewKey:'bgB',bg:'bgb',bgSum:'bgb_sum',bgJg:'bgb_jg',bgJgSum:'bgb_jg_sum'})
 
-            handelJgzdbg(bigTurn,bigvData);
+            //handelJgABbg(bigTurn,bigvData);
+
+            //结果终端
+            handelDefBg(bigvData,bigTurn,{viewKey:'jgzd',bg:'jgzd',bgSum:'jgzd_sum',bgJg:'jgzd_jg',bgJgSum:'jgzd_jg_sum'})
+            //handelJgzdbg(bigTurn,bigvData);
+            //板块报告
+            handelBkBg(bigvData,bigTurn,{viewKey:'bkbg',bg:'bkbg',bgSum:'bkbg_sum',bgJg:'bkbg_jg',bgJgSum:'bkbg_jg_sum'})
+            handelBkBg(bigvData,bigTurn,{viewKey:'bkzd',bg:'bkzd',bgSum:'bkzd_sum',bgJg:'bkzd_jg',bgJgSum:'bkzd_jg_sum'})
+
 		}else{
 			
-			var cols = ["hb","qhBg","hbBg","hbqh","xzBg","xzqh","jgbg","zdbg"
-				,"jgAbg","jgBbg","bgA","bgB","jgzd"];
+			var cols = ["hb",/*"qhBg","hbBg","hbqh","xzBg","xzqh","jgbg",*/"zdbg"
+				,"jgAbg","jgBbg","bgA","bgB","jgzd",'bkbg',"bkzd"];
 			var bigvData = {"bigTurn":bigTurn,"bgData":{},"jgData":{}};
 			
 			for (var i = 0; i < cols.length; i++) {
@@ -349,7 +336,7 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 			
 		}
 
-		function handelZdbg(bigTurn,bigvData){
+		/*function handelZdbg(bigTurn,bigvData){
 
             bigvData.bgData['zdbg'] = createBg(eval(bigTurn.zd));
             bigvData.bgData['zdbg'].push(bigTurn.zd_sum);
@@ -363,12 +350,9 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
                 zdjg.list.push(v);
                 zdjg.qh+=(v>0?1:(v<0?-1:0));
             }
+		}*/
 
-
-
-		}
-
-        function handelJgzdbg(bigTurn,bigvData){
+        /*function handelJgzdbg(bigTurn,bigvData){
 
             bigvData.bgData['jgzd'] = createBg(eval(bigTurn.jgzd));
             bigvData.bgData['jgzd'].push(bigTurn.jgzd_sum);
@@ -382,10 +366,44 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
                 jgzd.list.push(v);
                 jgzd.qh+=(v>0?1:(v<0?-1:0));
             }
+        }*/
 
+        function handelBkBg(bigvData,bigTurn,opt){
+            var viewKey = opt.viewKey;
+            bigvData.bgData[viewKey] = createBg(eval(bigTurn[opt.bg]));
+            bigvData.bgData[viewKey].push(bigTurn[opt.bgSum]);
+            var jg = {list:[null],jg: bigTurn[opt.bgJgSum],qh:0,type:[null]};
+            bigvData.jgData[viewKey] = jg;
 
-
+            var jgs = bigTurn[opt.bgJg]?bigTurn[opt.bgJg].split(","):[];
+            for (var i = 0; i < jgs.length; i++) {
+                if(!jgs[i])continue;
+                var item = jgs[i].split('_');
+                var v = new Number(item[1]);
+                jg.list.push(v);
+                jg.type.push(item[0]);
+                jg.qh+=(v>0?1:(v<0?-1:0));
+            }
         }
+
+        function handelDefBg(bigvData,bigTurn,opt){
+			var viewKey = opt.viewKey;
+            bigvData.bgData[viewKey] = createBg(eval(bigTurn[opt.bg]));
+            bigvData.bgData[viewKey].push(bigTurn[opt.bgSum]);
+            var jg = {list:[null],jg: bigTurn[opt.bgJgSum],qh:0};
+            bigvData.jgData[viewKey] = jg;
+
+            var jgs = bigTurn[opt.bgJg]?bigTurn[opt.bgJg].split(","):[];
+            for (var i = 0; i < jgs.length; i++) {
+                if(!jgs[i])continue;
+                var v = new Number(jgs[i]);
+                jg.list.push(v);
+                jg.qh+=(v>0?1:(v<0?-1:0));
+            }
+        }
+
+
+
 
         function createBg(arr){
             var ret = [{name:'',val:''},{name:'',val:''},0];
@@ -398,7 +416,7 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 
         }
 
-        function handelJgABbg(bigTurn,bigvData){
+        /*function handelJgABbg(bigTurn,bigvData){
 
             bigvData.bgData['bgA'] = createBg(eval(bigTurn.bga));
             bigvData.bgData['bgA'].push(bigTurn.bga_sum);
@@ -429,13 +447,13 @@ var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
 
 
 
-        }
+        }*/
 
 
         function add2BigVdata(bigVdata,vData){
 			
 			var jgData = bigVdata.jgData;
-			var col = [1,2,3,4,5,6,7,8,9,10,'hb','qhBg','hbBg','hbqh','xzBg','xzqh','jgbg','jgAbg','jgBbg'];
+			var col = [1,2,3,4,5,6,7,8,9,10,'hb'/*,'qhBg','hbBg','hbqh','xzBg','xzqh','jgbg'*/,'jgAbg','jgBbg'];
 			
 			
 			for (var j = 0; j < col.length; j++) {

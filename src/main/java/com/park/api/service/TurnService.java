@@ -169,13 +169,11 @@ public class TurnService {
 				allYz[2]+=yz[2];
 				allYz[3]+=yz[3];
 				//求和计算
-				
-					if((long)objs[4]>0)qh[0]++;
+					/*if((long)objs[4]>0)qh[0]++;
 					if((long)objs[4]<0)qh[1]++;
 					
 					if((long)objs[5]>0)qh[2]++;
-					if((long)objs[5]<0)qh[3]++;
-				//hzSum+=result.getJg_sum();
+					if((long)objs[5]<0)qh[3]++;*/
 			}
 			
 			int mod2 = getInputTurn().get().getMod2();
@@ -184,44 +182,41 @@ public class TurnService {
 			Long hzJg = CountService.reckonHzJg(results,uLock);
 			
 			//计算求和报告
-			Integer[] qhBg = CountService.countQh2(results,uLock);
-			Integer[] qhJg = upQh==null?null:CountService.countQhJg(pei.substring(0, 1), upQh);
+			/*Integer[] qhBg = CountService.countQh2(results,uLock);
+			Integer[] qhJg = upQh==null?null:CountService.countQhJg(pei.substring(0, 1), upQh);*/
 			
 			//计算原值报告
 			YzDto yzDto = CountService.reckonYz(allYz, upYz, Long.valueOf(map.get("yz_jg_sum").toString()), pei, mod2);
 			
 			
 			//计算合并报告
-			
-			String[] newHbbgConfigAndTrend = CountService.reckonHbbgTrend(results, map.get("hbbg_trend").toString(), map.get("hbbg_config").toString(),map.get("xzbg_config").toString(),bigTurn.getBigTurnConfig());
+			/*String[] newHbbgConfigAndTrend = CountService.reckonHbbgTrend(results, map.get("hbbg_trend").toString(), map.get("hbbg_config").toString(),map.get("xzbg_config").toString(),bigTurn.getBigTurnConfig());
 			String newHbbg_config = newHbbgConfigAndTrend[0];
 			String newHbbg_trend = newHbbgConfigAndTrend[2];
 			long[] hbBg = CountService.reckonHbBg(results,map.get("hbbg_lock").toString(),newHbbg_trend,bigTurn.getBigTurnConfig());
 			Long[] hbJg = upHb==null?null:CountService.reckonHbJg(pei.substring(0, 1), upHb);
-			long hbJgSum = hbJg==null?Long.valueOf(map.get("hb_jg_sum").toString()):Long.valueOf(map.get("hb_jg_sum").toString())+hbJg[0]+hbJg[1];
+			long hbJgSum = hbJg==null?Long.valueOf(map.get("hb_jg_sum").toString()):Long.valueOf(map.get("hb_jg_sum").toString())+hbJg[0]+hbJg[1];*/
 
 			//计算合并求和
-			//Integer[] hbqhBg = CountService.countHbQh2(hbBg);
-			Integer[] hbqhBg = CountService.countHbQh2(results,map.get("hbbg_lock").toString(),newHbbg_trend,bigTurn.getBigTurnConfig());
-			Integer[] hbqhJg = upHbqh==null?null:CountService.countHbQhJg(pei.substring(0, 1), upHbqh);
+			/*Integer[] hbqhBg = CountService.countHbQh2(results,map.get("hbbg_lock").toString(),newHbbg_trend,bigTurn.getBigTurnConfig());
+			Integer[] hbqhJg = upHbqh==null?null:CountService.countHbQhJg(pei.substring(0, 1), upHbqh);*/
 			
 			//计算选择报告
-			String newXzbg_config = newHbbgConfigAndTrend[1];
+			/*String newXzbg_config = newHbbgConfigAndTrend[1];
 			String[] newXzbgConfigAndTrend = CountService.reckonXzbgTrend(results, map.get("xzbg_trend").toString(), newXzbg_config,bigTurn.getBigTurnConfig());
-			
-			//String newXzbg_config = newXzbgConfigAndTrend[0];
+
 			String newXzbg_trend = newXzbgConfigAndTrend[1];
 			long[] xzBg = CountService.reckonXzBg(results,map.get("xzbg_lock").toString(),newXzbg_trend,bigTurn.getBigTurnConfig());
 			Long[] xzJg = upXz==null?null:CountService.reckonXzJg(pei.substring(0, 1), upXz);
-			long xzJgSum = xzJg==null?Long.valueOf(map.get("xz_jg_sum").toString()):Long.valueOf(map.get("xz_jg_sum").toString())+xzJg[0]+xzJg[1];
+			long xzJgSum = xzJg==null?Long.valueOf(map.get("xz_jg_sum").toString()):Long.valueOf(map.get("xz_jg_sum").toString())+xzJg[0]+xzJg[1];*/
 
 			//计算选择求和
-			Integer[] xzqhBg = CountService.countXzQh(results,map.get("xzbg_lock").toString(),newXzbg_trend,bigTurn.getBigTurnConfig());
-			Integer[] xzqhJg = upHbqh==null?null:CountService.countXzQhJg(pei.substring(0, 1), upXzqh);
+			/*Integer[] xzqhBg = CountService.countXzQh(results,map.get("xzbg_lock").toString(),newXzbg_trend,bigTurn.getBigTurnConfig());
+			Integer[] xzqhJg = upHbqh==null?null:CountService.countXzQhJg(pei.substring(0, 1), upXzqh);*/
 			
 			//计算结果报告
-			long[] jgbgBg = CountService.reckonJgBg(results,bigTurn.getBigTurnConfig());
-			CountProcessBean pbJgbg = doCountProcess(upJgbg,pei,Long.valueOf(map.get("jgbg_jg_sum").toString()));
+			/*long[] jgbgBg = CountService.reckonJgBg(results,bigTurn.getBigTurnConfig());
+			CountProcessBean pbJgbg = doCountProcess(upJgbg,pei,Long.valueOf(map.get("jgbg_jg_sum").toString()));*/
 
 			/*Long[] jgbgJg = upJgbg==null?null:CountService.reckonJg(pei.substring(0, 1), upJgbg);
 			long jgbgJgSum = jgbgJg==null?Long.valueOf(map.get("jgbg_jg_sum").toString()):Long.valueOf(map.get("jgbg_jg_sum").toString())+jgbgJg[0]+jgbgJg[1];
@@ -240,24 +235,24 @@ public class TurnService {
 
 			//构建返回参数
 			bigInputResult.setHzBg(new long[] {(long)hzBg[4],(long)hzBg[5]});
-			bigInputResult.setHbBg(hbBg);
-			bigInputResult.setXzBg(xzBg);
-			bigInputResult.setHzqhBg(qhBg);
-			bigInputResult.setHbqhBg(hbqhBg);
-			bigInputResult.setXzqhBg(xzqhBg);
-			bigInputResult.setJgbgBg(jgbgBg);
+			//bigInputResult.setHbBg(hbBg);
+			//bigInputResult.setXzBg(xzBg);
+			//bigInputResult.setHzqhBg(qhBg);
+			//bigInputResult.setHbqhBg(hbqhBg);
+			//bigInputResult.setXzqhBg(xzqhBg);
+			//bigInputResult.setJgbgBg(jgbgBg);
 			bigInputResult.setJgABg(jgbgBgAB[0]);
 			bigInputResult.setJgBBg(jgbgBgAB[1]);
 			ServiceManage.jdbcTemplate.update("update game_turn set "
 					+ "info=?,lj=lj+?,hz_jg=CONCAT(hz_jg,?),jg_sum=jg_sum+?"
-					+ ",qh=?,qh_sum=qh_sum+?,qh_jg=CONCAT(qh_jg,?),qh_last_jg=? "
+					//+ ",qh=?,qh_sum=qh_sum+?,qh_jg=CONCAT(qh_jg,?),qh_last_jg=? "//汇总求和
 					+ ",yz=?,yz_sum=yz_sum+?,yz_jg=CONCAT(yz_jg,?),yz_jg_sum=?,yz_last_jg=?"
-					+ ",hb=?,hb_sum=hb_sum+?,hb_jg=CONCAT(hb_jg,?),hb_jg_sum=?,hb_last_jg=?,hbbg_trend=?,hbbg_config=?"
+					//+ ",hb=?,hb_sum=hb_sum+?,hb_jg=CONCAT(hb_jg,?),hb_jg_sum=?,hb_last_jg=?,hbbg_trend=?,hbbg_config=?"
 					
-						+ ",xz=?,xz_sum=xz_sum+?,xz_jg=CONCAT(xz_jg,?),xz_jg_sum=?,xz_last_jg=?,xzbg_trend=?,xzbg_config=?"
-						+ ",jgbg=?,jgbg_sum=jgbg_sum+?,jgbg_jg=CONCAT(jgbg_jg,?),jgbg_jg_sum=?,jgbg_last_jg=?"
-					+ ",hbqh=?,hbqh_sum=hbqh_sum+?,hbqh_jg=CONCAT(hbqh_jg,?),hbqh_last_jg=? "
-					+ ",xzqh=?,xzqh_sum=xzqh_sum+?,xzqh_jg=CONCAT(xzqh_jg,?),xzqh_last_jg=? "
+						//+ ",xz=?,xz_sum=xz_sum+?,xz_jg=CONCAT(xz_jg,?),xz_jg_sum=?,xz_last_jg=?,xzbg_trend=?,xzbg_config=?"
+						//+ ",jgbg=?,jgbg_sum=jgbg_sum+?,jgbg_jg=CONCAT(jgbg_jg,?),jgbg_jg_sum=?,jgbg_last_jg=?"
+					//+ ",hbqh=?,hbqh_sum=hbqh_sum+?,hbqh_jg=CONCAT(hbqh_jg,?),hbqh_last_jg=? "
+					//+ ",xzqh=?,xzqh_sum=xzqh_sum+?,xzqh_jg=CONCAT(xzqh_jg,?),xzqh_last_jg=? "
 					/*		+ ",jgbgA=?,jgbgA_sum=jgbgA_sum+?,jgbgA_jg=CONCAT(jgbgA_jg,?),jgbgA_jg_sum=?"
 							+ ",jgbgB=?,jgbgB_sum=jgbgB_sum+?,jgbgB_jg=CONCAT(jgbgB_jg,?),jgbgB_jg_sum=?"
 					*/+ ",queue_count = ?"
@@ -267,10 +262,10 @@ public class TurnService {
 					hzJg==null?"":(hzJg+","),
 					hzJg==null?0:(hzJg),
 					
-					JSONObject.toJSONString(new Object[] {qh,qhBg}),
-					Math.abs(qhBg[0])+Math.abs(qhBg[1]),
-					qhJg==null?"":(qhJg[0]+qhJg[1]+","),
-					qhJg==null?"":qhJg[0]+"_"+qhJg[1],
+					//JSONObject.toJSONString(new Object[] {qh,qhBg}),
+					//Math.abs(qhBg[0])+Math.abs(qhBg[1]),
+					//qhJg==null?"":(qhJg[0]+qhJg[1]+","),
+					//qhJg==null?"":qhJg[0]+"_"+qhJg[1],
 							
 					JSONObject.toJSONString(new Object[] {allYz,yzDto.getYzBg()}),
 					Math.abs(yzDto.getYzBg()[0])+Math.abs(yzDto.getYzBg()[1]),
@@ -278,35 +273,35 @@ public class TurnService {
 					yzDto.getYzJgSum(),
 					yzDto.getYzJg()==null?"":yzDto.getYzJg()[0]+"_"+yzDto.getYzJg()[1],
 					
-					JSONObject.toJSONString(hbBg),
+					/*JSONObject.toJSONString(hbBg),
 					Math.abs(hbBg[0])+Math.abs(hbBg[1]),
 					hbJg==null?"":(hbJg[0]+hbJg[1]+","),
 					hbJgSum,
 					hbJg==null?"":hbJg[0]+"_"+hbJg[1],
-					newHbbg_trend,newHbbg_config,
+					newHbbg_trend,newHbbg_config,*/
 							
-							JSONObject.toJSONString(xzBg),
+							/*JSONObject.toJSONString(xzBg),
 							Math.abs(xzBg[0])+Math.abs(xzBg[1]),
 							xzJg==null?"":(xzJg[0]+xzJg[1]+","),
 							xzJgSum,
 							xzJg==null?"":xzJg[0]+"_"+xzJg[1],
-									newXzbg_trend,newXzbg_config,
+									newXzbg_trend,newXzbg_config,*/
 									
-							JSONObject.toJSONString(jgbgBg),
+							/*JSONObject.toJSONString(jgbgBg),
 							Math.abs(jgbgBg[0])+Math.abs(jgbgBg[1]),
 					pbJgbg.getBgJg()==null?"":(pbJgbg.getBgJg()[0]+pbJgbg.getBgJg()[1]+","),
 					pbJgbg.getNewBgJgSum(),
-					pbJgbg.getBgJg()==null?"":pbJgbg.getBgJg()[0]+"_"+pbJgbg.getBgJg()[1],
+					pbJgbg.getBgJg()==null?"":pbJgbg.getBgJg()[0]+"_"+pbJgbg.getBgJg()[1],*/
 							
-					JSONObject.toJSONString(hbqhBg),
+					/*JSONObject.toJSONString(hbqhBg),
 					Math.abs(hbqhBg[0])+Math.abs(hbqhBg[1]),
 					hbqhJg==null?"":(hbqhJg[0]+hbqhJg[1]+","),
-					hbqhJg==null?"":hbqhJg[0]+"_"+hbqhJg[1],
+					hbqhJg==null?"":hbqhJg[0]+"_"+hbqhJg[1],*/
 							
-					JSONObject.toJSONString(xzqhBg),
+					/*JSONObject.toJSONString(xzqhBg),
 					Math.abs(xzqhBg[0])+Math.abs(xzqhBg[1]),
 					xzqhJg==null?"":(xzqhJg[0]+xzqhJg[1]+","),
-					xzqhJg==null?"":xzqhJg[0]+"_"+xzqhJg[1],
+					xzqhJg==null?"":xzqhJg[0]+"_"+xzqhJg[1],*/
 
 					/*JSONObject.toJSONString(jgbgBgA),
 					Math.abs(jgbgBgA[0])+Math.abs(jgbgBgA[1]),

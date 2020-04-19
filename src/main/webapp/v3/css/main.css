@@ -350,6 +350,18 @@ html,body{
 .red{
 	color: red;
 }
+.green{
+	color: green;
+}
+.black{
+	color: black;
+}
+.orange{
+	color: orange;
+}
+.grey{
+	color:grey;
+}
 
 .pad-no {
 	padding: 0 !important;

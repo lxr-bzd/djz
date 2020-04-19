@@ -25,4 +25,12 @@ public class JsonUtils {
 		
 
 	}
+
+	public static  Double[] toIntDouble(String arrStr) {
+		if(StringUtils.isEmpty(arrStr))return null;
+		List<Double> upHbqhList = JSONArray.parseArray(arrStr,Double.class);
+		return upHbqhList.toArray(new Double[upHbqhList.size()]);
+
+
+	}
 }

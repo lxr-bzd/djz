@@ -1,11 +1,15 @@
 package com.park.api.service;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
+
+import com.park.api.entity.TurnGroup;
 import com.park.api.utils.ArrayUtils;
+import com.park.api.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -67,6 +71,25 @@ public class BigTurnService {
 
 		}else{
 
+			//小板汇总
+			List<TurnGroup> turnGroups = TurnGroupCountService.countGroup(bigTurn.getId(),results,bigTurn.getXb_lock(),bigTurn.getXb_inv_lock());
+			TurnGroupCountService.updateCountGroup(turnGroups);
+
+			//板块报告
+			Integer[] upBkbg = JsonUtils.toIntArray(bigTurn.getBkbg());
+			Integer[] bkbg = BigCoreService.countBkbg(turnGroups);
+			Integer[] bkbgJg = upBkbg==null?null:BigCoreService.countJg(pei.substring(0, 1),upBkbg);
+			Long bkbg_jg_sum = bkbgJg==null?0:Long.valueOf(bkbgJg[0]+bkbgJg[1]);
+			Integer bkbgJgType = upBkbg==null?null:BigCoreService.countJgDetail(bkbgJg,upBkbg);
+			Integer newBkbgTrend = CountCoreAlgorithm.reckonTrend(bkbg_jg_sum,new Integer(bigTurn.getBkbg_trend()));
+			//板块终端
+			Double[] upBkzd = JsonUtils.toIntDouble(bigTurn.getBkzd());
+			BigDecimal[] bkzd = BigCoreService.countBkzd(bkbg,bigTurn.getBigTurnConfig().getRule_bkbgs(),bigTurn.getBkbg_trend());
+			Double[] bkzdJg = upBkzd==null?null:BigCoreService.countJg(pei.substring(0, 1),upBkzd);
+			BigDecimal bkzd_jg_sum = bkzdJg==null?BigDecimal.ZERO:new BigDecimal(bkzdJg[0].toString()).add(new BigDecimal(bkzdJg[1].toString()));
+			Integer bkzdJgType = bkzdJg==null?null:BigCoreService.countJgDetail(bkzdJg,upBkzd);
+
+
 			//计算连续rule_A
 			int[] oldTgTrends = ArrayUtils.str2int(bigTurn.getTg_trends().split(","));
 			int[] newTgTrends = BigCoreService.reckonTgTrends(results,oldTgTrends);
@@ -83,8 +106,6 @@ public class BigTurnService {
 				zdBg = inverseQhzd(zdBg,inverseLockArr);
 			Integer[] zdJg = upZdBg==null?null:BigCoreService.countJg(pei.substring(0, 1),upZdBg);
 			Long zd_jg_sum = zdJg==null?0:Long.valueOf(zdJg[0]+zdJg[1]);
-
-
 
 
 			//A报告
@@ -112,17 +133,19 @@ public class BigTurnService {
 
 
 			ServiceManage.jdbcTemplate.update("UPDATE `game_big_turn` SET `frow` = ?, `bg` = ?,  `gj` = ?,  "+
-							" tg_trends=?,"+
+							" tg_trends=?,bkbg_trend=?,"+
 							" zd=?, zd_sum=zd_sum+?, zd_jg=CONCAT(zd_jg,?), zd_jg_sum = zd_jg_sum+?," +
 							" bga=?, bga_sum=bga_sum+?, bga_jg=CONCAT(bga_jg,?), bga_jg_sum = bga_jg_sum+?," +
 							" bgb=?, bgb_sum=bgb_sum+?, bgb_jg=CONCAT(bgb_jg,?), bgb_jg_sum = bgb_jg_sum+?, " +
-							" jgzd=?, jgzd_sum=jgzd_sum+?, jgzd_jg=CONCAT(jgzd_jg,?), jgzd_jg_sum = jgzd_jg_sum+? " +
+							" jgzd=?, jgzd_sum=jgzd_sum+?, jgzd_jg=CONCAT(jgzd_jg,?), jgzd_jg_sum = jgzd_jg_sum+?, " +
+							" bkbg=?, bkbg_sum=bkbg_sum+?, bkbg_jg=CONCAT(bkbg_jg,?), bkbg_jg_sum = bkbg_jg_sum+?, " +
+							" bkzd=?, bkzd_sum=bkzd_sum+?, bkzd_jg=CONCAT(bkzd_jg,?), bkzd_jg_sum = bkzd_jg_sum+? " +
 							" WHERE `id` = ?"
 					,bigTurn.getFrow()+1,
 					JSONObject.toJSONString(newbBg),
 					JSONObject.toJSONString(newGj),
 
-					StringUtils.join(ArrayUtils.toObject(newTgTrends),","),
+					StringUtils.join(ArrayUtils.toObject(newTgTrends),","),newBkbgTrend,
 
 					JSONArray.toJSONString(zdBg),
 					Math.abs(zdBg[0])+Math.abs(zdBg[1]),
@@ -145,6 +168,16 @@ public class BigTurnService {
 					Math.abs(jgzdBg[0])+Math.abs(jgzdBg[1]),
 					jgzdJg==null?"":(jgzdJg[0]+jgzdJg[1]+","),
 					jgzd_jg_sum,
+
+					JSONArray.toJSONString(bkbg),
+					Math.abs(bkbg[0])+Math.abs(bkbg[1]),
+					bkbgJg==null?"":bkbgJgType+"_"+(bkbgJg[0]+bkbgJg[1]+","),
+					bkbg_jg_sum,
+
+					JSONArray.toJSONString(bkzd),
+					bkzd[0].abs().add(bkzd[1].abs()),
+					bkzdJg==null?"":(bkzdJgType+"_"+new BigDecimal(bkzdJg[0].toString()).add(new BigDecimal(bkzdJg[1].toString()))+","),
+					bkzd_jg_sum,
 
 					bigTurn.getId()
 			);
@@ -210,7 +243,7 @@ public class BigTurnService {
 	public void doRenewTurn(){
 		
 		BigTurn bigTurn = createBigTurn();
-		
+		TurnGroupCountService.initData(bigTurn);
 		 for (int i = 0; i < bigTurn.getBigTurnConfig().getTurnNum(); i++) {
 			 turnService.doRenewTurn(bigTurn,i);
 		}
@@ -255,6 +288,8 @@ public class BigTurnService {
 
 		bigTurn.setJgzd_lock("1,1,1,1,1");
 		bigTurn.setInverse_lock("0,0,0,0,0,"+"0,0,0,0,0,"+"0,0");
+		bigTurn.setXb_inv_lock("0,0,0,0,0,"+"0,0,0,0,0"+",0");
+		bigTurn.setXb_lock("1,1,1,1,1,"+"1,1,1,1,1"+",1");
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -264,9 +299,9 @@ public class BigTurnService {
 	                public PreparedStatement createPreparedStatement(Connection con) throws SQLException
 	                {
 	                	PreparedStatement ps = con.prepareStatement("INSERT INTO `game_big_turn`( `frow`, `bg`, `gj`,`config_json`, `state`,   zd_sum,zd_jg,zd_jg_sum,zd_lock,tg_trends," +
-										"bga_jg,bgb_jg,jgzd_jg,jgzd_lock,inverse_lock) "
+										"bga_jg,bgb_jg,jgzd_jg,jgzd_lock,inverse_lock,xb_inv_lock,xb_lock,bkbg_jg,bkzd_jg) "
 	                			+ "VALUES ( ?, '', ?,?, 1,  ?,?,?,?, ?" +
-										",'','','',?,?)"
+										",'','','',?,?,?,?,'','')"
 	                			,Statement.RETURN_GENERATED_KEYS); 
 	                	
 	                	ps.setInt(1, bigTurn.getFrow());
@@ -281,6 +316,9 @@ public class BigTurnService {
 						ps.setString(8, bigTurn.getTg_trends());
 						ps.setString(9, bigTurn.getJgzd_lock());
 						ps.setString(10, bigTurn.getInverse_lock());
+						ps.setString(11, bigTurn.getXb_inv_lock());
+						ps.setString(12, bigTurn.getXb_lock());
+
 	                	return ps;
 	                }
 	            }, keyHolder);
@@ -302,6 +340,13 @@ public class BigTurnService {
 			config.setRule_B(sysService.getSysConfig("rule_B", String.class));
 			config.setRule_jg_A(sysService.getSysConfig("rule_jg_A", String.class));
 			config.setRule_jg_B(sysService.getSysConfig("rule_jg_B", String.class));
+			config.setRule_bkbgs(new String[]{
+					sysService.getSysConfig("rule_bkbg1", String.class),
+					sysService.getSysConfig("rule_bkbg2", String.class),
+					sysService.getSysConfig("rule_bkbg3", String.class),
+					sysService.getSysConfig("rule_bkbg4", String.class),
+					sysService.getSysConfig("rule_bkbg5", String.class),
+			});
 			return bigTurn;
 		} catch (EmptyResultDataAccessException e) {
 			return null;

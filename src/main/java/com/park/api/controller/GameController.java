@@ -1,10 +1,12 @@
 package com.park.api.controller;
 
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.park.api.service.*;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -93,6 +95,7 @@ public class GameController extends BaseController{
 				"TRUNCATE `djt_history`" ,
 				"TRUNCATE `game_history`" ,
 				"TRUNCATE `game_runing`" ,
+				"TRUNCATE `game_turn_group`" ,
 				"TRUNCATE `game_runing_count`");
 		
 		return JsonResult.getSuccessResult();
@@ -140,6 +143,12 @@ public class GameController extends BaseController{
 			case 6:
 				fname = "inverse_lock";
 				break;
+			case 7:
+				fname = "xb_inv_lock";
+				break;
+			case 8:
+				fname = "xb_lock";
+				break;
 
 		default:
 			throw new ApplicationException("错误的类型");
@@ -148,7 +157,7 @@ public class GameController extends BaseController{
 		
 		BigTurn bigTurn = bigTurnService.getCurrentTurn();
 
-		if(mod==4||mod==5||mod==6){
+		if(ArrayUtils.contains(new int[]{4,5,6,7,8},mod)){
 			String lockStr = ServiceManage.jdbcTemplate.queryForObject("select "+fname+" from game_big_turn where id=?", String.class,bigTurn.getId());
 
 			String[] locks = lockStr.split(",");

@@ -39,6 +39,7 @@ public class HistoryController extends BaseController{
 					"delete from djt_history WHERE tid in (select id from game_turn  WHERE big_turn_id="+tid+")"
 					,"delete from game_turn2 WHERE turn_id in (select id from game_turn where big_turn_id="+tid+")"
 					,"delete from game_turn WHERE big_turn_id="+tid
+					, "delete from game_turn_group WHERE big_turn_id in (select id from game_big_turn WHERE id="+tid+")"
 					 ,"delete from game_big_turn WHERE id="+tid
 					);
 			
@@ -48,6 +49,7 @@ public class HistoryController extends BaseController{
 					"delete from djt_history "
 					, "delete from game_turn2 WHERE turn_id in (select id from game_turn WHERE state=2)"
 					, "delete from game_turn WHERE state=2"
+					, "delete from game_turn_group WHERE big_turn_id in (select id from game_big_turn WHERE state=2)"
 					,"delete from game_big_turn WHERE state=2");
 		}
 		

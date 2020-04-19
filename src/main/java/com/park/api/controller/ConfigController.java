@@ -71,9 +71,14 @@ public class ConfigController extends BaseController{
 			case "rule_jg_B":
 			case "rule_A":
 			case "rule_B":
+			case "rule_bkbg1":
+			case "rule_bkbg2":
+			case "rule_bkbg3":
+			case "rule_bkbg4":
+			case "rule_bkbg5":
 			Integer start = Integer.parseInt(val.split(",")[0]);
 			Integer end = Integer.parseInt(val.split(",")[1]);
-			if(!(start>=1&&end<=100))throw new ApplicationException("值範圍錯誤！！");
+			if(!(start>=1&&end<=100))throw new ApplicationException("值範圍錯誤(在1~100)！！");
 			break;
 			
 
