@@ -45,6 +45,26 @@ public class BigTurn {
 	Long jgzd_jg_sum;
 
 	String inverse_lock;
+
+	String xb_inv_lock;
+	String xb_lock;
+
+
+	String bkbg;
+	String bkbg_jg;
+	Long bkbg_sum;
+	Long bkbg_jg_sum;
+
+	String bkbg_trend;
+
+
+
+	String bkzd;
+	String bkzd_jg;
+	Long bkzd_sum;
+	Long bkzd_jg_sum;
+
+
 	
 	BigTurnConfig bigTurnConfig;
 
@@ -286,5 +306,93 @@ public class BigTurn {
 
 	public void setInverse_lock(String inverse_lock) {
 		this.inverse_lock = inverse_lock;
+	}
+
+	public String getXb_inv_lock() {
+		return xb_inv_lock;
+	}
+
+	public void setXb_inv_lock(String xb_inv_lock) {
+		this.xb_inv_lock = xb_inv_lock;
+	}
+
+	public String getXb_lock() {
+		return xb_lock;
+	}
+
+	public void setXb_lock(String xb_lock) {
+		this.xb_lock = xb_lock;
+	}
+
+	public String getBkbg() {
+		return bkbg;
+	}
+
+	public void setBkbg(String bkbg) {
+		this.bkbg = bkbg;
+	}
+
+	public String getBkbg_jg() {
+		return bkbg_jg;
+	}
+
+	public void setBkbg_jg(String bkbg_jg) {
+		this.bkbg_jg = bkbg_jg;
+	}
+
+	public Long getBkbg_sum() {
+		return bkbg_sum;
+	}
+
+	public void setBkbg_sum(Long bkbg_sum) {
+		this.bkbg_sum = bkbg_sum;
+	}
+
+	public Long getBkbg_jg_sum() {
+		return bkbg_jg_sum;
+	}
+
+	public void setBkbg_jg_sum(Long bkbg_jg_sum) {
+		this.bkbg_jg_sum = bkbg_jg_sum;
+	}
+
+	public String getBkzd() {
+		return bkzd;
+	}
+
+	public void setBkzd(String bkzd) {
+		this.bkzd = bkzd;
+	}
+
+	public String getBkzd_jg() {
+		return bkzd_jg;
+	}
+
+	public void setBkzd_jg(String bkzd_jg) {
+		this.bkzd_jg = bkzd_jg;
+	}
+
+	public Long getBkzd_sum() {
+		return bkzd_sum;
+	}
+
+	public void setBkzd_sum(Long bkzd_sum) {
+		this.bkzd_sum = bkzd_sum;
+	}
+
+	public Long getBkzd_jg_sum() {
+		return bkzd_jg_sum;
+	}
+
+	public void setBkzd_jg_sum(Long bkzd_jg_sum) {
+		this.bkzd_jg_sum = bkzd_jg_sum;
+	}
+
+	public String getBkbg_trend() {
+		return bkbg_trend;
+	}
+
+	public void setBkbg_trend(String bkbg_trend) {
+		this.bkbg_trend = bkbg_trend;
 	}
 }

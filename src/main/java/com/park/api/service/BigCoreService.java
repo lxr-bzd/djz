@@ -3,8 +3,12 @@ package com.park.api.service;
 
 import com.park.api.entity.BigInputResult;
 import com.park.api.entity.InputResult;
+import com.park.api.entity.TurnGroup;
 import com.park.api.service.bean.BigTurnConfig;
+import com.park.api.utils.ArrayUtils;
+import com.park.api.utils.JsonUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class BigCoreService {
@@ -95,6 +99,16 @@ public class BigCoreService {
     }
 
 
+    public static Double[] countJg(String pei,Double[] upBg) {
+
+        Double[] bg = upBg;
+
+        Integer pv = Integer.valueOf(pei);
+        Double jg1 =(pv>2?bg[0]:-bg[0]);
+        Double	jg2 =(pv%2!=0?bg[1]:-bg[1]);
+        return new Double[] {jg1,jg2};
+
+    }
 
 
     public static Integer[] countJg(String pei,Integer[] upBg) {
@@ -105,6 +119,64 @@ public class BigCoreService {
         int jg1 =(pv>2?bg[0]:-bg[0]);
         int	jg2 =(pv%2!=0?bg[1]:-bg[1]);
         return new Integer[] {jg1,jg2};
+
+    }
+
+    /**
+     * @param upBg
+     * @return 颜色值
+     * 颜色值:1：两个都对（红色）
+     * ，2：对一个大的（橙色）
+     * ，3 错一个大的（绿色）
+     * ，4 两个错（黑色）
+     * ，5 两个为0（淡灰色）
+     */
+    public static Integer countJgDetail(Integer[] jg,Integer[] upBg) {
+
+        Integer type = null;
+        if(jg[0]==0&&jg[1]==0)
+            type = 5;
+        if(jg[0]>0&&jg[1]>0)
+            type = 1;
+        else if(jg[0]<0&&jg[1]<0)
+            type = 4;
+        else {
+            if(Math.abs(jg[0])>Math.abs(jg[1])){
+                type = jg[0]>0?2:3;
+            }else{
+                type = jg[1]>0?2:3;
+            }
+        }
+        return type;
+
+    }
+
+    /**
+     * @param upBg
+     * @return 颜色值
+     * 颜色值:1：两个都对（红色）
+     * ，2：对一个大的（橙色）
+     * ，3 错一个大的（绿色）
+     * ，4 两个错（黑色）
+     * ，5 两个为0（淡灰色）
+     */
+    public static Integer countJgDetail(Double[] jg,Double[] upBg) {
+
+        Integer type = null;
+        if(jg[0]==0&&jg[1]==0)
+            type = 5;
+        if(jg[0]>0&&jg[1]>0)
+            type = 1;
+        else if(jg[0]<0&&jg[1]<0)
+            type = 4;
+        else {
+            if(Math.abs(jg[0])>Math.abs(jg[1])){
+                type = jg[0]>0?2:3;
+            }else{
+                type = jg[1]>0?2:3;
+            }
+        }
+        return type;
 
     }
 
@@ -184,6 +256,8 @@ public class BigCoreService {
     }
 
 
+
+
     public static int[] reckonTgTrends(List<BigInputResult> bigResults,int[] oldTgTrends){
 
         int[] newTgTrends = new int[10];
@@ -217,6 +291,33 @@ public class BigCoreService {
 
         return newTgTrends;
 
+    }
+
+
+    public static Integer[] countBkbg(List<TurnGroup> turnGroups){
+
+        long[] bg = new long[]{0,0};
+        for (TurnGroup group :turnGroups) {
+            long[] d = ArrayUtils.toBasic(JsonUtils.toLongArray(group.getXbbg()));
+            CountCoreAlgorithm.bgCount(d,bg);
+        }
+
+        return new Integer[]{(int)bg[0],(int)bg[1]};
+    }
+
+
+    public static BigDecimal[] countBkzd(Integer[] bkbg,String[] rules,String trend){
+
+        long [] d = ArrayUtils.toBasic(ArrayUtils.int2Long(bkbg));
+        Integer t = Integer.valueOf(trend);
+        BigDecimal[] bg = new BigDecimal[]{BigDecimal.ZERO,BigDecimal.ZERO};
+        for (String ruleStr :rules) {
+            String[] rs = ruleStr.split(",");
+            int[] rule = ArrayUtils.str2int(rs);
+            CountCoreAlgorithm.bgCount(d,bg,t,rule,CountCoreAlgorithm.COEFFICIENT_N);
+        }
+
+        return bg;
     }
 
 

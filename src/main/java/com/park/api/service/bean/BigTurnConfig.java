@@ -20,6 +20,8 @@ public class BigTurnConfig {
 
 	String rule_B;
 
+	String[] rule_bkbgs;
+
 
 
 	
@@ -94,5 +96,13 @@ public class BigTurnConfig {
 
 	public void setRule_B(String rule_B) {
 		this.rule_B = rule_B;
+	}
+
+	public String[] getRule_bkbgs() {
+		return rule_bkbgs;
+	}
+
+	public void setRule_bkbgs(String[] rule_bkbgs) {
+		this.rule_bkbgs = rule_bkbgs;
 	}
 }
