@@ -134,9 +134,9 @@ public class BigCoreService {
     public static Integer countJgDetail(Integer[] jg,Integer[] upBg) {
 
         Integer type = null;
-        if(jg[0]==0&&jg[1]==0)
+        if(jg[0]+jg[1]==0)
             type = 5;
-        if(jg[0]>0&&jg[1]>0)
+        else if(jg[0]>0&&jg[1]>0)
             type = 1;
         else if(jg[0]<0&&jg[1]<0)
             type = 4;
@@ -163,9 +163,9 @@ public class BigCoreService {
     public static Integer countJgDetail(Double[] jg,Double[] upBg) {
 
         Integer type = null;
-        if(jg[0]==0&&jg[1]==0)
+        if(jg[0]+jg[1]==0)
             type = 5;
-        if(jg[0]>0&&jg[1]>0)
+        else if(jg[0]>0&&jg[1]>0)
             type = 1;
         else if(jg[0]<0&&jg[1]<0)
             type = 4;
@@ -306,12 +306,17 @@ public class BigCoreService {
     }
 
 
-    public static BigDecimal[] countBkzd(Integer[] bkbg,String[] rules,String trend){
+    public static BigDecimal[] countBkzd(Integer[] bkbg,String[] rules,String lockStr,String trend){
+
+        String[] locks = lockStr.split(",");
 
         long [] d = ArrayUtils.toBasic(ArrayUtils.int2Long(bkbg));
         Integer t = Integer.valueOf(trend);
         BigDecimal[] bg = new BigDecimal[]{BigDecimal.ZERO,BigDecimal.ZERO};
-        for (String ruleStr :rules) {
+        for (int i = 0; i < rules.length; i++) {
+            String ruleStr = rules[i];
+            if(locks[i].equals("0"))continue;
+
             String[] rs = ruleStr.split(",");
             int[] rule = ArrayUtils.str2int(rs);
             CountCoreAlgorithm.bgCount(d,bg,t,rule,CountCoreAlgorithm.COEFFICIENT_N);

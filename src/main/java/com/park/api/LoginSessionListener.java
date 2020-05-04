@@ -14,8 +14,8 @@ import com.park.api.service.SecurityService;
  */
 public class LoginSessionListener implements HttpSessionListener {  
 	
-    public void sessionCreated(HttpSessionEvent event) {  
-    	
+    public void sessionCreated(HttpSessionEvent event) {
+
     	System.out.println("session生成："+event.getSession().getId());
     }  
     

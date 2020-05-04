@@ -64,7 +64,10 @@ public class BigTurn {
 	Long bkzd_sum;
 	Long bkzd_jg_sum;
 
+	String bkzd_lock;
 
+
+	String bkbg_inv_lock;
 	
 	BigTurnConfig bigTurnConfig;
 
@@ -394,5 +397,21 @@ public class BigTurn {
 
 	public void setBkbg_trend(String bkbg_trend) {
 		this.bkbg_trend = bkbg_trend;
+	}
+
+	public String getBkzd_lock() {
+		return bkzd_lock;
+	}
+
+	public void setBkzd_lock(String bkzd_lock) {
+		this.bkzd_lock = bkzd_lock;
+	}
+
+	public String getBkbg_inv_lock() {
+		return bkbg_inv_lock;
+	}
+
+	public void setBkbg_inv_lock(String bkbg_inv_lock) {
+		this.bkbg_inv_lock = bkbg_inv_lock;
 	}
 }

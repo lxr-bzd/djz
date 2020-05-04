@@ -149,6 +149,12 @@ public class GameController extends BaseController{
 			case 8:
 				fname = "xb_lock";
 				break;
+			case 9:
+				fname = "bkzd_lock";
+				break;
+            case 10:
+                fname = "bkbg_inv_lock";
+                break;
 
 		default:
 			throw new ApplicationException("错误的类型");
@@ -157,25 +163,25 @@ public class GameController extends BaseController{
 		
 		BigTurn bigTurn = bigTurnService.getCurrentTurn();
 
-		if(ArrayUtils.contains(new int[]{4,5,6,7,8},mod)){
-			String lockStr = ServiceManage.jdbcTemplate.queryForObject("select "+fname+" from game_big_turn where id=?", String.class,bigTurn.getId());
+		if(ArrayUtils.contains(new int[]{1,2,3},mod)){
+            String lockStr = ServiceManage.jdbcTemplate.queryForObject("select "+fname+" from game_turn where turn_no = 0 AND big_turn_id=?", String.class,bigTurn.getId());
 
-			String[] locks = lockStr.split(",");
-			locks[Integer.valueOf(uid)-1] = val;
-			String newLockStr = StringUtils.join(locks, ",");
-			ServiceManage.jdbcTemplate.update("UPDATE game_big_turn SET "+fname+"=? WHERE  id=?",newLockStr, bigTurn.getId());
+            String[] locks = lockStr.split(",");
+            locks[Integer.valueOf(uid)-1] = val;
+            String newLockStr = StringUtils.join(locks, ",");
+            ServiceManage.jdbcTemplate.update("UPDATE game_turn SET "+fname+"=? WHERE  big_turn_id=?",newLockStr, bigTurn.getId());
 
 
 		}else{
-			String lockStr = ServiceManage.jdbcTemplate.queryForObject("select "+fname+" from game_turn where turn_no = 0 AND big_turn_id=?", String.class,bigTurn.getId());
+            String lockStr = ServiceManage.jdbcTemplate.queryForObject("select "+fname+" from game_big_turn where id=?", String.class,bigTurn.getId());
 
-			String[] locks = lockStr.split(",");
-			locks[Integer.valueOf(uid)-1] = val;
-			String newLockStr = StringUtils.join(locks, ",");
-			ServiceManage.jdbcTemplate.update("UPDATE game_turn SET "+fname+"=? WHERE  big_turn_id=?",newLockStr, bigTurn.getId());
+            String[] locks = lockStr.split(",");
+            locks[Integer.valueOf(uid)-1] = val;
+            String newLockStr = StringUtils.join(locks, ",");
+            ServiceManage.jdbcTemplate.update("UPDATE game_big_turn SET "+fname+"=? WHERE  id=?",newLockStr, bigTurn.getId());
 
 
-		}
+        }
 
 		return JsonResult.getSuccessResult();
 	}

@@ -75,16 +75,19 @@ public class BigTurnService {
 			List<TurnGroup> turnGroups = TurnGroupCountService.countGroup(bigTurn.getId(),results,bigTurn.getXb_lock(),bigTurn.getXb_inv_lock());
 			TurnGroupCountService.updateCountGroup(turnGroups);
 
+			String[] bkbgInvLocks = bigTurn.getBkbg_inv_lock().split(",");
 			//板块报告
 			Integer[] upBkbg = JsonUtils.toIntArray(bigTurn.getBkbg());
-			Integer[] bkbg = BigCoreService.countBkbg(turnGroups);
+			Integer[] bkbg = CountCoreAlgorithm.inverseBg(BigCoreService.countBkbg(turnGroups)
+                    ,bkbgInvLocks[0]);
 			Integer[] bkbgJg = upBkbg==null?null:BigCoreService.countJg(pei.substring(0, 1),upBkbg);
 			Long bkbg_jg_sum = bkbgJg==null?0:Long.valueOf(bkbgJg[0]+bkbgJg[1]);
 			Integer bkbgJgType = upBkbg==null?null:BigCoreService.countJgDetail(bkbgJg,upBkbg);
 			Integer newBkbgTrend = CountCoreAlgorithm.reckonTrend(bkbg_jg_sum,new Integer(bigTurn.getBkbg_trend()));
 			//板块终端
 			Double[] upBkzd = JsonUtils.toIntDouble(bigTurn.getBkzd());
-			BigDecimal[] bkzd = BigCoreService.countBkzd(bkbg,bigTurn.getBigTurnConfig().getRule_bkbgs(),bigTurn.getBkbg_trend());
+			BigDecimal[] bkzd = CountCoreAlgorithm.inverseBg(BigCoreService.countBkzd(bkbg,bigTurn.getBigTurnConfig().getRule_bkbgs(),bigTurn.getBkzd_lock(),newBkbgTrend+"")
+                    ,bkbgInvLocks[1]);
 			Double[] bkzdJg = upBkzd==null?null:BigCoreService.countJg(pei.substring(0, 1),upBkzd);
 			BigDecimal bkzd_jg_sum = bkzdJg==null?BigDecimal.ZERO:new BigDecimal(bkzdJg[0].toString()).add(new BigDecimal(bkzdJg[1].toString()));
 			Integer bkzdJgType = bkzdJg==null?null:BigCoreService.countJgDetail(bkzdJg,upBkzd);
@@ -283,14 +286,15 @@ public class BigTurnService {
 		bigTurn.setZd_sum(0l);
 		bigTurn.setZd_jg("");
 		bigTurn.setZd_jg_sum(0l);
-		bigTurn.setZd_lock("1,1,1,1,1"+",1,1,1,1,1"+",1,1,1,1,1"+",1,1,1,1,1,1");
+		bigTurn.setZd_lock("1,1,1,1,1"+",1,1,1,1,1"+",1,0,0,0,0"+",0,0,1,1,1,1");
 		bigTurn.setTg_trends("0,0,0,0,0,0,0,0,0,0");
 
 		bigTurn.setJgzd_lock("1,1,1,1,1");
 		bigTurn.setInverse_lock("0,0,0,0,0,"+"0,0,0,0,0,"+"0,0");
 		bigTurn.setXb_inv_lock("0,0,0,0,0,"+"0,0,0,0,0"+",0");
 		bigTurn.setXb_lock("1,1,1,1,1,"+"1,1,1,1,1"+",1");
-
+		bigTurn.setBkzd_lock("1,1,1,1,1");
+		bigTurn.setBkbg_inv_lock("0,0");
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 
 
@@ -299,9 +303,9 @@ public class BigTurnService {
 	                public PreparedStatement createPreparedStatement(Connection con) throws SQLException
 	                {
 	                	PreparedStatement ps = con.prepareStatement("INSERT INTO `game_big_turn`( `frow`, `bg`, `gj`,`config_json`, `state`,   zd_sum,zd_jg,zd_jg_sum,zd_lock,tg_trends," +
-										"bga_jg,bgb_jg,jgzd_jg,jgzd_lock,inverse_lock,xb_inv_lock,xb_lock,bkbg_jg,bkzd_jg) "
+										"bga_jg,bgb_jg,jgzd_jg,jgzd_lock,inverse_lock,xb_inv_lock,xb_lock,bkbg_jg,bkzd_jg,bkzd_lock,bkbg_inv_lock) "
 	                			+ "VALUES ( ?, '', ?,?, 1,  ?,?,?,?, ?" +
-										",'','','',?,?,?,?,'','')"
+										",'','','',?,?,?,?,'','',?,?)"
 	                			,Statement.RETURN_GENERATED_KEYS); 
 	                	
 	                	ps.setInt(1, bigTurn.getFrow());
@@ -318,6 +322,8 @@ public class BigTurnService {
 						ps.setString(10, bigTurn.getInverse_lock());
 						ps.setString(11, bigTurn.getXb_inv_lock());
 						ps.setString(12, bigTurn.getXb_lock());
+						ps.setString(13, bigTurn.getBkzd_lock());
+						ps.setString(14, bigTurn.getBkbg_inv_lock());
 
 	                	return ps;
 	                }

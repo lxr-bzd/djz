@@ -67,30 +67,69 @@ public class CountCoreAlgorithm {
     }
 
     public static void bgCount(long[] bg,long[] recBg,boolean inverse){
+
+        int f = inverse?-1:1;
         long[] dt = recBg;
         long xl = bg[0];
         long sd = bg[1];
         if(Math.abs(xl)>Math.abs(sd)){
-            dt[0]+=xl>0?1:-1;
+            dt[0]+=(xl>0?1:-1)*f;
         }else if(Math.abs(sd)>Math.abs(xl)){
-            dt[1]+=sd>0?1:-1;
+            dt[1]+=(sd>0?1:-1)*f;
         }else if(xl!=0){
-            dt[0]+=xl>0?1:-1;
-            dt[1]+=sd>0?1:-1;
+            dt[0]+=(xl>0?1:-1)*f;
+            dt[1]+=(sd>0?1:-1)*f;
         }
     }
 
 
     public static int reckonTrend(long jg, int oldTrend){
 
-        int newTgTrend = 0;
+        int newTgTrend = oldTrend;
 
-        if(oldTrend!=0&&oldTrend*jg>0)//同号
-            newTgTrend = oldTrend+(jg>0?1:-1);
-        else //不同号或者为0
-            newTgTrend = (jg>0?1:-1);
+        if(jg!=0) {
+            if (oldTrend != 0 && oldTrend * jg > 0)//同号
+                newTgTrend = oldTrend + (jg > 0 ? 1 : -1);
+            else //不同号或者为0
+                newTgTrend = (jg > 0 ? 1 : -1);
 
+        }
         return newTgTrend;
     }
+
+
+    public long[][] inverseBg(long[][] bg,String[] lockArr){
+
+        for (int i = 0; i < 2; i++) {
+            int li = i+10;
+            if(lockArr[li].equals("1")){
+                bg[i][0] = -bg[i][0];
+                bg[i][1] = -bg[i][1];
+            }
+
+
+        }
+        return bg;
+    }
+
+
+    public static Integer[] inverseBg(Integer[] bg,String lock){
+
+            if(lock.equals("1")){
+                bg[0] = -bg[0];
+                bg[1] = -bg[1];
+            }
+        return bg;
+    }
+
+    public static BigDecimal[] inverseBg(BigDecimal[] bg,String lock){
+
+        if(lock.equals("1")){
+            bg[0] = bg[0].multiply(BigDecimal.valueOf(-1));
+            bg[1] = bg[1].multiply(BigDecimal.valueOf(-1));
+        }
+        return bg;
+    }
+
 
 }

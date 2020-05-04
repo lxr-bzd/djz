@@ -362,6 +362,9 @@ html,body{
 .grey{
 	color:grey;
 }
+.white{
+	color:white;
+}
 
 .pad-no {
 	padding: 0 !important;

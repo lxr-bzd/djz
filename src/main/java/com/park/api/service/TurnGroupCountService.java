@@ -88,7 +88,7 @@ public class TurnGroupCountService {
             CountCoreAlgorithm.bgCount(new long[]{xl,sd},dt,invLock[i]==1);
         }
         //汇总报告的
-        if(lock[10]!=1){
+        if(lock[10]==1){
             long[] dt = datas[10];
             long xl = (long)result.getHzBg()[0];
             long sd =(long)result.getHzBg()[1];

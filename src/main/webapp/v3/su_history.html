@@ -100,16 +100,17 @@
 							    	<td colspan="2">選擇報告</td>
 							    	<td colspan="2">選擇求和</td>
 							    	<td colspan="2">結果報告</td>-->
-									<td colspan="2">求和終端</td>
+
 
 									<td colspan="2">結果1</td>
 									<td colspan="2">結果2</td>
 									<td colspan="2">結果3</td>
 									<td colspan="2">結果4</td>
+									<td colspan="2">求和終端</td>
 
 									<td colspan="2">结果終端</td>
-									<td colspan="2">版块報告</td>
-									<td colspan="2">版块终端</td>
+									<td colspan="2">板塊報告</td>
+									<td colspan="2">板塊终端</td>
 
 							    	<td rowspan="2"><a href="javascript:tableExport()">導出</a></td>
 							    	
@@ -244,16 +245,17 @@
 							    	<td colspan="2">選擇報告</td>
 							    	<td colspan="2">選擇求和</td>
 							    	<td colspan="2">結果報告</td>-->
-									<td colspan="2">求和終端</td>
+
 
 									<td colspan="2">結果1</td>
 									<td colspan="2">結果2</td>
 									<td colspan="2">結果3</td>
 									<td colspan="2">結果4</td>
+									<td colspan="2">求和終端</td>
 
 									<td colspan="2">结果終端</td>
-									<td colspan="2">版块報告</td>
-									<td colspan="2">版块终端</td>
+									<td colspan="2">板塊報告</td>
+									<td colspan="2">板塊终端</td>
 
 							    	<td rowspan="2"><a href="javascript:del(2)">刪除全部</a></td>
 							    	
@@ -344,7 +346,7 @@
 				console.log(tData);
 				
 				vData.push(tData);
-				var index = [1,2,3,4,5,6,7,8,9,10,'hb'/*,'qhBg','hbBg', 'hbqh','xzBg','xzqh','jgbg'*/,'zdbg','jgAbg','jgBbg','bgA','bgB','jgzd','bkbg','bkzd']
+				var index = [1,2,3,4,5,6,7,8,9,10,'hb'/*,'qhBg','hbBg', 'hbqh','xzBg','xzqh','jgbg'*/,'jgAbg','jgBbg','bgA','bgB','zdbg','jgzd','bkbg','bkzd']
 				for (var j = 0; j < index.length; j++) {
 					var col = index[j];
 					if(!sumData[col])sumData[col] = {jg:0,qh:0};
@@ -361,7 +363,7 @@
 				}
 			}
 
-            let jgCols = ['hb'/*,'qhBg','hbBg','hbqh','xzBg','xzqh','jgbg'*/,'zdbg','jgAbg','jgBbg','bgA','bgB','jgzd','bkbg','bkzd'];
+            let jgCols = ['hb'/*,'qhBg','hbBg','hbqh','xzBg','xzqh','jgbg'*/,'jgAbg','jgBbg','bgA','bgB','zdbg','jgzd','bkbg','bkzd'];
 
             var m = {vData:vData,sumData:sumData,gHzData:gHzData,u:[1,2,3,4,5,6,7,8,9,10]
 			,jgCols:jgCols};
