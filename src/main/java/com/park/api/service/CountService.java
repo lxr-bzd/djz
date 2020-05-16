@@ -609,7 +609,7 @@ public class CountService {
 	/**
 	 * 计算求和结果
 	 * @param pei
-	 * @param qh
+	 * @param upQh
 	 * @return
 	 */
 	public static Integer[] countQhJg(String pei,Integer[] upQh) {
@@ -626,7 +626,7 @@ public class CountService {
 	
 	/**
 	 * 提供报告汇总表A模式
-	 * @param allts["老+少+老-少-男+女+男-女-";]
+	 * @param allts ["老+少+老-少-男+女+男-女-";]
 	 * @return "[[大的下标值,和值],[大的下标值,和值],[大的下标值,和值],[大的下标值,和值],（老男为正数，少女为负数表示报告）,（同上）,原allts]"
 	 */
 	public static Object[] countAllTgA(long[] allts,Integer mod2) {

@@ -344,7 +344,7 @@ public class GameService {
 		if(row<3) return null;
 		
 		Long start1 = System.currentTimeMillis();
-		Map<String, Object> map = ServiceManage.jdbcTemplate.queryForMap("select `id`,tid,   `queue`,  `queue_count`,  `grp_queue`,   `rule`,  `rule_type`,`mod`,tg_sum,tg_trend,jg_qh from game_runing_count where hid=?",hid);
+		Map<String, Object> map = ServiceManage.jdbcTemplate.queryForMap("select `id`,tid,   `queue`,  `queue_count`,  `grp_queue`,   `rule`,  `rule_type`,`mod`,tg_sum,tg_trend,tg_trend2,jg_qh from game_runing_count where hid=?",hid);
 		System.out.println(hid+"查询："+((System.currentTimeMillis()-start1))+"ms");
 		start1 = System.currentTimeMillis();
 		String[] rule = map.get("rule").toString().split(",");
@@ -356,7 +356,7 @@ public class GameService {
 		String tid = map.get("tid").toString();
 		
 		Integer oldTgTrend = (Integer)map.get("tg_trend");
-		
+		Integer oldTgTrend2 = (Integer)map.get("tg_trend2");
 		
 		JgHandel jgHandel = createJgHandel(row, rule_type, start, end, mod2);
 		QueueHandel queueHandel = new QueueHandel(start);
@@ -390,9 +390,12 @@ public class GameService {
 				newTgTrend = (jg>0?1:-1);
 				
 		}
+
+		Integer newTgTrend2 = countTrend2(jg,oldTgTrend2);
+
 		
-		ServiceManage.jdbcTemplate.update("UPDATE game_runing_count SET queue=?,queue_count=?,tg=CONCAT(tg,?),tg_trend=?,tg_sum=?,jg_qh=?,ys=ys+? WHERE id=?"
-				,rets.getQueue(),rets.getQueueCount(),jgHandel.getResult()+",",newTgTrend,jg_sum,jg_qh,
+		ServiceManage.jdbcTemplate.update("UPDATE game_runing_count SET queue=?,queue_count=?,tg=CONCAT(tg,?),tg_trend=?,tg_trend2=?,tg_sum=?,jg_qh=?,ys=ys+? WHERE id=?"
+				,rets.getQueue(),rets.getQueueCount(),jgHandel.getResult()+",",newTgTrend,newTgTrend2,jg_sum,jg_qh,
 				rets.getYs(),map.get("id"));
 		System.out.println(hid+"update："+((System.currentTimeMillis()-start1))+"ms");
 		start1 = System.currentTimeMillis();
@@ -412,7 +415,7 @@ public class GameService {
 			inputResult.setUp_jg_sum(upjg_sum);
 			inputResult.setJg_qh(jg_qh);
 			inputResult.setTgTrend(newTgTrend);
-			
+			inputResult.setTgTrend2(newTgTrend2);
 			
 			return objs;
 			
@@ -423,6 +426,21 @@ public class GameService {
 		}
 		return null;
 	}
+
+	private int countTrend2(int jg,int oldTgTrend){
+		int newTgTrend = oldTgTrend;
+		if(jg!=0) {
+			if(oldTgTrend!=0&&oldTgTrend*jg>0)//同号
+				newTgTrend = oldTgTrend+(jg>0?1:-1);
+			else //不同号或者为0
+				newTgTrend = (jg>0?1:-1);
+		}else{
+			newTgTrend = 0;
+		}
+		return newTgTrend;
+	}
+
+
 	private String doCount(String hid,int row,String gong,String gongCol,Crow nCrow) {
 		
 		if(nCrow!=null) {

@@ -1,5 +1,6 @@
 package com.park.api.entity;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class BigInputResult {
@@ -10,8 +11,8 @@ public class BigInputResult {
 	long[] hbBg;
 	long[] xzBg;
 	long[] jgbgBg;
-	long[] jgABg;
-	long[] jgBBg;
+	/*long[] jgABg;
+	long[] jgBBg;*/
 	
 	Integer[] hzqhBg;
 	Integer[] hbqhBg;
@@ -22,6 +23,17 @@ public class BigInputResult {
 	Long xzJg;
 
 	int  tgTrend;
+
+	long[] xbbg;
+
+
+	BigDecimal[] bkhz ;
+	Integer[] bkhzHu;
+
+    Integer[] bkbg ;
+    BigDecimal[] bkzd;
+	Integer newBkbgTrend;
+
 	
 	public List<InputResult> getResults() {
 		return results;
@@ -111,19 +123,52 @@ public class BigInputResult {
 		this.jgbgBg = jgbgBg;
 	}
 
-	public long[] getJgABg() {
-		return jgABg;
+
+	public Integer[] getBkbg() {
+		return bkbg;
 	}
 
-	public void setJgABg(long[] jgABg) {
-		this.jgABg = jgABg;
+	public void setBkbg(Integer[] bkbg) {
+		this.bkbg = bkbg;
 	}
 
-	public long[] getJgBBg() {
-		return jgBBg;
+	public BigDecimal[] getBkhz() {
+		return bkhz;
 	}
 
-	public void setJgBBg(long[] jgBBg) {
-		this.jgBBg = jgBBg;
+	public void setBkhz(BigDecimal[] bkhz) {
+		this.bkhz = bkhz;
+	}
+
+	public long[] getXbbg() {
+		return xbbg;
+	}
+
+	public void setXbbg(long[] xbbg) {
+		this.xbbg = xbbg;
+	}
+
+	public Integer[] getBkhzHu() {
+		return bkhzHu;
+	}
+
+	public void setBkhzHu(Integer[] bkhzHu) {
+		this.bkhzHu = bkhzHu;
+	}
+
+    public BigDecimal[] getBkzd() {
+        return bkzd;
+    }
+
+    public void setBkzd(BigDecimal[] bkzd) {
+        this.bkzd = bkzd;
+    }
+
+	public Integer getNewBkbgTrend() {
+		return newBkbgTrend;
+	}
+
+	public void setNewBkbgTrend(Integer newBkbgTrend) {
+		this.newBkbgTrend = newBkbgTrend;
 	}
 }

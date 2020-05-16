@@ -155,6 +155,18 @@ public class GameController extends BaseController{
             case 10:
                 fname = "bkbg_inv_lock";
                 break;
+			case 11:
+				fname = "bkhz_lock";
+				break;
+			case 12:
+				fname = "turn_bkhz_lock";
+				break;
+			case 13:
+				fname = "zdbg_lock";
+				break;
+			case 14:
+				fname = "bkhz_inv_lock";
+				break;
 
 		default:
 			throw new ApplicationException("错误的类型");

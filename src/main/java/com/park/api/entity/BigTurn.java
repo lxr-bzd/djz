@@ -10,14 +10,14 @@ public class BigTurn {
 	String bg;
 	String gj;
 	
-	String zd;
-	String zd_jg;
-	Long zd_sum;
-	String zd_last_jg;
-	Long zd_jg_sum;
+	String zdbg;
+	String zdbg_jg;
+	Long zdbg_sum;
+	Long zdbg_jg_sum;
+	String zdbg_lock;
 
 
-	String bga;
+/*	String bga;
 	String bga_jg;
 	Long bga_sum;
 	String bga_last_jg;
@@ -27,9 +27,7 @@ public class BigTurn {
 	String bgb_jg;
 	Long bgb_sum;
 	String bgb_last_jg;
-	Long bgb_jg_sum;
-
-	String zd_lock;
+	Long bgb_jg_sum;*/
 	
 	Integer state;
 	String config_json;
@@ -64,10 +62,25 @@ public class BigTurn {
 	Long bkzd_sum;
 	Long bkzd_jg_sum;
 
+
+	String bkhz;
+	String bkhz_jg;
+	Long bkhz_sum;
+	Long bkhz_jg_sum;
+	String bkhz_lock;
+
+	String bkqh;
+	String bkqh_jg;
+	Long bkqh_sum;
+	Long bkqh_jg_sum;
+
 	String bkzd_lock;
 
+	String turn_bkhz_lock;
 
 	String bkbg_inv_lock;
+
+	String bkhz_inv_lock;
 	
 	BigTurnConfig bigTurnConfig;
 
@@ -103,46 +116,6 @@ public class BigTurn {
 		this.gj = gj;
 	}
 
-	public String getZd() {
-		return zd;
-	}
-
-	public void setZd(String zd) {
-		this.zd = zd;
-	}
-
-	public String getZd_jg() {
-		return zd_jg;
-	}
-
-	public void setZd_jg(String zd_jg) {
-		this.zd_jg = zd_jg;
-	}
-
-	public Long getZd_sum() {
-		return zd_sum;
-	}
-
-	public void setZd_sum(Long zd_sum) {
-		this.zd_sum = zd_sum;
-	}
-
-	public String getZd_last_jg() {
-		return zd_last_jg;
-	}
-
-	public void setZd_last_jg(String zd_last_jg) {
-		this.zd_last_jg = zd_last_jg;
-	}
-
-	public Long getZd_jg_sum() {
-		return zd_jg_sum;
-	}
-
-	public void setZd_jg_sum(Long zd_jg_sum) {
-		this.zd_jg_sum = zd_jg_sum;
-	}
-
 	public Integer getState() {
 		return state;
 	}
@@ -165,94 +138,6 @@ public class BigTurn {
 
 	public void setBigTurnConfig(BigTurnConfig bigTurnConfig) {
 		this.bigTurnConfig = bigTurnConfig;
-	}
-
-	public String getBga() {
-		return bga;
-	}
-
-	public void setBga(String bga) {
-		this.bga = bga;
-	}
-
-	public String getBga_jg() {
-		return bga_jg;
-	}
-
-	public void setBga_jg(String bga_jg) {
-		this.bga_jg = bga_jg;
-	}
-
-	public Long getBga_sum() {
-		return bga_sum;
-	}
-
-	public void setBga_sum(Long bga_sum) {
-		this.bga_sum = bga_sum;
-	}
-
-	public String getBga_last_jg() {
-		return bga_last_jg;
-	}
-
-	public void setBga_last_jg(String bga_last_jg) {
-		this.bga_last_jg = bga_last_jg;
-	}
-
-	public Long getBga_jg_sum() {
-		return bga_jg_sum;
-	}
-
-	public void setBga_jg_sum(Long bga_jg_sum) {
-		this.bga_jg_sum = bga_jg_sum;
-	}
-
-	public String getBgb() {
-		return bgb;
-	}
-
-	public void setBgb(String bgb) {
-		this.bgb = bgb;
-	}
-
-	public String getBgb_jg() {
-		return bgb_jg;
-	}
-
-	public void setBgb_jg(String bgb_jg) {
-		this.bgb_jg = bgb_jg;
-	}
-
-	public Long getBgb_sum() {
-		return bgb_sum;
-	}
-
-	public void setBgb_sum(Long bgb_sum) {
-		this.bgb_sum = bgb_sum;
-	}
-
-	public String getBgb_last_jg() {
-		return bgb_last_jg;
-	}
-
-	public void setBgb_last_jg(String bgb_last_jg) {
-		this.bgb_last_jg = bgb_last_jg;
-	}
-
-	public Long getBgb_jg_sum() {
-		return bgb_jg_sum;
-	}
-
-	public void setBgb_jg_sum(Long bgb_jg_sum) {
-		this.bgb_jg_sum = bgb_jg_sum;
-	}
-
-	public String getZd_lock() {
-		return zd_lock;
-	}
-
-	public void setZd_lock(String zd_lock) {
-		this.zd_lock = zd_lock;
 	}
 
 	public String getJgzd_lock() {
@@ -413,5 +298,133 @@ public class BigTurn {
 
 	public void setBkbg_inv_lock(String bkbg_inv_lock) {
 		this.bkbg_inv_lock = bkbg_inv_lock;
+	}
+
+	public String getBkhz() {
+		return bkhz;
+	}
+
+	public void setBkhz(String bkhz) {
+		this.bkhz = bkhz;
+	}
+
+	public String getBkhz_jg() {
+		return bkhz_jg;
+	}
+
+	public void setBkhz_jg(String bkhz_jg) {
+		this.bkhz_jg = bkhz_jg;
+	}
+
+	public Long getBkhz_sum() {
+		return bkhz_sum;
+	}
+
+	public void setBkhz_sum(Long bkhz_sum) {
+		this.bkhz_sum = bkhz_sum;
+	}
+
+	public Long getBkhz_jg_sum() {
+		return bkhz_jg_sum;
+	}
+
+	public void setBkhz_jg_sum(Long bkhz_jg_sum) {
+		this.bkhz_jg_sum = bkhz_jg_sum;
+	}
+
+	public String getBkqh() {
+		return bkqh;
+	}
+
+	public void setBkqh(String bkqh) {
+		this.bkqh = bkqh;
+	}
+
+	public String getBkqh_jg() {
+		return bkqh_jg;
+	}
+
+	public void setBkqh_jg(String bkqh_jg) {
+		this.bkqh_jg = bkqh_jg;
+	}
+
+	public Long getBkqh_sum() {
+		return bkqh_sum;
+	}
+
+	public void setBkqh_sum(Long bkqh_sum) {
+		this.bkqh_sum = bkqh_sum;
+	}
+
+	public Long getBkqh_jg_sum() {
+		return bkqh_jg_sum;
+	}
+
+	public void setBkqh_jg_sum(Long bkqh_jg_sum) {
+		this.bkqh_jg_sum = bkqh_jg_sum;
+	}
+
+	public String getBkhz_lock() {
+		return bkhz_lock;
+	}
+
+	public void setBkhz_lock(String bkhz_lock) {
+		this.bkhz_lock = bkhz_lock;
+	}
+
+	public String getTurn_bkhz_lock() {
+		return turn_bkhz_lock;
+	}
+
+	public void setTurn_bkhz_lock(String turn_bkhz_lock) {
+		this.turn_bkhz_lock = turn_bkhz_lock;
+	}
+
+	public String getBkhz_inv_lock() {
+		return bkhz_inv_lock;
+	}
+
+	public void setBkhz_inv_lock(String bkhz_inv_lock) {
+		this.bkhz_inv_lock = bkhz_inv_lock;
+	}
+
+	public String getZdbg() {
+		return zdbg;
+	}
+
+	public void setZdbg(String zdbg) {
+		this.zdbg = zdbg;
+	}
+
+	public String getZdbg_jg() {
+		return zdbg_jg;
+	}
+
+	public void setZdbg_jg(String zdbg_jg) {
+		this.zdbg_jg = zdbg_jg;
+	}
+
+	public Long getZdbg_sum() {
+		return zdbg_sum;
+	}
+
+	public void setZdbg_sum(Long zdbg_sum) {
+		this.zdbg_sum = zdbg_sum;
+	}
+
+	public Long getZdbg_jg_sum() {
+		return zdbg_jg_sum;
+	}
+
+	public void setZdbg_jg_sum(Long zdbg_jg_sum) {
+		this.zdbg_jg_sum = zdbg_jg_sum;
+	}
+
+	public String getZdbg_lock() {
+		return zdbg_lock;
+	}
+
+	public void setZdbg_lock(String zdbg_lock) {
+		this.zdbg_lock = zdbg_lock;
 	}
 }

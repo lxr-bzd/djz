@@ -64,11 +64,9 @@
 								<col style="width:120px;"><col style="width:90px;">
 								<col style="width:120px;"><col style="width:90px;">
 								<col style="width:120px;"><col style="width:90px;">
-								<col style="width:120px;"><col style="width:90px;">
-								<col style="width:120px;"><col style="width:90px;">
-								<col style="width:120px;"><col style="width:90px;">
-								<col style="width:120px;"><col style="width:90px;">
 
+
+								<col style="width:120px;"><col style="width:90px;">
 								<col style="width:120px;"><col style="width:90px;">
 								<!--<col style="width:120px;"><col style="width:80px;">
                                 <col style="width:120px;"><col style="width:80px;">
@@ -77,9 +75,9 @@
 
 								<col style="width:120px;">
 											
-										</colgroup>
+								</colgroup>
 								<tbody id="head_group">
-							  	<tr class="data_col"> <td colspan="1"><a href="javascript:history.back(-1)">返回</a></td><td colspan="39">歷史記錄</td><td colspan="1"><a href="javascript:history.back(-1)">返回</a></td></tr>
+							  	<tr class="data_col"> <td colspan="1"><a href="javascript:history.back(-1)">返回</a></td><td colspan="33">歷史記錄</td><td colspan="1"><a href="javascript:history.back(-1)">返回</a></td></tr>
 							  	<tr class="data_col">
 							    	<td rowspan="2">序號</td>
 							    	<td colspan="2">1號</td>
@@ -93,24 +91,23 @@
 							    	<td colspan="2">9號</td>
 							    	<td colspan="2">10號</td>
 							    	<td rowspan="2">序號</td>
-							    	<td colspan="2">匯總結果</td><!--
-							    	<td colspan="2">匯總求和</td>
-							    	<td colspan="2">合并報告</td>
-							    	<td colspan="2">合并求和</td>
-							    	<td colspan="2">選擇報告</td>
-							    	<td colspan="2">選擇求和</td>
-							    	<td colspan="2">結果報告</td>-->
+							    	<td colspan="2">匯總結果</td>
 
 
-									<td colspan="2">結果1</td>
+									<!--<td colspan="2">結果1</td>
 									<td colspan="2">結果2</td>
 									<td colspan="2">結果3</td>
 									<td colspan="2">結果4</td>
 									<td colspan="2">求和終端</td>
 
-									<td colspan="2">结果終端</td>
+									<td colspan="2">板塊報告求和结果終端</td>-->
+									<td colspan="2">板塊報告求和</td>
 									<td colspan="2">板塊報告</td>
-									<td colspan="2">板塊终端</td>
+									<td colspan="2">板塊匯總求和</td>
+									<td colspan="2">板塊匯總</td>
+
+									<td colspan="2">終端報告</td>
+
 
 							    	<td rowspan="2"><a href="javascript:tableExport()">導出</a></td>
 							    	
@@ -147,14 +144,9 @@
 							    	<td >求和</td>
 							    	<td >結果</td>
 							    	<td >求和</td>
-							    	<td >結果</td>
-									<td >求和</td>
 									<td >結果</td>
 									<td >求和</td>
-									<td >結果</td>
-									<td >求和</td>
-									<td >結果</td>
-									<td >求和</td>
+
 									<!--<td >結果</td><td >求和</td>
 
 									<td >結果</td><td >求和</td>
@@ -191,11 +183,9 @@
 											<col style="width:120px;"><col style="width:90px;">
 											<col style="width:120px;"><col style="width:90px;">
 											<col style="width:120px;"><col style="width:90px;">
-											<col style="width:120px;"><col style="width:90px;">
-											<col style="width:120px;"><col style="width:90px;">
-											<col style="width:120px;"><col style="width:90px;">
-											<col style="width:120px;"><col style="width:90px;">
 
+
+											<col style="width:120px;"><col style="width:90px;">
 											<col style="width:120px;"><col style="width:90px;">
 											<!--<col style="width:120px;"><col style="width:80px;">
                                             <col style="width:120px;"><col style="width:80px;">
@@ -247,15 +237,11 @@
 							    	<td colspan="2">結果報告</td>-->
 
 
-									<td colspan="2">結果1</td>
-									<td colspan="2">結果2</td>
-									<td colspan="2">結果3</td>
-									<td colspan="2">結果4</td>
-									<td colspan="2">求和終端</td>
-
-									<td colspan="2">结果終端</td>
+									<td colspan="2">板塊報告求和</td>
 									<td colspan="2">板塊報告</td>
-									<td colspan="2">板塊终端</td>
+									<td colspan="2">板塊匯總求和</td>
+									<td colspan="2">板塊匯總</td>
+									<td colspan="2">終端報告</td>
 
 							    	<td rowspan="2"><a href="javascript:del(2)">刪除全部</a></td>
 							    	
@@ -346,7 +332,7 @@
 				console.log(tData);
 				
 				vData.push(tData);
-				var index = [1,2,3,4,5,6,7,8,9,10,'hb'/*,'qhBg','hbBg', 'hbqh','xzBg','xzqh','jgbg'*/,'jgAbg','jgBbg','bgA','bgB','zdbg','jgzd','bkbg','bkzd']
+				var index = [1,2,3,4,5,6,7,8,9,10,'hb'/*,'qhBg','hbBg', 'hbqh','xzBg','xzqh','jgbg'*//*,'jgAbg','jgBbg','bgA','bgB','zdbg','jgzd'*/,'bkzd','bkbg','bkqh','bkhz','zdbg']
 				for (var j = 0; j < index.length; j++) {
 					var col = index[j];
 					if(!sumData[col])sumData[col] = {jg:0,qh:0};
@@ -363,7 +349,7 @@
 				}
 			}
 
-            let jgCols = ['hb'/*,'qhBg','hbBg','hbqh','xzBg','xzqh','jgbg'*/,'jgAbg','jgBbg','bgA','bgB','zdbg','jgzd','bkbg','bkzd'];
+            let jgCols = ['hb'/*,'qhBg','hbBg','hbqh','xzBg','xzqh','jgbg'*//*,'jgAbg','jgBbg','bgA','bgB','zdbg','jgzd'*/,'bkzd','bkbg','bkqh','bkhz','zdbg'];
 
             var m = {vData:vData,sumData:sumData,gHzData:gHzData,u:[1,2,3,4,5,6,7,8,9,10]
 			,jgCols:jgCols};

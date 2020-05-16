@@ -14,7 +14,10 @@ public class Turn {
 	Integer rule_type;
 	
 	String config_json;
-	
+
+	String bkbg;
+	Integer bkbg_trend;
+
 	GameConfig config;
 	
 	public String getId() {
@@ -63,7 +66,20 @@ public class Turn {
 		else setConfig(null);
 	
 	}
-	
-	
 
+	public String getBkbg() {
+		return bkbg;
+	}
+
+	public void setBkbg(String bkbg) {
+		this.bkbg = bkbg;
+	}
+
+	public Integer getBkbg_trend() {
+		return bkbg_trend;
+	}
+
+	public void setBkbg_trend(Integer bkbg_trend) {
+		this.bkbg_trend = bkbg_trend;
+	}
 }

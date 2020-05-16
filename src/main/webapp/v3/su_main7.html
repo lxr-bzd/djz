@@ -35,12 +35,15 @@
 			
 			.btn1{cursor: pointer;text-align: center;margin: 5px;height: 40px;line-height: 40px;border-radius:5px}
 			
-			.bg-td{text-align: left; display: flex;}
+			.bg-td{text-align: left; display: flex;height: 25px;}
 			.bg-td>span{flex:1;text-align: center;}
+			.bg-td2{ font-size: 18px}
 
-			.font1{font-size: 20px;}
+			.font1{font-size: 18px;}
 			.font2{font-size: 19px;}
-			.font3{font-size: 19px;}
+			.font3{font-size: 20px;}
+
+
 
 
 			.bk-red{background-color: #FFB000;}
@@ -87,22 +90,18 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 								<col style="width:90px;">
 								<col style="width:90px;">
 								<col style="width:90px;">
-								
-								<col style="width:90px;">
-								<col style="width:90px;">
-								<col style="width:90px;">
-								<col style="width:90px;">
-								<col style="width:90px;">
-								
-								
-								<col style="width:90px;">
-								<col style="width:90px;">
 								<col style="width:90px;">
 								<col style="width:90px;">
 								<col style="width:90px;">
 								<col style="width:90px;">
 								<col style="width:90px;">
 
+
+								<col style="width:90px;">
+								<col style="width:120px;">
+								<col style="width:120px;">
+
+								<col style="width:120px;">
 								<col style="width:120px;">
 								<col style="width:120px;">
 
@@ -122,8 +121,8 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							    	<td><div class="blue btn1 exit_btn">關閉</div></td>
 									<td><input id="setting-input" type="password" style="width: 90%;background-color: #eee"  placeholder=""></td>
 
-									<td colspan="6" id="input_group"><input type="text" style="width: 90%;background-color: #eee" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""></td>
-							    	<td colspan="2"> <div class="blue btn1 ok_btn">確定</div></td>
+									<td colspan="2" id="input_group"><input type="text" style="width: 90%;background-color: #eee" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""></td>
+							    	<td colspan="3"> <div class="blue btn1 ok_btn">確定</div></td>
 							    <!-- 	<td colspan="2">
 							    		<table style="height:100%">
 											<tr><td style="height:auto;font-size:16px;">開始<input type="number" id="tg_thre" value="" style="width: 40%;background-color: #eee;font-size:19px;">
@@ -151,12 +150,6 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							    	<td>9<span class="locak_btn1"></span></td>
 							    	<td>10<span class="locak_btn1"></span></td>
 							    	<td>匯總報告</td>
-							    	<td>匯總求和</td>
-							    	<td>合并報告</td>
-							    	<td>合并求和</td>
-									<td>選擇報告</td>
-									<td>選擇求和</td>
-									<td>結果報告</td>
 							    	
 							  	</tr>
 							  
@@ -180,25 +173,21 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 								<col style="width:90px;">
 								<col style="width:90px;">
 								<col style="width:90px;">
-
 								<col style="width:90px;">
 								<col style="width:90px;">
 								<col style="width:90px;">
 								<col style="width:90px;">
 								<col style="width:90px;">
 
-
-								<col style="width:90px;">
-								<col style="width:90px;">
-								<col style="width:90px;">
-								<col style="width:90px;">
-								<col style="width:90px;">
-								<col style="width:90px;">
 								<col style="width:90px;">
 
 								<col style="width:120px;">
 								<col style="width:120px;">
-								
+
+								<col style="width:120px;">
+								<col style="width:120px;">
+								<col style="width:120px;">
+
 								<col style="width:50px;">
 								
 							</colgroup>
@@ -208,11 +197,6 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							  	<tbody id="hzbg_group">
 							  	<tr class="data_col ">
 							  		<td rowspan="3"> <span class="" rowspan="3">汇总</span></td>
-							    	<td> <span class="red"></span></td>
-							    	<td> <span class="red"></span></td>
-							    	<td> <span class="red"></span></td>
-							    	<td> <span class="red"></span></td>
-							    	<td> <span class="red"></span></td>
 							    	<td> <span class="red"></span></td>
 							    	<td> <span class="red"></span></td>
 							    	<td> <span class="red"></span></td>
@@ -238,11 +222,7 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							    	<td><span class="red"></span></td>
 							    	<td><span class="red"></span></td>
 							    	<td><span class="red"></span></td>
-							    	<td><span class="red"></span></td>
-							    	<td><span class="red"></span></td>
-							    	<td> <span class="red"></span></td>
-							    	<td> <span class="red"></span></td>
-							    	<td> <span class="red"></span></td>
+
 							  	</tr>
 							  	<tr class="data_col ">
 							    	<td class="blue"></td>
@@ -256,11 +236,6 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							    	<td class="blue"></td>
 							    	<td class="blue"></td>
 							    	
-							    	<td class="blue"></td>
-							    	<td class="blue"></td>
-							    	<td class="blue"></td>
-							    	<td class="blue"></td>
-							    	<td class="blue"></td>
 							    	<td class="blue"></td>
 							  	</tr>
 							  	</tbody>
@@ -281,26 +256,22 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 									<col style="width:90px;">
 									<col style="width:90px;">
 									<col style="width:90px;">
-
 									<col style="width:90px;">
 									<col style="width:90px;">
 									<col style="width:90px;">
 									<col style="width:90px;">
 									<col style="width:90px;">
 
-
-									<col style="width:90px;">
-									<col style="width:90px;">
-									<col style="width:90px;">
-									<col style="width:90px;">
-									<col style="width:90px;">
-									<col style="width:90px;">
 									<col style="width:90px;">
 
 									<col style="width:120px;">
 									<col style="width:120px;">
-								
-								<col style="width:50px;">
+
+									<col style="width:120px;">
+									<col style="width:120px;">
+									<col style="width:120px;">
+
+									<col style="width:50px;">
 								
 							</colgroup>
 								<tbody id="jg_group">
@@ -340,26 +311,21 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 									<col style="width:90px;">
 									<col style="width:90px;">
 									<col style="width:90px;">
-
 									<col style="width:90px;">
 									<col style="width:90px;">
 									<col style="width:90px;">
 									<col style="width:90px;">
 									<col style="width:90px;">
 
-
 									<col style="width:90px;">
-									<col style="width:90px;">
-									<col style="width:90px;">
-									<col style="width:90px;">
-									<col style="width:90px;">
-									<col style="width:90px;">
-									<col style="width:90px;">
+									<col style="width:120px;">
+									<col style="width:120px;">
 
 									<col style="width:120px;">
 									<col style="width:120px;">
-								
-								<col style="width:50px;">
+									<col style="width:120px;">
+
+									<col style="width:50px;">
 								
 							</colgroup>
 								<tbody id="bottom_group">
@@ -377,11 +343,6 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							    	<td class="blue2"></td>
 							    	
 							    	<td class="blue2"></td>
-							    	<td class="blue2"></td>
-							    	<td class="blue2"></td>
-							    	<td class="blue2"></td>
-							    	<td class="blue2"></td>
-							    	<td class="blue2"></td>
 							    	<td>結果</td>
 							  	</tr>
 							  	<tr >
@@ -398,11 +359,6 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							    	<td></td>
 							    	
 							    	<td></td>
-							    	<td></td>
-							    	<td></td>
-							    	<td></td>
-							    	<td></td>
-							    	<td></td>
 							    	<td>求和</td>
 							  	</tr>
 							  	<tr >
@@ -418,11 +374,6 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							    	<td class="blue"></td>
 							    	<td class="blue"></td>
 							    	
-							    	<td class="blue"></td>
-							    	<td class="blue"></td>
-							    	<td class="blue"></td>
-							    	<td class="blue"></td>
-							    	<td class="blue"></td>
 							    	<td class="blue"></td>
 							    	<td>共計</td>
 							  	</tr>
@@ -827,26 +778,40 @@ function onBusEnd(){
 	
 	
 	function initData(data){
+
+
 		data.bigTurn.user_lock = data[0].turn.user_lock.split(',');
 		data.bigTurn.xzbg_lock =  data[0].turn.xzbg_lock.split(',');
 		data.bigTurn.hbbg_lock =  data[0].turn.hbbg_lock.split(',');
 		data.bigTurn.xzbg_config = data[0].turn.xzbg_config.split(',');
 		data.bigTurn.hbbg_config = data[0].turn.hbbg_config.split(',');
-        data.bigTurn.zd_lock = data.bigTurn.zd_lock.split(',');
         data.bigTurn.jgzd_lock = data.bigTurn.jgzd_lock.split(',');
         data.bigTurn.inverse_lock = data.bigTurn.inverse_lock.split(',');
-        data.bigTurn.xb_inv_lock = data.bigTurn.xb_inv_lock.split(',');
-        data.bigTurn.xb_lock = data.bigTurn.xb_lock.split(',');
-        data.bigTurn.bkzd_lock = data.bigTurn.bkzd_lock.split(',');
-        data.bigTurn.bkbg_inv_lock = data.bigTurn.bkbg_inv_lock.split(',');
+
 		data.bigTurn.config_json = eval("("+data[0].turn.config_json+")")
 		data.bigTurn.tip_open = data[0].tip_open;
 		data.bigTurn.queue_count = 0;
 		for (var i = 0; i < data.bigTurn.bigTurnConfig.turnNum; i++) {
 			data.bigTurn.queue_count+=data[i].turn.queue_count;
 		}
-		
-	} 
+
+        var keys = ['xb_inv_lock','xb_lock','bkzd_lock','bkhz_lock','bkbg_inv_lock','turn_bkhz_lock','bkhz_inv_lock','zdbg_lock']
+        init2Arr(data.bigTurn,keys);
+	}
+
+    function init2Json(data,keys){
+        for (let i = 0; i < keys.length; i++) {
+            let k = keys[i];
+            data[k] =  eval("("+data[k]+")")
+        }
+    }
+
+	function init2Arr(data,keys){
+        for (let i = 0; i < keys.length; i++) {
+            let k = keys[i];
+            data[k] = data[k].split(',');
+        }
+	}
 	
 var etbHtml = "";
 
@@ -887,15 +852,19 @@ function ref(data){
 
 
 	//显示这些列
-    let bgCols = ['hb',/*'qhBg','hbBg','hbqh','xzBg','xzqh','jgbg',*/'jgAbg','jgBbg','bgA','bgB','zdbg','jgzd','bkbg','bkzd'];
-    let jgCols = ['hb',/*'qhBg','hbBg','hbqh','xzBg','xzqh','jgbg',*/'jgAbg','jgBbg','bgA','bgB','zdbg','jgzd'];
-    let jgCols2 = ['bkbg','bkzd'];
+    let bgCols = ['hb',/*'qhBg','hbBg','hbqh','xzBg','xzqh','jgbg',*//*'jgAbg','jgBbg','bgA','bgB','zdbg','jgzd',*/];
+    let bgCols2 = ['bkzd','bkbg','bkqh','bkhz','zdbg'];
+    let jgCols = ['hb',/*'qhBg','hbBg','hbqh','xzBg','xzqh','jgbg',*//*'jgAbg','jgBbg','bgA','bgB',zdbg','jgzd'*/];
+    let jgCols2 = ['bkzd','bkbg','bkqh','bkhz','zdbg'];
+   let jgCols3 = [];
     let jgTypes = {1:'bk-red',2:'bk-yellow',3:'bk-green',4:'bk-black',5:'bk-grey'};
 
 
     bigvData['viewBg'] = bgCols;
+    bigvData['viewBg2'] = bgCols2;
     bigvData['jgCols'] = jgCols;
     bigvData['jgCols2'] = jgCols2;
+    bigvData['jgCols3'] = jgCols3;
     bigvData['jgTypes'] = jgTypes;
 
 	$("#head_group").html(initLockHtml(bigvData.bigTurn));
@@ -919,13 +888,15 @@ function ref(data){
 		var userlock = bigTurn.user_lock;
 		var hbbgLock = bigTurn.hbbg_lock;
 		var xzbgLock = bigTurn.xzbg_lock;
-        var zdLock = bigTurn.zd_lock;
         var jgzdLock = bigTurn.jgzd_lock;
         var inverse_lock = bigTurn.inverse_lock;
         var bkzd_lock = bigTurn.bkzd_lock;
         var bkbg_inv_lock = bigTurn.bkbg_inv_lock;
+        var bkhz_lock = bigTurn.bkhz_lock;
+        var zdbg_lock = bigTurn.zdbg_lock;
+        var turn_bkhz_lock = bigTurn.turn_bkhz_lock;
+        var bkhz_inv_lock = bigTurn.bkhz_inv_lock;
 		var html = "";
-
 		var jgzdLockIndex = 0;
 		var qhzdLockIndex = 0;
 		for (var i = 0; i < userlock.length; i++) {
@@ -934,13 +905,14 @@ function ref(data){
 			+'<div><span class="click_span" onclick="toSetConfig(2,0,'+(i+1)+',\''+bigTurn.xzbg_config[i]+'\',this)" >'+bigTurn.xzbg_config[i]+'</span></div>';
 			
 			html+='<td>'+(i+1) +' <br>'
-                +' '+getInverseBtnHtml(7,0,i+1,xb_inv_lock[i],'小板报告')
+                +' '+getInverseBtnHtml(7,0,i+1,xb_inv_lock[i],'板塊報告')
+                +' '+getLockBtnHtml(12,0,i+1,turn_bkhz_lock[i],{t:'板塊匯總'})
                 +' '+getLockBtnHtml(1,0,i+1,userlock[i])
-				//+' '+getLockBtnHtml(2,0,i+1,hbbgLock[i],{t:'合并报告'})
+				//+' '+getLockBtnHtml(2,0,i+1,hbbgLock[i],{t:'合并報告'})
 				//+' '+getLockBtnHtml(3,0,i+1,xzbgLock[i],{t:'選擇報告'})
-				+' '+getLockBtnHtml(4,0,qhzdLockIndex+1,zdLock[qhzdLockIndex],{t:'求和终端'})
-                +' '+getLockBtnHtml(8,0,i+1,xb_lock[i],{t:'小板报告'})
-				+cHtml+'</td>';
+				//+' '+getLockBtnHtml(4,0,qhzdLockIndex+1,zdLock[qhzdLockIndex],{t:'求和终端'})
+                +' '+getLockBtnHtml(8,0,i+1,xb_lock[i],{t:'板塊報告'})
+				/*+cHtml*/+'</td>';
             qhzdLockIndex++;
 		}
 
@@ -950,10 +922,10 @@ function ref(data){
 
             if(i==0){
                 html+='<td>'
-                    +' '+getInverseBtnHtml(7,0,11,xb_inv_lock[10],'小板报告')
-                    +' '+getInverseBtnHtml(6,0,i+1,inverse_lock[i],'')
-					+' '+getLockBtnHtml(4,0,qhzdLockIndex+1,zdLock[qhzdLockIndex],{t:'求和终端'})
-                    +' '+getLockBtnHtml(8,0,11,xb_lock[10],{t:'小板报告'})
+                    +' '+getInverseBtnHtml(7,0,11,xb_inv_lock[10],'小板報告')
+                    //+' '+getInverseBtnHtml(6,0,i+1,inverse_lock[i],'')
+					//+' '+getLockBtnHtml(4,0,qhzdLockIndex+1,zdLock[qhzdLockIndex],{t:'求和终端'})
+                    +' '+getLockBtnHtml(8,0,11,xb_lock[10],{t:'小板報告'})
 					+'<br>'+cols[i]+'</td>';
 
             }
@@ -963,27 +935,48 @@ function ref(data){
         var jgzdLockIndex_qhzd = jgzdLockIndex;
         jgzdLockIndex++;
 
-        var cols2 = ['結果1','結果2','結果3','結果4'];
+        /*var cols2 = ['結果1','結果2','結果3','結果4'];
 
         for (let i = 0; i < cols2.length; i++) {
-            html+='<td>'+getInverseBtnHtml(6,0,cols.length+2+i,inverse_lock[cols.length+1+i])+' '+getLockBtnHtml(5,0,jgzdLockIndex+1,jgzdLock[jgzdLockIndex],{t:'结果'})+' '+getLockBtnHtml(4,0,qhzdLockIndex+1,zdLock[qhzdLockIndex],{t:'求和终端'})+'<br>'+cols2[i]+'</td>';
+            html+='<td>'+getInverseBtnHtml(6,0,cols.length+2+i,inverse_lock[cols.length+1+i])
+				+' '+getLockBtnHtml(5,0,jgzdLockIndex+1,jgzdLock[jgzdLockIndex],{t:'结果'})
+				//+' '+getLockBtnHtml(4,0,qhzdLockIndex+1,zdLock[qhzdLockIndex],{t:'求和终端'})
+				+'<br>'+cols2[i]+'</td>';
             qhzdLockIndex++;
             jgzdLockIndex++;
-        }
+        }*/
 
-        html+='<td>'+getInverseBtnHtml(6,0,cols.length+1,inverse_lock[cols.length])+' '+getLockBtnHtml(5,0,jgzdLockIndex_qhzd+1,jgzdLock[jgzdLockIndex_qhzd],{t:'结果'})+'<br>求和终端</td>';
+        /*html+='<td>'+getInverseBtnHtml(6,0,cols.length+1,inverse_lock[cols.length])+' '+getLockBtnHtml(5,0,jgzdLockIndex_qhzd+1,jgzdLock[jgzdLockIndex_qhzd],{t:'结果'})
+			+'<br>求和终端</td>';
 
-
-        html+='<td>'+'结果终端'+'</td>';
+        html+='<td>'+'结果终端'+'</td>';*/
 
         var bkzdLockStr = "";
         for (let i = 0; i < bkzd_lock.length; i++) {
-            bkzdLockStr+= ' '+getLockBtnHtml(9,0,i+1,bkzd_lock[i],{t:'小板报告'+(i+1)});
+            bkzdLockStr+= ' '+getLockBtnHtml(9,0,i+1,bkzd_lock[i],{t:'小板報告'+(i+1)});
         }
 
-        html+='<td class="font1" > '+getInverseBtnHtml(10,0,1,bkbg_inv_lock[0])+' '+bkzdLockStr+'<br>'+'板塊报告'+'</td>';
-		html+='<td class="font1"> '+getInverseBtnHtml(10,0,2,bkbg_inv_lock[1])+'<br>'+'板塊终端'+'</td>';
+        html+='<td class="font1"> '+getInverseBtnHtml(10,0,2,bkbg_inv_lock[1])
+            +' '+getLockBtnHtml(13,0,1,zdbg_lock[0],{t:'終端報告'})+'<br>'+'板塊報告求和'+'</td>';
 
+        html+='<td class="font1" > '+getInverseBtnHtml(10,0,1,bkbg_inv_lock[0])
+            +' '+getLockBtnHtml(13,0,2,zdbg_lock[1],{t:'終端報告'})+'<br>'+'板塊報告'+'<br>'+bkzdLockStr+'</td>';
+
+
+        var bkhzLockStr = "";
+        for (let i = 0; i < bkhz_lock.length; i++) {
+            bkhzLockStr+= ' '+getLockBtnHtml(11,0,i+1,bkhz_lock[i],{t:'板塊匯總'+(i+1)});
+        }
+
+
+        html+='<td class="font1"> '+' '+getInverseBtnHtml(14,0,1,bkhz_inv_lock[0],'板塊匯總')
+            +' '+getLockBtnHtml(13,0,3,zdbg_lock[2],{t:'終端報告'})+'<br>'+'板塊匯總求和'+'</td>';
+
+        html+='<td class="font1" > '+' '+getInverseBtnHtml(14,0,2,bkhz_inv_lock[1],'板塊匯總')
+            +' '+getLockBtnHtml(13,0,4,zdbg_lock[3],{t:'終端報告'})+'<br>'+'板塊匯總'+'<br>'+bkhzLockStr+'</td>';
+
+
+        html+='<td class="font3" > '+'終端報告'+'</td>';
 		return html;
 	}
 
@@ -992,7 +985,7 @@ function ref(data){
 	
 	
 	/**
-	mod:1 汇总报告，2：合并报告，3 選擇報告,4 终端报告,5 结果,6结果反转
+	mod:1 汇总報告，2：合并報告，3 選擇報告,4 終端報告,5 结果,6结果反转
 	*/
 	function setLock(mod,tid,uid,val,btn){
 
@@ -1118,53 +1111,77 @@ function ref(data){
 	</script>
 
 
-	<script type="text/html" id="hzbg_tmpl">
-<tr class="data_col ">
-<td rowspan="3"> <span class="">匯總</span></td>
-							{{each bigTurn.user_lock as val i}}
-							    	<td>{{if bgData[i+1]}}
-											<div class="bg-td">{{bgData[i+1][0].name}} <span {{if bgData[i+1][0].val>0}}class="red"{{/if}}>{{if bgData[i+1][0].name}}{{bgData[i+1][0].val}}{{/if}}</span></div>
-										{{/if}}
-									</td>
-							{{/each}}
+		<script type="text/html" id="hzbg_tmpl">
+			<tr class="data_col ">
+				<td rowspan="3"><span class="">匯總</span></td>
+				{{each bigTurn.user_lock as val i}}
+				<td>{{if bgData[i+1]}}
+					<div class="bg-td">{{bgData[i+1][0].name}} <span {{if bgData[i+1][0].val>0}}class="red"{{/if}}>{{if bgData[i+1][0].name}}{{bgData[i+1][0].val}}{{/if}}</span>
+					</div>
+					{{/if}}
+				</td>
+				{{/each}}
 
-							{{each viewBg as val i}}
-							<td {{if i==7||i==8}}class="font2"{{/if}}>
-								<div class="bg-td">{{bgData[val][0].name}} <span {{if bgData[val][0].val>0}}class="red"{{/if}}>{{if bgData[val][0].name}}{{bgData[val][0].val}}{{/if}}</span></div>
+				{{each viewBg as val i}}
+				<td {{if i==7||i==8}}class="font2"{{/if}}>
+					<div class="bg-td">{{bgData[val][0].name}} <span {{if bgData[val][0].val>0}}class="red"{{/if}}>{{if bgData[val][0].name}}{{bgData[val][0].val}}{{/if}}</span>
+					</div>
+				</td>
+				{{/each}}
+				{{each viewBg2 as val i}}
+				<td {{if i==7||i==8}}class="font2"{{/if}}>
+					<div class="bg-td bg-td2">{{bgData[val][0].name}} <span {{if bgData[val][0].val>0}}class="red"{{/if}}>{{if bgData[val][0].name}}{{bgData[val][0].val}}{{/if}}</span>
+					</div>
+				</td>
+				{{/each}}
+				<td rowspan="3"><span class="">匯總</span></td>
+			</tr>
+			<tr class="data_col">
+				{{each bigTurn.user_lock as val i}}
+				<td>{{if bgData[i+1]}}
+					<div class="bg-td">{{bgData[i+1][1].name}} <span {{if bgData[i+1][1].val>0}}class="red"{{/if}}>{{if bgData[i+1][1].name}}{{bgData[i+1][1].val}}{{/if}}</span>
+					</div>
+					{{/if}}
+				</td>
+				{{/each}}
+				{{each viewBg as val i}}
+				<td {{if i==7||i==8}}class="font2"{{/if}}>
+					<div class="bg-td">{{bgData[val][1].name}} <span {{if bgData[val][1].val>0}}class="red"{{/if}}>{{if bgData[val][1].name}}{{bgData[val][1].val}}{{/if}}</span>
+					</div>
+				</td>
+				{{/each}}
+				{{each viewBg2 as val i}}
+				<td {{if i==7||i==8}}class="font2"{{/if}}>
+					<div class="bg-td bg-td2">{{bgData[val][1].name}} <span {{if bgData[val][1].val>0}}class="red"{{/if}}>{{if bgData[val][1].name}}{{bgData[val][1].val}}{{/if}}</span>
+					</div>
+				</td>
+				{{/each}}
 
-							</td>
-							{{/each}}
-									<td rowspan="3"> <span class="">匯總</span></td>
-							</tr>
-							  <tr class="data_col">
-							{{each bigTurn.user_lock as val i}}
-							    	<td>{{if bgData[i+1]}}
-										<div class="bg-td">{{bgData[i+1][1].name}} <span {{if bgData[i+1][1].val>0}}class="red"{{/if}}>{{if bgData[i+1][1].name}}{{bgData[i+1][1].val}}{{/if}}</span></div>
-									{{/if}}</td>
-							{{/each}}
-							{{each viewBg as val i}}
-								  <td {{if i==7||i==8}}class="font2"{{/if}}>
-									  <div class="bg-td">{{bgData[val][1].name}} <span {{if bgData[val][1].val>0}}class="red"{{/if}}>{{if bgData[val][1].name}}{{bgData[val][1].val}}{{/if}}</span></div>
+			</tr>
+			<tr class="data_col">
 
-								  </td>
-							{{/each}}
-							    
-								 </tr>
-							  	<tr class="data_col">
-							  		
-							{{each bigTurn.user_lock as val i}}
-									<td class="blue"><div class="bg-td">共 <span >{{if bgData[i+1]}}{{bgData[i+1][2]}}{{/if}}</span></div></td>
-							{{/each}}
-							{{each viewBg as val i}}
-									<td class="blue {{if i==7||i==8}}font2{{/if}}"><div class="bg-td">共 <span >{{bgData[val][2]}}</span></div></td>
-							{{/each}}
-							    	
-							    	</tr>
+				{{each bigTurn.user_lock as val i}}
+				<td class="blue">
+					<div class="bg-td ">共 <span>{{if bgData[i+1]}}{{bgData[i+1][2]}}{{/if}}</span></div>
+				</td>
+				{{/each}}
+				{{each viewBg as val i}}
+				<td class="blue {{if i==7||i==8}}font2{{/if}}">
+					<div class="bg-td">共 <span>{{bgData[val][2]}}</span></div>
+				</td>
+				{{/each}}
+				{{each viewBg2 as val i}}
+				<td class="blue {{if i==7||i==8}}font2{{/if}}">
+					<div class="bg-td bg-td2">共 <span>{{bgData[val][2]}}</span></div>
+				</td>
+				{{/each}}
+
+			</tr>
 
 
-	</script>
-	
-	<script type="text/html" id="jg_tmpl">
+		</script>
+
+		<script type="text/html" id="jg_tmpl">
 	{{each jgData['hb'].list  as val i}}
 	<tr>
 	<td>{{i+1}}</td>
@@ -1185,6 +1202,12 @@ function ref(data){
 		{{each jgCols2 as col jj}}
 
 		<td class="font3 {{if jgData[col].type[i]}}{{jgTypes[jgData[col].type[i]]}}{{/if}} {{if jgData[col].list[i]>0}}red{{/if}} ">{{jgData[col].list[i]}}</td>
+
+		{{/each}}
+
+		{{each jgCols3 as col jj}}
+
+		<td {{if jgData[col].list[i]>0}}class="red"{{/if}}>{{jgData[col].list[i]}}</td>
 
 		{{/each}}
 
@@ -1210,6 +1233,9 @@ function ref(data){
 			<td  class="blue2 font2 {{if jgData[col].jg>0}}red{{/if}}">{{jgData[col].jg}}</td>
 			{{/each}}
 
+			{{each jgCols3 as col j}}
+			<td class="blue2 {{if jgData[col].jg>0}}red{{/if}}">{{jgData[col].jg}}</td>
+			{{/each}}
 
 			<td>結果</td>
 		</tr>
@@ -1227,6 +1253,10 @@ function ref(data){
 									<td class="font2 {{if jgData[col].qh>0}}red{{/if}}">{{jgData[col].qh}}</td>
 									{{/each}}
 
+									{{each jgCols3 as col j}}
+									<td {{if jgData[col].qh>0}}class="red"{{/if}}>{{jgData[col].qh}}</td>
+									{{/each}}
+
 									<td>求和</td>
 							  	</tr>
 							  	<tr style="height:40px;">
@@ -1242,6 +1272,10 @@ function ref(data){
 
 									{{each jgCols2 as col j}}
 									<td class="blue font2">{{bgData[col][3]}}</td>
+									{{/each}}
+
+									{{each jgCols3 as col j}}
+									<td class="blue">{{bgData[col][3]}}</td>
 									{{/each}}
 
 									

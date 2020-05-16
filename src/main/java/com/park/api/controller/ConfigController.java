@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,10 +76,25 @@ public class ConfigController extends BaseController{
 			case "rule_bkbg2":
 			case "rule_bkbg3":
 			case "rule_bkbg4":
-			case "rule_bkbg5":
-			Integer start = Integer.parseInt(val.split(",")[0]);
-			Integer end = Integer.parseInt(val.split(",")[1]);
+			case "rule_bkbg5":{
+				Integer start = Integer.parseInt(val.split(",")[0]);
+				Integer end = Integer.parseInt(val.split(",")[1]);
+				if(!(start>=1&&end<=100))throw new ApplicationException("值範圍錯誤(在1~100)！！");
+			}
+			break;
+
+		case "rule_bkbg":
+		case "rule_bkhz":{
+			String[] arr = val.split(":");
+			Integer i = Integer.valueOf(arr[0]);
+			Integer start = Integer.parseInt(arr[1].split(",")[0]);
+			Integer end = Integer.parseInt(arr[1].split(",")[1]);
 			if(!(start>=1&&end<=100))throw new ApplicationException("值範圍錯誤(在1~100)！！");
+			String[] rules = sysService.getSysConfig(mod,String.class).split("_");
+			rules[i] = arr[1];
+			valObj = StringUtils.join(rules,"_");
+		}
+
 			break;
 			
 

@@ -22,7 +22,7 @@ public class BigTurnConfig {
 
 	String[] rule_bkbgs;
 
-
+	String[] ruleBkhzs;
 
 	
 
@@ -104,5 +104,13 @@ public class BigTurnConfig {
 
 	public void setRule_bkbgs(String[] rule_bkbgs) {
 		this.rule_bkbgs = rule_bkbgs;
+	}
+
+	public String[] getRuleBkhzs() {
+		return ruleBkhzs;
+	}
+
+	public void setRuleBkhzs(String[] ruleBkhzs) {
+		this.ruleBkhzs = ruleBkhzs;
 	}
 }

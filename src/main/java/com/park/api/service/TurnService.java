@@ -1,5 +1,6 @@
 package com.park.api.service;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -90,12 +91,13 @@ public class TurnService {
 		
 		inputTurn.set(turn);
 		List<Game> games = crowDao.getGames(turn.getId());
-		
+
+
 		List<InputResult> results = new ArrayList<>();
 		for (Game game : games) {
 			InputResult result = gameService.doInput(game,pei);
 			if(result.getRets()!=null)
-			results.add(result);
+				results.add(result);
 		}
 		
 		
@@ -106,12 +108,12 @@ public class TurnService {
 		
 		
 		Map<String, Object> map = ServiceManage.jdbcTemplate.queryForMap(
-				"select id,rule,frow, `mod`,user_lock,qh,yz,yz_jg_sum,hb,hb_jg_sum,hbqh,hbqh_sum,xz,xz_jg_sum,jgbg,jgbg_jg_sum,xzqh,xzqh_sum,xzbg_lock,xzbg_config,xzbg_trend,hbbg_lock,hbbg_config,hbbg_trend" +
+				"select id,rule,frow, `mod`,user_lock,yz,yz_jg_sum,hbqh,hbqh_sum,xzqh,xzqh_sum,xzbg_lock,xzbg_config,xzbg_trend,hbbg_lock,hbbg_config,hbbg_trend,bkhz_hu" +
 						" from game_turn where id=? limit 1",turn.getId());
-		Map<String, Object> map2 = ServiceManage.jdbcTemplate.queryForMap(
+		/*Map<String, Object> map2 = ServiceManage.jdbcTemplate.queryForMap(
 				"select jgbgA,jgbgA_jg_sum,jgbgB,jgbgB_jg_sum from game_turn2 where turn_id=? limit 1",turn.getId());
-
-		map.putAll(map2);
+*/
+		//map.putAll(map2);
 
 		String[] uLock = map.get("user_lock").toString().split(",");
 		
@@ -119,22 +121,24 @@ public class TurnService {
 		int start = Integer.parseInt(rule[0]);
 		int end = Integer.parseInt(rule[1]);
 		int frow = Integer.parseInt( map.get("frow").toString())-1;
+
 		
 		
-		List<Object> upQhList = StringUtils.isEmpty(map.get("qh").toString())?
-				null:JSONArray.parseArray(map.get("qh").toString()).getJSONArray(1);
+/*		List<Object> upQhList = StringUtils.isEmpty(map.get("qh").toString())?
+				null:JSONArray.parseArray(map.get("qh").toString()).getJSONArray(1);*/
 		
 		
-		Integer[] upQh = upQhList!=null?upQhList.toArray(new Integer[upQhList.size()]):null;
+		/*Integer[] upQh = upQhList!=null?upQhList.toArray(new Integer[upQhList.size()]):null;
+		*/
 		Long[] upYz = JsonUtils.toLongArray(StringUtils.isNotBlank(map.get("yz").toString())?JSONArray.parseArray(map.get("yz").toString()).getString(1):null);
-		Long[] upHb = JsonUtils.toLongArray(map.get("hb")!=null?map.get("hb").toString():null);
+		/*Long[] upHb = JsonUtils.toLongArray(map.get("hb")!=null?map.get("hb").toString():null);
 		Long[] upXz = JsonUtils.toLongArray(map.get("xz")!=null?map.get("xz").toString():null);
 		Long[] upJgbg = JsonUtils.toLongArray(map.get("jgbg")!=null?map.get("jgbg").toString():null);
 		Long[] upJgbgA = JsonUtils.toLongArray(map.get("jgbgA")!=null?map.get("jgbgA").toString():null);
 		Long[] upJgbgB = JsonUtils.toLongArray(map.get("jgbgB")!=null?map.get("jgbgB").toString():null);
 
 		Integer[] upHbqh = JsonUtils.toIntArray(map.get("hbqh")!=null?map.get("hbqh").toString():null);
-		Integer[] upXzqh = JsonUtils.toIntArray(map.get("xzqh")!=null?map.get("xzqh").toString():null);
+		Integer[] upXzqh = JsonUtils.toIntArray(map.get("xzqh")!=null?map.get("xzqh").toString():null);*/
 		
 		
 		int mod = Integer.parseInt(map.get("mod").toString());
@@ -187,8 +191,31 @@ public class TurnService {
 			
 			//计算原值报告
 			YzDto yzDto = CountService.reckonYz(allYz, upYz, Long.valueOf(map.get("yz_jg_sum").toString()), pei, mod2);
-			
-			
+
+			long[] xbbg = TurnCoreService.countXbbg(results,new long[] {(long)hzBg[4],(long)hzBg[5]},bigTurn.getXb_lock(),bigTurn.getXb_inv_lock());
+
+            //小板汇总
+            Integer[] upBkbg = JsonUtils.toIntArray(turn.getBkbg());
+            Integer[] bkbg = TurnCoreService.countBkbg2(xbbg);
+            Integer[] bkbgJg = upBkbg==null?null:BigCoreService.countJg(pei.substring(0, 1),upBkbg);
+            Long bkbg_jg_sum = bkbgJg==null?0:Long.valueOf(bkbgJg[0]+bkbgJg[1]);
+            Integer bkbgJgType = upBkbg==null?null:BigCoreService.countJgDetail(bkbgJg,upBkbg);
+            Integer newBkbgTrend = CountCoreAlgorithm.computeTrend(bkbg_jg_sum,new Integer(turn.getBkbg_trend()));
+
+            //板塊報告
+            //Double[] upBkzd = JsonUtils.toIntDouble(bigTurn.getBkzd());
+            BigDecimal[] bkzd = BigCoreService.countBkzd(bkbg,bigTurn.getBigTurnConfig().getRule_bkbgs(),bigTurn.getBkzd_lock(),newBkbgTrend+"");
+
+
+			//板块汇总
+			Integer[] upBkhzHu = map.get("bkhz_hu")==null?null:JsonUtils.toIntArray(map.get("bkhz_hu").toString());
+			Object[] bkhzObj = TurnCoreService.countBkhz(results,upBkhzHu,bigTurn.getTurn_bkhz_lock());
+			BigDecimal[] bkhz = bkhzObj==null?new BigDecimal[]{BigDecimal.ZERO,BigDecimal.ZERO}:(BigDecimal[]) bkhzObj[0];
+			Integer[] newBkhzHu = bkhzObj==null?null:(Integer[]) bkhzObj[1];
+            //Double[] bkzdJg = upBkzd==null?null:BigCoreService.countJg(pei.substring(0, 1),upBkzd);
+           // BigDecimal bkzd_jg_sum = bkzdJg==null?BigDecimal.ZERO:new BigDecimal(bkzdJg[0].toString()).add(new BigDecimal(bkzdJg[1].toString()));
+           // Integer bkzdJgType = bkzdJg==null?null:BigCoreService.countJgDetail(bkzdJg,upBkzd);
+
 			//计算合并报告
 			/*String[] newHbbgConfigAndTrend = CountService.reckonHbbgTrend(results, map.get("hbbg_trend").toString(), map.get("hbbg_config").toString(),map.get("xzbg_config").toString(),bigTurn.getBigTurnConfig());
 			String newHbbg_config = newHbbgConfigAndTrend[0];
@@ -223,14 +250,14 @@ public class TurnService {
 */
 
 
-			long[][] jgbgBgAB = CountService.reckonJgBgAB(results,bigTurn.getBigTurnConfig());
+			/*long[][] jgbgBgAB = CountService.reckonJgBgAB(results,bigTurn.getBigTurnConfig());
 			//计算 结果报告1
 			long[] jgbgBgA = jgbgBgAB[0];
 			CountProcessBean pbJgbgA = doCountProcess(upJgbgA,pei,Long.valueOf(map.get("jgbgA_jg_sum").toString()));
 
 			//计算 结果报告2
 			long[] jgbgBgB = jgbgBgAB[1];
-			CountProcessBean pbJgbgB = doCountProcess(upJgbgB,pei,Long.valueOf(map.get("jgbgB_jg_sum").toString()));
+			CountProcessBean pbJgbgB = doCountProcess(upJgbgB,pei,Long.valueOf(map.get("jgbgB_jg_sum").toString()));*/
 
 
 			//构建返回参数
@@ -241,10 +268,21 @@ public class TurnService {
 			//bigInputResult.setHbqhBg(hbqhBg);
 			//bigInputResult.setXzqhBg(xzqhBg);
 			//bigInputResult.setJgbgBg(jgbgBg);
-			bigInputResult.setJgABg(jgbgBgAB[0]);
-			bigInputResult.setJgBBg(jgbgBgAB[1]);
+			//bigInputResult.setJgABg(jgbgBgAB[0]);
+			//bigInputResult.setJgBBg(jgbgBgAB[1]);
+			bigInputResult.setXbbg(xbbg);
+			bigInputResult.setBkhz(bkhz);
+			bigInputResult.setBkhzHu(newBkhzHu);
+
+            bigInputResult.setBkbg(bkbg);
+            bigInputResult.setBkzd(bkzd);
+			bigInputResult.setNewBkbgTrend(newBkbgTrend);
 			ServiceManage.jdbcTemplate.update("update game_turn set "
 					+ "info=?,lj=lj+?,hz_jg=CONCAT(hz_jg,?),jg_sum=jg_sum+?"
+					+ ",xbbg=?"
+					+ ",bkhz=?,bkhz_hu=?"
+                    + ",bkbg=?, bkbg_sum=bkbg_sum+?, bkbg_jg=CONCAT(bkbg_jg,?), bkbg_jg_sum = bkbg_jg_sum+?,bkbg_trend=?"
+                    + ",bkzd=?, bkzd_sum=bkzd_sum+? "
 					//+ ",qh=?,qh_sum=qh_sum+?,qh_jg=CONCAT(qh_jg,?),qh_last_jg=? "//汇总求和
 					+ ",yz=?,yz_sum=yz_sum+?,yz_jg=CONCAT(yz_jg,?),yz_jg_sum=?,yz_last_jg=?"
 					//+ ",hb=?,hb_sum=hb_sum+?,hb_jg=CONCAT(hb_jg,?),hb_jg_sum=?,hb_last_jg=?,hbbg_trend=?,hbbg_config=?"
@@ -261,7 +299,24 @@ public class TurnService {
 					Math.abs((long)hzBg[4])+Math.abs((long)hzBg[5]),
 					hzJg==null?"":(hzJg+","),
 					hzJg==null?0:(hzJg),
-					
+
+					//小板报告
+					JSONObject.toJSONString(xbbg),
+
+					JSONObject.toJSONString(bkhz),
+					newBkhzHu==null?"":JSONObject.toJSONString(newBkhzHu),
+
+                    //板块报告
+                    JSONArray.toJSONString(bkbg),
+                    Math.abs(bkbg[0])+Math.abs(bkbg[1]),
+                    bkbgJg==null?"":bkbgJgType+"_"+(bkbgJg[0]+bkbgJg[1]+","),
+                    bkbg_jg_sum,
+					newBkbgTrend,
+
+					//板块终端
+                    JSONArray.toJSONString(bkzd),
+                    bkzd[0].abs().add(bkzd[1].abs()),
+
 					//JSONObject.toJSONString(new Object[] {qh,qhBg}),
 					//Math.abs(qhBg[0])+Math.abs(qhBg[1]),
 					//qhJg==null?"":(qhJg[0]+qhJg[1]+","),
@@ -317,7 +372,7 @@ public class TurnService {
 					countTurnId.get());
 
 			//分表更新
-			ServiceManage.jdbcTemplate.update("update game_turn2 set "
+			/*ServiceManage.jdbcTemplate.update("update game_turn2 set "
 					+ " jgbgA=?,jgbgA_sum=jgbgA_sum+?,jgbgA_jg=CONCAT(jgbgA_jg,?),jgbgA_jg_sum=?"
 					+ ",jgbgB=?,jgbgB_sum=jgbgB_sum+?,jgbgB_jg=CONCAT(jgbgB_jg,?),jgbgB_jg_sum=?"
 					+ " where turn_id=?",
@@ -330,7 +385,7 @@ public class TurnService {
 					Math.abs(jgbgBgB[0])+Math.abs(jgbgBgB[1]),
 					pbJgbgB.getBgJg()==null?"":(pbJgbgB.getBgJg()[0]+pbJgbgB.getBgJg()[1]+","),
 					pbJgbgB.getNewBgJgSum(),
-					countTurnId.get());
+					countTurnId.get());*/
 		
 		}else {//B模式
 			
@@ -428,11 +483,11 @@ public class TurnService {
 		                public PreparedStatement createPreparedStatement(Connection con) throws SQLException
 		                {
 		                	PreparedStatement ps = con.prepareStatement("INSERT INTO game_turn ("
-		                			+ "big_turn_id,turn_no,`mod`,`mod2`,frow,info,lj ,hz_jg  ,qh,qh_sum,qh_jg,qh_last_jg,  yz_jg, hb_jg,hbqh_jg,xzqh_jg  ,`rule`,rule_type,user_lock,state,config_json"
-		                			+ ",xz_jg,xzbg_lock,xzbg_config,xzbg_trend,hbbg_lock,hbbg_config,hbbg_trend,jgbg_jg" +
+		                			+ "big_turn_id,turn_no,`mod`,`mod2`,frow,info,lj ,hz_jg    ,yz_jg, hbqh_jg,xzqh_jg  ,`rule`,rule_type,user_lock,state,config_json"
+		                			+ ",bkzd_jg,bkbg_jg,xzbg_lock,xzbg_config,xzbg_trend,hbbg_lock,hbbg_config,hbbg_trend" +
 									")"
-		                			+ " VALUES (?,?,?,?,1,'',0,''  ,'',0,'',''   ,'','','',''  ,?,?,'1,1,1,1,1,1,1,1,1,1',1,?,"
-		                			+ "'','1,1,1,1,1,1,1,1,1,1',?,'0,0,0,0,0,0,0,0,0,0','1,1,1,1,1,1,1,1,1,1',?,'0,0,0,0,0,0,0,0,0,0',''" +
+		                			+ " VALUES (?,?,?,?,1,'',0,''    ,'','',''  ,?,?,'1,1,1,1,1,1,1,1,1,1',1,?,"
+		                			+ "'','','1,1,1,1,1,1,1,1,1,1',?,'0,0,0,0,0,0,0,0,0,0','1,1,1,1,1,1,1,1,1,1',?,'0,0,0,0,0,0,0,0,0,0'" +
 									")",Statement.RETURN_GENERATED_KEYS);
 		                	
 		                	ps.setInt(1, bigTurn.getId());

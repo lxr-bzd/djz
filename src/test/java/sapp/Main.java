@@ -18,8 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.WindowConstants;
 
-import com.lxr.pay.wxpay.utils.MsgType;
-
 
 public class Main {
 

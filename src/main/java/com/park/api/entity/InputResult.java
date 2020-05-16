@@ -23,6 +23,7 @@ public class InputResult {
 	int jg;
 	
 	int tgTrend;
+	int tgTrend2;
 	
 	public String getUid() {
 		return uid;
@@ -85,8 +86,12 @@ public class InputResult {
 	public void setTgTrend(int tgTrend) {
 		this.tgTrend = tgTrend;
 	}
-	
-	
-	
-	
+
+	public int getTgTrend2() {
+		return tgTrend2;
+	}
+
+	public void setTgTrend2(int tgTrend2) {
+		this.tgTrend2 = tgTrend2;
+	}
 }

@@ -30,7 +30,7 @@ public class CountCoreAlgorithm {
      * @param recBg
      * @return
      */
-    public static void bgCount(long[] bg, BigDecimal[] recBg,int jgTrend,int[] range,int coefficient){
+    public static void bgCount2(long[] bg, BigDecimal[] recBg,int jgTrend,int[] range,int coefficient){
 
         int length = Math.abs(jgTrend);
         if(!(length>=range[0]&&length<=range[1]))return;
@@ -39,6 +39,20 @@ public class CountCoreAlgorithm {
         //黑色的取反
         if(jgTrend<0)f = f*-1L;
         f = f*coefficient;
+
+        bgCount2(bg,recBg,f);
+
+
+    }
+
+
+    /**
+     *  与bgCount相比bgCount2会对提供值一样的各取一半
+     *
+     * @param recBg
+     * @return
+     */
+    public static void bgCount2(long[] bg, BigDecimal[] recBg,long f){
 
         BigDecimal[] dt = recBg;
         long xl = bg[0];
@@ -52,10 +66,30 @@ public class CountCoreAlgorithm {
             dt[1] = dt[1].add(BigDecimal.valueOf((sd>0?1:-1)*f).multiply(new BigDecimal("0.5")));
         }
 
-
     }
 
 
+    /**
+     *  与bgCount相比bgCount2会对提供值一样的各取一半
+     *
+     * @param recBg
+     * @return
+     */
+    public static void bgCount2(BigDecimal[] bg, BigDecimal[] recBg,long f){
+
+        BigDecimal[] dt = recBg;
+        BigDecimal xl = bg[0];
+        BigDecimal sd = bg[1];
+        if(xl.abs().compareTo(sd.abs())==1){
+            dt[0] = dt[0].add(BigDecimal.valueOf((xl.compareTo(BigDecimal.ZERO)==1?1:-1)*f));
+        }else if(sd.abs().compareTo(xl.abs())==1){
+            dt[1] = dt[1].add(BigDecimal.valueOf((sd.compareTo(BigDecimal.ZERO)==1?1:-1)*f));
+        }else if(!xl.equals(BigDecimal.ZERO)){
+            dt[0] = dt[0].add(BigDecimal.valueOf((xl.compareTo(BigDecimal.ZERO)==1?1:-1)*f).multiply(new BigDecimal("0.5")));
+            dt[1] = dt[1].add(BigDecimal.valueOf((sd.compareTo(BigDecimal.ZERO)==1?1:-1)*f).multiply(new BigDecimal("0.5")));
+        }
+
+    }
     /**
      * 统计报告,取一个大的
      * @param bg
@@ -82,19 +116,43 @@ public class CountCoreAlgorithm {
         }
     }
 
+    public static void bgCount(BigDecimal[] bg,long[] recBg){
 
-    public static int reckonTrend(long jg, int oldTrend){
-
-        int newTgTrend = oldTrend;
-
-        if(jg!=0) {
-            if (oldTrend != 0 && oldTrend * jg > 0)//同号
-                newTgTrend = oldTrend + (jg > 0 ? 1 : -1);
-            else //不同号或者为0
-                newTgTrend = (jg > 0 ? 1 : -1);
-
+        int f = 1;
+        long[] dt = recBg;
+        BigDecimal xl = bg[0];
+        BigDecimal sd = bg[1];
+        if(xl.abs().compareTo(sd.abs())==1){
+            dt[0]+=(xl.compareTo(BigDecimal.ZERO)==1?1:-1)*f;
+        }else if(sd.abs().compareTo(xl.abs())==1){
+            dt[1]+=(sd.compareTo(BigDecimal.ZERO)==1?1:-1)*f;
+        }else if(xl.abs().compareTo(BigDecimal.ZERO)!=0){
+            dt[0]+=(xl.compareTo(BigDecimal.ZERO)==1?1:-1)*f;
+            dt[1]+=(sd.compareTo(BigDecimal.ZERO)==1?1:-1)*f;
         }
-        return newTgTrend;
+    }
+
+    public static void bgSum(long[] bg,long[] recBg){
+        bgSum(bg,recBg,false);
+    }
+
+    public static void bgSum(long[] bg,long[] recBg,boolean inverse){
+
+        int f = inverse?-1:1;
+        long[] dt = recBg;
+        long xl = bg[0];
+        long sd = bg[1];
+        dt[0]+=(xl)*f;
+        dt[1]+=(sd)*f;
+
+    }
+
+
+    public static void bgSum(BigDecimal[] bg,BigDecimal[] recBg){
+
+        recBg[0] = recBg[0].add(bg[0]);
+        recBg[1] = recBg[1].add(bg[1]);
+
     }
 
 
@@ -108,6 +166,14 @@ public class CountCoreAlgorithm {
             }
 
 
+        }
+        return bg;
+    }
+    public static long[] inverseBg(long[] bg,String lock){
+
+        if(lock.equals("1")){
+            bg[0] = -bg[0];
+            bg[1] = -bg[1];
         }
         return bg;
     }
@@ -130,6 +196,85 @@ public class CountCoreAlgorithm {
         }
         return bg;
     }
+
+
+    public static int computeTrend(long jg, int oldTrend){
+
+        int newTgTrend = oldTrend;
+
+        if(jg!=0) {
+            if (oldTrend != 0 && oldTrend * jg > 0)//同号
+                newTgTrend = oldTrend + (jg > 0 ? 1 : -1);
+            else //不同号或者为0
+                newTgTrend = (jg > 0 ? 1 : -1);
+
+        }
+        return newTgTrend;
+    }
+
+
+    /**
+     * 由提供和配值计算结果
+     * @param pei
+     * @param upBg
+     * @return
+     */
+    public static Integer[] computeJg(String pei,Integer[] upBg) {
+
+        Integer[] bg = upBg;
+
+        Integer pv = Integer.valueOf(pei);
+        int jg1 =(pv>2?bg[0]:-bg[0]);
+        int	jg2 =(pv%2!=0?bg[1]:-bg[1]);
+        return new Integer[] {jg1,jg2};
+
+    }
+
+
+    /**
+     * 由提供和配值计算结果
+     * @param pei
+     * @param upBg
+     * @return
+     */
+    public static Long[] computeJg(String pei,Long[] upBg) {
+
+        Long[] bg = upBg;
+
+        Integer pv = Integer.valueOf(pei);
+        long jg1 =(pv>2?bg[0]:-bg[0]);
+        long jg2 =(pv%2!=0?bg[1]:-bg[1]);
+        return new Long[] {jg1,jg2};
+
+    }
+
+    /**
+     * 由提供和配值计算结果
+     * @param pei
+     * @param upBg
+     * @return
+     */
+    public static Double[] computeJg(String pei,Double[] upBg) {
+
+        Double[] bg = upBg;
+
+        Integer pv = Integer.valueOf(pei);
+        Double jg1 =(pv>2?bg[0]:-bg[0]);
+        Double jg2 =(pv%2!=0?bg[1]:-bg[1]);
+        return new Double[] {jg1,jg2};
+
+    }
+
+
+    public static void main(String[] args) {
+        Double b = 0.9d;
+
+        System.out.println(new BigDecimal(1.5).setScale(0,BigDecimal.ROUND_HALF_UP));
+        System.out.println(b-1);
+        b = BigDecimal.valueOf(b).subtract(BigDecimal.valueOf(1)).doubleValue();
+        System.out.println(b);
+    }
+
 
 
 }

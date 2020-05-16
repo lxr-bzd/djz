@@ -13,8 +13,6 @@ public class JsonUtils {
 		if(StringUtils.isEmpty(arrStr))return null;
 		List<Long> upHbqhList = JSONArray.parseArray(arrStr,Long.class);
 		return upHbqhList.toArray(new Long[upHbqhList.size()]);
-		
-
 	}
 	
 
@@ -26,7 +24,7 @@ public class JsonUtils {
 
 	}
 
-	public static  Double[] toIntDouble(String arrStr) {
+	public static  Double[] toDoubleArray(String arrStr) {
 		if(StringUtils.isEmpty(arrStr))return null;
 		List<Double> upHbqhList = JSONArray.parseArray(arrStr,Double.class);
 		return upHbqhList.toArray(new Double[upHbqhList.size()]);

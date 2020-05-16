@@ -12,6 +12,16 @@ public class ArrayUtils {
         return data;
     }
 
+    public static long[] int2Long(int[] ints){
+
+        long[] data = new long[ints.length];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = (long)ints[i];
+        }
+
+        return data;
+    }
+
     public static int[] str2int(String[] strs){
 
         int[] data = new int[strs.length];
@@ -50,6 +60,17 @@ public class ArrayUtils {
         long[] data = new long[arr.length];
         for (int i = 0; i < data.length; i++) {
             data[i] = arr[i].longValue();
+        }
+
+        return data;
+
+    }
+
+    public static int[] toBasic(Integer[] arr){
+
+        int[] data = new int[arr.length];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = arr[i].intValue();
         }
 
         return data;

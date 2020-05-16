@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import com.park.api.service.SecurityService;
 import com.park.api.service.UserService;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 public class ServiceManage {
 	
@@ -15,6 +16,8 @@ public class ServiceManage {
 	public static SecurityService securityService;
 	
 	public static JdbcTemplate jdbcTemplate;
+
+	public static NamedParameterJdbcTemplate namedJdbcTemplate;
 	
 	
 	public static DataSource dataSource;
@@ -30,6 +33,7 @@ public class ServiceManage {
 	 @Autowired
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		 ServiceManage.jdbcTemplate = jdbcTemplate;
+		 ServiceManage.namedJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 	}
 	 
 	 @Autowired

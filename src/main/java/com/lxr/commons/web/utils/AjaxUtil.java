@@ -1,14 +1,13 @@
 package com.lxr.commons.web.utils;
 
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONObject;
 
 public class AjaxUtil {
 /**
@@ -66,7 +65,7 @@ public static void ajaxResponse(HttpServletResponse response, String text) {
 				Object obj) {
 				try {
 				response.setContentType("text/html;charset=utf-8");
-				String v = JSONObject.fromObject(obj).toString();
+				String v = JSONObject.toJSONString(obj);
 				response.getWriter().write(v);
 				} catch (IOException e) {
 				}
@@ -123,13 +122,7 @@ public static void ajaxResponse(HttpServletResponse response, String text) {
 		}
 		return result;
 		}
-		
-		
-		public static void main(String[] args) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			System.out.println(JSONObject.fromObject(map));
-			
-		}
+
 		
 		
 		}
