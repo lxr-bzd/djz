@@ -81,7 +81,7 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 			<table border="0"><tr><td>
 			<div class="">
 				<div class="top-body">
-			<table border="0" style="border: 1px solid #000;width:100%">
+			<table id="head-table" border="0" style="border: 1px solid #000;width:100%">
 							<colgroup>
 								<col style="width:50px;">
 								
@@ -98,12 +98,24 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 
 
 								<col style="width:90px;">
-								<col style="width:120px;">
-								<col style="width:120px;">
+								<col style="width:90px;">
+								<col style="width:90px;">
+								<col style="width:90px;">
+								<col style="width:90px;">
+								<col style="width:90px;">
+								<col style="width:90px;">
+								<col style="width:90px;">
+								<col style="width:90px;">
+								<col style="width:90px;">
 
-								<col style="width:120px;">
-								<col style="width:120px;">
-								<col style="width:120px;">
+								<col style="width:90px;">
+								<col style="width:90px;">
+								<col style="width:90px;">
+								<col style="width:90px;">
+								<col style="width:90px;">
+								<col style="width:90px;">
+								<col style="width:90px;">
+								<col style="width:90px;">
 
 								<col style="width:50px;">
 								
@@ -121,8 +133,8 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							    	<td><div class="blue btn1 exit_btn">關閉</div></td>
 									<td><input id="setting-input" type="password" style="width: 90%;background-color: #eee"  placeholder=""></td>
 
-									<td colspan="2" id="input_group"><input type="text" style="width: 90%;background-color: #eee" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""></td>
-							    	<td colspan="3"> <div class="blue btn1 ok_btn">確定</div></td>
+									<td colspan="9" id="input_group"><input type="text" style="width: 90%;background-color: #eee" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""></td>
+							    	<td colspan="8"> <div class="blue btn1 ok_btn">確定</div></td>
 							    <!-- 	<td colspan="2">
 							    		<table style="height:100%">
 											<tr><td style="height:auto;font-size:16px;">開始<input type="number" id="tg_thre" value="" style="width: 40%;background-color: #eee;font-size:19px;">
@@ -165,7 +177,7 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 						<td  class="table_top rec-table-one">
 						<div class="top-body">
 							<table border="0" style="border: 1px solid #000;width:100%">
-							<colgroup>
+							<colgroup class="app-colgroup">
 								<col style="width:50px;">
 
 								<col style="width:90px;">
@@ -180,13 +192,6 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 								<col style="width:90px;">
 
 								<col style="width:90px;">
-
-								<col style="width:120px;">
-								<col style="width:120px;">
-
-								<col style="width:120px;">
-								<col style="width:120px;">
-								<col style="width:120px;">
 
 								<col style="width:50px;">
 								
@@ -248,7 +253,7 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 						<td>
 							<div class="scroll-body" style="height: 525px;">
 							<table class="rec-table-one" style="height:auto;width:100%;">
-								<colgroup>
+								<colgroup class="app-colgroup">
 									<col style="width:50px;">
 
 									<col style="width:90px;">
@@ -263,13 +268,6 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 									<col style="width:90px;">
 
 									<col style="width:90px;">
-
-									<col style="width:120px;">
-									<col style="width:120px;">
-
-									<col style="width:120px;">
-									<col style="width:120px;">
-									<col style="width:120px;">
 
 									<col style="width:50px;">
 								
@@ -303,7 +301,7 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 						<td>
 							<div class="bottom-body">
 							<table class="table_top" style="width:100%">
-								<colgroup>
+								<colgroup class="app-colgroup">
 									<col style="width:50px;">
 
 									<col style="width:90px;">
@@ -318,15 +316,8 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 									<col style="width:90px;">
 
 									<col style="width:90px;">
-									<col style="width:120px;">
-									<col style="width:120px;">
-
-									<col style="width:120px;">
-									<col style="width:120px;">
-									<col style="width:120px;">
 
 									<col style="width:50px;">
-								
 							</colgroup>
 								<tbody id="bottom_group">
 								<tr >
@@ -733,6 +724,8 @@ function onBusEnd(){
 	var notifyDialog;
 	
 	$(function(){
+
+        $(".app-colgroup").html($("#head-table>colgroup").html());
 		
 		var index = layer.load(1, {
 			  shade: [0.5,'#555'] //0.1透明度的白色背景
@@ -795,7 +788,7 @@ function onBusEnd(){
 			data.bigTurn.queue_count+=data[i].turn.queue_count;
 		}
 
-        var keys = ['xb_inv_lock','xb_lock','bkzd_lock','bkhz_lock','bkbg_inv_lock','turn_bkhz_lock','bkhz_inv_lock','zdbg_lock']
+        var keys = ['xb_inv_lock','xb_lock','bkzd_lock','bkhz_lock','bkbg_inv_lock','turn_bkhz_lock','bkhz_inv_lock','zdbg_lock','bkbgs_inv_lock']
         init2Arr(data.bigTurn,keys);
 	}
 
@@ -853,9 +846,9 @@ function ref(data){
 
 	//显示这些列
     let bgCols = ['hb',/*'qhBg','hbBg','hbqh','xzBg','xzqh','jgbg',*//*'jgAbg','jgBbg','bgA','bgB','zdbg','jgzd',*/];
-    let bgCols2 = ['bkzd','bkbg','bkqh','bkhz','zdbg'];
+    let bgCols2 = [/*'bkzd','bkbg','bkqh','bkhz','zdbg'*/'bkbg1','bkbg2','bkbg3','bkbg4','bkbg5','bkbg6','bkbg7','bkbg8','bkbg9','bkbg10','bkbg11','bkbg12','bkbg13','bkbg14','bkbg15','zdbg','zdqh'];
     let jgCols = ['hb',/*'qhBg','hbBg','hbqh','xzBg','xzqh','jgbg',*//*'jgAbg','jgBbg','bgA','bgB',zdbg','jgzd'*/];
-    let jgCols2 = ['bkzd','bkbg','bkqh','bkhz','zdbg'];
+    let jgCols2 = [/*'bkzd','bkbg','bkqh','bkhz','zdbg'*/'bkbg1','bkbg2','bkbg3','bkbg4','bkbg5','bkbg6','bkbg7','bkbg8','bkbg9','bkbg10','bkbg11','bkbg12','bkbg13','bkbg14','bkbg15','zdbg','zdqh'];
    let jgCols3 = [];
     let jgTypes = {1:'bk-red',2:'bk-yellow',3:'bk-green',4:'bk-black',5:'bk-grey'};
 
@@ -896,6 +889,7 @@ function ref(data){
         var zdbg_lock = bigTurn.zdbg_lock;
         var turn_bkhz_lock = bigTurn.turn_bkhz_lock;
         var bkhz_inv_lock = bigTurn.bkhz_inv_lock;
+        var bkbgs_inv_lock = bigTurn.bkbgs_inv_lock;
 		var html = "";
 		var jgzdLockIndex = 0;
 		var qhzdLockIndex = 0;
@@ -911,7 +905,7 @@ function ref(data){
 				//+' '+getLockBtnHtml(2,0,i+1,hbbgLock[i],{t:'合并報告'})
 				//+' '+getLockBtnHtml(3,0,i+1,xzbgLock[i],{t:'選擇報告'})
 				//+' '+getLockBtnHtml(4,0,qhzdLockIndex+1,zdLock[qhzdLockIndex],{t:'求和终端'})
-                +' '+getLockBtnHtml(8,0,i+1,xb_lock[i],{t:'板塊報告'})
+                +' '+getLockBtnHtml(8,0,i+1,xb_lock[i],{t:'小板報告'})
 				/*+cHtml*/+'</td>';
             qhzdLockIndex++;
 		}
@@ -950,8 +944,8 @@ function ref(data){
 			+'<br>求和终端</td>';
 
         html+='<td>'+'结果终端'+'</td>';*/
-
-        var bkzdLockStr = "";
+/*---------------------------------------------------------------------*/
+       /* var bkzdLockStr = "";
         for (let i = 0; i < bkzd_lock.length; i++) {
             bkzdLockStr+= ' '+getLockBtnHtml(9,0,i+1,bkzd_lock[i],{t:'小板報告'+(i+1)});
         }
@@ -973,10 +967,28 @@ function ref(data){
             +' '+getLockBtnHtml(13,0,3,zdbg_lock[2],{t:'終端報告'})+'<br>'+'板塊匯總求和'+'</td>';
 
         html+='<td class="font1" > '+' '+getInverseBtnHtml(14,0,2,bkhz_inv_lock[1],'板塊匯總')
-            +' '+getLockBtnHtml(13,0,4,zdbg_lock[3],{t:'終端報告'})+'<br>'+'板塊匯總'+'<br>'+bkhzLockStr+'</td>';
+            +' '+getLockBtnHtml(13,0,4,zdbg_lock[3],{t:'終端報告'})+'<br>'+'板塊匯總'+'<br>'+bkhzLockStr+'</td>';*/
+
+        for (let i = 0; i < 15; i++) {
+            if(i<10)
+            	html+='<td class="font1"> '+getInverseBtnHtml2("bkbgs_inv_lock",i+1,bkbgs_inv_lock[i],'板塊報告')+'<br>'
+					+'板塊报告'+(i+1)+''
+					+' '+getInverseBtnHtml(7,0,i+1,xb_inv_lock[i],'板塊報告')
+					+' '+getLockBtnHtml(12,0,i+1,turn_bkhz_lock[i],{t:'板塊匯總'})
+					+' '+getLockBtnHtml(1,0,i+1,userlock[i])
+					//+' '+getLockBtnHtml(2,0,i+1,hbbgLock[i],{t:'合并報告'})
+					//+' '+getLockBtnHtml(3,0,i+1,xzbgLock[i],{t:'選擇報告'})
+					//+' '+getLockBtnHtml(4,0,qhzdLockIndex+1,zdLock[qhzdLockIndex],{t:'求和终端'})
+					+' '+getLockBtnHtml(8,0,i+1,xb_lock[i],{t:'板塊報告'})
+					+'</td>';
+            else
+                html+='<td class="font1"> '+getInverseBtnHtml2("bkbgs_inv_lock",i+1,bkbgs_inv_lock[i],'板塊報告')+'<br>'
+                    +'板塊报告'+(i+1)+''+'</td>';
+        }
 
 
         html+='<td class="font3" > '+'終端報告'+'</td>';
+        html+='<td class="font3" > '+'終端求和'+'</td>';
 		return html;
 	}
 
@@ -987,11 +999,11 @@ function ref(data){
 	/**
 	mod:1 汇总報告，2：合并報告，3 選擇報告,4 終端報告,5 结果,6结果反转
 	*/
-	function setLock(mod,tid,uid,val,btn){
+	function setLock(mod,field,tid,uid,val,btn){
 
 		$.ajax({
 			url:"../user/game/setLock.do",
-			data:{mod:mod,uid:uid,tid:tid,val:val},
+			data:{mod:mod,uid:uid,tid:tid,val:val,field:field},
 			type:"post",
 			async:false,
 			success:function(json){
@@ -1013,16 +1025,20 @@ function ref(data){
 		
 	}
 
+    function getInverseBtnHtml2(field,uid,val,t){
+        return getLockBtnHtml(0,0,uid,val,{t:t,textVal:[['正','locak_btn2'],['反','locak_btn1']]},field);
+    }
+
     function getInverseBtnHtml(mod,tid,uid,val,t){
         return getLockBtnHtml(mod,tid,uid,val,{t:t,textVal:[['正','locak_btn2'],['反','locak_btn1']]});
     }
 	
-	function getLockBtnHtml(mod,tid,uid,val,cfg){
+	function getLockBtnHtml(mod,tid,uid,val,cfg,field){
         cfg = cfg||{};
 	    var title = cfg.t;
 		var textVal = cfg.textVal?cfg.textVal:[['瑣','locak_btn1'],['解','locak_btn2']];
 		return html  = '<span data-cfg="'+JSON.stringify(cfg).replace(/"/g,"'")+'" title="'+title+'" class="'+(val==1?textVal[0][1]:textVal[1][1])+'" onclick="'
-		+'setLock('+mod+','+tid+','+uid+','+(val==1?0:1)+',this)" >'+(val==1?textVal[0][0]:textVal[1][0])+'</span>';
+		+'setLock('+mod+',\''+field+'\','+tid+','+uid+','+(val==1?0:1)+',this)" >'+(val==1?textVal[0][0]:textVal[1][0])+'</span>';
 		
 	}
 

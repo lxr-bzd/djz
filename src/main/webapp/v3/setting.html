@@ -32,7 +32,10 @@
 			
 			.btn1{text-align: center;margin: 5px;height: 40px;line-height: 40px;border-radius:5px}
 			input{font-size: 19px;font-weight: bold;}
-		
+
+			.in-table {width: 100%;height: auto;}
+			.in-table td{padding: 8px 5px!important;}
+
 		</style>
 	</head>
 	<body>
@@ -54,331 +57,252 @@
 											<col style="width:2500px;">
 											<col style="width:2500px;">
 										</colgroup>
-								<tbody id="head_group">
-							  	<tr class="data_col"> <td colspan="6" style="text-align: left;padding: 10px 20px;"><div style="text-align: left;padding: 10px 20px;"><a href="javascript:history.back(-1)">返回</a><div></div></div></td></tr>
-								<tr class="data_col">
-									<td colspan="3">
-										<div  class="key-widget" data-key="use_rule" data-type="enum"  style="text-align: left;padding: 10px 20px;">
-											<span>設置公式：</span>
-											<input type="radio" name="use_rule" value="1"> 表1
-											<input type="radio" name="use_rule" value="2"> 表2
-											<input value="保存" type="button" class="save">
+								<tbody id="head_group" >
+							  	<tr class=""> <td colspan="6" style="text-align: left;padding: 10px 20px;"><div style="text-align: left;padding: 10px 20px;"><a href="javascript:history.back(-1)">返回</a><div></div></div></td></tr>
+								<tr class="">
+									<td colspan="3" style="text-align: left">
+										<div style="height: 100%;">
+											<table class="in-table" style="height: auto;">
+											<tr class="data_col">
+												<td colspan="3">
+													<div  class="key-widget" data-key="use_rule" data-type="enum"  style="text-align: left;padding: 10px 20px;">
+														<span>設置公式：</span>
+														<input type="radio" name="use_rule" value="1"> 表1
+														<input type="radio" name="use_rule" value="2"> 表2
+														<input value="保存" type="button" class="save">
+													</div>
+												</td>
+											</tr>
+											<tr class="data_col">
+												<td colspan="3">
+													<div  class="key-widget" data-key="mod2" data-type="enum"  style="text-align: left;padding: 10px 20px;">
+														<span>設置模式：</span>
+														<input type="radio" name="mod2" value="1"> A模式
+														<input type="radio" name="mod2" value="2"> B模式
+														<input value="保存" type="button" class="save">
+													</div></td>
+
+											</tr>
+											<tr class="data_col">
+												<td colspan="3">
+													<div class="key-widget" data-key="gameGroupNum" data-type="enum" style="text-align: left;padding: 10px 20px;">
+														<span>設置組數：</span>
+														<input type="radio" name="gameGroupNum" value="10"> 大
+														<input type="radio" name="gameGroupNum" value="1"> 小
+														<input value="保存" type="button" class="save">
+													</div></td>
+
+											</tr>
+
+											<tr>
+												<td colspan="3">
+													<div class="key-widget" data-key="gameRowNum" data-type="enum" style="text-align: left;padding: 10px 20px;">
+														<span>設置行數：</span>
+														<input type="radio" name="gameRowNum" value="212" >210行
+														<input type="radio" name="gameRowNum" value="2002">2000行
+														<input value="保存" type="button" class="save">
+													</div>
+												</td>
+
+											</tr>
+											<tr>
+												<td colspan="3">
+													<div class="key-widget" data-key="tip_open" data-type="enum" style="text-align: left;padding: 10px 20px;">
+														<span>是否開啟提示：</span>
+														<input type="radio" name="tip_open" value="1">是
+														<input type="radio" name="tip_open" value="2" >否
+														<input value="保存" type="button" class="save">
+													</div>
+												</td>
+
+											</tr>
+											<tr>
+												<td colspan="3">
+													<div class="key-widget" data-key="turn_num" style="text-align: left;padding: 10px 20px;">
+														<span>版數：</span>
+														<input type="number" class="target" value="">
+														<input value="保存" type="button" class="save">
+													</div>
+												</td>
+
+											</tr>
+											<tr>
+											<td colspan="3">
+												<div class="key-widget" data-key="rule" data-type="range" style="padding: 10px;text-align: left;">
+
+													<span>表1：</span><input class="start" type="number">
+													<span>- </span><input class="end" type="number">
+													<input value="保存" type="button" class="save">
+												</div>
+											</td>
+											</tr>
+											<tr>
+												<td colspan="3">
+													<div class="key-widget" data-key="rule2" data-type="range" style="padding: 10px;text-align: left;">
+
+														<span>表2：</span><input class="start" type="number">
+														<span>- </span><input class="end" type="number">
+														<input value="保存" type="button" class="save">
+													</div>
+												</td>
+
+											</tr>
+
+
+											<tr>
+												<td colspan="3">
+													<div style="padding: 10px;text-align: left;">
+														<input type="button" value="清空所有數據"  onclick="removeAll()">
+													</div>
+												</td>
+											</tr>
+
+										</table>
 										</div>
 									</td>
 
+									<td colspan="3" style="text-align: left">
+										<div style="height: 100%;">
+											<table class="in-table"  style="height: auto;">
+												<tr>
+													<td colspan="3">
+														<div class="key-widget" data-key="rule_bkbg2" data-index="0" data-type="range-group" style="padding: 10px;text-align: left;">
 
-									<td colspan="3">
-										<div class="key-widget" data-key="rule_bkhz" data-index="0" data-type="range-group" style="padding: 10px;text-align: left;">
+															<span>板塊設置1：</span><input class="start" type="number">
+															<span>- </span><input class="end" type="number">
+															<input value="保存" type="button" class="save">
+														</div>
+													</td>
 
-											<span>板塊汇总設置1：</span><input class="start" type="number">
-											<span>- </span><input class="end" type="number">
-											<input value="保存" type="button" class="save">
+												</tr>
+												<tr>
+													<td colspan="3">
+														<div class="key-widget" data-key="rule_bkbg2" data-index="1" data-type="range-group" style="padding: 10px;text-align: left;">
+
+															<span>板塊設置2：</span><input class="start" type="number">
+															<span>- </span><input class="end" type="number">
+															<input value="保存" type="button" class="save">
+														</div>
+													</td>
+
+												</tr>
+												<tr><td colspan="3">
+													<div class="key-widget" data-key="rule_bkbg2" data-index="2" data-type="range-group" style="padding: 10px;text-align: left;">
+
+														<span>板塊設置3：</span><input class="start" type="number">
+														<span>- </span><input class="end" type="number">
+														<input value="保存" type="button" class="save">
+													</div>
+												</td></tr>
+												<tr><td colspan="3">
+													<div class="key-widget" data-key="rule_bkbg2" data-index="3" data-type="range-group" style="padding: 10px;text-align: left;">
+
+														<span>板塊設置4：</span><input class="start" type="number">
+														<span>- </span><input class="end" type="number">
+														<input value="保存" type="button" class="save">
+													</div>
+												</td></tr>
+												<tr><td colspan="3">
+													<div class="key-widget" data-key="rule_bkbg2" data-index="4" data-type="range-group" style="padding: 10px;text-align: left;">
+
+														<span>板塊設置5：</span><input class="start" type="number">
+														<span>- </span><input class="end" type="number">
+														<input value="保存" type="button" class="save">
+													</div>
+												</td></tr>
+
+												<tr><td colspan="3">
+													<div class="key-widget" data-key="rule_bkbg2" data-index="5" data-type="range-group" style="padding: 10px;text-align: left;">
+
+														<span>板塊設置6：</span><input class="start" type="number">
+														<span>- </span><input class="end" type="number">
+														<input value="保存" type="button" class="save">
+													</div>
+												</td></tr>
+												<tr><td colspan="3">
+													<div class="key-widget" data-key="rule_bkbg2" data-index="6" data-type="range-group" style="padding: 10px;text-align: left;">
+
+														<span>板塊設置7：</span><input class="start" type="number">
+														<span>- </span><input class="end" type="number">
+														<input value="保存" type="button" class="save">
+													</div>
+												</td></tr>
+												<tr><td colspan="3">
+													<div class="key-widget" data-key="rule_bkbg2" data-index="7" data-type="range-group" style="padding: 10px;text-align: left;">
+
+														<span>板塊設置8：</span><input class="start" type="number">
+														<span>- </span><input class="end" type="number">
+														<input value="保存" type="button" class="save">
+													</div>
+												</td></tr>
+												<tr><td colspan="3">
+													<div class="key-widget" data-key="rule_bkbg2" data-index="8" data-type="range-group" style="padding: 10px;text-align: left;">
+
+														<span>板塊設置9：</span><input class="start" type="number">
+														<span>- </span><input class="end" type="number">
+														<input value="保存" type="button" class="save">
+													</div>
+												</td></tr>
+												<tr><td colspan="3">
+													<div class="key-widget" data-key="rule_bkbg2" data-index="9" data-type="range-group" style="padding: 10px;text-align: left;">
+
+														<span>板塊設置10：</span><input class="start" type="number">
+														<span>- </span><input class="end" type="number">
+														<input value="保存" type="button" class="save">
+													</div>
+												</td></tr>
+												<tr>
+													<td colspan="3">
+														<div class="key-widget" data-key="rule_bkbg2" data-index="10" data-type="range-group" style="padding: 10px;text-align: left;">
+
+															<span>板塊設置11：</span><input class="start" type="number">
+															<span>- </span><input class="end" type="number">
+															<input value="保存" type="button" class="save">
+														</div>
+													</td>
+
+												</tr>
+												<tr>
+													<td colspan="3">
+														<div class="key-widget" data-key="rule_bkbg2" data-index="11" data-type="range-group" style="padding: 10px;text-align: left;">
+
+															<span>板塊設置12：</span><input class="start" type="number">
+															<span>- </span><input class="end" type="number">
+															<input value="保存" type="button" class="save">
+														</div>
+													</td>
+
+												</tr>
+												<tr><td colspan="3">
+													<div class="key-widget" data-key="rule_bkbg2" data-index="12" data-type="range-group" style="padding: 10px;text-align: left;">
+
+														<span>板塊設置13：</span><input class="start" type="number">
+														<span>- </span><input class="end" type="number">
+														<input value="保存" type="button" class="save">
+													</div>
+												</td></tr>
+												<tr><td colspan="3">
+													<div class="key-widget" data-key="rule_bkbg2" data-index="13" data-type="range-group" style="padding: 10px;text-align: left;">
+
+														<span>板塊設置14：</span><input class="start" type="number">
+														<span>- </span><input class="end" type="number">
+														<input value="保存" type="button" class="save">
+													</div>
+												</td></tr>
+												<tr><td colspan="3">
+													<div class="key-widget" data-key="rule_bkbg2" data-index="14" data-type="range-group" style="padding: 10px;text-align: left;">
+
+														<span>板塊設置15：</span><input class="start" type="number">
+														<span>- </span><input class="end" type="number">
+														<input value="保存" type="button" class="save">
+													</div>
+												</td></tr>
+
+										</table>
 										</div>
 									</td>
 								</tr>
-								<tr class="data_col">
-							    	<td colspan="3">
-							    		<div  class="key-widget" data-key="mod2" data-type="enum"  style="text-align: left;padding: 10px 20px;">
-											<span>設置模式：</span>
-											<input type="radio" name="mod2" value="1"> A模式
-											<input type="radio" name="mod2" value="2"> B模式
-											<input value="保存" type="button" class="save">
-										</div></td>
 
-									<td colspan="3">
-										<div class="key-widget" data-key="rule_bkhz" data-index="1" data-type="range-group" style="padding: 10px;text-align: left;">
-
-											<span>板塊汇总設置2：</span><input class="start" type="number">
-											<span>- </span><input class="end" type="number">
-											<input value="保存" type="button" class="save">
-										</div>
-									</td>
-
-							    	
-							  	</tr>
-							  	<tr class="data_col">
-							    	<td colspan="3">
-							    		<div class="key-widget" data-key="gameGroupNum" data-type="enum" style="text-align: left;padding: 10px 20px;">
-										<span>設置組數：</span>
-											<input type="radio" name="gameGroupNum" value="10"> 大
-											<input type="radio" name="gameGroupNum" value="1"> 小
-											<input value="保存" type="button" class="save">
-										</div></td>
-
-									<td colspan="3">
-										<div class="key-widget" data-key="rule_bkhz" data-index="2" data-type="range-group" style="padding: 10px;text-align: left;">
-
-											<span>板塊汇总設置3：</span><input class="start" type="number">
-											<span>- </span><input class="end" type="number">
-											<input value="保存" type="button" class="save">
-										</div>
-									</td>
-
-							  	</tr>
-							  	
-							  	<tr>
-							  	<td colspan="3">
-										<div class="key-widget" data-key="gameRowNum" data-type="enum" style="text-align: left;padding: 10px 20px;">
-											<span>設置行數：</span>
-											<input type="radio" name="gameRowNum" value="212" >210行
-											<input type="radio" name="gameRowNum" value="2002">2000行
-											<input value="保存" type="button" class="save">
-										</div>
-										</td>
-									<td colspan="3">
-										<div class="key-widget" data-key="rule_bkhz" data-index="3" data-type="range-group" style="padding: 10px;text-align: left;">
-
-											<span>板塊汇总設置4：</span><input class="start" type="number">
-											<span>- </span><input class="end" type="number">
-											<input value="保存" type="button" class="save">
-										</div>
-									</td>
-
-							  	</tr>
-							  	<tr>
-							  	<td colspan="3">
-										<div class="key-widget" data-key="tip_open" data-type="enum" style="text-align: left;padding: 10px 20px;">
-												<span>是否開啟提示：</span>
-												<input type="radio" name="tip_open" value="1">是
-												<input type="radio" name="tip_open" value="2" >否
-												<input value="保存" type="button" class="save">
-											</div>
-										</td>
-									<td colspan="3">
-										<div class="key-widget" data-key="rule_bkhz" data-index="4" data-type="range-group" style="padding: 10px;text-align: left;">
-
-											<span>板塊汇总設置5：</span><input class="start" type="number">
-											<span>- </span><input class="end" type="number">
-											<input value="保存" type="button" class="save">
-										</div>
-									</td>
-
-							  	</tr>
-							  	<tr>
-							  	<td colspan="3">
-										<div class="key-widget" data-key="turn_num" style="text-align: left;padding: 10px 20px;">
-											<span>版數：</span>
-											<input type="number" class="target" value="">
-											<input value="保存" type="button" class="save">
-										</div>
-										</td>
-									<td colspan="3">
-										<div class="key-widget" data-key="rule_bkhz" data-index="5" data-type="range-group" style="padding: 10px;text-align: left;">
-
-											<span>板塊汇总設置6：</span><input class="start" type="number">
-											<span>- </span><input class="end" type="number">
-											<input value="保存" type="button" class="save">
-										</div>
-									</td>
-							  	</tr>
-							  	
-							  	
-							  	<!--<tr>-->
-							  	<!--<td colspan="3">-->
-										<!--<div class="key-widget" data-key="tg_thre" style="text-align: left;padding: 10px 20px;">-->
-											<!--<span>開始：</span><input class="target" type="number"> <input value="保存" type="button" class="save">-->
-										<!--</div>-->
-										<!--<div class="key-widget" data-key="conf_len" style="text-align: left;padding: 10px 20px;">-->
-											<!--<span>間隔：</span><input class="target" type="number"> <input value="保存" type="button" class="save">-->
-										<!--</div>-->
-										<!--</td>-->
-							  	<!--</tr>-->
-							  	<!--<tr>-->
-							  	<td colspan="3">
-										<div class="key-widget" data-key="rule" data-type="range" style="padding: 10px;text-align: left;">
-										
-											<span>表1：</span><input class="start" type="number">
-											<span>- </span><input class="end" type="number">
-											<input value="保存" type="button" class="save">
-										</div>
-										</td>
-
-								<td colspan="3">
-									<div class="key-widget" data-key="rule_bkhz" data-index="6" data-type="range-group" style="padding: 10px;text-align: left;">
-
-										<span>板塊汇总設置7：</span><input class="start" type="number">
-										<span>- </span><input class="end" type="number">
-										<input value="保存" type="button" class="save">
-									</div>
-								</td>
-							  	</tr>
-							  	<tr>
-							  	<td colspan="3">
-										<div class="key-widget" data-key="rule2" data-type="range" style="padding: 10px;text-align: left;">
-										
-											<span>表2：</span><input class="start" type="number">
-											<span>- </span><input class="end" type="number">
-											<input value="保存" type="button" class="save">
-										</div>
-										</td>
-
-									<td colspan="3">
-										<div class="key-widget" data-key="rule_bkhz" data-index="7" data-type="range-group" style="padding: 10px;text-align: left;">
-
-											<span>板塊汇总設置8：</span><input class="start" type="number">
-											<span>- </span><input class="end" type="number">
-											<input value="保存" type="button" class="save">
-										</div>
-									</td>
-							  	</tr>
-							  	<tr>
-							  	<!--<td colspan="3">
-										<div class="key-widget" data-key="rule3" data-type="range" style="padding: 10px;text-align: left;">
-										
-											<span>表3：</span><input class="start" type="number">
-											<span>- </span><input class="end" type="number">
-											<input value="保存" type="button" class="save">
-										</div>
-										</td>
-							  	</tr>-->
-								<tr>
-									<!--<td colspan="3">
-										<div class="key-widget" data-key="rule_jg_A" data-type="range" style="padding: 10px;text-align: left;">
-
-											<span>结果1表：</span><input class="start" type="number">
-											<span>- </span><input class="end" type="number">
-											<input value="保存" type="button" class="save">
-										</div>
-									</td>-->
-									<td colspan="3">
-										<div class="key-widget" data-key="rule_bkbg" data-index="0" data-type="range-group" style="padding: 10px;text-align: left;">
-
-											<span>板塊設置1：</span><input class="start" type="number">
-											<span>- </span><input class="end" type="number">
-											<input value="保存" type="button" class="save">
-										</div>
-									</td>
-									<td colspan="3">
-										<div class="key-widget" data-key="rule_bkhz" data-index="8" data-type="range-group" style="padding: 10px;text-align: left;">
-
-											<span>板塊汇总設置9：</span><input class="start" type="number">
-											<span>- </span><input class="end" type="number">
-											<input value="保存" type="button" class="save">
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<!--<td colspan="3">
-										<div class="key-widget" data-key="rule_jg_B" data-type="range" style="padding: 10px;text-align: left;">
-
-											<span>结果2表：</span><input class="start" type="number">
-											<span>- </span><input class="end" type="number">
-											<input value="保存" type="button" class="save">
-										</div>
-									</td>-->
-									<td colspan="3">
-										<div class="key-widget" data-key="rule_bkbg" data-index="1" data-type="range-group" style="padding: 10px;text-align: left;">
-
-											<span>板塊設置2：</span><input class="start" type="number">
-											<span>- </span><input class="end" type="number">
-											<input value="保存" type="button" class="save">
-										</div>
-									</td>
-									<td colspan="3">
-										<div class="key-widget" data-key="rule_bkhz" data-index="9" data-type="range-group" style="padding: 10px;text-align: left;">
-
-											<span>板塊汇总設置10：</span><input class="start" type="number">
-											<span>- </span><input class="end" type="number">
-											<input value="保存" type="button" class="save">
-										</div>
-									</td>
-								</tr>
-
-								<!--<tr>
-									<td colspan="3">
-										<div class="key-widget" data-key="rule_A" data-type="range" style="padding: 10px;text-align: left;">
-
-											<span>结果3表：</span><input class="start" type="number">
-											<span>- </span><input class="end" type="number">
-											<input value="保存" type="button" class="save">
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td colspan="3">
-										<div class="key-widget" data-key="rule_B" data-type="range" style="padding: 10px;text-align: left;">
-
-											<span>结果4表：</span><input class="start" type="number">
-											<span>- </span><input class="end" type="number">
-											<input value="保存" type="button" class="save">
-										</div>
-									</td>
-								</tr>-->
-
-								<tr><td colspan="3">
-									<div class="key-widget" data-key="rule_bkbg" data-index="2" data-type="range-group" style="padding: 10px;text-align: left;">
-
-										<span>板塊設置3：</span><input class="start" type="number">
-										<span>- </span><input class="end" type="number">
-										<input value="保存" type="button" class="save">
-									</div>
-								</td></tr>
-								<tr><td colspan="3">
-									<div class="key-widget" data-key="rule_bkbg" data-index="3" data-type="range-group" style="padding: 10px;text-align: left;">
-
-										<span>板塊設置4：</span><input class="start" type="number">
-										<span>- </span><input class="end" type="number">
-										<input value="保存" type="button" class="save">
-									</div>
-								</td></tr>
-								<tr><td colspan="3">
-									<div class="key-widget" data-key="rule_bkbg" data-index="4" data-type="range-group" style="padding: 10px;text-align: left;">
-
-										<span>板塊設置5：</span><input class="start" type="number">
-										<span>- </span><input class="end" type="number">
-										<input value="保存" type="button" class="save">
-									</div>
-								</td></tr>
-
-								<tr><td colspan="3">
-									<div class="key-widget" data-key="rule_bkbg" data-index="5" data-type="range-group" style="padding: 10px;text-align: left;">
-
-										<span>板塊設置6：</span><input class="start" type="number">
-										<span>- </span><input class="end" type="number">
-										<input value="保存" type="button" class="save">
-									</div>
-								</td></tr>
-								<tr><td colspan="3">
-									<div class="key-widget" data-key="rule_bkbg" data-index="6" data-type="range-group" style="padding: 10px;text-align: left;">
-
-										<span>板塊設置7：</span><input class="start" type="number">
-										<span>- </span><input class="end" type="number">
-										<input value="保存" type="button" class="save">
-									</div>
-								</td></tr>
-								<tr><td colspan="3">
-									<div class="key-widget" data-key="rule_bkbg" data-index="7" data-type="range-group" style="padding: 10px;text-align: left;">
-
-										<span>板塊設置8：</span><input class="start" type="number">
-										<span>- </span><input class="end" type="number">
-										<input value="保存" type="button" class="save">
-									</div>
-								</td></tr>
-								<tr><td colspan="3">
-									<div class="key-widget" data-key="rule_bkbg" data-index="8" data-type="range-group" style="padding: 10px;text-align: left;">
-
-										<span>板塊設置9：</span><input class="start" type="number">
-										<span>- </span><input class="end" type="number">
-										<input value="保存" type="button" class="save">
-									</div>
-								</td></tr>
-								<tr><td colspan="3">
-									<div class="key-widget" data-key="rule_bkbg" data-index="9" data-type="range-group" style="padding: 10px;text-align: left;">
-
-										<span>板塊設置10：</span><input class="start" type="number">
-										<span>- </span><input class="end" type="number">
-										<input value="保存" type="button" class="save">
-									</div>
-								</td></tr>
-
-							  	<tr>
-							  	<td colspan="3">
-										<div style="padding: 10px;text-align: left;">
-											<input type="button" value="清空所有數據"  onclick="removeAll()">
-										</div>
-										</td>
-							  	</tr>
-							  	
 							  	
 							  	</tbody>
 							  

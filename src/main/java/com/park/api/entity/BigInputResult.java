@@ -1,8 +1,11 @@
 package com.park.api.entity;
 
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.List;
 
+@Data
 public class BigInputResult {
 	
 	List<InputResult> results;
@@ -11,8 +14,6 @@ public class BigInputResult {
 	long[] hbBg;
 	long[] xzBg;
 	long[] jgbgBg;
-	/*long[] jgABg;
-	long[] jgBBg;*/
 	
 	Integer[] hzqhBg;
 	Integer[] hbqhBg;
@@ -25,6 +26,8 @@ public class BigInputResult {
 	int  tgTrend;
 
 	long[] xbbg;
+	long[] xbbgB;
+	long[] xbbgC;
 
 
 	BigDecimal[] bkhz ;

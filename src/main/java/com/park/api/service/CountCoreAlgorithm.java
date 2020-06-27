@@ -4,6 +4,7 @@ import com.park.api.entity.BigInputResult;
 import com.park.api.entity.InputResult;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -45,6 +46,16 @@ public class CountCoreAlgorithm {
 
     }
 
+    /**
+     *  与bgCount相比bgCount2会对提供值一样的各取一半
+     *
+     * @param recBg
+     * @return
+     */
+    public static void bgCount2(Double[] bg, BigDecimal[] recBg,long f){
+
+        bgCount2(new long[]{bg[0].longValue(),bg[1].longValue()},recBg,f);
+    }
 
     /**
      *  与bgCount相比bgCount2会对提供值一样的各取一半
@@ -116,6 +127,8 @@ public class CountCoreAlgorithm {
         }
     }
 
+
+
     public static void bgCount(BigDecimal[] bg,long[] recBg){
 
         int f = 1;
@@ -155,6 +168,12 @@ public class CountCoreAlgorithm {
 
     }
 
+    public static void bgSum(Integer[] bg,Integer[] recBg){
+
+        recBg[0] += bg[0];
+        recBg[1] += bg[1];
+
+    }
 
     public long[][] inverseBg(long[][] bg,String[] lockArr){
 
@@ -266,7 +285,93 @@ public class CountCoreAlgorithm {
     }
 
 
+    /**
+     *
+     * @param bg
+     * @param recBg
+     * @param inverse
+     */
+    public static void bgCountGroup1(long[] bg,Integer[] recBg,boolean inverse){
+
+        int f = inverse?-1:1;
+        Integer[] temp = new Integer[]{0,0};
+        long max = 0;
+        for (int i = 0; i < bg.length; i++) {
+            long xl = bg[i];
+            if(Math.abs(xl)>max){
+                max = Math.abs(xl);
+                temp = new Integer[]{0,0};
+            }else if(Math.abs(xl)==max){
+
+            }else if(Math.abs(xl)<max){
+                continue;
+            }
+
+            int t = i%2==0?0:1;
+            temp[t]+=(xl>0?1:-1)*f;
+        }
+
+        recBg[0]+=temp[0];
+        recBg[1]+=temp[1];
+    }
+
+    /**
+     *
+     * @param bg
+     * @param recBg
+     * @param inverse
+     */
+    public static void bgCountGroup2(long[] bg,Integer[] recBg,boolean inverse){
+
+        int f = inverse?-1:1;
+        Integer[] temp = new Integer[]{0,0};
+        long min = Long.MAX_VALUE;
+        for (int i = 0; i < bg.length; i++) {
+            long xl = bg[i];
+            if(Math.abs(xl)<min){
+                min = Math.abs(xl);
+                temp = new Integer[]{0,0};
+            }else if(Math.abs(xl)==min){
+
+            }else if(Math.abs(xl)>min){
+                continue;
+            }
+
+            int t = i%2==0?0:1;
+            temp[t]+=(xl>0?1:-1)*f;
+        }
+
+        recBg[0]+=temp[0];
+        recBg[1]+=temp[1];
+    }
+
+    /**
+     *
+     * @param bg
+     * @param recBg
+     * @param inverse
+     */
+    public static void bgCountGroup3(long[] bg,Integer[] recBg,boolean inverse){
+
+        int f = inverse?-1:1;
+        Integer[] temp = new Integer[]{0,0};
+        long min = 0;
+        for (int i = 0; i < bg.length; i++) {
+            long xl = bg[i];
+
+            int t = i%2==0?0:1;
+            temp[t]+=(xl>0?1:-1)*f;
+        }
+
+        recBg[0]+=temp[0];
+        recBg[1]+=temp[1];
+    }
+
     public static void main(String[] args) {
+
+        Integer[] rec = new Integer[]{0,0};
+        bgCountGroup3(new long[]{1,2,1,2},rec,false);
+        System.out.println(Arrays.toString(rec));
         Double b = 0.9d;
 
         System.out.println(new BigDecimal(1.5).setScale(0,BigDecimal.ROUND_HALF_UP));

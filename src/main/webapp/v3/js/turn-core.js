@@ -332,7 +332,7 @@ function createBigVdata(bigTurn,vDatas){
         //handelDefBg(bigvData,bigTurn,{viewKey:'jgzd',bg:'jgzd',bgSum:'jgzd_sum',bgJg:'jgzd_jg',bgJgSum:'jgzd_jg_sum'})
         //handelJgzdbg(bigTurn,bigvData);
         //板块报告
-        handelBkBg(bigvData,bigTurn,{viewKey:'bkbg',bg:'bkbg',bgSum:'bkbg_sum',bgJg:'bkbg_jg',bgJgSum:'bkbg_jg_sum'})
+        //handelBkBg(bigvData,bigTurn,{viewKey:'bkbg',bg:'bkbg',bgSum:'bkbg_sum',bgJg:'bkbg_jg',bgJgSum:'bkbg_jg_sum'})
         handelBkBg(bigvData,bigTurn,{viewKey:'bkzd',bg:'bkzd',bgSum:'bkzd_sum',bgJg:'bkzd_jg',bgJgSum:'bkzd_jg_sum'})
 
 		//板块汇总
@@ -341,12 +341,17 @@ function createBigVdata(bigTurn,vDatas){
         handelBkBg(bigvData,bigTurn,{viewKey:'bkqh',bg:'bkqh',bgSum:'bkqh_sum',bgJg:'bkqh_jg',bgJgSum:'bkqh_jg_sum'})
         //终端报告
         handelBkBg(bigvData,bigTurn,{viewKey:'zdbg',bg:'zdbg',bgSum:'zdbg_sum',bgJg:'zdbg_jg',bgJgSum:'zdbg_jg_sum'})
+        //终端报告
+        handelBkBg(bigvData,bigTurn,{viewKey:'zdqh',bg:'zdqh',bgSum:'zdqh_sum',bgJg:'zdqh_jg',bgJgSum:'zdqh_jg_sum'})
 
+        //1-15个板块报告
+        handelBkBg2(bigvData,bigTurn);
 
     }else{
 
         var cols = ["hb",/*"qhBg","hbBg","hbqh","xzBg","xzqh","jgbg",*//*"zdbg"
-            ,"jgAbg","jgBbg","bgA","bgB","jgzd",*/'bkbg',"bkzd","bkhz","bkqh",'zdbg'];
+            ,"jgAbg","jgBbg","bgA","bgB","jgzd",*/'bkbg',"bkzd","bkhz","bkqh"
+            ,'bkbg1','bkbg2','bkbg3','bkbg4','bkbg5','bkbg6','bkbg7','bkbg8','bkbg9','bkbg10','bkbg11','bkbg12','bkbg13','bkbg14','bkbg15','zdbg','zdqh'];
         var bigvData = {"bigTurn":bigTurn,"bgData":{},"jgData":{}};
 
         for (var i = 0; i < cols.length; i++) {
@@ -374,6 +379,30 @@ function createBigVdata(bigTurn,vDatas){
 
     }
 
+    function handelBkBg2(bigvData,bigTurn){
+
+        var bgs = bigTurn.bkbgs.split("_");
+        var bgSums = bigTurn.bkbgs_sum.split(",");
+        var jgSums = bigTurn.bkbgs_jg_sum.split(",");
+        for (let j = 0; j < bgs.length; j++) {
+            var viewKey = "bkbg"+(j+1);
+            bigvData.bgData[viewKey] = createBg(eval(bgs[j]));
+            bigvData.bgData[viewKey].push(bgSums[j]);
+            var jg = {list:[null],jg: jgSums[j],qh:0,type:[null]};
+            bigvData.jgData[viewKey] = jg;
+
+            var jgs = bigTurn["bkbg"+(j+1)+"_jg"].split(",");
+            for (var i = 0; i < jgs.length; i++) {
+                if(!jgs[i])continue;
+                var item = jgs[i].split('_');
+                var v = new Number(item[1]);
+                jg.list.push(v);
+                jg.type.push(item[0]);
+                jg.qh+=(v>0?1:(v<0?-1:0));
+            }
+        }
+
+    }
 
     function handelBkBg(bigvData,bigTurn,opt){
         var viewKey = opt.viewKey;

@@ -21,7 +21,7 @@ import java.util.List;
 public class TurnGroupCountService {
 
 
-    public static List<TurnGroup> countGroup(int big_turn_id,List<BigInputResult> results,String lockStr,String invLockStr){
+  /*  public static List<TurnGroup> countGroup(int big_turn_id,List<BigInputResult> results,String lockStr,String invLockStr){
 
         int[] locks = ArrayUtils.str2int(lockStr.split(","));
         int[] invLocks = ArrayUtils.str2int(invLockStr.split(","));
@@ -54,8 +54,8 @@ public class TurnGroupCountService {
 
         }
         return list;
-    }
-
+    }*/
+/*
     public static long[] countXbbg(long[][] datas){
         long[] ret = new long[]{0,0};
         for (int i = 0; i < datas.length; i++) {
@@ -135,7 +135,7 @@ public class TurnGroupCountService {
             }
         }
         System.out.println(Arrays.toString(list.toArray()));
-    }
+    }*/
 
 
 }

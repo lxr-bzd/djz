@@ -1,0 +1,131 @@
+package com.park.api.service;
+
+import com.alibaba.fastjson.JSONObject;
+import com.park.api.ServiceManage;
+import com.park.api.entity.*;
+import com.park.api.utils.ArrayUtils;
+import com.park.api.utils.JsonUtils;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+
+import javax.json.JsonObject;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created By lxr on 2020/6/21
+ **/
+public class TurnGroupService {
+
+
+    public void handlGroup(BigTurn bigTurn,String pei,List<BigInputResult> results, String lockStr,String invLockStr){
+
+        List<TurnGroup>[] groups = getTurnGroups(bigTurn.getId());
+        List<TurnGroupResult>[] turnResults = build1(results,lockStr,invLockStr);
+
+        for (int i = 0; i < groups.length; i++) {
+            List<TurnGroup> groupList = groups[i];
+            List<TurnGroupResult> resultList = turnResults[i];
+            for (int j = 0; j < groupList.size(); j++) {
+                TurnGroup group = groupList.get(j);
+                TurnGroupResult result = resultList.get(j);
+                Integer bgATrend = inputTurnGroup(pei,group.getXbhzA(),group.getXbhzA_Trend());
+                Integer bgBTrend = inputTurnGroup(pei,group.getXbhzB(),group.getXbhzB_Trend());
+                Integer bgCTrend = inputTurnGroup(pei,group.getXbhzC(),group.getXbhzC_Trend());
+                group.setXbhzA(JSONObject.toJSONString(result.getXbbgA()));
+                group.setXbhzB(JSONObject.toJSONString(result.getXbbgB()));
+                group.setXbhzC(JSONObject.toJSONString(result.getXbbgC()));
+                group.setXbhzA_Trend(bgATrend);
+                group.setXbhzB_Trend(bgBTrend);
+                group.setXbhzC_Trend(bgCTrend);
+            }
+        }
+
+        updateTurnGroups(groups);
+
+    }
+
+    private Integer inputTurnGroup(String pei,String upBg,Integer upTrend){
+        Integer[] upBgA = JsonUtils.toIntArray(upBg);
+        Integer[] bkbgJg = upBgA==null?null:BigCoreService.countJg(pei.substring(0, 1),upBgA);
+        Long jg_sum = bkbgJg==null?0:Long.valueOf(bkbgJg[0]+bkbgJg[1]);
+        Integer newBgTrend = CountCoreAlgorithm.computeTrend(jg_sum,new Integer(upTrend));
+        return newBgTrend;
+    }
+
+
+
+    //计算小板报告
+    public static List<TurnGroupResult>[] build1(List<BigInputResult> results, String lockStr,String invLockStr ){
+
+        List<TurnGroupResult> list1 = new ArrayList<>();
+        List<TurnGroupResult> list2 = new ArrayList<>();
+        List<TurnGroupResult> list3 = new ArrayList<>();
+        List<TurnGroupResult> list4 = new ArrayList<>();
+        List<TurnGroupResult> list5 = new ArrayList<>();
+        List<TurnGroupResult>[] lists = new List[]{list1,list2,list3,list4,list5};
+
+        int[] locks = ArrayUtils.str2int(lockStr.split(","));
+        int[] invLocks = ArrayUtils.str2int(invLockStr.split(","));
+        /*for (int j = 0; j < results.size(); j++) {
+            TurnGroupResult r = scanner(results,locks,invLocks,j,j+1);
+            list1.add(r);
+        }*/
+        for (int i = 0; i < 5; i++) {
+            int n = i+1;
+            int t = results.size()/n+(results.size()%n==0?0:1);
+            for (int j = 0; j < t; j++) {
+                int start = j*n;
+                int end = start+n;
+                if(end>results.size())end=results.size();
+                TurnGroupResult r = scanner(results,locks,invLocks,start,end);
+                lists[i].add(r);
+            }
+        }
+
+        return lists;
+    }
+
+    public static TurnGroupResult scanner(List<BigInputResult> results,int[] locks,int[] invLocks,int start,int end){
+
+        TurnGroupResult r = new TurnGroupResult();
+        long[] xbbgA = new long[]{0,0};//取大的
+        long[] xbbgB = new long[]{0,0};//取小的
+        long[] xbbgC = new long[]{0,0};//各取
+        for (int j = start; j < end; j++) {
+            CountCoreAlgorithm.bgSum(results.get(j).getXbbg(),xbbgA);
+            CountCoreAlgorithm.bgSum(results.get(j).getXbbgB(),xbbgB);
+            CountCoreAlgorithm.bgSum(results.get(j).getXbbgC(),xbbgC);
+        }
+
+        r.setXbbgA(ArrayUtils.toObject(xbbgA));
+        r.setXbbgB(ArrayUtils.toObject(xbbgB));
+        r.setXbbgC(ArrayUtils.toObject(xbbgC));
+
+        return r;
+
+    }
+
+
+
+    public List<TurnGroup>[] getTurnGroups(Integer turnId){
+
+        List<TurnGroup> list1 = ServiceManage.jdbcTemplate.queryForList("select * from game_turn_group where  state=1 limit 1",TurnGroup.class);
+        List<TurnGroup> list2 = ServiceManage.jdbcTemplate.queryForList("select * from game_turn_group where  state=1 limit 1",TurnGroup.class);
+        List<TurnGroup> list3 = ServiceManage.jdbcTemplate.queryForList("select * from game_turn_group where  state=1 limit 1",TurnGroup.class);
+        List<TurnGroup> list4 = ServiceManage.jdbcTemplate.queryForList("select * from game_turn_group where  state=1 limit 1",TurnGroup.class);
+        List<TurnGroup> list5 = ServiceManage.jdbcTemplate.queryForList("select * from game_turn_group where  state=1 limit 1",TurnGroup.class);
+        return new List[]{list1,list2,list3,list4,list5};
+    }
+
+    public void updateTurnGroups(List<TurnGroup>[]  turngroups){
+
+    }
+
+
+    public void initGroup(Integer bigTurnId,Integer turnNum){
+
+        ServiceManage.jdbcTemplate.up
+
+    }
+
+}

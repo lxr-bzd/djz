@@ -1,62 +1,26 @@
 package com.park.api.entity;
 
+import lombok.Data;
+
 /**
  * Created By lxr on 2020/4/17
  **/
+@Data
 public class TurnGroup {
 
     Integer id;
     Integer big_turn_id;
-    String position;
-    String data;
-    Integer order;
-    String xbbg;
+    Integer group_num;
+    Integer turnStart;
+    Integer turnEnd;
 
-    public Integer getId() {
-        return id;
-    }
+    String xbhzA;
+    Integer xbhzA_Trend;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    String xbhzB;
+    Integer xbhzB_Trend;
 
-    public Integer getBig_turn_id() {
-        return big_turn_id;
-    }
+    String xbhzC;
+    Integer xbhzC_Trend;
 
-    public void setBig_turn_id(Integer big_turn_id) {
-        this.big_turn_id = big_turn_id;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    public Integer getOrder() {
-        return order;
-    }
-
-    public void setOrder(Integer order) {
-        this.order = order;
-    }
-
-    public String getXbbg() {
-        return xbbg;
-    }
-
-    public void setXbbg(String xbbg) {
-        this.xbbg = xbbg;
-    }
 }

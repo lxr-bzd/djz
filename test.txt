@@ -1,2 +1,3 @@
-<td {{if sumData[col].jg>0}}class="red"{{/if}}>{{sumData[col].jg}}</td><td {{if sumData[col].qh>0}}class="red"{{/if}}>{{sumData[col].qh}}</td>
-				
+bkbg1_jg=CONCAT(bkbg1_jg,?),bkbg2_jg=CONCAT(bkbg2_jg,?),bkbg3_jg=CONCAT(bkbg3_jg,?),bkbg4_jg=CONCAT(bkbg4_jg,?),bkbg5_jg=CONCAT(bkbg5_jg,?),
+bkbg6_jg=CONCAT(bkbg6_jg,?),bkbg7_jg=CONCAT(bkbg7_jg,?),bkbg8_jg=CONCAT(bkbg8_jg,?),bkbg9_jg=CONCAT(bkbg9_jg,?),bkbg10_jg=CONCAT(bkbg10_jg,?),
+bkbg11_jg=CONCAT(bkbg11_jg,?),bkbg12_jg=CONCAT(bkbg12_jg,?),bkbg13_jg=CONCAT(bkbg13_jg,?),bkbg14_jg=CONCAT(bkbg14_jg,?),bkbg15_jg=CONCAT(bkbg15_jg,?),

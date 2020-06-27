@@ -1,15 +1,14 @@
 package com.park.api.service;
 
 
-import com.park.api.entity.BigInputResult;
-import com.park.api.entity.InputResult;
-import com.park.api.entity.TurnGroup;
+import com.park.api.entity.*;
 import com.park.api.service.bean.BigTurnConfig;
 import com.park.api.utils.ArrayUtils;
 import com.park.api.utils.DoubleUtils;
 import com.park.api.utils.JsonUtils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BigCoreService {
@@ -349,7 +348,7 @@ public class BigCoreService {
                 int b = hu[4];
                 if(!(b>=rule[0]&&b<=rule[1]))continue;
 
-                long n = (long)Math.pow(2,hu[2]==0?1:(hu[2]-rule[0]+1));
+                long n = hu[2]==0?1:(long)Math.pow(2,hu[2]-rule[0]+1);
 
                 BigDecimal[] d = result.getBkhz();
                 bg[0] = bg[0].add(d[0].multiply(new BigDecimal(n)));
@@ -390,6 +389,9 @@ public class BigCoreService {
             BigDecimal[] d = result.getBkhz();
             CountCoreAlgorithm.bgCount2(d,bg,1);
         }
+
+        bg[0] = bg[0].setScale(0,BigDecimal.ROUND_HALF_UP);
+        bg[1] = bg[1].setScale(0,BigDecimal.ROUND_HALF_UP);
         return bg;
     }
     public static BigDecimal[] countBkbg(List<BigInputResult> results){
@@ -404,6 +406,33 @@ public class BigCoreService {
         return bg;
     }
 
+    public static List<BigDecimal[]> countBkbg15(List<BigInputResult> results, BigTurn bigTurn,String[] rules){
+
+        List<TurnGroupResult>[] listArr = TurnGroupService.build1(results,bigTurn.getXb_lock(),bigTurn.getXb_inv_lock());
+        List<BigDecimal[]> ret = new ArrayList<>();
+        for (int i = 0; i < 15; i++) {
+            ret.add(new BigDecimal[]{BigDecimal.ZERO,BigDecimal.ZERO});
+        }
+        for (int i = 0; i < listArr.length; i++) {
+            int start = i*3;
+            BigDecimal[] bgA = ret.get(start);
+            BigDecimal[] bgB = ret.get(start+1);
+            BigDecimal[] bgC = ret.get(start+2);
+            int[] ra = ArrayUtils.str2int(rules[start].split(","));
+            int[] rb = ArrayUtils.str2int(rules[start+1].split(","));
+            int[] rc = ArrayUtils.str2int(rules[start+2].split(","));
+            List<TurnGroupResult> list = listArr[i];
+            for (int j = 0; j < list.size(); j++) {
+                CountCoreAlgorithm.bgCount2(ArrayUtils.toBasic(ArrayUtils.int2Long(list.get(j).getXbbgA())),bgA,1,ra,CountCoreAlgorithm.COEFFICIENT_P);
+                CountCoreAlgorithm.bgCount2(ArrayUtils.toBasic(ArrayUtils.int2Long(list.get(j).getXbbgB())),bgB,1,rb,CountCoreAlgorithm.COEFFICIENT_P);
+                CountCoreAlgorithm.bgCount2(ArrayUtils.toBasic(ArrayUtils.int2Long(list.get(j).getXbbgC())),bgC,1,rc,CountCoreAlgorithm.COEFFICIENT_P);
+            }
+
+
+        }
+
+        return ret;
+    }
 
 
     public static BigDecimal[] countBkzd(Integer[] bkbg,String[] rules,String lockStr,String trend){

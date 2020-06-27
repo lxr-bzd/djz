@@ -114,10 +114,18 @@ public class GameController extends BaseController{
 		
 		return JsonResult.getSuccessResult();
 	}
-	
+
+	/**
+	 *
+	 * @param mod
+	 * @param uid 位置从1开始
+	 * @param tid
+	 * @param val
+	 * @return
+	 */
 	@RequestMapping("setLock")
 	@ResponseBody
-	public Object setLock(Integer mod,String uid,String tid,String val) {
+	public Object setLock(Integer mod,String field,String uid,String tid,String val) {
 		
 		if(StringUtils.isEmpty(uid)||StringUtils.isEmpty(tid)||StringUtils.isEmpty(val)||
 				!(val.equals("0")||val.equals("1")))
@@ -125,6 +133,10 @@ public class GameController extends BaseController{
 		
 		String fname = null;
 		switch (mod) {
+			case 0:
+				if(StringUtils.isEmpty(field))throw new ApplicationException("参数错误");
+				fname = field;
+				break;
 		case 1:
 			fname = "user_lock";
 			break;
@@ -167,6 +179,7 @@ public class GameController extends BaseController{
 			case 14:
 				fname = "bkhz_inv_lock";
 				break;
+
 
 		default:
 			throw new ApplicationException("错误的类型");

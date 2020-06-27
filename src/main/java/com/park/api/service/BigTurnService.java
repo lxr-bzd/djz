@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
-import com.park.api.entity.TurnGroup;
+import com.park.api.entity.*;
 import com.park.api.utils.ArrayUtils;
 import com.park.api.utils.DoubleUtils;
 import com.park.api.utils.JsonUtils;
@@ -28,10 +28,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.lxr.commons.exception.ApplicationException;
 import com.park.api.ServiceManage;
-import com.park.api.entity.BigInputResult;
-import com.park.api.entity.BigTurn;
-import com.park.api.entity.InputResult;
 import com.park.api.service.bean.BigTurnConfig;
+
+import javax.json.JsonObject;
 
 @Service
 public class BigTurnService {
@@ -82,12 +81,12 @@ public class BigTurnService {
 
 			String[] bkbgInvLocks = bigTurn.getBkbg_inv_lock().split(",");
 			//板块报告
-            Double[] upBkbg = JsonUtils.toDoubleArray(bigTurn.getBkbg());
+            /*Double[] upBkbg = JsonUtils.toDoubleArray(bigTurn.getBkbg());
 			BigDecimal[] bkbg = CountCoreAlgorithm.inverseBg(BigCoreService.countBkbg(results),bkbgInvLocks[1]);
             Double[] bkbgJg = upBkbg==null?null:CountCoreAlgorithm.computeJg(pei.substring(0, 1),upBkbg);
 			Long bkbg_jg_sum = bkbgJg==null?0: DoubleUtils.add(bkbgJg[0],bkbgJg[1]).longValue();
 			Integer bkbgJgType = upBkbg==null?null:BigCoreService.countJgDetail(bkbgJg);
-			Integer newBkbgTrend = CountCoreAlgorithm.computeTrend(bkbg_jg_sum,new Integer(bigTurn.getBkbg_trend()));
+			Integer newBkbgTrend = CountCoreAlgorithm.computeTrend(bkbg_jg_sum,new Integer(bigTurn.getBkbg_trend()));*/
 
 			//板塊報告求和
 			Long[] upBkzd = JsonUtils.toLongArray(bigTurn.getBkzd());
@@ -116,11 +115,7 @@ public class BigTurnService {
 			Integer bkqhJgType = upBkqh==null?null:BigCoreService.countJgDetail(bkqhJg);
 
 
-            Long[] upZdbg = JsonUtils.toLongArray(bigTurn.getZdbg());
-            BigDecimal[] zdbg = BigCoreService.sumZdbg(bigTurn.getZdbg_lock(),bkzd,bkbg,bkqh,bkhz);
-            Long[] zdbgJg = upZdbg==null?null:BigCoreService.countJg(pei.substring(0, 1),upZdbg);
-            Long zdbg_jg_sum = zdbgJg==null?0:Long.valueOf(zdbgJg[0]+zdbgJg[1]);;
-			Integer zdbgJgType = zdbgJg==null?null:BigCoreService.countJgDetail(zdbgJg);
+
 
 			//计算连续rule_A
 			int[] oldTgTrends = ArrayUtils.str2int(bigTurn.getTg_trends().split(","));
@@ -163,26 +158,80 @@ public class BigTurnService {
 			Long[] jgzdJg = upJgzdBg==null?null:BigCoreService.countJg(pei.substring(0, 1),upJgzdBg);
 			Long jgzd_jg_sum = jgzdJg==null?0:Long.valueOf(jgzdJg[0]+jgzdJg[1]);*/
 
+			List<BgItem> bkbgs = handelBkbg(results,pei,bigTurn);
+			String[] bkbgSqls = joinBkbgs(bkbgs);
+
+			//终端报告
+			/*Long[] upZdbg = JsonUtils.toLongArray(bigTurn.getZdbg());
+			BigDecimal[] zdbg = BigCoreService.sumZdbg(bigTurn.getZdbg_lock(),bkzd,bkbg,bkqh,bkhz);
+			Long[] zdbgJg = upZdbg==null?null:BigCoreService.countJg(pei.substring(0, 1),upZdbg);
+			Long zdbg_jg_sum = zdbgJg==null?0:Long.valueOf(zdbgJg[0]+zdbgJg[1]);
+			Integer zdbgJgType = zdbgJg==null?null:BigCoreService.countJgDetail(zdbgJg);*/
+
+			BgItem zdbg = buildZdbg(JsonUtils.toLongArray(bigTurn.getZdbg()),pei,bkbgs);
+			//终端求和
+			BgItem zdqh = buildZdqh(JsonUtils.toLongArray(bigTurn.getZdqh()),pei,bkbgs);
 
 			ServiceManage.jdbcTemplate.update("UPDATE `game_big_turn` SET `frow` = ?, `bg` = ?,  `gj` = ?,  "+
-							" tg_trends=?,bkbg_trend=?,"+
+							" tg_trends=?," +
+							//"bkbg_trend=?,"+
 							//" zd=?, zd_sum=zd_sum+?, zd_jg=CONCAT(zd_jg,?), zd_jg_sum = zd_jg_sum+?," +
 							//" bga=?, bga_sum=bga_sum+?, bga_jg=CONCAT(bga_jg,?), bga_jg_sum = bga_jg_sum+?," +
 							//" bgb=?, bgb_sum=bgb_sum+?, bgb_jg=CONCAT(bgb_jg,?), bgb_jg_sum = bgb_jg_sum+?, " +
 							//" jgzd=?, jgzd_sum=jgzd_sum+?, jgzd_jg=CONCAT(jgzd_jg,?), jgzd_jg_sum = jgzd_jg_sum+?, " +
-							" bkbg=?, bkbg_sum=bkbg_sum+?, bkbg_jg=CONCAT(bkbg_jg,?), bkbg_jg_sum = bkbg_jg_sum+?, " +
+							//" bkbg=?, bkbg_sum=bkbg_sum+?, bkbg_jg=CONCAT(bkbg_jg,?), bkbg_jg_sum = bkbg_jg_sum+?, " +
 							" bkzd=?, bkzd_sum=bkzd_sum+?, bkzd_jg=CONCAT(bkzd_jg,?), bkzd_jg_sum = bkzd_jg_sum+?, " +
 
 							" bkhz=?, bkhz_sum=bkhz_sum+?, bkhz_jg=CONCAT(bkhz_jg,?), bkhz_jg_sum = bkhz_jg_sum+?, " +
                             " bkqh=?, bkqh_sum=bkqh_sum+?, bkqh_jg=CONCAT(bkqh_jg,?), bkqh_jg_sum = bkqh_jg_sum+?, " +
 
-                            " zdbg=?, zdbg_sum=zdbg_sum+?, zdbg_jg=CONCAT(zdbg_jg,?), zdbg_jg_sum = zdbg_jg_sum+? " +
-			" WHERE `id` = ?"
-					,bigTurn.getFrow()+1,
-					JSONObject.toJSONString(newbBg),
-					JSONObject.toJSONString(newGj),
+                           " bkbgs=?, bkbgs_sum=?, bkbgs_jg_sum = ?, " +
+							" bkbg1_jg=CONCAT(bkbg1_jg,?),bkbg2_jg=CONCAT(bkbg2_jg,?),bkbg3_jg=CONCAT(bkbg3_jg,?),bkbg4_jg=CONCAT(bkbg4_jg,?),bkbg5_jg=CONCAT(bkbg5_jg,?)," +
+							" bkbg6_jg=CONCAT(bkbg6_jg,?),bkbg7_jg=CONCAT(bkbg7_jg,?),bkbg8_jg=CONCAT(bkbg8_jg,?),bkbg9_jg=CONCAT(bkbg9_jg,?),bkbg10_jg=CONCAT(bkbg10_jg,?)," +
+							" bkbg11_jg=CONCAT(bkbg11_jg,?),bkbg12_jg=CONCAT(bkbg12_jg,?),bkbg13_jg=CONCAT(bkbg13_jg,?),bkbg14_jg=CONCAT(bkbg14_jg,?),bkbg15_jg=CONCAT(bkbg15_jg,?),"+
 
-					StringUtils.join(ArrayUtils.toObject(newTgTrends),","),newBkbgTrend,
+							" zdbg=?, zdbg_sum=zdbg_sum+?, zdbg_jg=CONCAT(zdbg_jg,?), zdbg_jg_sum = zdbg_jg_sum+?, " +
+							" zdqh=?, zdqh_sum=zdqh_sum+?, zdqh_jg=CONCAT(zdqh_jg,?), zdqh_jg_sum = zdqh_jg_sum+? " +
+
+							" WHERE `id` = ?"
+					,buildUpdate(
+							new Object[]{
+									bigTurn.getFrow()+1,
+									JSONObject.toJSONString(newbBg),
+									JSONObject.toJSONString(newGj),
+
+									StringUtils.join(ArrayUtils.toObject(newTgTrends),",")/*,newBkbgTrend*/}
+							,new Object[]{
+									/*JSONArray.toJSONString(bkbg),
+									bkbg[0].abs().add(bkbg[1].abs()),
+									bkbgJg==null?"":bkbgJgType+"_"+(bkbgJg[0]+bkbgJg[1]+","),
+									bkbg_jg_sum,*/
+
+									JSONArray.toJSONString(bkzd),
+									Math.abs(bkzd[0])+Math.abs(bkzd[1]),
+									bkzdJg==null?"":(bkzdJgType+"_"+new BigDecimal(bkzdJg[0].toString()).add(new BigDecimal(bkzdJg[1].toString()))+","),
+									bkzd_jg_sum,
+
+									JSONArray.toJSONString(bkhz),
+									bkhz[0].abs().add(bkhz[1].abs()),
+									bkhzJg==null?"":bkhzJgType+"_"+(bkhzJg[0]+bkhzJg[1]+","),
+									bkhz_jg_sum,
+
+									JSONArray.toJSONString(bkqh),
+									bkqh[0].abs().add(bkqh[1].abs()),
+									bkqhJg==null?"":bkqhJgType+"_"+(bkqhJg[0]+bkqhJg[1]+","),
+									bkqh_jg_sum/*,
+
+									JSONArray.toJSONString(zdbg),
+									zdbg[0].abs().add(zdbg[1].abs()),
+									zdbgJg==null?"":zdbgJgType+"_"+(zdbgJg[0]+zdbgJg[1]+","),
+									zdbg_jg_sum*/}
+							,new Object[]{bkbgSqls[0],bkbgSqls[1], bkbgSqls[2]}
+							,buildBkbgJgs(bkbgs)
+							,buildBgItemArray(zdbg)
+							,buildBgItemArray(zdqh)
+							,bigTurn.getId())
+
 
 					/*JSONArray.toJSONString(zdBg),
 					Math.abs(zdBg[0])+Math.abs(zdBg[1]),
@@ -205,37 +254,119 @@ public class BigTurnService {
 					Math.abs(jgzdBg[0])+Math.abs(jgzdBg[1]),
 					jgzdJg==null?"":(jgzdJg[0]+jgzdJg[1]+","),
 					jgzd_jg_sum,*/
-
-					JSONArray.toJSONString(bkbg),
-                    bkbg[0].abs().add(bkbg[1].abs()),
-					bkbgJg==null?"":bkbgJgType+"_"+(bkbgJg[0]+bkbgJg[1]+","),
-					bkbg_jg_sum,
-
-					JSONArray.toJSONString(bkzd),
-                    Math.abs(bkzd[0])+Math.abs(bkzd[1]),
-					bkzdJg==null?"":(bkzdJgType+"_"+new BigDecimal(bkzdJg[0].toString()).add(new BigDecimal(bkzdJg[1].toString()))+","),
-					bkzd_jg_sum,
-
-					JSONArray.toJSONString(bkhz),
-					bkhz[0].abs().add(bkhz[1].abs()),
-					bkhzJg==null?"":bkhzJgType+"_"+(bkhzJg[0]+bkhzJg[1]+","),
-					bkhz_jg_sum,
-
-					JSONArray.toJSONString(bkqh),
-                    bkqh[0].abs().add(bkqh[1].abs()),
-					bkqhJg==null?"":bkqhJgType+"_"+(bkqhJg[0]+bkqhJg[1]+","),
-					bkqh_jg_sum,
-
-                    JSONArray.toJSONString(zdbg),
-                    zdbg[0].abs().add(zdbg[1].abs()),
-                    zdbgJg==null?"":zdbgJgType+"_"+(zdbgJg[0]+zdbgJg[1]+","),
-                    zdbg_jg_sum,
-
-					bigTurn.getId()
 			);
+
+
 		}
 
 	 }
+
+
+
+	 private Object[] buildUpdate(Object[] p1,Object[] p2,Object[] bkbgs,Object[] bkgbJgs,Object[] zdbg,Object[] zdqh,Integer bigTurnId){
+
+		 return ArrayUtils.concatAll(p1,p2,bkbgs,bkgbJgs,zdbg,zdqh,new Object[]{bigTurnId});
+	 }
+
+
+	/**
+	 * " zdqh=?, zdqh_sum=zdqh_sum+?, zdqh_jg=CONCAT(zdqh_jg,?), zdqh_jg_sum = zdqh_jg_sum+? " +
+	 * @param item
+	 * @return
+	 */
+	private Object[] buildBgItemArray(BgItem item){
+		Object[] objs = new Object[]{
+				JSONArray.toJSONString(item.getBg())
+				,item.getBgSum()
+				,item.getJg()==null?"":(item.getJgType()+"_"+(item.getJg()[0]+item.getJg()[1])+",")
+				,item.getJgSum()};
+
+		return objs;
+	}
+
+	 private Object[] buildBkbgJgs(List<BgItem> items){
+	 	Object[] objs = new Object[items.size()];
+		 for (int i = 0; i < items.size(); i++) {
+			 BgItem item = items.get(i);
+			 objs[i] = item.getJg()==null?"":item.getJgType()+"_"+(item.getJg()[0]+item.getJg()[1]+",");
+		 }
+	 	return objs;
+	 }
+
+
+	 private String[]  joinBkbgs(List<BgItem> items){
+		 StringBuffer bg = new StringBuffer();
+		 StringBuffer bgSum = new StringBuffer();
+		 StringBuffer jgSum = new StringBuffer();
+		 for (int i = 0; i < items.size(); i++) {
+		 	BgItem item = items.get(i);
+		 	bg.append(JSONArray.toJSONString(item.getBg())+"_");
+		 	bgSum.append(item.getBgSum()+",");
+			jgSum.append(item.getJgSum()+",");
+		 }
+		 bg.delete(bg.length()-1,bg.length());
+		 bgSum.delete(bgSum.length()-1,bgSum.length());
+		 jgSum.delete(jgSum.length()-1,jgSum.length());
+	 	return new String[]{bg.toString(),bgSum.toString(),jgSum.toString()};
+	 }
+
+	 private BgItem buildZdbg(Long[] upBg,String pei,List<BgItem> bkbgs){
+		 BgItem ret = new BgItem();
+		 long[] bg = new long[]{0l,0l};
+		 for (BgItem item:bkbgs) {
+			 CountCoreAlgorithm.bgSum(ArrayUtils.toBasic(item.getBg()),bg,false);
+		 }
+		 ret.setBg(ArrayUtils.toObject(bg));
+		 ret.setJg(upBg==null?null:CountCoreAlgorithm.computeJg(pei.substring(0, 1),upBg));
+		 ret.setBgSum(Math.abs(ret.getBg()[0])+Math.abs(ret.getBg()[1]));
+		 ret.setJgSum(ret.getJg()==null?0:ret.getJg()[0]+ret.getJg()[1]);
+		 ret.setJgType(upBg==null?null:BigCoreService.countJgDetail(ret.getJg()));
+		 return ret;
+	 }
+
+	 private BgItem buildZdqh(Long[] upBg,String pei,List<BgItem> bkbgs){
+		 BgItem ret = new BgItem();
+		 BigDecimal[] bg = new BigDecimal[]{BigDecimal.ZERO,BigDecimal.ZERO};
+		 for (BgItem item:bkbgs) {
+			 CountCoreAlgorithm.bgCount2(ArrayUtils.toBasic(item.getBg()),bg,1);
+		 }
+		 ret.setBg(new Long[]{bg[0].longValue(),bg[1].longValue()});
+		 ret.setJg(upBg==null?null:CountCoreAlgorithm.computeJg(pei.substring(0, 1),upBg));
+		 ret.setBgSum(Math.abs(ret.getBg()[0])+Math.abs(ret.getBg()[1]));
+		 ret.setJgSum(ret.getJg()==null?0:ret.getJg()[0]+ret.getJg()[1]);
+		 ret.setJgType(upBg==null?null:BigCoreService.countJgDetail(ret.getJg()));
+		return ret;
+	 }
+
+	 private List<BgItem> handelBkbg(List<BigInputResult> results,String pei,BigTurn bigTurn){
+
+	 	String[] upBgs = StringUtils.isEmpty(bigTurn.getBkbgs())?null:bigTurn.getBkbgs().split("_");
+		List<BigDecimal[]> bkbgs = BigCoreService.countBkbg15(results,bigTurn,bigTurn.getBigTurnConfig().getRule_bkbgs2());
+	 	//List<TurnGroupResult>[] lists = TurnGroupService.build1(results,bigTurn.getXb_lock(),bigTurn.getXb_inv_lock());
+	 	String[] invs = bigTurn.getBkbgs_inv_lock().split(",");
+
+	 	long[] bgSums = ArrayUtils.str2long(bigTurn.getBkbgs_sum().split(","));
+	 	long[] jgSums = ArrayUtils.str2long(bigTurn.getBkbgs_jg_sum().split(","));
+
+	 	List<BgItem> ret = new ArrayList<>();
+		 for (int i = 0; i < 15; i++) {
+			 Double[] upBkbg = upBgs==null?null:JsonUtils.toDoubleArray(upBgs[i]);
+			 BigDecimal[] bkbg = CountCoreAlgorithm.inverseBg(bkbgs.get(i),invs[i]);
+			 Double[] bkbgJg = upBkbg==null?null:CountCoreAlgorithm.computeJg(pei.substring(0, 1),upBkbg);
+			 Long bkbg_jg_sum = bkbgJg==null?0: DoubleUtils.add(bkbgJg[0],bkbgJg[1]).longValue();
+			 Integer bkbgJgType = upBkbg==null?null:BigCoreService.countJgDetail(bkbgJg);
+			 BgItem item = new BgItem();
+			 item.setBg(new Long[]{bkbg[0].setScale(0, BigDecimal.ROUND_HALF_UP).longValue(),bkbg[0].setScale(0, BigDecimal.ROUND_HALF_UP).longValue()});
+			 item.setBgSum(bgSums[i]+bkbg[0].abs().add(bkbg[1].abs()).longValue());
+			 item.setJg(bkbgJg!=null?new Long[]{bkbgJg[0].longValue(),bkbgJg[1].longValue()}:null);
+			 item.setJgSum(jgSums[i]+bkbg_jg_sum);
+			 item.setJgType(bkbgJgType);
+			 ret.add(item);
+		 }
+
+	 	return ret;
+	 }
+
 
 
 
@@ -280,7 +411,7 @@ public class BigTurnService {
 	 
 	 
 	 public Map<String, Object> getMainModel() {
-		 BigTurn bigTurn = getCurrentTurn();
+		 BigTurn bigTurn = getCurrentTurn(true);
 		 if(bigTurn==null)return null;
 		 
 		 Map<String, Object> map = new HashMap<String, Object>();
@@ -341,7 +472,7 @@ public class BigTurnService {
 		bigTurn.setXb_lock("1,1,1,1,1,"+"1,1,1,1,1"+",1");
 		bigTurn.setBkzd_lock("1,1,1,1,1,"+"1,1,1,1,1");
 
-		bigTurn.setBkbg_inv_lock("0,0");
+		bigTurn.setBkbg_inv_lock("1,1");
 		bigTurn.setBkhz_lock("1,1,1,1,1,"+"1,1,1,1,1");
 
         bigTurn.setTurn_bkhz_lock("1,1,1,1,1,"+"1,1,1,1,1");
@@ -349,6 +480,10 @@ public class BigTurnService {
 
         bigTurn.setZdbg_jg("");
         bigTurn.setZdbg_lock("1,1,1,1");
+
+        bigTurn.setBkbgs_sum("0,0,0,0,0,"+"0,0,0,0,0,"+"0,0,0,0,0");
+        bigTurn.setBkbgs_jg_sum("0,0,0,0,0,"+"0,0,0,0,0,"+"0,0,0,0,0");
+		bigTurn.setBkbgs_inv_lock("0,0,0,0,0,"+"0,0,0,0,0,"+"0,0,0,0,0");
 
         Map<String, Object> param = null;
         try {
@@ -361,10 +496,12 @@ public class BigTurnService {
 
 		String sql = "INSERT INTO `game_big_turn`( `frow`, `bg`, `gj`,`config_json`, `state`  ,tg_trends" +
                 ",jgzd_jg,jgzd_lock,inverse_lock,xb_inv_lock,xb_lock,bkbg_jg,bkzd_jg,bkzd_lock,bkbg_inv_lock" +
-                ",bkhz_jg,bkhz_lock,bkqh_jg,turn_bkhz_lock,bkhz_inv_lock,zdbg_jg,zdbg_lock) "
+                ",bkhz_jg,bkhz_lock,bkqh_jg,turn_bkhz_lock,bkhz_inv_lock,zdbg_jg,zdbg_lock,zdqh_jg,bkbgs_sum,bkbgs_jg_sum,bkbgs_inv_lock" +
+				",bkbg1_jg,bkbg2_jg,bkbg3_jg,bkbg4_jg,bkbg5_jg,bkbg6_jg,bkbg7_jg,bkbg8_jg,bkbg9_jg,bkbg10_jg,bkbg11_jg,bkbg12_jg,bkbg13_jg,bkbg14_jg,bkbg15_jg) "
                 + "VALUES ( :frow, '', :gj,:config_json, 1,  :tg_trends" +
                 ",'',:jgzd_lock,:inverse_lock,:xb_inv_lock,:xb_lock,'','',:bkzd_lock,:bkbg_inv_lock" +
-                ",'',:bkhz_lock,'',:turn_bkhz_lock,:bkhz_inv_lock,:zdbg_jg,:zdbg_lock)";
+                ",'',:bkhz_lock,'',:turn_bkhz_lock,:bkhz_inv_lock,:zdbg_jg,:zdbg_lock,'',:bkbgs_sum,:bkbgs_jg_sum,:bkbgs_inv_lock" +
+				",'','','','','','','','','','','','','','','')";
         ServiceManage.namedJdbcTemplate.update(sql,new MapSqlParameterSource(param),keyHolder);
 
         bigTurn.setId(keyHolder.getKey().intValue());
@@ -407,13 +544,25 @@ public class BigTurnService {
 	            }, keyHolder);*/
 
 	}
-	
+
 	public BigTurn getCurrentTurn() {
+
+	 	return getCurrentTurn(false);
+
+	}
+	
+	public BigTurn getCurrentTurn(boolean isFull) {
 		BigTurn bigTurn = null;
 		try {
-			
-			 bigTurn = ServiceManage.jdbcTemplate.queryForObject("select * from game_big_turn where  state=1 limit 1",
-					new BeanPropertyRowMapper<BigTurn>(BigTurn.class));
+
+			 if(isFull){
+				 bigTurn = ServiceManage.jdbcTemplate.queryForObject("select * from game_big_turn where  state=1 limit 1",
+						 new BeanPropertyRowMapper<BigTurnFull>(BigTurnFull.class));
+			 }else {
+				 bigTurn = ServiceManage.jdbcTemplate.queryForObject("select * from game_big_turn where  state=1 limit 1",
+						 new BeanPropertyRowMapper<BigTurn>(BigTurn.class));
+			 }
+
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}
@@ -434,6 +583,7 @@ public class BigTurnService {
 					sysService.getSysConfig("rule_bkbg5", String.class),
 			});*/
             config.setRule_bkbgs(sysService.getSysConfig("rule_bkbg", String.class).split("_"));
+            config.setRule_bkbgs2(sysService.getSysConfig("rule_bkbg2", String.class).split("_"));
 			config.setRuleBkhzs(sysService.getSysConfig("rule_bkhz", String.class).split("_"));
 			return bigTurn;
 
@@ -525,5 +675,6 @@ public class BigTurnService {
 		return gj;
 		
 	}
+
 
 }

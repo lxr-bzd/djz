@@ -47,7 +47,7 @@
 						<td  class="table_top rec-table-one">
 						<div class="top-body">
 							<table  class="rec-table-one">
-							<colgroup>
+							<colgroup class="app-colgroup">
 								<col style="width:90px;">
 								<col style="width:90px;"><col style="width:65px;">
 								<col style="width:90px;"><col style="width:65px;">
@@ -61,13 +61,13 @@
 								<col style="width:90px;"><col style="width:65px;">
 								<col style="width:90px;">
 								<col style="width:120px;"><col style="width:90px;">
-								<col style="width:120px;"><col style="width:90px;">
+							<!--	<col style="width:120px;"><col style="width:90px;">
 								<col style="width:120px;"><col style="width:90px;">
 								<col style="width:120px;"><col style="width:90px;">
 
 
 								<col style="width:120px;"><col style="width:90px;">
-								<col style="width:120px;"><col style="width:90px;">
+								<col style="width:120px;"><col style="width:90px;">-->
 								<!--<col style="width:120px;"><col style="width:80px;">
                                 <col style="width:120px;"><col style="width:80px;">
                                 <col style="width:120px;"><col style="width:80px;">
@@ -77,8 +77,8 @@
 											
 								</colgroup>
 								<tbody id="head_group">
-							  	<tr class="data_col"> <td colspan="1"><a href="javascript:history.back(-1)">返回</a></td><td colspan="33">歷史記錄</td><td colspan="1"><a href="javascript:history.back(-1)">返回</a></td></tr>
-							  	<tr class="data_col">
+							  	<tr class="data_col"> <td colspan="1"><a href="javascript:history.back(-1)">返回</a></td><td colspan="23"  id="title-td">歷史記錄</td><td colspan="1"><a href="javascript:history.back(-1)">返回</a></td></tr>
+							  	<tr class="data_col title-head" >
 							    	<td rowspan="2">序號</td>
 							    	<td colspan="2">1號</td>
 							    	<td colspan="2">2號</td>
@@ -101,18 +101,18 @@
 									<td colspan="2">求和終端</td>
 
 									<td colspan="2">板塊報告求和结果終端</td>-->
-									<td colspan="2">板塊報告求和</td>
+									<!--<td colspan="2">板塊報告求和</td>
 									<td colspan="2">板塊報告</td>
 									<td colspan="2">板塊匯總求和</td>
 									<td colspan="2">板塊匯總</td>
 
-									<td colspan="2">終端報告</td>
+									<td colspan="2">終端報告</td>-->
 
 
 							    	<td rowspan="2"><a href="javascript:tableExport()">導出</a></td>
 							    	
 							  	</tr>
-							  	<tr class="data_col">
+							  	<tr class="data_col title-head2"  >
 							    	<td >結果</td>
 							    	<td >求和</td>
 							    	<td >結果</td>
@@ -136,7 +136,7 @@
 							    	
 							    	<td >結果</td>
 							    	<td >求和</td>
-							    	<td >結果</td>
+							    	<!--<td >結果</td>
 							    	<td >求和</td>
 							    	<td >結果</td>
 							    	<td >求和</td>
@@ -145,7 +145,7 @@
 							    	<td >結果</td>
 							    	<td >求和</td>
 									<td >結果</td>
-									<td >求和</td>
+									<td >求和</td>-->
 
 									<!--<td >結果</td><td >求和</td>
 
@@ -166,7 +166,7 @@
 						<td>
 							<div class="scroll-body">
 							<table class="rec-table-one">
-										<colgroup>
+										<colgroup  class="app-colgroup">
 											<col style="width:90px;">
 											<col style="width:90px;"><col style="width:65px;">
 											<col style="width:90px;"><col style="width:65px;">
@@ -180,13 +180,13 @@
 											<col style="width:90px;"><col style="width:65px;">
 											<col style="width:90px;">
 											<col style="width:120px;"><col style="width:90px;">
-											<col style="width:120px;"><col style="width:90px;">
+											<!--<col style="width:120px;"><col style="width:90px;">
 											<col style="width:120px;"><col style="width:90px;">
 											<col style="width:120px;"><col style="width:90px;">
 
 
 											<col style="width:120px;"><col style="width:90px;">
-											<col style="width:120px;"><col style="width:90px;">
+											<col style="width:120px;"><col style="width:90px;">-->
 											<!--<col style="width:120px;"><col style="width:80px;">
                                             <col style="width:120px;"><col style="width:80px;">
                                             <col style="width:120px;"><col style="width:80px;">
@@ -215,7 +215,7 @@
 
 							  	</tr> -->
 							  	</tbody>
-							  	<tr class="data_col">
+							  	<tr class="data_col title-head" >
 							    	<td rowspan="2">序號</td>
 							    	<td colspan="2">1號</td>
 							    	<td colspan="2">2號</td>
@@ -235,13 +235,13 @@
 							    	<td colspan="2">選擇報告</td>
 							    	<td colspan="2">選擇求和</td>
 							    	<td colspan="2">結果報告</td>-->
-
+<!--
 
 									<td colspan="2">板塊報告求和</td>
 									<td colspan="2">板塊報告</td>
 									<td colspan="2">板塊匯總求和</td>
 									<td colspan="2">板塊匯總</td>
-									<td colspan="2">終端報告</td>
+									<td colspan="2">終端報告</td>-->
 
 							    	<td rowspan="2"><a href="javascript:del(2)">刪除全部</a></td>
 							    	
@@ -271,6 +271,26 @@
 		<script type="text/javascript">
 		
 		$(function(){
+		    var head = [];
+            for (let i = 0; i < 15; i++) {
+                head.push("板塊报告"+(i+1));
+            }
+            head.push("終端報告")
+            head.push("終端求和")
+		    var html1 = '';
+		    var html2= '';
+		    var html3= '';
+            for (let i = 0; i < head.length; i++) {
+                var name = head[i];
+				html1+='<col style="width:120px;"><col style="width:90px;">';
+				html2+='<td colspan="2">'+name+'</td>';
+				html3+='<td >結果</td><td >求和</td>';
+            }
+            $(".app-colgroup").append(html1);
+            $(".title-head").append(html2);
+            $(".title-head2").append(html3);
+            $("#title-td").attr("colspan",23+(head.length*2));
+
 			 $app.request("../user/his.do",function(data){
 					if(data.code!=1){
 						$app.alert(data.msg);
@@ -309,9 +329,12 @@
 			
 			console.log(vDataMap);
 			var vData = [];
-			
-			
-			var sumData = {hb:{jg:0,qh:0}
+
+			var cols = ['hb',
+                'bkbg1','bkbg2','bkbg3','bkbg4','bkbg5','bkbg6','bkbg7','bkbg8','bkbg9','bkbg10','bkbg11','bkbg12','bkbg13','bkbg14','bkbg15','zdbg','zdqh'/*,'qhBg','hbBg', 'hbqh','xzBg','xzqh','jgbg'*//*,'jgAbg','jgBbg','bgA','bgB','zdbg','jgzd'*//*,'bkzd','bkbg','bkqh','bkhz','zdbg'*/]
+
+
+            var sumData = {/*hb:{jg:0,qh:0}
 			,hbBg:{jg:0,qh:0}
 			,qh:{sum:0,qh:0,jg:0}
 			,yz:{sum:0,qh:0,jg:0}
@@ -322,9 +345,15 @@
                 ,bgA:{sum:0,qh:0,jg:0}
                 ,bgB:{sum:0,qh:0,jg:0}
                 ,jgzd:{sum:0,qh:0,jg:0}
-                ,bkbg:{sum:0,qh:0,jg:0},bkzd:{sum:0,qh:0,jg:0}};
-			var gHzData = {hb:0,qh:0,yz:0,hbBg:0,hbqh:0,xzBg:0,jgAbg:0,jgBbg:0,bgA:0,bgB:0,jgzd:0,'bkbg':0,'bkzd':0};
-			
+                ,bkbg:{sum:0,qh:0,jg:0},bkzd:{sum:0,qh:0,jg:0}*/};
+			var gHzData = {/*hb:0,*//*,qh:0,yz:0,hbBg:0,hbqh:0,xzBg:0,jgAbg:0,jgBbg:0,bgA:0,bgB:0,jgzd:0,'bkbg':0,'bkzd':0*/};
+
+            for (let i = 0; i < cols.length; i++) {
+                let col = cols[i]
+                sumData[col] = {sum:0,qh:0,jg:0};
+                gHzData[col] = 0;
+            }
+
 			for (var i = 0; i < bigTurns.length; i++) {
 				bigTurns[i].bigTurnConfig = eval("("+bigTurns[i].config_json+")");
 				var tData = createBigVdata(bigTurns[i],vDataMap[bigTurns[i].id]);
@@ -332,7 +361,7 @@
 				console.log(tData);
 				
 				vData.push(tData);
-				var index = [1,2,3,4,5,6,7,8,9,10,'hb'/*,'qhBg','hbBg', 'hbqh','xzBg','xzqh','jgbg'*//*,'jgAbg','jgBbg','bgA','bgB','zdbg','jgzd'*/,'bkzd','bkbg','bkqh','bkhz','zdbg']
+				var index = [1,2,3,4,5,6,7,8,9,10].concat(cols);
 				for (var j = 0; j < index.length; j++) {
 					var col = index[j];
 					if(!sumData[col])sumData[col] = {jg:0,qh:0};
@@ -349,7 +378,7 @@
 				}
 			}
 
-            let jgCols = ['hb'/*,'qhBg','hbBg','hbqh','xzBg','xzqh','jgbg'*//*,'jgAbg','jgBbg','bgA','bgB','zdbg','jgzd'*/,'bkzd','bkbg','bkqh','bkhz','zdbg'];
+            let jgCols = cols;
 
             var m = {vData:vData,sumData:sumData,gHzData:gHzData,u:[1,2,3,4,5,6,7,8,9,10]
 			,jgCols:jgCols};
