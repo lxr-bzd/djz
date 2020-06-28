@@ -118,8 +118,6 @@ public class BigTurnService {
 			Integer bkqhJgType = upBkqh==null?null:BigCoreService.countJgDetail(bkqhJg);
 
 
-
-
 			//计算连续rule_A
 			int[] oldTgTrends = ArrayUtils.str2int(bigTurn.getTg_trends().split(","));
 			int[] newTgTrends = BigCoreService.reckonTgTrends(results,oldTgTrends);
@@ -161,13 +159,13 @@ public class BigTurnService {
 			Long[] jgzdJg = upJgzdBg==null?null:BigCoreService.countJg(pei.substring(0, 1),upJgzdBg);
 			Long jgzd_jg_sum = jgzdJg==null?0:Long.valueOf(jgzdJg[0]+jgzdJg[1]);*/
 
-
+			//
 			List<TurnGroupResult>[] groupResults = turnGroupService.handlGroup(bigTurn,pei,results,bigTurn.getXb_lock(),bigTurn.getXb_inv_lock());
 
-			List<BgItem> bkbgs = handelBkbg(results,pei,bigTurn);
+			//15个板块报告
+			List<BgItem> bkbgs = BigCoreService.handelBkbg(groupResults,pei,bigTurn);
+
 			String[] bkbgSqls = joinBkbgs(bkbgs);
-
-
 			//终端报告
 			/*Long[] upZdbg = JsonUtils.toLongArray(bigTurn.getZdbg());
 			BigDecimal[] zdbg = BigCoreService.sumZdbg(bigTurn.getZdbg_lock(),bkzd,bkbg,bkqh,bkhz);
@@ -345,34 +343,7 @@ public class BigTurnService {
 		return ret;
 	 }
 
-	 private List<BgItem> handelBkbg(List<BigInputResult> results,String pei,BigTurn bigTurn){
 
-	 	String[] upBgs = StringUtils.isEmpty(bigTurn.getBkbgs())?null:bigTurn.getBkbgs().split("_");
-		List<BigDecimal[]> bkbgs = BigCoreService.countBkbg15(results,bigTurn,bigTurn.getBigTurnConfig().getRule_bkbgs2());
-	 	//List<TurnGroupResult>[] lists = TurnGroupService.build1(results,bigTurn.getXb_lock(),bigTurn.getXb_inv_lock());
-	 	String[] invs = bigTurn.getBkbgs_inv_lock().split(",");
-
-	 	long[] bgSums = ArrayUtils.str2long(bigTurn.getBkbgs_sum().split(","));
-	 	long[] jgSums = ArrayUtils.str2long(bigTurn.getBkbgs_jg_sum().split(","));
-
-	 	List<BgItem> ret = new ArrayList<>();
-		 for (int i = 0; i < 15; i++) {
-			 Double[] upBkbg = upBgs==null?null:JsonUtils.toDoubleArray(upBgs[i]);
-			 BigDecimal[] bkbg = CountCoreAlgorithm.inverseBg(bkbgs.get(i),invs[i]);
-			 Double[] bkbgJg = upBkbg==null?null:CountCoreAlgorithm.computeJg(pei.substring(0, 1),upBkbg);
-			 Long bkbg_jg_sum = bkbgJg==null?0: DoubleUtils.add(bkbgJg[0],bkbgJg[1]).longValue();
-			 Integer bkbgJgType = upBkbg==null?null:BigCoreService.countJgDetail(bkbgJg);
-			 BgItem item = new BgItem();
-			 item.setBg(new Long[]{bkbg[0].setScale(0, BigDecimal.ROUND_HALF_UP).longValue(),bkbg[0].setScale(0, BigDecimal.ROUND_HALF_UP).longValue()});
-			 item.setBgSum(bgSums[i]+bkbg[0].abs().add(bkbg[1].abs()).longValue());
-			 item.setJg(bkbgJg!=null?new Long[]{bkbgJg[0].longValue(),bkbgJg[1].longValue()}:null);
-			 item.setJgSum(jgSums[i]+bkbg_jg_sum);
-			 item.setJgType(bkbgJgType);
-			 ret.add(item);
-		 }
-
-	 	return ret;
-	 }
 
 
 

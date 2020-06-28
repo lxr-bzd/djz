@@ -65,7 +65,7 @@ public class TurnService {
 			
 			//ret.put("lastRow", crowDao.getInputRow(game.getId()));
 			List<Map<String, Object>> maps = ServiceManage.jdbcTemplate.queryForList(
-					"select b.id,b.tid,b.hid,b.tg,b.tg_sum,b.rule,b.rule_type,b.ys,b.g,b.g_sum,a.uid from game_history a left join game_runing_count b on a.id=b.hid  where a.state=1 AND b.tid=?",turn.get("id"));
+					"select b.id,b.tid,b.hid,'' tg,b.tg_sum,b.rule,b.rule_type,b.ys,b.g,b.g_sum,a.uid from game_history a left join game_runing_count b on a.id=b.hid  where a.state=1 AND b.tid=?",turn.get("id"));
 			ret.put("counts", maps);
 			ret.put("turn", turn);
 			ret.put("tip_open", ServiceManage.jdbcTemplate.queryForObject("select val from djt_sys where ckey = 'tip_open'",Integer.class));
@@ -190,9 +190,11 @@ public class TurnService {
 			Integer[] qhJg = upQh==null?null:CountService.countQhJg(pei.substring(0, 1), upQh);*/
 			
 			//计算原值报告
-			YzDto yzDto = CountService.reckonYz(allYz, upYz, Long.valueOf(map.get("yz_jg_sum").toString()), pei, mod2);
+			//YzDto yzDto = CountService.reckonYz(allYz, upYz, Long.valueOf(map.get("yz_jg_sum").toString()), pei, mod2);
 
-			long[] xbbg = TurnCoreService.countXbbg(results,new long[] {(long)hzBg[4],(long)hzBg[5]},bigTurn.getXb_lock(),bigTurn.getXb_inv_lock());
+			long[] xbbg = TurnCoreService.countXbbg(results,new long[] {(long)hzBg[4],(long)hzBg[5]},bigTurn.getXb_lock(),bigTurn.getXb_inv_lock(),1);
+			long[] xbbgB = TurnCoreService.countXbbg(results,new long[] {(long)hzBg[4],(long)hzBg[5]},bigTurn.getXb_lock(),bigTurn.getXb_inv_lock(),2);
+			long[] xbbgC = TurnCoreService.countXbbg(results,new long[] {(long)hzBg[4],(long)hzBg[5]},bigTurn.getXb_lock(),bigTurn.getXb_inv_lock(),3);
 
             //小板汇总
             Integer[] upBkbg = JsonUtils.toIntArray(turn.getBkbg());
@@ -271,6 +273,8 @@ public class TurnService {
 			//bigInputResult.setJgABg(jgbgBgAB[0]);
 			//bigInputResult.setJgBBg(jgbgBgAB[1]);
 			bigInputResult.setXbbg(xbbg);
+			bigInputResult.setXbbgB(xbbgB);
+			bigInputResult.setXbbgC(xbbgC);
 			bigInputResult.setBkhz(bkhz);
 			bigInputResult.setBkhzHu(newBkhzHu);
 
@@ -284,7 +288,7 @@ public class TurnService {
                     + ",bkbg=?, bkbg_sum=bkbg_sum+?, bkbg_jg=CONCAT(bkbg_jg,?), bkbg_jg_sum = bkbg_jg_sum+?,bkbg_trend=?"
                     + ",bkzd=?, bkzd_sum=bkzd_sum+? "
 					//+ ",qh=?,qh_sum=qh_sum+?,qh_jg=CONCAT(qh_jg,?),qh_last_jg=? "//汇总求和
-					+ ",yz=?,yz_sum=yz_sum+?,yz_jg=CONCAT(yz_jg,?),yz_jg_sum=?,yz_last_jg=?"
+					//+ ",yz=?,yz_sum=yz_sum+?,yz_jg=CONCAT(yz_jg,?),yz_jg_sum=?,yz_last_jg=?"
 					//+ ",hb=?,hb_sum=hb_sum+?,hb_jg=CONCAT(hb_jg,?),hb_jg_sum=?,hb_last_jg=?,hbbg_trend=?,hbbg_config=?"
 					
 						//+ ",xz=?,xz_sum=xz_sum+?,xz_jg=CONCAT(xz_jg,?),xz_jg_sum=?,xz_last_jg=?,xzbg_trend=?,xzbg_config=?"
@@ -322,11 +326,11 @@ public class TurnService {
 					//qhJg==null?"":(qhJg[0]+qhJg[1]+","),
 					//qhJg==null?"":qhJg[0]+"_"+qhJg[1],
 							
-					JSONObject.toJSONString(new Object[] {allYz,yzDto.getYzBg()}),
-					Math.abs(yzDto.getYzBg()[0])+Math.abs(yzDto.getYzBg()[1]),
-					yzDto.getYzJg()==null?"":(yzDto.getYzJg()[0]+yzDto.getYzJg()[1]+","),
-					yzDto.getYzJgSum(),
-					yzDto.getYzJg()==null?"":yzDto.getYzJg()[0]+"_"+yzDto.getYzJg()[1],
+					//JSONObject.toJSONString(new Object[] {allYz,yzDto.getYzBg()}),
+					//Math.abs(yzDto.getYzBg()[0])+Math.abs(yzDto.getYzBg()[1]),
+					//yzDto.getYzJg()==null?"":(yzDto.getYzJg()[0]+yzDto.getYzJg()[1]+","),
+					//yzDto.getYzJgSum(),
+					//yzDto.getYzJg()==null?"":yzDto.getYzJg()[0]+"_"+yzDto.getYzJg()[1],
 					
 					/*JSONObject.toJSONString(hbBg),
 					Math.abs(hbBg[0])+Math.abs(hbBg[1]),

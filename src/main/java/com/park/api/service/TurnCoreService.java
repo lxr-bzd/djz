@@ -1,6 +1,7 @@
 package com.park.api.service;
 
 
+import com.lxr.commons.exception.ApplicationException;
 import com.park.api.entity.BigInputResult;
 import com.park.api.entity.InputResult;
 import com.park.api.utils.ArrayUtils;
@@ -92,8 +93,16 @@ public class TurnCoreService {
     }
 
 
-
-        public static long[] countXbbg(List<InputResult> results,long[] hzbg, String lockStr,String invLockStr ){
+    /**
+     *
+     * @param results
+     * @param hzbg
+     * @param lockStr
+     * @param invLockStr
+     * @param type 1:取大的 2:取小的，3:各取一个
+     * @return
+     */
+        public static long[] countXbbg(List<InputResult> results,long[] hzbg, String lockStr,String invLockStr,Integer type){
         int[] locks = ArrayUtils.str2int(lockStr.split(","));
         int[] invLocks = ArrayUtils.str2int(invLockStr.split(","));
         long[][] datas = new long[][]{new long[]{0l,0l},new long[]{0l,0l},new long[]{0l,0l},new long[]{0l,0l},new long[]{0l,0l},new long[]{0l,0l},new long[]{0l,0l},new long[]{0l,0l},new long[]{0l,0l},new long[]{0l,0l}
@@ -104,14 +113,40 @@ public class TurnCoreService {
             long[] dt = datas[i];
             long xl = (long)inputResult.getRets()[4];
             long sd =(long)inputResult.getRets()[5];
-            CountCoreAlgorithm.bgCount(new long[]{xl,sd},dt,invLocks[i]==1);
+            switch (type){
+                case 1:
+                    CountCoreAlgorithm.bgCount(new long[]{xl,sd},dt,invLocks[i]==1);
+                    break;
+                case 2:
+                    CountCoreAlgorithm.bgCountB(new long[]{xl,sd},dt,invLocks[i]==1);
+                    break;
+                case 3:
+                    CountCoreAlgorithm.bgCountC(new long[]{xl,sd},dt,invLocks[i]==1);
+                    break;
+                default:
+                    throw new ApplicationException("不支持的类型");
+            }
+
         }
         //汇总报告的
         if(locks[10]==1){
             long[] dt = datas[10];
             long xl = (long)hzbg[0];
             long sd =(long)hzbg[1];
-            CountCoreAlgorithm.bgCount(new long[]{xl,sd},dt,invLocks[10]==1);
+            switch (type){
+                case 1:
+                    CountCoreAlgorithm.bgCount(new long[]{xl,sd},dt,invLocks[10]==1);
+                    break;
+                case 2:
+                    CountCoreAlgorithm.bgCountB(new long[]{xl,sd},dt,invLocks[10]==1);
+                    break;
+                case 3:
+                    CountCoreAlgorithm.bgCountC(new long[]{xl,sd},dt,invLocks[10]==1);
+                    break;
+                default:
+                    throw new ApplicationException("不支持的类型");
+            }
+
         }
 
 

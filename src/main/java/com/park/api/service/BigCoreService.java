@@ -6,6 +6,7 @@ import com.park.api.service.bean.BigTurnConfig;
 import com.park.api.utils.ArrayUtils;
 import com.park.api.utils.DoubleUtils;
 import com.park.api.utils.JsonUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -406,29 +407,26 @@ public class BigCoreService {
         return bg;
     }
 
-    public static List<BigDecimal[]> countBkbg15(List<BigInputResult> results, BigTurn bigTurn,String[] rules){
+    public static List<BigDecimal[]> countBkbg15(List<TurnGroupResult>[] groupResults, BigTurn bigTurn,String[] rules){
 
-        List<TurnGroupResult>[] listArr = TurnGroupService.build1(results,bigTurn.getXb_lock(),bigTurn.getXb_inv_lock());
         List<BigDecimal[]> ret = new ArrayList<>();
         for (int i = 0; i < 15; i++) {
             ret.add(new BigDecimal[]{BigDecimal.ZERO,BigDecimal.ZERO});
         }
-        for (int i = 0; i < listArr.length; i++) {
+        for (int i = 0; i < groupResults.length; i++) {
             int start = i*3;
             BigDecimal[] bgA = ret.get(start);
             BigDecimal[] bgB = ret.get(start+1);
-            BigDecimal[] bgC = ret.get(start+2);
+            BigDecimal[] bgC = ret.get(start+2);/*
             int[] ra = ArrayUtils.str2int(rules[start].split(","));
             int[] rb = ArrayUtils.str2int(rules[start+1].split(","));
-            int[] rc = ArrayUtils.str2int(rules[start+2].split(","));
-            List<TurnGroupResult> list = listArr[i];
+            int[] rc = ArrayUtils.str2int(rules[start+2].split(","));*/
+            List<TurnGroupResult> list = groupResults[i];
             for (int j = 0; j < list.size(); j++) {
-                //CountCoreAlgorithm.bgCount2(ArrayUtils.toBasic(ArrayUtils.int2Long(list.get(j).getXbbgA())),bgA,1,ra,CountCoreAlgorithm.COEFFICIENT_P);
-                //CountCoreAlgorithm.bgCount2(ArrayUtils.toBasic(ArrayUtils.int2Long(list.get(j).getXbbgB())),bgB,1,rb,CountCoreAlgorithm.COEFFICIENT_P);
-                //CountCoreAlgorithm.bgCount2(ArrayUtils.toBasic(ArrayUtils.int2Long(list.get(j).getXbbgC())),bgC,1,rc,CountCoreAlgorithm.COEFFICIENT_P);
+                CountCoreAlgorithm.bgSum(list.get(j).getBgbgA(),bgA);
+                CountCoreAlgorithm.bgSum(list.get(j).getBgbgB(),bgB);
+                CountCoreAlgorithm.bgSum(list.get(j).getBgbgC(),bgC);
             }
-
-
         }
 
         return ret;
@@ -508,6 +506,34 @@ public class BigCoreService {
         bg[0] = bg[0].setScale(0,BigDecimal.ROUND_HALF_UP);
         bg[1] = bg[1].setScale(0,BigDecimal.ROUND_HALF_UP);
         return bg;
+    }
+
+    public static List<BgItem> handelBkbg(List<TurnGroupResult>[] groupResults,String pei,BigTurn bigTurn){
+
+        String[] upBgs = StringUtils.isEmpty(bigTurn.getBkbgs())?null:bigTurn.getBkbgs().split("_");
+        List<BigDecimal[]> bkbgs = BigCoreService.countBkbg15(groupResults,bigTurn,bigTurn.getBigTurnConfig().getRule_bkbgs2());
+        String[] invs = bigTurn.getBkbgs_inv_lock().split(",");
+
+        long[] bgSums = ArrayUtils.str2long(bigTurn.getBkbgs_sum().split(","));
+        long[] jgSums = ArrayUtils.str2long(bigTurn.getBkbgs_jg_sum().split(","));
+
+        List<BgItem> ret = new ArrayList<>();
+        for (int i = 0; i < 15; i++) {
+            Double[] upBkbg = upBgs==null?null:JsonUtils.toDoubleArray(upBgs[i]);
+            BigDecimal[] bkbg = CountCoreAlgorithm.inverseBg(bkbgs.get(i),invs[i]);
+            Double[] bkbgJg = upBkbg==null?null:CountCoreAlgorithm.computeJg(pei.substring(0, 1),upBkbg);
+            Long bkbg_jg_sum = bkbgJg==null?0: DoubleUtils.add(bkbgJg[0],bkbgJg[1]).longValue();
+            Integer bkbgJgType = upBkbg==null?null:BigCoreService.countJgDetail(bkbgJg);
+            BgItem item = new BgItem();
+            item.setBg(new Long[]{bkbg[0].setScale(0, BigDecimal.ROUND_HALF_UP).longValue(),bkbg[0].setScale(0, BigDecimal.ROUND_HALF_UP).longValue()});
+            item.setBgSum(bgSums[i]+bkbg[0].abs().add(bkbg[1].abs()).longValue());
+            item.setJg(bkbgJg!=null?new Long[]{bkbgJg[0].longValue(),bkbgJg[1].longValue()}:null);
+            item.setJgSum(jgSums[i]+bkbg_jg_sum);
+            item.setJgType(bkbgJgType);
+            ret.add(item);
+        }
+
+        return ret;
     }
 
 }

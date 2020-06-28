@@ -62,7 +62,7 @@ function initViewData(data){
         qhJg.qh+=(v>0?1:(v<0?-1:0));
     }*/
     /* 开始处理原值数据 */
-    turn.yz = eval(turn.yz );
+   /* turn.yz = eval(turn.yz );
     var yzBg = createBg([turn.yz[1][0],turn.yz[1][1]]);
     yzBg.push(turn.yz_sum);
     bgData['yzBg'] =yzBg;
@@ -74,7 +74,7 @@ function initViewData(data){
         var v = new Number(yzjgs[i]);
         yzJg.list.push(v);
         yzJg.qh+=(v>0?1:(v<0?-1:0));
-    }
+    }*/
 
     /* 结束处理原值数据 */
 

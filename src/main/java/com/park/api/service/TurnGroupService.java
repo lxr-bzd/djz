@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
 import javax.json.JsonObject;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,16 +24,29 @@ public class TurnGroupService {
 
         List<TurnGroup>[] groups = getTurnGroups(bigTurn.getId());
         List<TurnGroupResult>[] turnResults = build1(results,lockStr,invLockStr);
-
+        String[] bkbgRules = bigTurn.getBigTurnConfig().getRule_bkbgs2();
         for (int i = 0; i < groups.length; i++) {
             List<TurnGroup> groupList = groups[i];
             List<TurnGroupResult> resultList = turnResults[i];
+            int ii = i*3;
+            int[] ruleA = ArrayUtils.str2int(bkbgRules[ii].split(","));
+            int[] ruleB = ArrayUtils.str2int(bkbgRules[ii+1].split(","));
+            int[] ruleC = ArrayUtils.str2int(bkbgRules[ii+2].split(","));
             for (int j = 0; j < groupList.size(); j++) {
                 TurnGroup group = groupList.get(j);
                 TurnGroupResult result = resultList.get(j);
-                Integer bgATrend = inputTurnGroup(pei,group.getXbhzA(),group.getXbhzA_Trend());
-                Integer bgBTrend = inputTurnGroup(pei,group.getXbhzB(),group.getXbhzB_Trend());
-                Integer bgCTrend = inputTurnGroup(pei,group.getXbhzC(),group.getXbhzC_Trend());
+
+                Object[] bkA = inputTurnGroup(pei,result.getXbbgA(),group.getXbhzA(),group.getXbhzA_Trend(),ruleA);
+                Object[] bkB = inputTurnGroup(pei,result.getXbbgB(),group.getXbhzB(),group.getXbhzB_Trend(),ruleB);
+                Object[] bkC = inputTurnGroup(pei,result.getXbbgC(),group.getXbhzC(),group.getXbhzC_Trend(),ruleC);
+
+                result.setBgbgA((BigDecimal[]) bkA[1]);
+                result.setBgbgB((BigDecimal[]) bkB[1]);
+                result.setBgbgC((BigDecimal[]) bkC[1]);
+
+                Integer bgATrend = (Integer) bkA[0];
+                Integer bgBTrend = (Integer) bkB[0];
+                Integer bgCTrend = (Integer) bkC[0];
                 group.setXbhzA(JSONObject.toJSONString(result.getXbbgA()));
                 group.setXbhzB(JSONObject.toJSONString(result.getXbbgB()));
                 group.setXbhzC(JSONObject.toJSONString(result.getXbbgC()));
@@ -46,12 +60,17 @@ public class TurnGroupService {
         return turnResults;
     }
 
-    private Integer inputTurnGroup(String pei,String upBg,Integer upTrend){
+    private Object[] inputTurnGroup(String pei,Long[] xbBg,String upBg,Integer upTrend,int[] rule){
         Integer[] upBgA = JsonUtils.toIntArray(upBg);
         Integer[] bkbgJg = upBgA==null?null:BigCoreService.countJg(pei.substring(0, 1),upBgA);
         Long jg_sum = bkbgJg==null?0:Long.valueOf(bkbgJg[0]+bkbgJg[1]);
         Integer newBgTrend = CountCoreAlgorithm.computeTrend(jg_sum,new Integer(upTrend));
-        return newBgTrend;
+
+        //BigCoreService.countBkzd(cuBg,bigTurn.getBigTurnConfig().getRule_bkbgs(),bigTurn.getBkzd_lock(),newBkbgTrend+"");
+        long [] d = ArrayUtils.toBasic(xbBg);
+        BigDecimal[] bkbg = new BigDecimal[]{BigDecimal.ZERO,BigDecimal.ZERO};
+        CountCoreAlgorithm.bgCount2(d,bkbg,newBgTrend,rule,CountCoreAlgorithm.COEFFICIENT_P);
+        return new Object[]{newBgTrend,bkbg};
     }
 
 
@@ -111,11 +130,12 @@ public class TurnGroupService {
 
     public List<TurnGroup>[] getTurnGroups(Integer bigTurnId){
 
-        List<TurnGroup> list1 = ServiceManage.jdbcTemplate.queryForList("select * from game_turn_group where  big_turn_id=? AND group_num = 1 ORDER BY turnStart ASC",TurnGroup.class,bigTurnId);
-        List<TurnGroup> list2 = ServiceManage.jdbcTemplate.queryForList("select * from game_turn_group where  big_turn_id=? AND group_num = 2 ORDER BY turnStart ASC",TurnGroup.class,bigTurnId);
-        List<TurnGroup> list3 = ServiceManage.jdbcTemplate.queryForList("select * from game_turn_group where  big_turn_id=? AND group_num = 3 ORDER BY turnStart ASC",TurnGroup.class,bigTurnId);
-        List<TurnGroup> list4 = ServiceManage.jdbcTemplate.queryForList("select * from game_turn_group where  big_turn_id=? AND group_num = 4 ORDER BY turnStart ASC",TurnGroup.class,bigTurnId);
-        List<TurnGroup> list5 = ServiceManage.jdbcTemplate.queryForList("select * from game_turn_group where  big_turn_id=? AND group_num = 5 ORDER BY turnStart ASC",TurnGroup.class,bigTurnId);
+
+        List<TurnGroup> list1 = ServiceManage.jdbcTemplate.query("select * from game_turn_group where  big_turn_id=? AND group_num = 1 ORDER BY turnStart ASC",new BeanPropertyRowMapper<TurnGroup>(TurnGroup.class),bigTurnId);
+        List<TurnGroup> list2 = ServiceManage.jdbcTemplate.query("select * from game_turn_group where  big_turn_id=? AND group_num = 2 ORDER BY turnStart ASC",new BeanPropertyRowMapper<TurnGroup>(TurnGroup.class),bigTurnId);
+        List<TurnGroup> list3 = ServiceManage.jdbcTemplate.query("select * from game_turn_group where  big_turn_id=? AND group_num = 3 ORDER BY turnStart ASC",new BeanPropertyRowMapper<TurnGroup>(TurnGroup.class),bigTurnId);
+        List<TurnGroup> list4 = ServiceManage.jdbcTemplate.query("select * from game_turn_group where  big_turn_id=? AND group_num = 4 ORDER BY turnStart ASC",new BeanPropertyRowMapper<TurnGroup>(TurnGroup.class),bigTurnId);
+        List<TurnGroup> list5 = ServiceManage.jdbcTemplate.query("select * from game_turn_group where  big_turn_id=? AND group_num = 5 ORDER BY turnStart ASC",new BeanPropertyRowMapper<TurnGroup>(TurnGroup.class),bigTurnId);
         return new List[]{list1,list2,list3,list4,list5};
     }
 

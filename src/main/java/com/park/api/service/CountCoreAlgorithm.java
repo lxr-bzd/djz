@@ -127,7 +127,47 @@ public class CountCoreAlgorithm {
         }
     }
 
+    /**
+     * 取 小的
+     * @param bg
+     * @param recBg
+     * @param inverse
+     */
+    public static void bgCountB(long[] bg,long[] recBg,boolean inverse){
 
+        int f = inverse?-1:1;
+        long[] dt = recBg;
+        long xl = bg[0];
+        long sd = bg[1];
+        if(Math.abs(xl)<Math.abs(sd)){
+            dt[0]+=(xl>0?1:-1)*f;
+        }else if(Math.abs(sd)<Math.abs(xl)){
+            dt[1]+=(sd>0?1:-1)*f;
+        }else if(xl!=0){
+            dt[0]+=(xl>0?1:-1)*f;
+            dt[1]+=(sd>0?1:-1)*f;
+        }
+    }
+
+    /**
+     * 取 小的
+     * @param bg
+     * @param recBg
+     * @param inverse
+     */
+    public static void bgCountC(long[] bg,long[] recBg,boolean inverse){
+
+        int f = inverse?-1:1;
+        long[] dt = recBg;
+        long xl = bg[0];
+        long sd = bg[1];
+        if(Math.abs(xl)!=0){
+            dt[0]+=(xl>0?1:-1)*f;
+        }
+        if(Math.abs(sd)!=0){
+            dt[1]+=(sd>0?1:-1)*f;
+        }
+    }
 
     public static void bgCount(BigDecimal[] bg,long[] recBg){
 
