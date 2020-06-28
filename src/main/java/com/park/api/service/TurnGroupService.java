@@ -6,6 +6,7 @@ import com.park.api.entity.*;
 import com.park.api.utils.ArrayUtils;
 import com.park.api.utils.JsonUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.stereotype.Service;
 
 import javax.json.JsonObject;
 import java.util.ArrayList;
@@ -14,10 +15,11 @@ import java.util.List;
 /**
  * Created By lxr on 2020/6/21
  **/
+@Service
 public class TurnGroupService {
 
 
-    public void handlGroup(BigTurn bigTurn,String pei,List<BigInputResult> results, String lockStr,String invLockStr){
+    public List<TurnGroupResult>[] handlGroup(BigTurn bigTurn,String pei,List<BigInputResult> results, String lockStr,String invLockStr){
 
         List<TurnGroup>[] groups = getTurnGroups(bigTurn.getId());
         List<TurnGroupResult>[] turnResults = build1(results,lockStr,invLockStr);
@@ -41,7 +43,7 @@ public class TurnGroupService {
         }
 
         updateTurnGroups(groups);
-
+        return turnResults;
     }
 
     private Integer inputTurnGroup(String pei,String upBg,Integer upTrend){
@@ -107,24 +109,44 @@ public class TurnGroupService {
 
 
 
-    public List<TurnGroup>[] getTurnGroups(Integer turnId){
+    public List<TurnGroup>[] getTurnGroups(Integer bigTurnId){
 
-        List<TurnGroup> list1 = ServiceManage.jdbcTemplate.queryForList("select * from game_turn_group where  state=1 limit 1",TurnGroup.class);
-        List<TurnGroup> list2 = ServiceManage.jdbcTemplate.queryForList("select * from game_turn_group where  state=1 limit 1",TurnGroup.class);
-        List<TurnGroup> list3 = ServiceManage.jdbcTemplate.queryForList("select * from game_turn_group where  state=1 limit 1",TurnGroup.class);
-        List<TurnGroup> list4 = ServiceManage.jdbcTemplate.queryForList("select * from game_turn_group where  state=1 limit 1",TurnGroup.class);
-        List<TurnGroup> list5 = ServiceManage.jdbcTemplate.queryForList("select * from game_turn_group where  state=1 limit 1",TurnGroup.class);
+        List<TurnGroup> list1 = ServiceManage.jdbcTemplate.queryForList("select * from game_turn_group where  big_turn_id=? AND group_num = 1 ORDER BY turnStart ASC",TurnGroup.class,bigTurnId);
+        List<TurnGroup> list2 = ServiceManage.jdbcTemplate.queryForList("select * from game_turn_group where  big_turn_id=? AND group_num = 2 ORDER BY turnStart ASC",TurnGroup.class,bigTurnId);
+        List<TurnGroup> list3 = ServiceManage.jdbcTemplate.queryForList("select * from game_turn_group where  big_turn_id=? AND group_num = 3 ORDER BY turnStart ASC",TurnGroup.class,bigTurnId);
+        List<TurnGroup> list4 = ServiceManage.jdbcTemplate.queryForList("select * from game_turn_group where  big_turn_id=? AND group_num = 4 ORDER BY turnStart ASC",TurnGroup.class,bigTurnId);
+        List<TurnGroup> list5 = ServiceManage.jdbcTemplate.queryForList("select * from game_turn_group where  big_turn_id=? AND group_num = 5 ORDER BY turnStart ASC",TurnGroup.class,bigTurnId);
         return new List[]{list1,list2,list3,list4,list5};
     }
 
     public void updateTurnGroups(List<TurnGroup>[]  turngroups){
+        for (int i = 0; i < 5; i++) {
+            List<TurnGroup> groups = turngroups[i];
+            for (int j = 0; j < groups.size(); j++) {
+                TurnGroup group = groups.get(j);
+                ServiceManage.jdbcTemplate.update("UPDATE game_turn_group SET `xbhzA` = ?, `xbhzA_Trend` = ?,`xbhzB` = ?, `xbhzB_Trend` = ?,`xbhzC` = ?, `xbhzC_Trend` = ? WHERE `id` = ?",
+                        group.getXbhzA(),group.getXbhzA_Trend(),group.getXbhzB(),group.getXbhzB_Trend(),group.getXbhzC(),group.getXbhzC_Trend(),group.getId());
+            }
+        }
+
 
     }
 
 
     public void initGroup(Integer bigTurnId,Integer turnNum){
 
-        ServiceManage.jdbcTemplate.up
+        for (int i = 0; i < 5; i++) {
+            int n = i+1;
+            int t = turnNum/n+(turnNum%n==0?0:1);
+            for (int j = 0; j < t; j++) {
+                int start = j*n;
+                int end = start+n;
+                if(end>turnNum)end=turnNum;
+                ServiceManage.jdbcTemplate.update("INSERT INTO game_turn_group( `big_turn_id`, `group_num`, `turnStart`, `turnEnd`, `xbhzA`, `xbhzA_Trend`, `xbhzB`, `xbhzB_Trend`, `xbhzC`, `xbhzC_Trend`) " +
+                        "VALUES ( ?, ?, ?, ?, '', 0, '', 0, '', 0)",bigTurnId,n,start,end);
+            }
+        }
+
 
     }
 

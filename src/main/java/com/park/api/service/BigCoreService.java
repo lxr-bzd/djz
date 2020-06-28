@@ -423,9 +423,9 @@ public class BigCoreService {
             int[] rc = ArrayUtils.str2int(rules[start+2].split(","));
             List<TurnGroupResult> list = listArr[i];
             for (int j = 0; j < list.size(); j++) {
-                CountCoreAlgorithm.bgCount2(ArrayUtils.toBasic(ArrayUtils.int2Long(list.get(j).getXbbgA())),bgA,1,ra,CountCoreAlgorithm.COEFFICIENT_P);
-                CountCoreAlgorithm.bgCount2(ArrayUtils.toBasic(ArrayUtils.int2Long(list.get(j).getXbbgB())),bgB,1,rb,CountCoreAlgorithm.COEFFICIENT_P);
-                CountCoreAlgorithm.bgCount2(ArrayUtils.toBasic(ArrayUtils.int2Long(list.get(j).getXbbgC())),bgC,1,rc,CountCoreAlgorithm.COEFFICIENT_P);
+                //CountCoreAlgorithm.bgCount2(ArrayUtils.toBasic(ArrayUtils.int2Long(list.get(j).getXbbgA())),bgA,1,ra,CountCoreAlgorithm.COEFFICIENT_P);
+                //CountCoreAlgorithm.bgCount2(ArrayUtils.toBasic(ArrayUtils.int2Long(list.get(j).getXbbgB())),bgB,1,rb,CountCoreAlgorithm.COEFFICIENT_P);
+                //CountCoreAlgorithm.bgCount2(ArrayUtils.toBasic(ArrayUtils.int2Long(list.get(j).getXbbgC())),bgC,1,rc,CountCoreAlgorithm.COEFFICIENT_P);
             }
 
 
