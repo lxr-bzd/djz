@@ -171,6 +171,12 @@ function initViewData(data){
     //处理小板报告
     turn.xbbg = eval("("+turn.xbbg+")");
     bgData['xbbg'] = createBg(turn.xbbg);
+
+    turn.xbbgB = eval("("+turn.xbbgB+")");
+    bgData['xbbgB'] = createBg(turn.xbbgB);
+
+    turn.xbbgC = eval("("+turn.xbbgC+")");
+    bgData['xbbgC'] = createBg(turn.xbbgC);
     //处理小板报告
 
     //处理小板报告
@@ -187,6 +193,11 @@ function initViewData(data){
     turn.bkzd = eval("("+turn.bkzd+")");
     bgData['bkzd'] = createBg(turn.bkzd);
     //处理板块终端
+    turn.bkzdB = eval("("+turn.bkzdB+")");
+    bgData['bkzdB'] = createBg(turn.bkzdB);
+
+    turn.bkzdC = eval("("+turn.bkzdC+")");
+    bgData['bkzdC'] = createBg(turn.bkzdC);
 
 
     return {turn:turn,bgData:bgData,jgData:jgData};

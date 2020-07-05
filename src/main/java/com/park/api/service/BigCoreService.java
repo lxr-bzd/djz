@@ -513,19 +513,22 @@ public class BigCoreService {
         String[] upBgs = StringUtils.isEmpty(bigTurn.getBkbgs())?null:bigTurn.getBkbgs().split("_");
         List<BigDecimal[]> bkbgs = BigCoreService.countBkbg15(groupResults,bigTurn,bigTurn.getBigTurnConfig().getRule_bkbgs2());
         String[] invs = bigTurn.getBkbgs_inv_lock().split(",");
+        String[] locks = bigTurn.getBkbgs_lock().split(",");
 
         long[] bgSums = ArrayUtils.str2long(bigTurn.getBkbgs_sum().split(","));
         long[] jgSums = ArrayUtils.str2long(bigTurn.getBkbgs_jg_sum().split(","));
 
+        BigDecimal[] defBg = new BigDecimal[]{BigDecimal.ZERO,BigDecimal.ZERO};
+
         List<BgItem> ret = new ArrayList<>();
         for (int i = 0; i < 15; i++) {
             Double[] upBkbg = upBgs==null?null:JsonUtils.toDoubleArray(upBgs[i]);
-            BigDecimal[] bkbg = CountCoreAlgorithm.inverseBg(bkbgs.get(i),invs[i]);
+            BigDecimal[] bkbg = CountCoreAlgorithm.inverseBg((locks[i].equals("1"))?bkbgs.get(i):defBg,invs[i]);
             Double[] bkbgJg = upBkbg==null?null:CountCoreAlgorithm.computeJg(pei.substring(0, 1),upBkbg);
             Long bkbg_jg_sum = bkbgJg==null?0: DoubleUtils.add(bkbgJg[0],bkbgJg[1]).longValue();
             Integer bkbgJgType = upBkbg==null?null:BigCoreService.countJgDetail(bkbgJg);
             BgItem item = new BgItem();
-            item.setBg(new Long[]{bkbg[0].setScale(0, BigDecimal.ROUND_HALF_UP).longValue(),bkbg[0].setScale(0, BigDecimal.ROUND_HALF_UP).longValue()});
+            item.setBg(new Long[]{bkbg[0].setScale(0, BigDecimal.ROUND_HALF_UP).longValue(),bkbg[1].setScale(0, BigDecimal.ROUND_HALF_UP).longValue()});
             item.setBgSum(bgSums[i]+bkbg[0].abs().add(bkbg[1].abs()).longValue());
             item.setJg(bkbgJg!=null?new Long[]{bkbgJg[0].longValue(),bkbgJg[1].longValue()}:null);
             item.setJgSum(jgSums[i]+bkbg_jg_sum);

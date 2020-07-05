@@ -7,6 +7,7 @@ import com.park.api.entity.InputResult;
 import com.park.api.utils.ArrayUtils;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -107,6 +108,7 @@ public class TurnCoreService {
         int[] invLocks = ArrayUtils.str2int(invLockStr.split(","));
         long[][] datas = new long[][]{new long[]{0l,0l},new long[]{0l,0l},new long[]{0l,0l},new long[]{0l,0l},new long[]{0l,0l},new long[]{0l,0l},new long[]{0l,0l},new long[]{0l,0l},new long[]{0l,0l},new long[]{0l,0l}
                 ,new long[]{0l,0l}};
+        long[] ret = new long[]{0l,0l};
         for (int i = 0; i < results.size(); i++) {
             if(locks[i]!=1)continue;
             InputResult inputResult = results.get(i);
@@ -139,6 +141,7 @@ public class TurnCoreService {
                     break;
                 case 2:
                     CountCoreAlgorithm.bgCountB(new long[]{xl,sd},dt,invLocks[10]==1);
+                    System.out.println(Arrays.toString(datas));
                     break;
                 case 3:
                     CountCoreAlgorithm.bgCountC(new long[]{xl,sd},dt,invLocks[10]==1);

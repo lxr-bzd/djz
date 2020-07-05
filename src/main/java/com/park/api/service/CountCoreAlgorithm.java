@@ -42,8 +42,22 @@ public class CountCoreAlgorithm {
         f = f*coefficient;
 
         bgCount2(bg,recBg,f);
+    }
 
+    public static void bgCount3(long[] bg, BigDecimal[] recBg,int jgTrend,int[] range,boolean backInv){
 
+        int length = Math.abs(jgTrend);
+        if(!(length>=range[0]&&length<=range[1]))return;
+
+        long f = length<1?0:(long) (Math.pow(MULTIPLE_2,length-range[0]));
+        //黑色的取反
+        if(backInv){
+            if(jgTrend<0)f = f*-1L;
+        }else{
+            if(jgTrend>0)f = f*-1L;
+        }
+
+        bgCount2(bg,recBg,f);
     }
 
     /**
@@ -139,14 +153,24 @@ public class CountCoreAlgorithm {
         long[] dt = recBg;
         long xl = bg[0];
         long sd = bg[1];
-        if(Math.abs(xl)<Math.abs(sd)){
-            dt[0]+=(xl>0?1:-1)*f;
-        }else if(Math.abs(sd)<Math.abs(xl)){
-            dt[1]+=(sd>0?1:-1)*f;
-        }else if(xl!=0){
-            dt[0]+=(xl>0?1:-1)*f;
-            dt[1]+=(sd>0?1:-1)*f;
+        if(xl!=0&&sd!=0){
+            if(Math.abs(xl)<Math.abs(sd)){
+                dt[0]+=(xl>0?1:-1)*f;
+            }else if(Math.abs(sd)<Math.abs(xl)){
+                dt[1]+=(sd>0?1:-1)*f;
+            }else if(xl!=0){
+                dt[0]+=(xl>0?1:-1)*f;
+                dt[1]+=(sd>0?1:-1)*f;
+            }
+        }else{
+            if(sd!=0){
+                dt[1]+=(sd>0?1:-1)*f;
+            }
+            if(xl!=0){
+                dt[0]+=(xl>0?1:-1)*f;
+            }
         }
+
     }
 
     /**

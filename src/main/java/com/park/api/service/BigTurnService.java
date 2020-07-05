@@ -173,9 +173,9 @@ public class BigTurnService {
 			Long zdbg_jg_sum = zdbgJg==null?0:Long.valueOf(zdbgJg[0]+zdbgJg[1]);
 			Integer zdbgJgType = zdbgJg==null?null:BigCoreService.countJgDetail(zdbgJg);*/
 
-			BgItem zdbg = buildZdbg(JsonUtils.toLongArray(bigTurn.getZdbg()),pei,bkbgs);
+			BgItem zdbg = buildZdbg(JsonUtils.toLongArray(bigTurn.getZdbg()),pei,bkbgs,bigTurn.getBkbgs_zd_lock(),bkbgInvLocks[0]);
 			//终端求和
-			BgItem zdqh = buildZdqh(JsonUtils.toLongArray(bigTurn.getZdqh()),pei,bkbgs);
+			BgItem zdqh = buildZdqh(JsonUtils.toLongArray(bigTurn.getZdqh()),pei,bkbgs,bigTurn.getBkbgs_qh_lock(),bkbgInvLocks[1]);
 
 			ServiceManage.jdbcTemplate.update("UPDATE `game_big_turn` SET `frow` = ?, `bg` = ?,  `gj` = ?,  "+
 							" tg_trends=?," +
@@ -315,13 +315,22 @@ public class BigTurnService {
 	 	return new String[]{bg.toString(),bgSum.toString(),jgSum.toString()};
 	 }
 
-	 private BgItem buildZdbg(Long[] upBg,String pei,List<BgItem> bkbgs){
+	 private BgItem buildZdbg(Long[] upBg,String pei,List<BgItem> bkbgs,String lock,String inv){
+		String[] locks = lock.split(",");
 		 BgItem ret = new BgItem();
 		 long[] bg = new long[]{0l,0l};
-		 for (BgItem item:bkbgs) {
+		 for (int i = 0; i < bkbgs.size(); i++) {
+			 BgItem item = bkbgs.get(i);
+			 if("1".equals(locks[i]))
 			 CountCoreAlgorithm.bgSum(ArrayUtils.toBasic(item.getBg()),bg,false);
+
 		 }
-		 ret.setBg(ArrayUtils.toObject(bg));
+		 Long[] bgLong = ArrayUtils.toObject(bg);
+		 if(inv.equals("1")){
+			 bgLong[0] = -bgLong[0];
+			 bgLong[1] = -bgLong[1];
+		 }
+		 ret.setBg(bgLong);
 		 ret.setJg(upBg==null?null:CountCoreAlgorithm.computeJg(pei.substring(0, 1),upBg));
 		 ret.setBgSum(Math.abs(ret.getBg()[0])+Math.abs(ret.getBg()[1]));
 		 ret.setJgSum(ret.getJg()==null?0:ret.getJg()[0]+ret.getJg()[1]);
@@ -329,17 +338,28 @@ public class BigTurnService {
 		 return ret;
 	 }
 
-	 private BgItem buildZdqh(Long[] upBg,String pei,List<BgItem> bkbgs){
+	 private BgItem buildZdqh(Long[] upBg,String pei,List<BgItem> bkbgs,String lock,String inv){
+		 String[] locks = lock.split(",");
 		 BgItem ret = new BgItem();
 		 BigDecimal[] bg = new BigDecimal[]{BigDecimal.ZERO,BigDecimal.ZERO};
-		 for (BgItem item:bkbgs) {
-			 CountCoreAlgorithm.bgCount2(ArrayUtils.toBasic(item.getBg()),bg,1);
+		 for (int i = 0; i < bkbgs.size(); i++) {
+			 BgItem item = bkbgs.get(i);
+			 if("1".equals(locks[i]))
+			 	CountCoreAlgorithm.bgCount2(ArrayUtils.toBasic(item.getBg()),bg,1);
 		 }
-		 ret.setBg(new Long[]{bg[0].longValue(),bg[1].longValue()});
+
+		 Long[] bgLong = new Long[]{bg[0].setScale(0,BigDecimal.ROUND_HALF_UP).longValue(),bg[1].setScale(0,BigDecimal.ROUND_HALF_UP).longValue()};
+		 if(inv.equals("1")){
+			 bgLong[0] = -bgLong[0];
+			 bgLong[1] = -bgLong[1];
+		 }
+
+		 ret.setBg(bgLong);
 		 ret.setJg(upBg==null?null:CountCoreAlgorithm.computeJg(pei.substring(0, 1),upBg));
 		 ret.setBgSum(Math.abs(ret.getBg()[0])+Math.abs(ret.getBg()[1]));
 		 ret.setJgSum(ret.getJg()==null?0:ret.getJg()[0]+ret.getJg()[1]);
 		 ret.setJgType(upBg==null?null:BigCoreService.countJgDetail(ret.getJg()));
+
 		return ret;
 	 }
 
@@ -448,9 +468,9 @@ public class BigTurnService {
 		bigTurn.setInverse_lock("0,0,0,0,0,"+"0,0,0,0,0,"+"0,0");
 		bigTurn.setXb_inv_lock("0,0,0,0,0,"+"0,0,0,0,0"+",0");
 		bigTurn.setXb_lock("1,1,1,1,1,"+"1,1,1,1,1"+",1");
-		bigTurn.setBkzd_lock("1,1,1,1,1,"+"1,1,1,1,1");
+		bigTurn.setBkzd_lock("1,0,0,0,0,"+"0,,0,0,0,0");
 
-		bigTurn.setBkbg_inv_lock("1,1");
+		bigTurn.setBkbg_inv_lock("0,0");
 		bigTurn.setBkhz_lock("1,1,1,1,1,"+"1,1,1,1,1");
 
         bigTurn.setTurn_bkhz_lock("1,1,1,1,1,"+"1,1,1,1,1");
@@ -463,6 +483,10 @@ public class BigTurnService {
         bigTurn.setBkbgs_jg_sum("0,0,0,0,0,"+"0,0,0,0,0,"+"0,0,0,0,0");
 		bigTurn.setBkbgs_inv_lock("0,0,0,0,0,"+"0,0,0,0,0,"+"0,0,0,0,0");
 
+		bigTurn.setBkbgs_lock("1,1,1,1,1,"+"1,1,1,1,1,"+"1,1,1,1,1");
+		bigTurn.setBkbgs_zd_lock("1,1,1,1,1,"+"1,1,1,1,1,"+"1,1,1,1,1");
+		bigTurn.setBkbgs_qh_lock("1,1,1,1,1,"+"1,1,1,1,1,"+"1,1,1,1,1");
+
         Map<String, Object> param = null;
         try {
             param = BeanUtils.describe(bigTurn);
@@ -474,11 +498,11 @@ public class BigTurnService {
 
 		String sql = "INSERT INTO `game_big_turn`( `frow`, `bg`, `gj`,`config_json`, `state`  ,tg_trends" +
                 ",jgzd_jg,jgzd_lock,inverse_lock,xb_inv_lock,xb_lock,bkbg_jg,bkzd_jg,bkzd_lock,bkbg_inv_lock" +
-                ",bkhz_jg,bkhz_lock,bkqh_jg,turn_bkhz_lock,bkhz_inv_lock,zdbg_jg,zdbg_lock,zdqh_jg,bkbgs_sum,bkbgs_jg_sum,bkbgs_inv_lock" +
+                ",bkhz_jg,bkhz_lock,bkqh_jg,turn_bkhz_lock,bkhz_inv_lock,zdbg_jg,zdbg_lock,zdqh_jg,bkbgs_sum,bkbgs_jg_sum,bkbgs_inv_lock,bkbgs_lock,bkbgs_zd_lock,bkbgs_qh_lock" +
 				",bkbg1_jg,bkbg2_jg,bkbg3_jg,bkbg4_jg,bkbg5_jg,bkbg6_jg,bkbg7_jg,bkbg8_jg,bkbg9_jg,bkbg10_jg,bkbg11_jg,bkbg12_jg,bkbg13_jg,bkbg14_jg,bkbg15_jg) "
                 + "VALUES ( :frow, '', :gj,:config_json, 1,  :tg_trends" +
                 ",'',:jgzd_lock,:inverse_lock,:xb_inv_lock,:xb_lock,'','',:bkzd_lock,:bkbg_inv_lock" +
-                ",'',:bkhz_lock,'',:turn_bkhz_lock,:bkhz_inv_lock,:zdbg_jg,:zdbg_lock,'',:bkbgs_sum,:bkbgs_jg_sum,:bkbgs_inv_lock" +
+                ",'',:bkhz_lock,'',:turn_bkhz_lock,:bkhz_inv_lock,:zdbg_jg,:zdbg_lock,'',:bkbgs_sum,:bkbgs_jg_sum,:bkbgs_inv_lock,:bkbgs_lock,:bkbgs_zd_lock,:bkbgs_qh_lock" +
 				",'','','','','','','','','','','','','','','')";
         ServiceManage.namedJdbcTemplate.update(sql,new MapSqlParameterSource(param),keyHolder);
 
@@ -657,6 +681,9 @@ public class BigTurnService {
 		return gj;
 
 	}
+
+
+
 
 
 }

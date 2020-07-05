@@ -18,6 +18,12 @@ public class Turn {
 	String bkbg;
 	Integer bkbg_trend;
 
+	String xbbgB;
+	Integer xbbgB_trend;
+
+	String xbbgC;
+	Integer xbbgC_trend;
+
 	GameConfig config;
 	
 	public String getId() {
@@ -81,5 +87,37 @@ public class Turn {
 
 	public void setBkbg_trend(Integer bkbg_trend) {
 		this.bkbg_trend = bkbg_trend;
+	}
+
+	public String getXbbgB() {
+		return xbbgB;
+	}
+
+	public void setXbbgB(String xbbgB) {
+		this.xbbgB = xbbgB;
+	}
+
+	public Integer getXbbgB_trend() {
+		return xbbgB_trend;
+	}
+
+	public void setXbbgB_trend(Integer xbbgB_trend) {
+		this.xbbgB_trend = xbbgB_trend;
+	}
+
+	public String getXbbgC() {
+		return xbbgC;
+	}
+
+	public void setXbbgC(String xbbgC) {
+		this.xbbgC = xbbgC;
+	}
+
+	public Integer getXbbgC_trend() {
+		return xbbgC_trend;
+	}
+
+	public void setXbbgC_trend(Integer xbbgC_trend) {
+		this.xbbgC_trend = xbbgC_trend;
 	}
 }

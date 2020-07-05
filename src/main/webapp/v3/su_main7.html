@@ -85,6 +85,7 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							<colgroup>
 								<col style="width:50px;">
 								
+								<!--<col style="width:90px;">
 								<col style="width:90px;">
 								<col style="width:90px;">
 								<col style="width:90px;">
@@ -93,11 +94,8 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 								<col style="width:90px;">
 								<col style="width:90px;">
 								<col style="width:90px;">
-								<col style="width:90px;">
-								<col style="width:90px;">
+								<col style="width:90px;">-->
 
-
-								<col style="width:100px;">
 								<col style="width:100px;">
 								<col style="width:100px;">
 								<col style="width:100px;">
@@ -133,8 +131,8 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							    	<td><div class="blue btn1 exit_btn">關閉</div></td>
 									<td><input id="setting-input" type="password" style="width: 90%;background-color: #eee"  placeholder=""></td>
 
-									<td colspan="9" id="input_group"><input type="text" style="width: 90%;background-color: #eee" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""></td>
-							    	<td colspan="8"> <div class="blue btn1 ok_btn">確定</div></td>
+									<td colspan="4" id="input_group"><input type="text" style="width: 90%;background-color: #eee" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""></td>
+							    	<td colspan="2"> <div class="blue btn1 ok_btn">確定</div></td>
 							    <!-- 	<td colspan="2">
 							    		<table style="height:100%">
 											<tr><td style="height:auto;font-size:16px;">開始<input type="number" id="tg_thre" value="" style="width: 40%;background-color: #eee;font-size:19px;">
@@ -180,18 +178,18 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 							<colgroup class="app-colgroup">
 								<col style="width:50px;">
 
-								<col style="width:90px;">
-								<col style="width:90px;">
-								<col style="width:90px;">
-								<col style="width:90px;">
-								<col style="width:90px;">
-								<col style="width:90px;">
-								<col style="width:90px;">
-								<col style="width:90px;">
-								<col style="width:90px;">
-								<col style="width:90px;">
+								<col style="width:100px;">
+								<col style="width:100px;">
+								<col style="width:100px;">
+								<col style="width:100px;">
+								<col style="width:100px;">
+								<col style="width:100px;">
+								<col style="width:100px;">
+								<col style="width:100px;">
+								<col style="width:100px;">
+								<col style="width:100px;">
 
-								<col style="width:90px;">
+								<col style="width:100px;">
 
 								<col style="width:50px;">
 								
@@ -256,7 +254,7 @@ filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
 								<colgroup class="app-colgroup">
 									<col style="width:50px;">
 
-									<col style="width:90px;">
+
 									<col style="width:90px;">
 									<col style="width:90px;">
 									<col style="width:90px;">
@@ -788,7 +786,7 @@ function onBusEnd(){
 			data.bigTurn.queue_count+=data[i].turn.queue_count;
 		}
 
-        var keys = ['xb_inv_lock','xb_lock','bkzd_lock','bkhz_lock','bkbg_inv_lock','turn_bkhz_lock','bkhz_inv_lock','zdbg_lock','bkbgs_inv_lock']
+        var keys = ['xb_inv_lock','xb_lock','bkzd_lock','bkhz_lock','bkbg_inv_lock','turn_bkhz_lock','bkhz_inv_lock','zdbg_lock','bkbgs_inv_lock','bkbgs_lock','bkbgs_zd_lock','bkbgs_qh_lock']
         init2Arr(data.bigTurn,keys);
 	}
 
@@ -845,9 +843,9 @@ function ref(data){
 
 
 	//显示这些列
-    let bgCols = ['hb',/*'qhBg','hbBg','hbqh','xzBg','xzqh','jgbg',*//*'jgAbg','jgBbg','bgA','bgB','zdbg','jgzd',*/];
+    let bgCols = [/*'hb',*//*'qhBg','hbBg','hbqh','xzBg','xzqh','jgbg',*//*'jgAbg','jgBbg','bgA','bgB','zdbg','jgzd',*/];
     let bgCols2 = [/*'bkzd','bkbg','bkqh','bkhz','zdbg'*/'bkbg1','bkbg2','bkbg3','bkbg4','bkbg5','bkbg6','bkbg7','bkbg8','bkbg9','bkbg10','bkbg11','bkbg12','bkbg13','bkbg14','bkbg15','zdbg','zdqh'];
-    let jgCols = ['hb',/*'qhBg','hbBg','hbqh','xzBg','xzqh','jgbg',*//*'jgAbg','jgBbg','bgA','bgB',zdbg','jgzd'*/];
+    let jgCols = [/*'hb',*//*'qhBg','hbBg','hbqh','xzBg','xzqh','jgbg',*//*'jgAbg','jgBbg','bgA','bgB',zdbg','jgzd'*/];
     let jgCols2 = [/*'bkzd','bkbg','bkqh','bkhz','zdbg'*/'bkbg1','bkbg2','bkbg3','bkbg4','bkbg5','bkbg6','bkbg7','bkbg8','bkbg9','bkbg10','bkbg11','bkbg12','bkbg13','bkbg14','bkbg15','zdbg','zdqh'];
    let jgCols3 = [];
     let jgTypes = {1:'bk-red',2:'bk-yellow',3:'bk-green',4:'bk-black',5:'bk-grey'};
@@ -890,10 +888,13 @@ function ref(data){
         var turn_bkhz_lock = bigTurn.turn_bkhz_lock;
         var bkhz_inv_lock = bigTurn.bkhz_inv_lock;
         var bkbgs_inv_lock = bigTurn.bkbgs_inv_lock;
+        var bkbgs_lock = bigTurn.bkbgs_lock;
+        var bkbgs_zd_lock = bigTurn.bkbgs_zd_lock;
+        var bkbgs_qh_lock = bigTurn.bkbgs_qh_lock;
 		var html = "";
 		var jgzdLockIndex = 0;
 		var qhzdLockIndex = 0;
-		for (var i = 0; i < userlock.length; i++) {
+/*		for (var i = 0; i < userlock.length; i++) {
 			
 			var cHtml = '<div><span class="click_span" onclick="toSetConfig(1,0,'+(i+1)+',\''+bigTurn.hbbg_config[i]+'\',this)" >'+bigTurn.hbbg_config[i]+'</span></div>'
 			+'<div><span class="click_span" onclick="toSetConfig(2,0,'+(i+1)+',\''+bigTurn.xzbg_config[i]+'\',this)" >'+bigTurn.xzbg_config[i]+'</span></div>';
@@ -906,13 +907,13 @@ function ref(data){
 				//+' '+getLockBtnHtml(3,0,i+1,xzbgLock[i],{t:'選擇報告'})
 				//+' '+getLockBtnHtml(4,0,qhzdLockIndex+1,zdLock[qhzdLockIndex],{t:'求和终端'})
                 +' '+getLockBtnHtml(8,0,i+1,xb_lock[i],{t:'小板報告'})
-				/*+cHtml*/+'</td>';
+				/!*+cHtml*!/+'</td>';
             qhzdLockIndex++;
-		}
+		}*/
 
 		var cols = ['匯總報告','匯總求和','合并報告','合并求和', '選擇報告','選擇求和','結果報告'];
 
-        for (let i = 0; i < cols.length; i++) {
+       /* for (let i = 0; i < cols.length; i++) {
 
             if(i==0){
                 html+='<td>'
@@ -924,7 +925,7 @@ function ref(data){
 
             }
             qhzdLockIndex++;
-        }
+        }*/
 
         var jgzdLockIndex_qhzd = jgzdLockIndex;
         jgzdLockIndex++;
@@ -972,23 +973,34 @@ function ref(data){
         for (let i = 0; i < 15; i++) {
             if(i<10)
             	html+='<td class="font1"> '+getInverseBtnHtml2("bkbgs_inv_lock",i+1,bkbgs_inv_lock[i],'板塊報告')+'<br>'
-					+'板塊报告'+(i+1)+''
-					+' '+getInverseBtnHtml(7,0,i+1,xb_inv_lock[i],'板塊報告')
-					+' '+getLockBtnHtml(12,0,i+1,turn_bkhz_lock[i],{t:'板塊匯總'})
-					+' '+getLockBtnHtml(1,0,i+1,userlock[i])
+					+'板塊报告'+(i+1)+'<br>'
+					+' '+getLockBtnHtml2("bkbgs_lock",i+1,bkbgs_lock[i],'板塊報告')
+					+' '+getLockBtnHtml2("bkbgs_zd_lock",i+1,bkbgs_zd_lock[i],'終端報告')
+					+' '+getLockBtnHtml2("bkbgs_qh_lock",i+1,bkbgs_qh_lock[i],'終端求和')
+					/*+' '+getInverseBtnHtml(7,0,i+1,xb_inv_lock[i],'板塊報告')*/
+					/*+' '+getLockBtnHtml(12,0,i+1,turn_bkhz_lock[i],{t:'板塊匯總'})*/
+					/*+' '+getLockBtnHtml(1,0,i+1,userlock[i])*/
 					//+' '+getLockBtnHtml(2,0,i+1,hbbgLock[i],{t:'合并報告'})
 					//+' '+getLockBtnHtml(3,0,i+1,xzbgLock[i],{t:'選擇報告'})
 					//+' '+getLockBtnHtml(4,0,qhzdLockIndex+1,zdLock[qhzdLockIndex],{t:'求和终端'})
-					+' '+getLockBtnHtml(8,0,i+1,xb_lock[i],{t:'板塊報告'})
+					/*+' '+getLockBtnHtml(8,0,i+1,xb_lock[i],{t:'板塊報告'})*/
 					+'</td>';
             else
                 html+='<td class="font1"> '+getInverseBtnHtml2("bkbgs_inv_lock",i+1,bkbgs_inv_lock[i],'板塊報告')+'<br>'
-                    +'板塊报告'+(i+1)+''+'</td>';
+                    +'板塊报告'+(i+1)+'<br>'
+                    +' '+getLockBtnHtml2("bkbgs_lock",i+1,bkbgs_lock[i],'板塊報告')
+                    +' '+getLockBtnHtml2("bkbgs_zd_lock",i+1,bkbgs_zd_lock[i],'終端報告')
+                    +' '+getLockBtnHtml2("bkbgs_qh_lock",i+1,bkbgs_qh_lock[i],'終端求和')
+                   /* +' '+getInverseBtnHtml(7,0,11,xb_inv_lock[10],'板塊報告')*/
+                    //+' '+getInverseBtnHtml(6,0,i+1,inverse_lock[i],'')
+                    //+' '+getLockBtnHtml(4,0,qhzdLockIndex+1,zdLock[qhzdLockIndex],{t:'求和终端'})
+                   /* +' '+getLockBtnHtml(8,0,11,xb_lock[10],{t:'板塊報告'})*/
+                    +'</td>';
         }
+        bkbg_inv_lock
 
-
-        html+='<td class="font3" > '+'終端報告'+'</td>';
-        html+='<td class="font3" > '+'終端求和'+'</td>';
+        html+='<td class="font3" > '+getInverseBtnHtml2("bkbg_inv_lock",1,bkbg_inv_lock[0],'終端報告')+'<br>終端報告'+'</td>';
+        html+='<td class="font3" > '+getInverseBtnHtml2("bkbg_inv_lock",2,bkbg_inv_lock[1],'終端求和')+'<br>終端求和'+'</td>';
 		return html;
 	}
 
@@ -1011,7 +1023,7 @@ function ref(data){
 					layer.msg('操作成功');
 					console.log($(btn).attr('data-cfg'))
                     var cfg = eval("("+$(btn).attr('data-cfg')+")");
-                    $(btn).replaceWith(getLockBtnHtml(mod,tid,uid,val,cfg));
+                    $(btn).replaceWith(getLockBtnHtml(mod,tid,uid,val,cfg,field));
 
 				}else{
 					
@@ -1027,6 +1039,10 @@ function ref(data){
 
     function getInverseBtnHtml2(field,uid,val,t){
         return getLockBtnHtml(0,0,uid,val,{t:t,textVal:[['正','locak_btn2'],['反','locak_btn1']]},field);
+    }
+
+    function getLockBtnHtml2(field,uid,val,t){
+        return getLockBtnHtml(0,0,uid,val,{t:t},field);
     }
 
     function getInverseBtnHtml(mod,tid,uid,val,t){
@@ -1130,13 +1146,13 @@ function ref(data){
 		<script type="text/html" id="hzbg_tmpl">
 			<tr class="data_col ">
 				<td rowspan="3"><span class="">匯總</span></td>
-				{{each bigTurn.user_lock as val i}}
+				<!--{--{each bigTurn.user_lock as val i}--}
 				<td>{{if bgData[i+1]}}
 					<div class="bg-td">{{bgData[i+1][0].name}} <span {{if bgData[i+1][0].val>0}}class="red"{{/if}}>{{if bgData[i+1][0].name}}{{bgData[i+1][0].val}}{{/if}}</span>
 					</div>
 					{{/if}}
 				</td>
-				{{/each}}
+				{--{/each}--}-->
 
 				{{each viewBg as val i}}
 				<td {{if i==7||i==8}}class="font2"{{/if}}>
@@ -1153,13 +1169,13 @@ function ref(data){
 				<td rowspan="3"><span class="">匯總</span></td>
 			</tr>
 			<tr class="data_col">
-				{{each bigTurn.user_lock as val i}}
+				<!--{--{each bigTurn.user_lock as val i}--}
 				<td>{{if bgData[i+1]}}
 					<div class="bg-td">{{bgData[i+1][1].name}} <span {{if bgData[i+1][1].val>0}}class="red"{{/if}}>{{if bgData[i+1][1].name}}{{bgData[i+1][1].val}}{{/if}}</span>
 					</div>
 					{{/if}}
 				</td>
-				{{/each}}
+				{--{/each}--}-->
 				{{each viewBg as val i}}
 				<td {{if i==7||i==8}}class="font2"{{/if}}>
 					<div class="bg-td">{{bgData[val][1].name}} <span {{if bgData[val][1].val>0}}class="red"{{/if}}>{{if bgData[val][1].name}}{{bgData[val][1].val}}{{/if}}</span>
@@ -1176,11 +1192,11 @@ function ref(data){
 			</tr>
 			<tr class="data_col">
 
-				{{each bigTurn.user_lock as val i}}
+				<!--{--{each bigTurn.user_lock as val i}--}
 				<td class="blue">
 					<div class="bg-td ">共 <span>{{if bgData[i+1]}}{{bgData[i+1][2]}}{{/if}}</span></div>
 				</td>
-				{{/each}}
+				{--{/each}--}-->
 				{{each viewBg as val i}}
 				<td class="blue {{if i==7||i==8}}font2{{/if}}">
 					<div class="bg-td">共 <span>{{bgData[val][2]}}</span></div>
@@ -1201,13 +1217,13 @@ function ref(data){
 	{{each jgData['hb'].list  as val i}}
 	<tr>
 	<td>{{i+1}}</td>
-		{{each bigTurn.user_lock as val j}}
+		<!--{--{each bigTurn.user_lock as val j}--}
 			{{if jgData[j+1]}}
 				<td {{if jgData[j+1].list[i]>0}}class="red"{{/if}}>{{jgData[j+1].list[i]}}</td>
 			{{else}}
 				<td></td>
 			{{/if}}
-		{{/each}}
+		{--{/each}--}-->
 
 		{{each jgCols as col jj}}
 
@@ -1236,10 +1252,10 @@ function ref(data){
 	<script type="text/html" id="bottom_tmpl">
 		<tr>
 			<td>結果</td>
-			{{each bigTurn.user_lock as val j}}
+			<!--{--{each bigTurn.user_lock as val j}--}
 			{{if jgData[j+1]}}
 			<td class="blue2{{if jgData[j+1].jg>0}} red{{/if}}">{{jgData[j+1].jg}}</td>{{else}}<td  class="blue2"></td>{{/if}}
-			{{/each}}
+			{--{/each}--}-->
 
 			{{each jgCols as col j}}
 			<td class="blue2 {{if jgData[col].jg>0}}red{{/if}}">{{jgData[col].jg}}</td>
@@ -1257,10 +1273,10 @@ function ref(data){
 		</tr>
 							  	<tr>
 							  		<td>求和</td>
-									{{each bigTurn.user_lock as val j}}
+									<!--{--{each bigTurn.user_lock as val j}--}
 										{{if jgData[j+1]}}<td {{if jgData[j+1].qh>0}}class="red"{{/if}}>{{jgData[j+1].qh}}</td>{{else}}<td></td>{{/if}}
 							    	
-									{{/each}}
+									{--{/each}--}-->
 									{{each jgCols as col j}}
 										<td {{if jgData[col].qh>0}}class="red"{{/if}}>{{jgData[col].qh}}</td>
 									{{/each}}
@@ -1277,10 +1293,10 @@ function ref(data){
 							  	</tr>
 							  	<tr style="height:40px;">
 							  		<td>共計</td>
-									{{each bigTurn.user_lock as val j}}
+									<!--{--{each bigTurn.user_lock as val j}--}
 										{{if bgData[j+1]}}<td class="blue">{{bgData[j+1][3]}}</td>{{else}}<td class="blue"></td>{{/if}}
 							    	
-									{{/each}}
+									{--{/each}--}-->
 
 									{{each jgCols as col j}}
 									<td class="blue">{{bgData[col][3]}}</td>

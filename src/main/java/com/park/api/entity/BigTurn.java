@@ -93,7 +93,11 @@ public class BigTurn {
 	String bkbg_inv_lock;
 
 	String bkhz_inv_lock;
-	
+
+	String bkbgs_lock;
+	String bkbgs_zd_lock;
+	String bkbgs_qh_lock;
+
 	BigTurnConfig bigTurnConfig;
 
 

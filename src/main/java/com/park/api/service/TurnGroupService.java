@@ -69,7 +69,7 @@ public class TurnGroupService {
         //BigCoreService.countBkzd(cuBg,bigTurn.getBigTurnConfig().getRule_bkbgs(),bigTurn.getBkzd_lock(),newBkbgTrend+"");
         long [] d = ArrayUtils.toBasic(xbBg);
         BigDecimal[] bkbg = new BigDecimal[]{BigDecimal.ZERO,BigDecimal.ZERO};
-        CountCoreAlgorithm.bgCount2(d,bkbg,newBgTrend,rule,CountCoreAlgorithm.COEFFICIENT_P);
+        CountCoreAlgorithm.bgCount3(d,bkbg,newBgTrend,rule,false);
         return new Object[]{newBgTrend,bkbg};
     }
 
