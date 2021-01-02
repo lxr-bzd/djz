@@ -46,7 +46,7 @@ public class CountService {
 		int groupNum = config.getGameGroupLen();
 		int queueGroupSize = queueItemSize*20;
 		int colGroupSize = 4;
-		
+		//描述反转次数
 		Integer[] qcs = parseQueueCounts(queueCounts);
 		StringBuilder newQueue = new StringBuilder();
 		

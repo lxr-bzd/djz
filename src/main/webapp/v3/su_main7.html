@@ -809,10 +809,10 @@ var etbHtml = "";
 function ref(data){
 	
 	
-	if(data.bigTurn.tip_open==1&&data.bigTurn.queue_count>0){
-		openTip();
+	/*if(data.bigTurn.tip_open==1&&data.bigTurn.queue_count>0){
+		//openTip();
 		myTest.stop();
-	}
+	}*/
 		
 	
 	
@@ -838,8 +838,7 @@ function ref(data){
 	
 
 	var bigvData = createBigVdata(data.bigTurn,vDatas);
-	
-	console.log(bigvData);
+
 
 
 	//显示这些列
@@ -850,13 +849,24 @@ function ref(data){
    let jgCols3 = [];
     let jgTypes = {1:'bk-red',2:'bk-yellow',3:'bk-green',4:'bk-black',5:'bk-grey'};
 
-
     bigvData['viewBg'] = bgCols;
     bigvData['viewBg2'] = bgCols2;
     bigvData['jgCols'] = jgCols;
     bigvData['jgCols2'] = jgCols2;
     bigvData['jgCols3'] = jgCols3;
     bigvData['jgTypes'] = jgTypes;
+
+    var isTip = false;
+    for (let i = 0; i < bgCols2.length; i++) {
+        if(bigvData.bgData[bgCols2[i]]&&bigvData.bgData[bgCols2[i]][2]!=0){
+            isTip = true
+		}
+    }
+
+    if(data.bigTurn.tip_open==1&&isTip){
+        openTip();
+        myTest.stop();
+    }
 
 	$("#head_group").html(initLockHtml(bigvData.bigTurn));
     $("#hzbg_group").html(template("hzbg_tmpl",bigvData));
