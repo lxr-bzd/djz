@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.park.api.entity.GameGroup;
 import com.park.api.service.*;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +34,9 @@ public class GameController extends BaseController{
 	
 	@Autowired
 	BigTurnService bigTurnService;
+
+	@Autowired
+	GameGroupService gameGroupService;
 	
 	                                                                                                      
 	@RequestMapping("input")
@@ -43,29 +47,45 @@ public class GameController extends BaseController{
 		Integer isSu = ServiceManage.jdbcTemplate.queryForObject("select is_su from djt_user where djt_u_id = ?", Integer.class,uid);
 		if(isSu!=1)throw new ApplicationException("不是超级会员无法操作");
 		
-		bigTurnService.doInputBigTurn(pei);
+		gameGroupService.doInput(pei);
 		System.gc();
-		Object ret = bigTurnService.getMainModel();
+		Object ret = gameGroupService.getMainModel();
 		if(ret==null)throw new ApplicationException("本輪已結束");
 		return JsonResult.getSuccessResult(ret);
 	}
-	
+
 	@RequestMapping("data")
 	@ResponseBody
 	public Object data() {
 		String uid = ServiceManage.securityService.getSubjectId().toString();
-		Map<String, Object> ret = bigTurnService.getMainModel();
+		Map<String, Object> ret = bigTurnService.getMainModel(1);
 		Integer isSu = ServiceManage.jdbcTemplate.queryForObject("select is_su from djt_user where djt_u_id = ?", Integer.class,uid);
 		if(isSu==1&&ret==null) {
-			bigTurnService.doRenewTurn();
-			ret = bigTurnService.getMainModel();
+			gameGroupService.doRenew();
+			ret = bigTurnService.getMainModel(1);
 			
 		}
 		
 		if(ret == null) throw new ApplicationException("没有正在进行的表格");
 		return JsonResult.getSuccessResult(ret);
 	}
-	
+
+
+	@RequestMapping("data2")
+	@ResponseBody
+	public Object data2() {
+		String uid = ServiceManage.securityService.getSubjectId().toString();
+		Map<String, Object> ret = gameGroupService.getMainModel();
+		Integer isSu = ServiceManage.jdbcTemplate.queryForObject("select is_su from djt_user where djt_u_id = ?", Integer.class,uid);
+		if(isSu==1&&ret==null) {
+			gameGroupService.doRenew();
+			ret = gameGroupService.getMainModel();
+
+		}
+
+		if(ret == null) throw new ApplicationException("没有正在进行的表格");
+		return JsonResult.getSuccessResult(ret);
+	}
 	
 	@RequestMapping("renew")
 	@ResponseBody
@@ -74,10 +94,10 @@ public class GameController extends BaseController{
 		String uid = ServiceManage.securityService.getSessionSubject().getId().toString();
 		Integer isSu = ServiceManage.jdbcTemplate.queryForObject("select is_su from djt_user where djt_u_id = ?", Integer.class,uid);
 		if(isSu!=1)throw new ApplicationException("不是超级会员无法操作");
-		bigTurnService.doFinishTurn();
-		bigTurnService.doRenewTurn();
+		gameGroupService.doFinish();
+		gameGroupService.doRenew();
 		
-		Map<String, Object> ret = bigTurnService.getMainModel();
+		Map<String, Object> ret = gameGroupService.getMainModel();
 		
 		return JsonResult.getSuccessResult(ret);
 	}
@@ -90,6 +110,7 @@ public class GameController extends BaseController{
 		
 		ServiceManage.jdbcTemplate.batchUpdate(
 				"TRUNCATE `game_big_turn`" ,
+				"TRUNCATE `game_group`" ,
 				"TRUNCATE `game_turn`" ,
 				"TRUNCATE `game_turn2`" ,
 				"TRUNCATE `djt_history`" ,
@@ -186,7 +207,7 @@ public class GameController extends BaseController{
 		}
 		
 		
-		BigTurn bigTurn = bigTurnService.getCurrentTurn();
+		BigTurn bigTurn = null;//gameGroupService.getCurrentTurn(1);
 
 		if(ArrayUtils.contains(new int[]{1,2,3},mod)){
             String lockStr = ServiceManage.jdbcTemplate.queryForObject("select "+fname+" from game_turn where turn_no = 0 AND big_turn_id=?", String.class,bigTurn.getId());
@@ -234,7 +255,7 @@ public class GameController extends BaseController{
 			break;
 		}
 		
-		BigTurn bigTurn = bigTurnService.getCurrentTurn();
+		BigTurn bigTurn = null;//gameGroupService.getCurrentTurn(1);
 		
 		String lockStr = ServiceManage.jdbcTemplate.queryForObject("select "+fname+" from game_turn where turn_no = 0 AND big_turn_id=?", String.class,bigTurn.getId());
 		

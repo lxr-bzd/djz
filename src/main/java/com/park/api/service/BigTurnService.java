@@ -44,8 +44,8 @@ public class BigTurnService {
 	@Autowired
 	SysService sysService;
 
-	 public void doInputBigTurn(String pei) {
-		 BigTurn bigTurn = getCurrentTurn();
+	 public BigTurnResult doInputBigTurn(String pei,int groupNo) {
+		 BigTurn bigTurn = getCurrentTurn(groupNo);
 		 if(bigTurn==null)throw new ApplicationException("请刷新本轮");
 
 		 List<BigInputResult> results = new ArrayList<>();
@@ -75,6 +75,10 @@ public class BigTurnService {
 
 					bigTurn.getId()
 			);
+
+			BigTurnResult result = new BigTurnResult();
+			result.setGroupNo(groupNo);
+			return result;
 
 		}else{
 
@@ -261,6 +265,11 @@ public class BigTurnService {
 					jgzd_jg_sum,*/
 			);
 
+			BigTurnResult result = new BigTurnResult();
+			result.setGroupNo(groupNo);
+			result.setZdqh(zdqh);
+			result.setZdbg(zdbg);
+			return result;
 
 		}
 
@@ -408,8 +417,15 @@ public class BigTurnService {
 	}
 
 
-	 public Map<String, Object> getMainModel() {
-		 BigTurn bigTurn = getCurrentTurn(true);
+	public Map getGroupData(int groupNo){
+
+		return ServiceManage.jdbcTemplate.queryForMap("select zdqh,zdqh_jg,zdqh_sum,zdqh_jg_sum from game_big_turn where  state=1 AND group_no = "+groupNo+" limit 1");
+		//return null;
+	}
+
+
+	 public Map<String, Object> getMainModel(int groupNo) {
+		 BigTurn bigTurn = getCurrentTurn(true,groupNo);
 		 if(bigTurn==null)return null;
 
 		 Map<String, Object> map = new HashMap<String, Object>();
@@ -421,20 +437,22 @@ public class BigTurnService {
 		 return map;
 	 }
 
-	public void doRenewTurn(){
+	public BigTurn doRenewTurn(int groupNo){
 
-		BigTurn bigTurn = createBigTurn();
+		BigTurn bigTurn = createBigTurn(groupNo);
 		//TurnGroupCountService.initData(bigTurn);
 		 for (int i = 0; i < bigTurn.getBigTurnConfig().getTurnNum(); i++) {
 			 turnService.doRenewTurn(bigTurn,i);
 		}
 
+		 return bigTurn;
+
 	}
 
-	public void doFinishTurn(){
+	public BigTurn doFinishTurn(int groupNo){
 
-		BigTurn bigTurn = getCurrentTurn();
-		if(bigTurn==null)return;
+		BigTurn bigTurn = getCurrentTurn(groupNo);
+		if(bigTurn==null)return null;
 
 		 for (int i = 0; i < bigTurn.getBigTurnConfig().getTurnNum(); i++) {
 			 turnService.doFinishTurn(bigTurn,i);
@@ -442,11 +460,12 @@ public class BigTurnService {
 
 		 ServiceManage.jdbcTemplate.update("UPDATE game_big_turn SET state=2 WHERE id =?",bigTurn.getId());
 
+		 return bigTurn;
 
 	}
 
 
-	public BigTurn createBigTurn() {
+	public BigTurn createBigTurn(int groupNo) {
 
 		BigTurnConfig config = new BigTurnConfig();
 		config.setTurnNum(sysService.getSysConfig("turn_num", Integer.class));
@@ -458,6 +477,7 @@ public class BigTurnService {
 
 		final BigTurn bigTurn = new BigTurn();
 		bigTurn.setFrow(1);
+		bigTurn.setGroup_no(groupNo);
 		bigTurn.setGj("[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]");
 		bigTurn.setConfig_json(JSONObject.toJSONString(config));
 		bigTurn.setBigTurnConfig(config);
@@ -496,11 +516,11 @@ public class BigTurnService {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-		String sql = "INSERT INTO `game_big_turn`( `frow`, `bg`, `gj`,`config_json`, `state`  ,tg_trends" +
+		String sql = "INSERT INTO `game_big_turn`( `frow`, `bg`, `gj`,`config_json`, `state`,group_no  ,tg_trends" +
                 ",jgzd_jg,jgzd_lock,inverse_lock,xb_inv_lock,xb_lock,bkbg_jg,bkzd_jg,bkzd_lock,bkbg_inv_lock" +
                 ",bkhz_jg,bkhz_lock,bkqh_jg,turn_bkhz_lock,bkhz_inv_lock,zdbg_jg,zdbg_lock,zdqh_jg,bkbgs_sum,bkbgs_jg_sum,bkbgs_inv_lock,bkbgs_lock,bkbgs_zd_lock,bkbgs_qh_lock" +
 				",bkbg1_jg,bkbg2_jg,bkbg3_jg,bkbg4_jg,bkbg5_jg,bkbg6_jg,bkbg7_jg,bkbg8_jg,bkbg9_jg,bkbg10_jg,bkbg11_jg,bkbg12_jg,bkbg13_jg,bkbg14_jg,bkbg15_jg) "
-                + "VALUES ( :frow, '', :gj,:config_json, 1,  :tg_trends" +
+                + "VALUES ( :frow, '', :gj,:config_json, 1,:group_no,  :tg_trends" +
                 ",'',:jgzd_lock,:inverse_lock,:xb_inv_lock,:xb_lock,'','',:bkzd_lock,:bkbg_inv_lock" +
                 ",'',:bkhz_lock,'',:turn_bkhz_lock,:bkhz_inv_lock,:zdbg_jg,:zdbg_lock,'',:bkbgs_sum,:bkbgs_jg_sum,:bkbgs_inv_lock,:bkbgs_lock,:bkbgs_zd_lock,:bkbgs_qh_lock" +
 				",'','','','','','','','','','','','','','','')";
@@ -551,21 +571,23 @@ public class BigTurnService {
 
 	}
 
-	public BigTurn getCurrentTurn() {
+	public BigTurn getCurrentTurn(int groupNo) {
 
-	 	return getCurrentTurn(false);
+	 	return getCurrentTurn(false,groupNo);
 
 	}
 
-	public BigTurn getCurrentTurn(boolean isFull) {
+
+
+	public BigTurn getCurrentTurn(boolean isFull,int groupNo) {
 		BigTurn bigTurn = null;
 		try {
 
 			 if(isFull){
-				 bigTurn = ServiceManage.jdbcTemplate.queryForObject("select * from game_big_turn where  state=1 limit 1",
+				 bigTurn = ServiceManage.jdbcTemplate.queryForObject("select * from game_big_turn where  state=1 AND group_no = "+groupNo+" limit 1",
 						 new BeanPropertyRowMapper<BigTurnFull>(BigTurnFull.class));
 			 }else {
-				 bigTurn = ServiceManage.jdbcTemplate.queryForObject("select * from game_big_turn where  state=1 limit 1",
+				 bigTurn = ServiceManage.jdbcTemplate.queryForObject("select * from game_big_turn where  state=1  AND group_no = "+groupNo+" limit 1",
 						 new BeanPropertyRowMapper<BigTurn>(BigTurn.class));
 			 }
 

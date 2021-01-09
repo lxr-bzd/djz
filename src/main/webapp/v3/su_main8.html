@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+
+    <meta name="description" content="">
+
+    <meta name="Keywords" content="">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+    <style type="text/css">
+        table{border-collapse: collapse;}
+        table td,table th{
+            border: 1px solid rgba(0,0,0,1);
+        }
+        .top-body{overflow-y: scroll;}
+        .top-body>table{table-layout: fixed;}
+        .scroll-body1{overflow-y: scroll;height: 656px;}
+        .scroll-body{overflow-y: scroll;height: 420px;}
+        .scroll-body>table{table-layout: fixed;}
+        .scroll-body td{height: 35px;}
+        .bottom-body{overflow-y: scroll;}
+        .bottom-body>table{table-layout: fixed;}
+        .bottom-body td{height: 35px;}
+
+        .blue{background-color: #087ec3;color: white;}
+        .blue2{background-color: #92ebff;}
+        .locak_btn1{background-color: #dddddd;padding: 2px 1px;cursor: pointer;border-radius:5px}
+        .locak_btn2{background-color: yellow;padding: 2px 1px;cursor: pointer;border-radius:5px}
+
+        .click_span{padding: 3px 8px;cursor: pointer;border-radius:5px}
+
+        .btn1{cursor: pointer;text-align: center;margin: 5px;height: 40px;line-height: 40px;border-radius:5px}
+
+        .bg-td{text-align: left; display: flex;height: 25px;}
+        .bg-td>span{flex:1;text-align: center;}
+        .bg-td2{ font-size: 18px}
+
+        .font1{font-size: 18px;}
+        .font2{font-size: 19px;}
+        .font3{font-size: 20px;}
+
+
+
+
+        .bk-red{background-color: #FFB000;}
+        .bk-yellow{background-color: #f3fe44;}
+        .bk-green{background-color: #93f12e;}
+        .bk-green2{background-color: #92ebff;}
+        .bk-black{background-color:#76933c;}
+        .bk-grey{background-color:white;}
+
+
+        .test-panel {
+            position:absolute; /*绝对定位*/
+            top:20px; /*距顶部50%*/
+            left:0px;
+            padding:18px 15px;
+            /* margin:-100px 0 0 -150px; */ /*设定这个div的margin-top的负值为自身的高度的一半,margin-left的值也是自身的宽度的一半的负值.(感觉在绕口令)*/
+            width:160px; /*宽为400,那么margin-top为-200px*/
+            height:85px; /*高为200那么margin-left为-100px;*/
+            z-index:999999999; /*浮动在最上层 */
+            /* filter:alpha(Opacity=80);-moz-opacity:0.8;opacity: 0.8; */
+            background-color:#191970;
+        }
+
+        .test-btn{
+            font-weight:bold;
+            font-size:16px;
+            filter:alpha(Opacity=100);-moz-opacity:1;opacity:1;
+        }
+
+    </style>
+</head>
+<body>
+<!--前臺表-->
+<section class="reception_wrap" style="overflow-x: scroll;height: 100%;">
+    <div class="reception_box">
+        <table border="0"><tr><td>
+            <div class="">
+                <div class="top-body">
+                    <table id="head-table" border="0" style="border: 1px solid #000;width:100%">
+                        <colgroup>
+                            <col style="width:50px;">
+
+                            <!--<col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">-->
+
+                            <col style="width:100px;">
+                            <col style="width:100px;">
+                            <col style="width:100px;">
+                            <col style="width:100px;">
+                            <col style="width:100px;">
+                            <col style="width:100px;">
+                            <col style="width:100px;">
+                            <col style="width:100px;">
+                            <col style="width:100px;">
+
+                            <col style="width:100px;">
+                            <col style="width:100px;">
+                            <col style="width:100px;">
+                            <col style="width:100px;">
+                            <col style="width:100px;">
+                            <col style="width:100px;">
+                            <col style="width:120px;">
+                            <col style="width:80px;">
+                            <col style="width:100px;">
+                            <col style="width:100px;">
+
+                            <col style="width:50px;">
+
+                        </colgroup>
+                        <tbody >
+                        <tr class="data_col person_int">
+                            <td rowspan="4" class="focus_row">--</td>
+                            <td colspan="7" class="blue" style="font-size:24px">計 算 表</td>
+                            <!--<td><a onclick="toSetting()"><div class="blue btn1">設置</div></a></td>-->
+                            <td><div class="blue btn1 refresh_btn">刷新</div></td>
+
+
+                            <td><a href="su_history.html"><div class="blue btn1">記錄</div></a></td>
+                            <!-- <td><div class="blue btn1 remove-all">清空</div></td> -->
+                            <td><div class="blue btn1 exit_btn">關閉</div></td>
+                            <td><input id="setting-input" type="password" style="width: 90%;background-color: #eee"  placeholder=""></td>
+
+                            <td colspan="4" id="input_group"><input type="text" style="width: 90%;background-color: #eee" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""></td>
+                            <td colspan="4"> <div class="blue btn1 ok_btn">確定</div></td>
+                            <!-- 	<td colspan="2">
+                                    <table style="height:100%">
+                                        <tr><td style="height:auto;font-size:16px;">開始<input type="number" id="tg_thre" value="" style="width: 40%;background-color: #eee;font-size:19px;">
+                                                    <input value="保存" style="border:auto;width:auto;font-size:16px;padding:1px 5px;" type="button"  onclick="saveConfig('tg_thre',$('#tg_thre').val())"></td>
+                                        </tr>
+                                        <tr><td style="height:auto;font-size:16px;">間隔<input type="number" id="conf_len" value="" style="width: 40%;background-color: #eee;font-size:19px;">
+                                                    <input value="保存" style="border:auto;width:auto;font-size:16px;padding:1px 5px;" type="button"  onclick="saveConfig('conf_len',$('#conf_len').val())"></td>
+                                        </tr>
+                                    </table>
+                                </td> -->
+                            <td rowspan="4" class="focus_row">--</td>
+
+                        </tr>
+
+                        <tr class="data_col" id="head_group">
+
+                            <td>1<span class="locak_btn1"></span></td>
+                            <td>2<span class="locak_btn1"></span></td>
+                            <td>3 <span class="locak_btn1"></span></td>
+                            <td>4<span class="locak_btn1"></span></td>
+                            <td>5<span class="locak_btn1"></span></td>
+                            <td>6<span class="locak_btn1"></span></td>
+                            <td>7<span class="locak_btn1"></span></td>
+                            <td>8<span class="locak_btn1"></span></td>
+                            <td>9<span class="locak_btn1"></span></td>
+                            <td>10<span class="locak_btn1"></span></td>
+                            <td>匯總報告</td>
+
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>	</td></tr>  <tr><td>
+            <!--内部一层[[-->
+            <div class="">
+                <table>
+                    <tr class="reception">
+                        <!--A表-->
+                        <td  class="table_top rec-table-one">
+                            <div class="top-body">
+                                <table border="0" style="border: 1px solid #000;width:100%">
+                                    <colgroup class="app-colgroup">
+                                        <col style="width:50px;">
+
+                                        <col style="width:100px;">
+                                        <col style="width:100px;">
+                                        <col style="width:100px;">
+                                        <col style="width:100px;">
+                                        <col style="width:100px;">
+                                        <col style="width:100px;">
+                                        <col style="width:100px;">
+                                        <col style="width:100px;">
+                                        <col style="width:100px;">
+                                        <col style="width:120px;">
+                                        <col style="width:80px;">
+                                        <col style="width:100px;">
+                                        <col style="width:100px;">
+
+                                        <col style="width:50px;">
+
+                                    </colgroup>
+                                    <tbody id="bg_group">
+
+                                    </tbody>
+                                    <tbody id="hzbg_group">
+                                    <tr class="data_col ">
+                                        <td rowspan="3"> <span class="" rowspan="3">汇总</span></td>
+                                        <td> <span class="red"></span></td>
+                                        <td> <span class="red"></span></td>
+                                        <td> <span class="red"></span></td>
+                                        <td> <span class="red"></span></td>
+                                        <td> <span class="red"></span></td>
+                                        <td> <span class="red"></span></td>
+                                        <td> <span class="red"></span></td>
+                                        <td> <span class="red"></span></td>
+                                        <td> <span class="red"></span></td>
+                                        <td> <span class="red"></span></td>
+                                        <td> <span class="red"></span></td>
+                                        <td rowspan="3"> <span class="" >汇总</span></td>
+                                    </tr>
+                                    <tr class="data_col ">
+                                        <td><span class="red"></span></td>
+                                        <td><span class="red"></span></td>
+                                        <td><span class="red"></span></td>
+                                        <td><span class="red"></span></td>
+                                        <td><span class="red"></span></td>
+                                        <td><span class="red"></span></td>
+                                        <td><span class="red"></span></td>
+                                        <td><span class="red"></span></td>
+                                        <td><span class="red"></span></td>
+                                        <td><span class="red"></span></td>
+                                        <td><span class="red"></span></td>
+
+                                    </tr>
+                                    <tr class="data_col ">
+                                        <td class="blue"></td>
+                                        <td class="blue"></td>
+                                        <td class="blue"></td>
+                                        <td class="blue"></td>
+                                        <td class="blue"></td>
+                                        <td class="blue"></td>
+                                        <td class="blue"></td>
+                                        <td class="blue"></td>
+                                        <td class="blue"></td>
+                                        <td class="blue"></td>
+
+                                        <td class="blue"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="scroll-body" style="height: 525px;">
+                                <table class="rec-table-one" style="height:auto;width:100%;">
+                                    <colgroup class="app-colgroup">
+                                        <col style="width:50px;">
+
+
+                                        <col style="width:90px;">
+                                        <col style="width:90px;">
+                                        <col style="width:90px;">
+                                        <col style="width:90px;">
+                                        <col style="width:90px;">
+                                        <col style="width:90px;">
+                                        <col style="width:90px;">
+                                        <col style="width:90px;">
+                                        <col style="width:90px;">
+                                        <col style="width:90px;">
+                                        <col style="width:90px;">
+
+                                        <col style="width:50px;">
+
+                                    </colgroup>
+                                    <tbody id="jg_group">
+
+                                    <!-- <tr >
+                                        <td>1</td>
+                                      <td>200</td>
+                                      <td>200</td>
+                                      <td>200</td>
+                                      <td>200</td>
+                                      <td>200</td>
+                                      <td>200</td>
+                                      <td>200</td>
+                                      <td>200</td>
+                                      <td>200</td>
+                                      <td>200</td>
+                                      <td>1</td>
+                                      <td>200</td>
+                                      <td>200</td>
+                                      <td>1</td>
+                                    </tr> -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="bottom-body">
+                                <table class="table_top" style="width:100%">
+                                    <colgroup class="app-colgroup">
+                                        <col style="width:50px;">
+
+                                        <col style="width:90px;">
+                                        <col style="width:90px;">
+                                        <col style="width:90px;">
+                                        <col style="width:90px;">
+                                        <col style="width:90px;">
+                                        <col style="width:90px;">
+                                        <col style="width:90px;">
+                                        <col style="width:90px;">
+                                        <col style="width:90px;">
+                                        <col style="width:90px;">
+
+                                        <col style="width:90px;">
+
+                                        <col style="width:50px;">
+                                    </colgroup>
+                                    <tbody id="bottom_group">
+                                    <tr >
+                                        <td>結果</td>
+                                        <td class="blue2"></td>
+                                        <td class="blue2"></td>
+                                        <td class="blue2"></td>
+                                        <td class="blue2"></td>
+                                        <td class="blue2"></td>
+                                        <td class="blue2"></td>
+                                        <td class="blue2"></td>
+                                        <td class="blue2"></td>
+                                        <td class="blue2"></td>
+                                        <td class="blue2"></td>
+
+                                        <td class="blue2"></td>
+                                        <td>結果</td>
+                                    </tr>
+                                    <tr >
+                                        <td>求和</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+
+                                        <td></td>
+                                        <td>求和</td>
+                                    </tr>
+                                    <tr >
+                                        <td>共計</td>
+                                        <td class="blue"></td>
+                                        <td class="blue"></td>
+                                        <td class="blue"></td>
+                                        <td class="blue"></td>
+                                        <td class="blue"></td>
+                                        <td class="blue"></td>
+                                        <td class="blue"></td>
+                                        <td class="blue"></td>
+                                        <td class="blue"></td>
+                                        <td class="blue"></td>
+
+                                        <td class="blue"></td>
+                                        <td>共計</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </td>
+                    </tr>
+                </table>
+            </div></td></tr></table>
+        <!--彈窗-->
+        <!--關閉按鈕-->
+        <div class="exit_pup_wrap hide">
+            <div class="exit_pup_box">
+                <div class="exit_pup">
+                    <h2>確定要關閉嗎？</h2>
+                    <div class="pup_btn">
+                        <a href="javascript:;" class="cancel_btn">取消</a>
+                        <a href="reception-login.html">確定</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--刷新按鈕-->
+        <div class="refresh_pup_wrap hide">
+            <div class="exit_pup_box">
+                <div class="exit_pup">
+                    <h2>確定要刷新嗎？</h2>
+                    <div class="pup_btn">
+                        <a href="javascript:;" class="cancel_btn">取消</a>
+                        <a href="javascript:;" class="pup_sure_btn">確定</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--確定按鈕-->
+        <div class="sure_pup_wrap hide">
+            <div class="exit_pup_box">
+                <div class="exit_pup">
+                    <h2>請檢查輸入框是否填滿</h2>
+                    <div class="pup_btn">
+                        <a href="javascript:;" class="pup_sure">確定</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="test-panel"></div>
+
+<script src="js/jquery-1.11.2.min.js"></script>
+<script type="text/javascript">
+    //關閉彈窗
+    $(".exit_btn").click(function () {
+        logout();
+        //$(".exit_pup_wrap").addClass("showtb").removeClass("hide")
+    })
+    $(".cancel_btn").click(function () {
+        $(".exit_pup_wrap").addClass("hide").removeClass("showtb")
+    })
+    //刷新彈窗
+    $(".refresh_btn").click(function () {
+        reNew();
+
+    })
+    //刷新彈窗
+    $(".remove-all").click(function () {
+        removeAll();
+
+    });
+    $(".cancel_btn,.pup_sure_btn").click(function () {
+        $(".refresh_pup_wrap").addClass("hide").removeClass("showtb")
+    })
+
+    //			回刪
+    $('.int_item').on('keyup',function(e){
+        var i = $('.int_item').index(e.target);
+        if (window.event.keyCode==8) {
+            this.value="";
+            if (i<=0) {
+                i=0;
+            } else{
+                i--;
+            }
+            $('.int_item').eq(i).focus();
+        }
+    })
+    //			確定按鈕判斷
+    var off=null;
+    $(".ok_btn").click(function () {
+        for (var j=0;j<$('.int_item').length;j++) {
+            if ($('.int_item').eq(j).val()=="") {
+                off=true;
+                break;
+            }else{
+                off=false;
+            }
+        }
+
+        if (off) {
+            $(".sure_pup_wrap").addClass("showtb").removeClass("hide")
+            $(".pup_sure").click(function () {
+                $(".sure_pup_wrap").addClass("hide").removeClass("showtb")
+            })
+        }else{
+            doInput();
+
+        }
+    })
+</script>
+
+<script src="../js/app.js"></script>
+<script src="../jslib/layer/layer.js"></script>
+<script type="text/javascript" src="../js/template-web.js"></script>
+
+<script type="text/javascript" src="../js/tableExport.min.js"></script>
+<script type="text/javascript" src="../js/jquery.base64.js"></script>
+<script src="./js/turn-core.js"></script>
+<script src="./js/group-core.js"></script>
+
+<script type="text/javascript">
+    //	input輸入框
+    $('.int_item').on('input propertychange',onInput);
+    function onInput(e){
+        var inp = e.currentTarget;
+        var i = $('.int_item').index($(inp));
+        inp.value=inp.value.replace(/[^1234.]/g,'')
+        if ($(inp).val().length==1) {
+            i++;
+            $('.int_item').eq(i).focus();
+        } else if ($(inp).val().length>1) {
+            inp.value=inp.value.replace(/[\d]/g,'')
+        }
+        if (window.event.keyCode==8) {
+            inp.value="";
+            if (i<=0) {
+                i=0;
+            } else{
+                i--;
+            }
+            $('.int_item').eq(i).focus();
+        }
+
+    }
+
+
+
+    function reNew(){
+
+        layer.confirm('是否重新開始？', {
+            btn: ['確定', '取消']
+        },function(index){
+            layer.close(index);
+            var index2 = layer.load(1, {
+                shade: [0.5,'#555'] //0.1透明度的白色背景
+            });
+            $app.request("../user/game/renew.do",function(data){
+                layer.close(index2);
+                if(data.code!=1){
+                    $app.alert(data.msg);
+                    return;
+                }
+                cleanInput();
+                initData(data.data);
+                ref(data.data);
+
+            });
+
+        });
+    }
+
+
+    function doInput(){
+        var val = getInput();
+        if(!val){
+            layer.alert("請輸入完整");
+            return;
+        }
+        var index = layer.load(1, {
+            shade: [0.5,'#555'] //0.1透明度的白色背景
+        });
+        $app.request("../user/game/input.do?pei="+val,function(data){
+            layer.close(index);
+            if(data.code!=1){
+                layer.alert(data.msg,{
+                    success:function(layero){
+                        layero.find('.layui-layer-content').css('font-size', '18px');
+                    }
+                });
+
+                return;
+            }
+
+            initData(data.data);
+
+            /*var gameRowNum = data.data.config.config_json.gameRowNum;
+            if(gameRowNum-data.data.bigTurn.frow<=2)myTest.stop();*/
+
+            cleanInput();
+            $app.msg("ok");
+            ref(data.data);
+            onBusEnd();
+        });
+
+    }
+
+
+    function getInput(){
+
+        var inputs = $("#input_group input");
+        var val="";
+        inputs.each(function(i,e){
+            var v = $(e).val();
+            if(!(/^[1234]{1}$/g).test(v))return;
+            val+=v;
+        });
+        if(val.length!=1)return;
+        var ret = '';
+        for (var i = 0; i < 10; i++) {
+            ret+=val;
+        }
+        return ret;
+    }
+
+    function cleanInput(){
+
+        var inputs = $("#input_group input");
+        inputs.val("");
+    }
+
+    function logout(){
+        layer.confirm('您確定要退出？', {
+            btn: ['確定','取消'] //按鈕
+        }, function(){
+            $app.request("../logout.do",function(data){
+                window.location.href = $app.loginUrl;
+            });
+        });
+
+
+    }
+
+    $("#setting-input").keypress(function (e) {
+        if (e.which == 13) {
+
+            toSetting(e.target);
+        }
+    });
+
+    function toSetting(e){
+        var val = $(e).val();
+        if(!val){
+            $app.alert("請輸入設置密碼");
+            return;
+        }
+        $app.request("../user/game/validationSettingPwd.do",function(data){
+            if(data.data.result==1){
+                $(e).val('');
+                window.location.href = "setting.html";
+            }else{
+                $app.alert(data.data.msg);
+            }
+
+        },{param:{pwd:val}});
+
+        /*layer.prompt({title: '請輸入設置密碼', formType: 1,offset: 't',btn:['確認','取消']},function(val, index){
+            if(!val){
+                $app.alert("請輸入設置密碼");
+                return;
+			}
+            layer.close(index);
+            $app.request("../user/game/validationSettingPwd.do",function(data){
+                if(data.data.result==1){
+                    window.location.href = "setting.html";
+				}else{
+                    $app.alert(data.data.msg);
+				}
+
+            },{param:{pwd:val}});
+        });*/
+    }
+
+
+    function tableExport(){
+        var tb = $(etbHtml);
+
+        $("body").append(tb);
+        tb.tableExport({type:'excel',ignoreColumn: [],ignoreRow:[]
+            , separator:';', escape:'false'
+            ,formats: ['xlsx']
+            ,fileName: '前臺表導出'+new Date().format("yyyy-MM-dd")});
+        tb.remove();
+    }
+
+
+
+</script>
+<script type="text/javascript">
+    // L  X  D  S
+    // 老 少 男 女
+    var conf1 = {'L':'L','X':'X','D':'D','S':'S'}
+
+    var gailv = [0,0,0,0]
+
+
+    var myTest = {
+        val:'',
+        open:false,
+        start:function(){
+            if(!$('#input_group>input').val()){
+                layer.msg('未輸入數字，啟動失敗');
+                return;
+            }
+
+            $('.ok_btn').click();
+            this.val = $('#input_group>input').val();
+            this.open = true;
+            $(".test-panel").html('<div class=" btn1 test-btn" style="background-color:#7FFF00;" onclick="myTest.stop()">停止</div>');
+
+
+        },
+        input:function(){
+            var g = [[1,20],[21,50],[51,80],[81,100]];
+            var n = Math.ceil(Math.random()*100);
+            for (var i = 0; i < g.length; i++) {
+
+                if(n>=g[i][0]&&n<=g[i][1]){this.val = i+1;continue;}
+            }
+
+            gailv[this.val-1]+=1;
+            //this.val = Math.ceil(Math.random()*100);
+            $('#input_group>input').val(this.val);
+            $('.ok_btn').click();
+
+
+        }
+        ,stop:function(){
+            this.val = '';
+            this.open = false;
+            $(".test-panel").html('<div class=" btn1 test-btn" style="background-color:yellow;" onclick="myTest.start()">啟動</div>');
+        },
+        init:function(){
+            this.stop();
+
+
+        }
+    };
+
+    myTest.init();
+
+    function onBusEnd(){
+        if(myTest.open)	myTest.input();
+
+    }
+
+
+    var notifyDialog;
+
+    $(function(){
+
+        $(".app-colgroup").html($("#head-table>colgroup").html());
+
+        var index = layer.load(1, {
+            shade: [0.5,'#555'] //0.1透明度的白色背景
+        });
+        $app.request("../user/game/data2.do",function(data){
+            layer.close(index);
+            if(data.code!=1){
+                $app.alert(data.msg);
+                return;
+            }
+
+
+            initData(data.data);
+            ref(data.data);
+        });
+
+        $(document).keydown(function(event){
+
+            if(event.keyCode == 32){
+                layer.close(notifyDialog);
+            }
+
+
+        });
+
+    });
+
+    function openTip(){
+        layer.open({
+            title:'提示',
+            type: 1,
+            skin: 'layui-layer-molv', //样式类名
+            closeBtn: 0, //不显示关闭按钮
+            anim: 2,
+            content: '<div style="padding:20px;width:180px;"></div>'
+            ,btn:['關閉']
+            ,success:function(layero){
+                layero.find('.layui-layer-btn').css('text-align', 'center').find('a').css('padding','6px 80px').css('height','40px')
+            }
+        });
+
+    }
+
+
+    function initData(data){
+
+        return;
+        data.bigTurn.user_lock = data[0].turn.user_lock.split(',');
+        data.bigTurn.xzbg_lock =  data[0].turn.xzbg_lock.split(',');
+        data.bigTurn.hbbg_lock =  data[0].turn.hbbg_lock.split(',');
+        data.bigTurn.xzbg_config = data[0].turn.xzbg_config.split(',');
+        data.bigTurn.hbbg_config = data[0].turn.hbbg_config.split(',');
+        data.bigTurn.jgzd_lock = data.bigTurn.jgzd_lock.split(',');
+        data.bigTurn.inverse_lock = data.bigTurn.inverse_lock.split(',');
+
+        data.bigTurn.config_json = eval("("+data[0].turn.config_json+")")
+        data.bigTurn.tip_open = data[0].tip_open;
+        data.bigTurn.queue_count = 0;
+        for (var i = 0; i < data.bigTurn.bigTurnConfig.turnNum; i++) {
+            data.bigTurn.queue_count+=data[i].turn.queue_count;
+        }
+
+        var keys = ['xb_inv_lock','xb_lock','bkzd_lock','bkhz_lock','bkbg_inv_lock','turn_bkhz_lock','bkhz_inv_lock','zdbg_lock','bkbgs_inv_lock','bkbgs_lock','bkbgs_zd_lock','bkbgs_qh_lock']
+        init2Arr(data.bigTurn,keys);
+    }
+
+    function init2Json(data,keys){
+        for (let i = 0; i < keys.length; i++) {
+            let k = keys[i];
+            data[k] =  eval("("+data[k]+")")
+        }
+    }
+
+    function init2Arr(data,keys){
+        for (let i = 0; i < keys.length; i++) {
+            let k = keys[i];
+            data[k] = data[k].split(',');
+        }
+    }
+
+    var etbHtml = "";
+
+    function ref(data){
+
+
+        /*if(data.bigTurn.tip_open==1&&data.bigTurn.queue_count>0){
+            //openTip();
+            myTest.stop();
+        }*/
+
+
+
+        var frow = data.gameGroup.frow;
+        data.gameGroup.mod = 1;
+        $(".focus_row").html(frow-2);
+        $(".mod_group").html(data.gameGroup.mod==1?'A':'B');
+
+        $("#jg_group").empty();
+
+        var bigvData = groupUtils.createVdata(data)
+        console.log(bigvData);
+
+
+        //显示这些列
+       /* var showCol = {
+
+            jgCols :[/!*'hb',*!//!*'qhBg','hbBg','hbqh','xzBg','xzqh','jgbg',*!//!*'jgAbg','jgBbg','bgA','bgB',zdbg','jgzd'*!/];
+            ,jgCols2 :[/!*'bkzd','bkbg','bkqh','bkhz','zdbg'*!/'bkbg1','bkbg2','bkbg3','bkbg4','bkbg5','bkbg6','bkbg7','bkbg8','bkbg9','bkbg10','bkbg11','bkbg12','bkbg13','bkbg14','bkbg15','hzbg','fz','zdbg'];
+            ,jgCols3 : []
+        }*/
+
+        var bgCols = [
+             {n:'bkbg1',t:1},{n:'bkbg2',t:1},{n:'bkbg3',t:1},{n:'bkbg4',t:1},{n:'bkbg5',t:1}
+            ,{n:'bkbg6',t:1},{n:'bkbg7',t:1},{n:'bkbg8',t:1},{n:'bkbg9',t:1},{n:'bkbg10',t:1}
+            ,{n:'bkbg11',t:1},{n:'bkbg12',t:1},{n:'bkbg13',t:1},{n:'bkbg14',t:1},{n:'bkbg15',t:1}
+            ,{n:'hzbg',t:1}
+            ,{n:'hzqh',t:3},{n:'fzbg',t:3}
+            ,{n:'zdbg',t:1}
+        ];
+
+        var jgCols = [
+            {n:'bkbg1',t:1},{n:'bkbg2',t:1},{n:'bkbg3',t:1},{n:'bkbg4',t:1},{n:'bkbg5',t:1}
+            ,{n:'bkbg6',t:1},{n:'bkbg7',t:1},{n:'bkbg8',t:1},{n:'bkbg9',t:1},{n:'bkbg10',t:1}
+            ,{n:'bkbg11',t:1},{n:'bkbg12',t:1},{n:'bkbg13',t:1},{n:'bkbg14',t:1},{n:'bkbg15',t:1}
+            ,{n:'hzbg',t:1}
+            ,{n:'hzqh',t:3},{n:'fzbg',t:3}
+            ,{n:'zdbg',t:1}
+        ]
+       /* let bgCols = [/!*'hb',*!//!*'qhBg','hbBg','hbqh','xzBg','xzqh','jgbg',*!//!*'jgAbg','jgBbg','bgA','bgB','zdbg','jgzd',*!/];
+        let bgCols2 = [/!*'bkzd','bkbg','bkqh','bkhz','zdbg'*!/'bkbg1','bkbg2','bkbg3','bkbg4','bkbg5','bkbg6','bkbg7','bkbg8','bkbg9','bkbg10','bkbg11','bkbg12','bkbg13','bkbg14','bkbg15','hzbg','fz','zdbg'];
+*/
+        let jgTypes = {1:'bk-red',2:'bk-yellow',3:'bk-green',4:'bk-black',5:'bk-grey',6:'bk-grey',7:'bk-green2'};
+
+        bigvData['bgCols'] = bgCols;
+        bigvData['jgCols'] = jgCols;
+        /*bigvData['jgCols'] = jgCols;
+        bigvData['jgCols2'] = jgCols2;
+        bigvData['showCol'] = showCol;*/
+        bigvData['jgTypes'] = jgTypes;
+
+        var isTip = false;
+        for (let i = 0; i < bgCols.length; i++) {
+            if(bigvData.bgData[bgCols[i].n]&&bigvData.bgData[bgCols[i].n][2]!=0){
+                isTip = true
+            }
+        }
+
+        if(data.config.tip_open==1&&isTip){
+            openTip();
+            myTest.stop();
+        }
+
+        $("#head_group").html(initLockHtml(bigvData.bigTurn));
+        $("#hzbg_group").html(template("hzbg_tmpl",bigvData));
+
+        $("#jg_group").html(template("jg_tmpl",bigvData));
+        $("#jg_group>tr:last").attr("id","bottom2");
+
+        $("#bottom_group").html(template("bottom_tmpl",bigvData));
+        $("#bottom_group>tr:last").attr("id","bottom1");
+
+        location.href="#bottom1";
+        location.href="#bottom2";
+    }
+
+
+
+    function initLockHtml(bigTurn){
+        /*var xb_inv_lock = bigTurn.xb_inv_lock;
+        var xb_lock = bigTurn.xb_lock;
+        var userlock = bigTurn.user_lock;
+        var hbbgLock = bigTurn.hbbg_lock;
+        var xzbgLock = bigTurn.xzbg_lock;
+        var jgzdLock = bigTurn.jgzd_lock;
+        var inverse_lock = bigTurn.inverse_lock;
+        var bkzd_lock = bigTurn.bkzd_lock;
+        var bkbg_inv_lock = bigTurn.bkbg_inv_lock;
+        var bkhz_lock = bigTurn.bkhz_lock;
+        var zdbg_lock = bigTurn.zdbg_lock;
+        var turn_bkhz_lock = bigTurn.turn_bkhz_lock;
+        var bkhz_inv_lock = bigTurn.bkhz_inv_lock;
+        var bkbgs_inv_lock = bigTurn.bkbgs_inv_lock;
+        var bkbgs_lock = bigTurn.bkbgs_lock;
+        var bkbgs_zd_lock = bigTurn.bkbgs_zd_lock;
+        var bkbgs_qh_lock = bigTurn.bkbgs_qh_lock;*/
+        var html = "";
+        var jgzdLockIndex = 0;
+        var qhzdLockIndex = 0;
+        /*		for (var i = 0; i < userlock.length; i++) {
+
+                    var cHtml = '<div><span class="click_span" onclick="toSetConfig(1,0,'+(i+1)+',\''+bigTurn.hbbg_config[i]+'\',this)" >'+bigTurn.hbbg_config[i]+'</span></div>'
+                    +'<div><span class="click_span" onclick="toSetConfig(2,0,'+(i+1)+',\''+bigTurn.xzbg_config[i]+'\',this)" >'+bigTurn.xzbg_config[i]+'</span></div>';
+
+                    html+='<td>'+(i+1) +' <br>'
+                        +' '+getInverseBtnHtml(7,0,i+1,xb_inv_lock[i],'板塊報告')
+                        +' '+getLockBtnHtml(12,0,i+1,turn_bkhz_lock[i],{t:'板塊匯總'})
+                        +' '+getLockBtnHtml(1,0,i+1,userlock[i])
+                        //+' '+getLockBtnHtml(2,0,i+1,hbbgLock[i],{t:'合并報告'})
+                        //+' '+getLockBtnHtml(3,0,i+1,xzbgLock[i],{t:'選擇報告'})
+                        //+' '+getLockBtnHtml(4,0,qhzdLockIndex+1,zdLock[qhzdLockIndex],{t:'求和终端'})
+                        +' '+getLockBtnHtml(8,0,i+1,xb_lock[i],{t:'小板報告'})
+                        /!*+cHtml*!/+'</td>';
+                    qhzdLockIndex++;
+                }*/
+
+        var cols = ['匯總報告','匯總求和','合并報告','合并求和', '選擇報告','選擇求和','結果報告'];
+
+        /* for (let i = 0; i < cols.length; i++) {
+
+             if(i==0){
+                 html+='<td>'
+                     +' '+getInverseBtnHtml(7,0,11,xb_inv_lock[10],'小板報告')
+                     //+' '+getInverseBtnHtml(6,0,i+1,inverse_lock[i],'')
+                     //+' '+getLockBtnHtml(4,0,qhzdLockIndex+1,zdLock[qhzdLockIndex],{t:'求和终端'})
+                     +' '+getLockBtnHtml(8,0,11,xb_lock[10],{t:'小板報告'})
+                     +'<br>'+cols[i]+'</td>';
+
+             }
+             qhzdLockIndex++;
+         }*/
+
+        var jgzdLockIndex_qhzd = jgzdLockIndex;
+        jgzdLockIndex++;
+
+        /*var cols2 = ['結果1','結果2','結果3','結果4'];
+
+        for (let i = 0; i < cols2.length; i++) {
+            html+='<td>'+getInverseBtnHtml(6,0,cols.length+2+i,inverse_lock[cols.length+1+i])
+				+' '+getLockBtnHtml(5,0,jgzdLockIndex+1,jgzdLock[jgzdLockIndex],{t:'结果'})
+				//+' '+getLockBtnHtml(4,0,qhzdLockIndex+1,zdLock[qhzdLockIndex],{t:'求和终端'})
+				+'<br>'+cols2[i]+'</td>';
+            qhzdLockIndex++;
+            jgzdLockIndex++;
+        }*/
+
+        /*html+='<td>'+getInverseBtnHtml(6,0,cols.length+1,inverse_lock[cols.length])+' '+getLockBtnHtml(5,0,jgzdLockIndex_qhzd+1,jgzdLock[jgzdLockIndex_qhzd],{t:'结果'})
+			+'<br>求和终端</td>';
+
+        html+='<td>'+'结果终端'+'</td>';*/
+        /*---------------------------------------------------------------------*/
+        /* var bkzdLockStr = "";
+         for (let i = 0; i < bkzd_lock.length; i++) {
+             bkzdLockStr+= ' '+getLockBtnHtml(9,0,i+1,bkzd_lock[i],{t:'小板報告'+(i+1)});
+         }
+
+         html+='<td class="font1"> '+getInverseBtnHtml(10,0,2,bkbg_inv_lock[1])
+             +' '+getLockBtnHtml(13,0,1,zdbg_lock[0],{t:'終端報告'})+'<br>'+'板塊報告求和'+'</td>';
+
+         html+='<td class="font1" > '+getInverseBtnHtml(10,0,1,bkbg_inv_lock[0])
+             +' '+getLockBtnHtml(13,0,2,zdbg_lock[1],{t:'終端報告'})+'<br>'+'板塊報告'+'<br>'+bkzdLockStr+'</td>';
+
+
+         var bkhzLockStr = "";
+         for (let i = 0; i < bkhz_lock.length; i++) {
+             bkhzLockStr+= ' '+getLockBtnHtml(11,0,i+1,bkhz_lock[i],{t:'板塊匯總'+(i+1)});
+         }
+
+
+         html+='<td class="font1"> '+' '+getInverseBtnHtml(14,0,1,bkhz_inv_lock[0],'板塊匯總')
+             +' '+getLockBtnHtml(13,0,3,zdbg_lock[2],{t:'終端報告'})+'<br>'+'板塊匯總求和'+'</td>';
+
+         html+='<td class="font1" > '+' '+getInverseBtnHtml(14,0,2,bkhz_inv_lock[1],'板塊匯總')
+             +' '+getLockBtnHtml(13,0,4,zdbg_lock[3],{t:'終端報告'})+'<br>'+'板塊匯總'+'<br>'+bkhzLockStr+'</td>';*/
+
+        for (let i = 0; i < 15; i++) {
+            if(i<10)
+                html+='<td class="font1"> '/*+getInverseBtnHtml2("bkbgs_inv_lock",i+1,bkbgs_inv_lock[i],'板塊報告')+'<br>'*/
+                    +'板塊报告'+(i+1)+'<br>'
+                   /* +' '+getLockBtnHtml2("bkbgs_lock",i+1,bkbgs_lock[i],'板塊報告')
+                    +' '+getLockBtnHtml2("bkbgs_zd_lock",i+1,bkbgs_zd_lock[i],'終端報告')
+                    +' '+getLockBtnHtml2("bkbgs_qh_lock",i+1,bkbgs_qh_lock[i],'終端求和')*/
+                    +'</td>';
+            else
+                html+='<td class="font1"> '/*+getInverseBtnHtml2("bkbgs_inv_lock",i+1,bkbgs_inv_lock[i],'板塊報告')+'<br>'*/
+                    +'板塊报告'+(i+1)+'<br>'
+                   /* +' '+getLockBtnHtml2("bkbgs_lock",i+1,bkbgs_lock[i],'板塊報告')
+                    +' '+getLockBtnHtml2("bkbgs_zd_lock",i+1,bkbgs_zd_lock[i],'終端報告')
+                    +' '+getLockBtnHtml2("bkbgs_qh_lock",i+1,bkbgs_qh_lock[i],'終端求和')*/
+                    +'</td>';
+        }
+
+        html+='<td class="font3" > '+'<br>汇总報告'+'</td>';
+        html+='<td class="font3" > '+'<br>汇总求和'+'</td>';
+        html+='<td class="font3" > '+'<br>分值報告'+'</td>';
+        html+='<td class="font3" > '+'<br>終端報告'+'</td>';
+        return html;
+    }
+
+
+
+
+
+    /**
+     mod:1 汇总報告，2：合并報告，3 選擇報告,4 終端報告,5 结果,6结果反转
+     */
+    function setLock(mod,field,tid,uid,val,btn){
+
+        $.ajax({
+            url:"../user/game/setLock.do",
+            data:{mod:mod,uid:uid,tid:tid,val:val,field:field},
+            type:"post",
+            async:false,
+            success:function(json){
+                if(json.code==1){
+                    layer.msg('操作成功');
+                    console.log($(btn).attr('data-cfg'))
+                    var cfg = eval("("+$(btn).attr('data-cfg')+")");
+                    $(btn).replaceWith(getLockBtnHtml(mod,tid,uid,val,cfg,field));
+
+                }else{
+
+                    alert(json.msg)
+                }
+            }
+        });
+
+
+
+
+    }
+
+    function getInverseBtnHtml2(field,uid,val,t){
+        return getLockBtnHtml(0,0,uid,val,{t:t,textVal:[['正','locak_btn2'],['反','locak_btn1']]},field);
+    }
+
+    function getLockBtnHtml2(field,uid,val,t){
+        return getLockBtnHtml(0,0,uid,val,{t:t},field);
+    }
+
+    function getInverseBtnHtml(mod,tid,uid,val,t){
+        return getLockBtnHtml(mod,tid,uid,val,{t:t,textVal:[['正','locak_btn2'],['反','locak_btn1']]});
+    }
+
+    function getLockBtnHtml(mod,tid,uid,val,cfg,field){
+        cfg = cfg||{};
+        var title = cfg.t;
+        var textVal = cfg.textVal?cfg.textVal:[['瑣','locak_btn1'],['解','locak_btn2']];
+        return html  = '<span data-cfg="'+JSON.stringify(cfg).replace(/"/g,"'")+'" title="'+title+'" class="'+(val==1?textVal[0][1]:textVal[1][1])+'" onclick="'
+            +'setLock('+mod+',\''+field+'\','+tid+','+uid+','+(val==1?0:1)+',this)" >'+(val==1?textVal[0][0]:textVal[1][0])+'</span>';
+
+    }
+
+
+
+
+
+
+    function toSetConfig(mod,tid,uid,val,btn){
+
+        val = $(btn).html();
+        var datas = val.split('-');
+        //在这里面输入任何合法的js语句
+        layer.open({
+            type: 1,
+            skin: 'layui-layer-demo', //样式类名
+            closeBtn: 0, //不显示关闭按钮
+            anim: 2,
+            shadeClose: true, //开启遮罩关闭
+            content: '<div class="context-div" style="margin:10px;"><input style="width:150px;height:30px;" name="start" type="number"/>-<input style="width:150px;height:30px;" name="end" class="int_item" type="number"/></dev>',
+            btn:['保存','取消'],
+            yes: function(index, layero){
+                sval = layero.find(".context-div input[name=start]").val()+"-"+layero.find(".context-div input[name=end]").val();
+                $.ajax({
+                    url:"../user/game/setConfig.do",
+                    data:{mod:mod,uid:uid,tid:tid,val:sval},
+                    type:"post",
+                    async:false,
+                    success:function(json){
+                        layer.close(index); //如果设定了yes回调，需进行手工关闭
+                        if(json.code==1){
+                            layer.msg('保存成功');
+                            $(btn).html(sval);
+
+
+                        }else{
+
+                            alert(json.msg)
+                        }
+                    }
+                });
+
+            },
+            success: function(layero, index){
+                layero.find(".context-div input[name=start]").val(datas[0]);
+                layero.find(".context-div input[name=end]").val(datas[1]);
+                console.log(layero, index);
+            }
+
+        });
+
+    }
+
+
+
+    /**
+     清空所有遊戲數據
+     */
+    function removeAll(){
+        layer.confirm('確定清空數據？', {
+            btn: ['是','否']
+        }, function(){
+            $.ajax({
+                url:"../user/game/clear.do",
+                type:"post",
+                async:false,
+                success:function(result){
+                    if(result.code==1){
+                        layer.msg('成功');
+                        location.reload();
+                    }
+                    else{
+
+                        alert(result.msg)
+                    }
+                }
+            });
+
+        }, function(){
+
+        });
+
+    }
+
+
+</script>
+
+
+<script type="text/html" id="hzbg_tmpl">
+    <tr class="data_col ">
+        <td rowspan="3"><span class="">匯總</span></td>
+        {{each bgCols as val i}}
+            {{if val.t==1}}
+            <td >
+                <div class="bg-td">{{bgData[val.n][0].name}} <span {{if bgData[val.n][0].val>0}}class="red"{{/if}}>{{if bgData[val.n][0].name}}{{bgData[val.n][0].val}}{{/if}}</span>
+                </div>
+            </td>
+            {{/if}}
+            {{if val.t==3}}
+            <td rowspan="2">
+                <div class="bg-td">
+                    <span class="">{{bgData[val.n][2]}}</span>
+                </div>
+            </td>
+            {{/if}}
+        {{/each}}
+
+        <!--{{each viewBg as val i}}-->
+        <!--<td {{if i==7||i==8}}class="font2"{{/if}}>-->
+            <!--<div class="bg-td">{{bgData[val][0].name}} <span {{if bgData[val][0].val>0}}class="red"{{/if}}>{{if bgData[val][0].name}}{{bgData[val][0].val}}{{/if}}</span>-->
+            <!--</div>-->
+        <!--</td>-->
+        <!--{{/each}}-->
+        <!--{{each viewBg2 as val i}}-->
+        <!--<td {{if i==7||i==8}}class="font2"{{/if}}>-->
+            <!--<div class="bg-td bg-td2">{{bgData[val][0].name}} <span {{if bgData[val][0].val>0}}class="red"{{/if}}>{{if bgData[val][0].name}}{{bgData[val][0].val}}{{/if}}</span>-->
+            <!--</div>-->
+        <!--</td>-->
+        <!--{{/each}}-->
+        <td rowspan="3"><span class="">匯總</span></td>
+    </tr>
+    <tr class="data_col">
+        {{each bgCols as val i}}
+        {{if val.t==1}}
+        <td >
+            <div class="bg-td">{{bgData[val.n][1].name}} <span {{if bgData[val.n][1].val>0}}class="red"{{/if}}>{{if bgData[val.n][1].name}}{{bgData[val.n][1].val}}{{/if}}</span>
+            </div>
+        </td>
+        {{/if}}
+        {{if val.t==3}}
+        {{/if}}
+        {{/each}}
+       <!-- {{each viewBg as val i}}
+        <td {{if i==7||i==8}}class="font2"{{/if}}>
+            <div class="bg-td">{{bgData[val][1].name}} <span {{if bgData[val][1].val>0}}class="red"{{/if}}>{{if bgData[val][1].name}}{{bgData[val][1].val}}{{/if}}</span>
+            </div>
+        </td>
+        {{/each}}
+        {{each viewBg2 as val i}}
+        <td {{if i==7||i==8}}class="font2"{{/if}}>
+            <div class="bg-td bg-td2">{{bgData[val][1].name}} <span {{if bgData[val][1].val>0}}class="red"{{/if}}>{{if bgData[val][1].name}}{{bgData[val][1].val}}{{/if}}</span>
+            </div>
+        </td>
+        {{/each}}-->
+
+    </tr>
+    <tr class="data_col">
+
+        {{each bgCols as val i}}
+
+            <td class="blue ">
+                <div class="bg-td bg-td2">共 <span>{{bgData[val.n][2]}}</span></div>
+            </td>
+        {{/each}}
+        <!--{{each viewBg as val i}}
+        <td class="blue {{if i==7||i==8}}font2{{/if}}">
+            <div class="bg-td">共 <span>{{bgData[val][2]}}</span></div>
+        </td>
+        {{/each}}
+        {{each viewBg2 as val i}}
+        <td class="blue {{if i==7||i==8}}font2{{/if}}">
+            <div class="bg-td bg-td2">共 <span>{{bgData[val][2]}}</span></div>
+        </td>
+        {{/each}}-->
+
+    </tr>
+
+
+</script>
+
+<script type="text/html" id="jg_tmpl">
+    {{each jgData['bkbg1'].list  as val i}}
+    <tr>
+        <td>{{i+1}}</td>
+        {{each jgCols as val j}}
+            {{if val.t==1}}
+                {{if jgData[val.n].type[i]==6}}
+                <td class="font3"></td>
+                {{else}}
+                <td class="font3 {{if jgData[val.n].type[i]}}{{jgTypes[jgData[val.n].type[i]]}}{{/if}} {{if jgData[val.n].list[i]>0}}red{{/if}} ">{{jgData[val.n].list[i]}}</td>
+                {{/if}}
+            {{/if}}
+            {{if val.t==3}}
+                <td {{if jgData[val.n].list[i]>0}}class="red"{{/if}}>{{jgData[val.n].list[i]}}</td>
+            {{/if}}
+        {{/each}}
+
+
+
+        <td>{{i+1}}</td>
+    </tr>
+    {{/each}}
+</script>
+
+
+<script type="text/html" id="bottom_tmpl">
+    <tr>
+        <td>結果</td>
+        {{each jgCols as val i}}
+            {{if val.t==1}}
+                <td  class="blue2 font2 {{if jgData[val.n].jg>0}}red{{/if}}">{{jgData[val.n].jg}}</td>
+            {{/if}}
+            {{if val.t==3}}
+                <td  class="blue2 font2 {{if jgData[val.n].jg>0}}red{{/if}}">{{jgData[val.n].jg}}</td>
+            {{/if}}
+        {{/each}}
+
+
+
+       <!-- {{each jgCols2 as col j}}
+        <td  class="blue2 font2 {{if jgData[col].jg>0}}red{{/if}}">{{jgData[col].jg}}</td>
+        {{/each}}
+
+        {{each jgCols3 as col j}}
+        <td class="blue2 {{if jgData[col].jg>0}}red{{/if}}">{{jgData[col].jg}}</td>
+        {{/each}}-->
+
+        <td>結果</td>
+    </tr>
+    <tr>
+        <td>求和</td>
+        {{each jgCols as val i}}
+            {{if val.t==1}}
+            <td class="font2 {{if jgData[val.n].qh>0}}red{{/if}}">{{jgData[val.n].qh}}</td>
+            {{/if}}
+            {{if val.t==3}}
+            <td class="font2 {{if jgData[val.n].qh>0}}red{{/if}}">{{jgData[val.n].qh}}</td>
+            {{/if}}
+        {{/each}}
+
+
+        <!--{{each jgCols2 as col j}}
+        <td class="font2 {{if jgData[col].qh>0}}red{{/if}}">{{jgData[col].qh}}</td>
+        {{/each}}
+
+        {{each jgCols3 as col j}}
+        <td {{if jgData[col].qh>0}}class="red"{{/if}}>{{jgData[col].qh}}</td>
+        {{/each}}
+-->
+        <td>求和</td>
+    </tr>
+    <tr style="height:40px;">
+        <td>共計</td>
+        {{each jgCols as val i}}
+        {{if val.t==1}}
+        <td class="blue font2">{{bgData[val.n][3]}}</td>
+        {{/if}}
+        {{if val.t==3}}
+        <td class="blue font2">{{bgData[val.n][3]}}</td>
+        {{/if}}
+        {{/each}}
+
+
+
+        <!--{{each jgCols2 as col j}}
+        <td class="blue font2">{{bgData[col][3]}}</td>
+        {{/each}}
+
+        {{each jgCols3 as col j}}
+        <td class="blue">{{bgData[col][3]}}</td>
+        {{/each}}-->
+
+
+        <td>共計</td>
+    </tr>
+
+    <tr style="height:40px;">
+        <td>双計</td>
+        {{each jgCols as val i}}
+        {{if val.t==1}}
+        <td class=" font2">{{jgData[val.n]['sj']}}</td>
+        {{/if}}
+        {{if val.t==3}}
+        <td class=" font2">{{jgData[val.n]['sj']}}</td>
+        {{/if}}
+        {{/each}}
+
+        <td>双計</td>
+    </tr>
+</script>
+</body>
+</html>

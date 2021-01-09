@@ -98,6 +98,8 @@ public class BigTurn {
 	String bkbgs_zd_lock;
 	String bkbgs_qh_lock;
 
+	Integer group_no;
+
 	BigTurnConfig bigTurnConfig;
 
 

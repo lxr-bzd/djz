@@ -154,13 +154,17 @@ public class BigCoreService {
 
     public static Integer countJgDetail(Long[] jg) {
         Integer type = null;
-        if(jg[0]+jg[1]==0)
-            type = 5;
+        if(jg[0]+jg[1]==0){
+            type = jg[0]==0?6:5;
+        }
         else if(jg[0]>0&&jg[1]>0)
             type = 1;
         else if(jg[0]<0&&jg[1]<0)
             type = 4;
-        else {
+        else if(jg[0]==0||jg[1]==0){
+            type = 7;
+        }else{
+
             if(Math.abs(jg[0])>Math.abs(jg[1])){
                 type = jg[0]>0?2:3;
             }else{
