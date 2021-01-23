@@ -16,5 +16,9 @@ public class GameGroup {
     private  String fz;
     private  String hzqh;
 
+    private String sb;
 
+    private  String fz_count;
+
+    private String trend;
 }

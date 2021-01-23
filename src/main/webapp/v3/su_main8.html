@@ -33,7 +33,7 @@
 
         .click_span{padding: 3px 8px;cursor: pointer;border-radius:5px}
 
-        .btn1{cursor: pointer;text-align: center;margin: 5px;height: 40px;line-height: 40px;border-radius:5px}
+        .btn1{cursor: pointer;text-align: center;margin: 5px;height: 55px;line-height: 55px;border-radius:5px}
 
         .bg-td{text-align: left; display: flex;height: 25px;}
         .bg-td>span{flex:1;text-align: center;}
@@ -44,7 +44,9 @@
         .font3{font-size: 20px;}
 
 
-
+        .bg-div{
+            font-size: 20px;
+        }
 
         .bk-red{background-color: #FFB000;}
         .bk-yellow{background-color: #f3fe44;}
@@ -115,6 +117,7 @@
                             <col style="width:100px;">
                             <col style="width:120px;">
                             <col style="width:80px;">
+                            <col style="width:80px;">
                             <col style="width:100px;">
                             <col style="width:100px;">
 
@@ -135,7 +138,7 @@
                             <td><input id="setting-input" type="password" style="width: 90%;background-color: #eee"  placeholder=""></td>
 
                             <td colspan="4" id="input_group"><input type="text" style="width: 90%;background-color: #eee" maxlength="1" autofocus="autofocus" class="int_item" placeholder=""></td>
-                            <td colspan="4"> <div class="blue btn1 ok_btn">確定</div></td>
+                            <td colspan="5"> <div class="blue btn1 ok_btn">確定</div></td>
                             <!-- 	<td colspan="2">
                                     <table style="height:100%">
                                         <tr><td style="height:auto;font-size:16px;">開始<input type="number" id="tg_thre" value="" style="width: 40%;background-color: #eee;font-size:19px;">
@@ -541,6 +544,7 @@
 
 
     function doInput(){
+
         var val = getInput();
         if(!val){
             layer.alert("請輸入完整");
@@ -570,6 +574,7 @@
             $app.msg("ok");
             ref(data.data);
             onBusEnd();
+            $("#input_group input")[0].focus();
         });
 
     }
@@ -845,6 +850,7 @@
             ,{n:'bkbg6',t:1},{n:'bkbg7',t:1},{n:'bkbg8',t:1},{n:'bkbg9',t:1},{n:'bkbg10',t:1}
             ,{n:'bkbg11',t:1},{n:'bkbg12',t:1},{n:'bkbg13',t:1},{n:'bkbg14',t:1},{n:'bkbg15',t:1}
             ,{n:'hzbg',t:1}
+            ,{n:'sbbg',t:4}
             ,{n:'hzqh',t:3},{n:'fzbg',t:3}
             ,{n:'zdbg',t:1}
         ];
@@ -854,7 +860,8 @@
             ,{n:'bkbg6',t:1},{n:'bkbg7',t:1},{n:'bkbg8',t:1},{n:'bkbg9',t:1},{n:'bkbg10',t:1}
             ,{n:'bkbg11',t:1},{n:'bkbg12',t:1},{n:'bkbg13',t:1},{n:'bkbg14',t:1},{n:'bkbg15',t:1}
             ,{n:'hzbg',t:1}
-            ,{n:'hzqh',t:3},{n:'fzbg',t:3}
+            ,{n:'sbbg',t:3}
+            ,{n:'hzqh',t:3},{n:'fzbg',t:5}
             ,{n:'zdbg',t:1}
         ]
        /* let bgCols = [/!*'hb',*!//!*'qhBg','hbBg','hbqh','xzBg','xzqh','jgbg',*!//!*'jgAbg','jgBbg','bgA','bgB','zdbg','jgzd',*!/];
@@ -1011,6 +1018,7 @@
         }
 
         html+='<td class="font3" > '+'<br>汇总報告'+'</td>';
+        html+='<td class="font3" > '+'<br>双边報告'+'</td>';
         html+='<td class="font3" > '+'<br>汇总求和'+'</td>';
         html+='<td class="font3" > '+'<br>分值報告'+'</td>';
         html+='<td class="font3" > '+'<br>終端報告'+'</td>';
@@ -1162,15 +1170,21 @@
         {{each bgCols as val i}}
             {{if val.t==1}}
             <td >
-                <div class="bg-td">{{bgData[val.n][0].name}} <span {{if bgData[val.n][0].val>0}}class="red"{{/if}}>{{if bgData[val.n][0].name}}{{bgData[val.n][0].val}}{{/if}}</span>
+                <div class="bg-td bg-div">{{bgData[val.n][0].name}} <span {{if bgData[val.n][0].val>0}}class="red"{{/if}}>{{if bgData[val.n][0].name}}{{bgData[val.n][0].val}}{{/if}}</span>
                 </div>
             </td>
             {{/if}}
             {{if val.t==3}}
             <td rowspan="2">
-                <div class="bg-td">
+                <div class="bg-td bg-div">
                     <span class="">{{bgData[val.n][2]}}</span>
                 </div>
+            </td>
+            {{/if}}
+            {{if val.t==4}}
+            <td rowspan="2">
+                    <div class="bg-td bg-div">{{bgData[val.n][0].name}} <span {{if bgData[val.n][0].val>0}}class="red"{{/if}}>{{if bgData[val.n][0].name}}{{bgData[val.n][0].val}}{{/if}}</span>
+                    </div>
             </td>
             {{/if}}
         {{/each}}
@@ -1193,11 +1207,13 @@
         {{each bgCols as val i}}
         {{if val.t==1}}
         <td >
-            <div class="bg-td">{{bgData[val.n][1].name}} <span {{if bgData[val.n][1].val>0}}class="red"{{/if}}>{{if bgData[val.n][1].name}}{{bgData[val.n][1].val}}{{/if}}</span>
+            <div class="bg-td bg-div">{{bgData[val.n][1].name}} <span {{if bgData[val.n][1].val>0}}class="red"{{/if}}>{{if bgData[val.n][1].name}}{{bgData[val.n][1].val}}{{/if}}</span>
             </div>
         </td>
         {{/if}}
         {{if val.t==3}}
+        {{/if}}
+        {{if val.t==4}}
         {{/if}}
         {{/each}}
        <!-- {{each viewBg as val i}}
@@ -1216,10 +1232,10 @@
     </tr>
     <tr class="data_col">
 
-        {{each bgCols as val i}}
+        {{each jgCols as val i}}
 
             <td class="blue ">
-                <div class="bg-td bg-td2">共 <span>{{bgData[val.n][2]}}</span></div>
+                <div class="bg-td bg-td2 "> <!--共 <span>--><span>{{jgData[val.n]['trend']}}</span></div>
             </td>
         {{/each}}
         <!--{{each viewBg as val i}}
@@ -1253,6 +1269,12 @@
             {{if val.t==3}}
                 <td {{if jgData[val.n].list[i]>0}}class="red"{{/if}}>{{jgData[val.n].list[i]}}</td>
             {{/if}}
+            {{if val.t==4}}
+
+            {{/if}}
+            {{if val.t==5}}
+            <td {{if jgData[val.n].list[i]>0}}class="red"{{/if}}>{{if jgData[val.n].list[i]!=0}}{{jgData[val.n].list[i]}}{{/if}}</td>
+            {{/if}}
         {{/each}}
 
 
@@ -1270,9 +1292,14 @@
             {{if val.t==1}}
                 <td  class="blue2 font2 {{if jgData[val.n].jg>0}}red{{/if}}">{{jgData[val.n].jg}}</td>
             {{/if}}
-            {{if val.t==3}}
-                <td  class="blue2 font2 {{if jgData[val.n].jg>0}}red{{/if}}">{{jgData[val.n].jg}}</td>
+            {{if val.t==3||val.t==5}}
+            <td class="font2 {{if jgData[val.n].jg>0}}red{{/if}}">{{jgData[val.n].jg}}</td>
             {{/if}}
+            {{if val.t==4}}
+            <td  class="blue2 font2 {{if jgData[val.n].jg>0}}red{{/if}}">{{jgData[val.n].jg}}</td>
+            {{/if}}
+
+
         {{/each}}
 
 
@@ -1293,7 +1320,10 @@
             {{if val.t==1}}
             <td class="font2 {{if jgData[val.n].qh>0}}red{{/if}}">{{jgData[val.n].qh}}</td>
             {{/if}}
-            {{if val.t==3}}
+            {{if val.t==3||val.t==5}}
+            <td class="font2 {{if jgData[val.n].qh>0}}red{{/if}}">{{jgData[val.n].qh}}</td>
+            {{/if}}
+            {{if val.t==4}}
             <td class="font2 {{if jgData[val.n].qh>0}}red{{/if}}">{{jgData[val.n].qh}}</td>
             {{/if}}
         {{/each}}
@@ -1315,7 +1345,10 @@
         {{if val.t==1}}
         <td class="blue font2">{{bgData[val.n][3]}}</td>
         {{/if}}
-        {{if val.t==3}}
+        {{if val.t==3||val.t==5}}
+        <td class="font2 {{if bgData[val.n][3]>0}}red{{/if}}">{{bgData[val.n][3]}}</td>
+        {{/if}}
+        {{if val.t==4}}
         <td class="blue font2">{{bgData[val.n][3]}}</td>
         {{/if}}
         {{/each}}
@@ -1337,12 +1370,10 @@
     <tr style="height:40px;">
         <td>双計</td>
         {{each jgCols as val i}}
-        {{if val.t==1}}
-        <td class=" font2">{{jgData[val.n]['sj']}}</td>
+        {{if val.t==1||val.t==3||val.t==4||val.t==5}}
+        <td class="{{if jgData[val.n]['sj']>0}}red {{/if}}font2">{{jgData[val.n]['sj']}}</td>
         {{/if}}
-        {{if val.t==3}}
-        <td class=" font2">{{jgData[val.n]['sj']}}</td>
-        {{/if}}
+
         {{/each}}
 
         <td>双計</td>
