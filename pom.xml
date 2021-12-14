@@ -14,7 +14,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
     <!-- log4j日志文件管理包版本 -->
     <slf4j.version>1.7.7</slf4j.version>
     
-    <log4j>2.8.2</log4j>
+    <log4j>2.16.0</log4j>
 </properties>
 <dependencies>
     <!-- https://mvnrepository.com/artifact/aspectj/aspectjweaver -->
